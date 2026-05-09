@@ -41,7 +41,12 @@
     ],
     "extra": {
       "apiUrl": "https://api.globalsponsorhub.com",
-      "siteUrl": "https://www.globalsponsorhub.com"
-    }
+      "siteUrl": "https://www.globalsponsorhub.com",
+      "router": {},
+      "eas": {
+        "projectId": "7de27b37-fe11-4dd5-8f6a-413693433a1f"
+      }
+    },
+    "owner": "jennielouxx"
   }
 }
