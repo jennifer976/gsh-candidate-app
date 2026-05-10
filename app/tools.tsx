@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchCandidateDashboard } from "@/lib/api-client";
-import { getMarketingSiteUrl } from "@/lib/config";
+import { marketingUrl } from "@/lib/marketing-links";
 import { colors, gradient } from "@/lib/theme";
 
 const TIPS = [
@@ -20,8 +20,6 @@ export default function ToolsScreen() {
   const router = useRouter();
   const dash = useQuery({ queryKey: ["analytics", "candidate-dashboard"], queryFn: fetchCandidateDashboard });
   const pct = dash.data?.profile.completionPercentage ?? null;
-
-  const site = getMarketingSiteUrl();
 
   return (
     <SafeAreaView style={styles.safe} edges={["bottom"]}>
@@ -54,10 +52,12 @@ export default function ToolsScreen() {
           </LinearGradient>
         </Pressable>
 
-        <Pressable
-          style={styles.outlineBtn}
-          onPress={() => void Linking.openURL(`${site}/candidate/tools`)}
-        >
+        <Pressable style={styles.outlineBtn} onPress={() => router.push("/learn")}>
+          <Text style={styles.outlineBtnText}>Guides, blog & resources</Text>
+          <Text style={styles.outlineBtnSub}>Visa guides, resource hub, FAQs — same content as the website</Text>
+        </Pressable>
+
+        <Pressable style={styles.outlineBtn} onPress={() => void Linking.openURL(marketingUrl("/candidate/tools"))}>
           <Text style={styles.outlineBtnText}>Open full toolkit on the web</Text>
         </Pressable>
       </ScrollView>
@@ -102,4 +102,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   outlineBtnText: { color: colors.textPrimary, fontWeight: "700", fontSize: 15 },
+  outlineBtnSub: {
+    marginTop: 6,
+    fontSize: 13,
+    color: colors.textMuted,
+    fontWeight: "500",
+    textAlign: "center",
+    lineHeight: 18,
+    paddingHorizontal: 8,
+  },
 });

@@ -73,6 +73,7 @@ export default function RootLayout() {
           <Stack.Screen name="partners" options={{ title: "Partners" }} />
           <Stack.Screen name="offers" options={{ title: "Offers" }} />
           <Stack.Screen name="tools" options={{ title: "Career toolkit" }} />
+          <Stack.Screen name="learn" options={{ title: "Guides & resources" }} />
           <Stack.Screen name="ats-assistant" options={{ title: "ATS assistant" }} />
           <Stack.Screen name="forgot-password" options={{ title: "Forgot password", presentation: "modal" }} />
         </Stack>

@@ -8,7 +8,18 @@ import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
-const LINKS: { title: string; subtitle: string; href: string; icon: IonName }[] = [
+type RowDef = { title: string; subtitle: string; href: string; icon: IonName };
+
+const LEARN_FIRST: RowDef[] = [
+  {
+    title: "Guides, blog & resources",
+    subtitle: "Visa guides, articles, news, FAQs — open on globalsponsorhub.com",
+    href: "/learn",
+    icon: "compass-outline",
+  },
+];
+
+const LINKS: RowDef[] = [
   { title: "Dashboard", subtitle: "Applications, interviews, trends", href: "/dashboard", icon: "stats-chart-outline" },
   { title: "Notification inbox", subtitle: "Account & application updates", href: "/notification-feed", icon: "notifications-outline" },
   { title: "Job alerts", subtitle: "Matches, email prefs, saved searches", href: "/alerts", icon: "flash-outline" },
@@ -19,6 +30,31 @@ const LINKS: { title: string; subtitle: string; href: string; icon: IonName }[] 
   { title: "Settings", subtitle: "Password & preferences", href: "/settings", icon: "settings-outline" },
 ];
 
+function RowLink({
+  title,
+  subtitle,
+  icon,
+  onPress,
+}: {
+  title: string;
+  subtitle: string;
+  icon: IonName;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable style={[styles.row, cardSurfaceStyle(true)]} onPress={onPress} accessibilityRole="button">
+      <View style={styles.iconCircle}>
+        <Ionicons name={icon} size={22} color={colors.brand} />
+      </View>
+      <View style={styles.rowText}>
+        <Text style={styles.rowTitle}>{title}</Text>
+        <Text style={styles.rowSub}>{subtitle}</Text>
+      </View>
+      <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
+    </Pressable>
+  );
+}
+
 export default function MoreScreen() {
   const router = useRouter();
 
@@ -27,23 +63,28 @@ export default function MoreScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <Text style={styles.h1}>More</Text>
-          <Text style={styles.lead}>Everything from the web candidate hub — on your phone.</Text>
-          {LINKS.map((item) => (
-            <Pressable
+          <Text style={styles.lead}>Jobs, partners, and tooling — plus the same guides and blog as on the website.</Text>
+
+          <Text style={styles.section}>Learn & support</Text>
+          {LEARN_FIRST.map((item) => (
+            <RowLink
               key={item.title}
-              style={[styles.row, cardSurfaceStyle(true)]}
+              title={item.title}
+              subtitle={item.subtitle}
+              icon={item.icon}
               onPress={() => router.push(item.href)}
-              accessibilityRole="button"
-            >
-              <View style={styles.iconCircle}>
-                <Ionicons name={item.icon} size={22} color={colors.brand} />
-              </View>
-              <View style={styles.rowText}>
-                <Text style={styles.rowTitle}>{item.title}</Text>
-                <Text style={styles.rowSub}>{item.subtitle}</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
-            </Pressable>
+            />
+          ))}
+
+          <Text style={styles.section}>Your hub</Text>
+          {LINKS.map((item) => (
+            <RowLink
+              key={item.title}
+              title={item.title}
+              subtitle={item.subtitle}
+              icon={item.icon}
+              onPress={() => router.push(item.href)}
+            />
           ))}
         </ScrollView>
       </SafeAreaView>
@@ -59,8 +100,17 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: fontFamily.regular,
     color: colors.textMuted,
-    marginBottom: 18,
+    marginBottom: 16,
     lineHeight: 22,
+  },
+  section: {
+    marginTop: 10,
+    marginBottom: 10,
+    fontSize: 12,
+    fontFamily: fontFamily.bold,
+    color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 0.75,
   },
   row: {
     flexDirection: "row",

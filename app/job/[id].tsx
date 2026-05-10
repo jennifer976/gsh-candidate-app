@@ -49,7 +49,6 @@ export default function JobDetailScreen() {
       : "";
 
   const profileReady = profileQuery.isSuccess;
-  const canApply = profileReady && resumeUrl.length > 0;
 
   const saveMut = useMutation({
     mutationFn: () => saveJob(jobId),

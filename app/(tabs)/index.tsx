@@ -75,6 +75,24 @@ export default function JobsScreen() {
           </View>
         </Pressable>
 
+        <Pressable
+          style={[cardSurfaceStyle(true), styles.learnBanner]}
+          onPress={() => router.push("/learn")}
+          accessibilityRole="button"
+          accessibilityLabel="Guides blog and resources"
+        >
+          <View style={styles.learnRow}>
+            <View style={styles.learnIconWrap}>
+              <Ionicons name="book-outline" size={22} color={colors.teal} />
+            </View>
+            <View style={styles.learnTextCol}>
+              <Text style={styles.learnBannerTitle}>Guides, blog & resources</Text>
+              <Text style={styles.learnBannerSub}>Visa guides, articles, FAQs — open on the website</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={22} color={colors.textMuted} accessibilityElementsHidden />
+          </View>
+        </Pressable>
+
         <View style={styles.searchOuter}>
           <View style={styles.searchWrap}>
             <Ionicons name="search" size={20} color={colors.placeholder} style={styles.searchIcon} />
@@ -166,6 +184,28 @@ const styles = StyleSheet.create({
   alertsTextCol: { flex: 1 },
   alertsBannerTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.purpleTextDark },
   alertsBannerSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.purpleText, lineHeight: 18 },
+  learnBanner: {
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: "rgba(14, 205, 209, 0.28)",
+  },
+  learnRow: { flexDirection: "row", alignItems: "center", gap: 12 },
+  learnIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: radii.sm,
+    backgroundColor: "rgba(14, 205, 209, 0.12)",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "rgba(14, 205, 209, 0.35)",
+  },
+  learnTextCol: { flex: 1 },
+  learnBannerTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.textPrimary },
+  learnBannerSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 18 },
   searchOuter: { paddingHorizontal: 16, paddingVertical: 12 },
   searchWrap: {
     flexDirection: "row",
