@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { curatedListingPrimaryBadge, normalizeAgencyWebsite } from "@/lib/curated-listing-labels";
 import { fetchPublicExternalJobById, recordExternalApplyClick } from "@/lib/api-client";
 import { openExternalHttpsUrl } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -96,6 +97,8 @@ export default function ExternalJobDetailScreen() {
   }
 
   const listing = query.data;
+  const primaryBadge = curatedListingPrimaryBadge(listing);
+  const agencySiteUrl = normalizeAgencyWebsite(listing.agencyWebsite);
 
   return (
     <GshScreenBackground>
@@ -103,8 +106,10 @@ export default function ExternalJobDetailScreen() {
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <View style={[styles.hero, cardSurfaceStyle(true)]}>
             <View style={styles.badgeRow}>
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>Curated listing</Text>
+              <View style={[styles.badge, primaryBadge === "Agency" && styles.badgeAgency]}>
+                <Text style={[styles.badgeText, primaryBadge === "Agency" && styles.badgeTextAgency]}>
+                  {primaryBadge === "Agency" ? "Agency listing" : "GSH curated"}
+                </Text>
               </View>
               {listing.isFeatured ? (
                 <View style={[styles.badge, styles.badgeFeatured]}>
@@ -141,6 +146,19 @@ export default function ExternalJobDetailScreen() {
             <Text style={styles.agencyLine}>Listed via {listing.agencyName}</Text>
           ) : null}
 
+          {agencySiteUrl ? (
+            <Pressable
+              style={styles.agencyContactBtn}
+              onPress={() => void openExternalHttpsUrl(agencySiteUrl)}
+              accessibilityRole="link"
+              accessibilityLabel="Contact agency website"
+            >
+              <Ionicons name="business-outline" size={18} color={colors.brand} />
+              <Text style={styles.agencyContactText}>Contact agency</Text>
+              <Ionicons name="open-outline" size={16} color={colors.placeholder} />
+            </Pressable>
+          ) : null}
+
           <Text style={styles.disclaimer}>
             You apply on the employer’s site (ATS). We open their official apply link in a secure browser window — Global
             Sponsor Hub cannot submit your CV on your behalf for curated listings.
@@ -152,8 +170,8 @@ export default function ExternalJobDetailScreen() {
               onPress={() => applyMut.mutate()}
               disabled={applyMut.isPending}
             />
-            <Pressable style={styles.outlineBtn} onPress={() => router.push("/(tabs)")} accessibilityRole="button">
-              <Text style={styles.outlineBtnText}>Back to Jobs feed</Text>
+            <Pressable style={styles.outlineBtn} onPress={() => router.push("/curated-listings")} accessibilityRole="button">
+              <Text style={styles.outlineBtnText}>Back to curated listings</Text>
             </Pressable>
           </View>
         </ScrollView>
@@ -195,6 +213,8 @@ const styles = StyleSheet.create({
     borderColor: colors.purpleBorder,
   },
   badgeText: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.purpleTextDark },
+  badgeAgency: { backgroundColor: colors.purpleMuted, borderColor: colors.purpleBorder },
+  badgeTextAgency: { color: colors.purpleTextDark },
   badgeFeatured: { backgroundColor: "rgba(14, 205, 209, 0.14)", borderColor: "rgba(14, 205, 209, 0.45)" },
   badgeTextFeatured: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.textMarketing },
   title: { fontSize: 22, fontFamily: fontFamily.extraBold, color: colors.textPrimary, letterSpacing: -0.35 },
@@ -210,6 +230,20 @@ const styles = StyleSheet.create({
     lineHeight: 23,
   },
   agencyLine: { marginTop: 14, fontSize: 13, fontFamily: fontFamily.medium, color: colors.textMuted },
+  agencyContactBtn: {
+    marginTop: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    alignSelf: "flex-start",
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: radii.sm,
+    borderWidth: 1,
+    borderColor: colors.purpleBorder,
+    backgroundColor: colors.purpleMuted,
+  },
+  agencyContactText: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.brand, flex: 1 },
   disclaimer: {
     marginTop: 18,
     fontSize: 13,

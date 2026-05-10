@@ -6,7 +6,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "General",
     question: "What is Global Sponsor Hub?",
     answer:
-      "Global Sponsor Hub is a direct hiring platform built for international roles. Employers post jobs directly; candidates apply through the platform. Listings show visa sponsorship, relocation support, or openness to global talent. Curated external roles are manually maintained by our team.",
+      "Global Sponsor Hub is built for international and sponsorship-friendly hiring. The main job board is for employer-posted roles (companies listing their own jobs). Recruitment agencies and partner-curated wider-web links appear on curated listings — separate from that board. Listings show visa sponsorship, relocation support, or openness to global talent where provided.",
   },
   {
     category: "General",
@@ -23,7 +23,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "General",
     question: "Do you vet jobs or partners?",
     answer:
-      "Employer-posted jobs are reviewed for posting standards; we do not verify every employer claim. Curated external listings are manually curated. Partner profiles are owned by partners.",
+      "Employer listings on the main board are reviewed for posting standards; we do not verify every claim. Agency and curated listings are maintained separately. Partner profiles are owned by partners.",
   },
   {
     category: "General",

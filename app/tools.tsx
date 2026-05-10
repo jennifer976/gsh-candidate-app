@@ -84,8 +84,8 @@ export default function ToolsScreen() {
             <Text style={styles.outlineBtnSub}>Country corridors, topics, and checklists</Text>
           </Pressable>
 
-          <Pressable style={styles.outlineBtn} onPress={() => router.push("/learn")}>
-            <Text style={styles.outlineBtnText}>Guides & resources</Text>
+          <Pressable style={styles.outlineBtn} onPress={() => router.push("/tools-resources")}>
+            <Text style={styles.outlineBtnText}>Tools & resources</Text>
             <Text style={styles.outlineBtnSub}>Blog, news, FAQs, legal, and more</Text>
           </Pressable>
       </ScrollView>

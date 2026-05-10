@@ -94,8 +94,8 @@ export default function DashboardScreen() {
             </Text>
           ))}
 
-          <Text style={styles.section}>Fresh hub listings</Text>
-          <Text style={styles.sectionHint}>Employer-posted roles on Global Sponsor Hub (last week).</Text>
+          <Text style={styles.section}>Fresh direct listings</Text>
+          <Text style={styles.sectionHint}>Employer-posted roles on Global Sponsor Hub (last week) — main board, not agency curated.</Text>
           {d.latestJobs.slice(0, 8).map((job) => (
             <Pressable
               key={job._id}
@@ -117,9 +117,9 @@ export default function DashboardScreen() {
 
           {d.latestCuratedExternal && d.latestCuratedExternal.length > 0 ? (
             <>
-              <Text style={styles.section}>Curated external</Text>
+              <Text style={styles.section}>Curated listings</Text>
               <Text style={styles.sectionHint}>
-                Partner-curated & aggregated roles (same board as the Jobs tab).
+                Agencies, partner-curated and wider-web — separate from the main employer feed (same catalogue as /jobs/external).
                 {typeof d.stats.curatedRolesPublished === "number"
                   ? ` ${d.stats.curatedRolesPublished} live on the public hub.`
                   : ""}
@@ -159,7 +159,7 @@ export default function DashboardScreen() {
             </View>
           ))}
 
-          <Pressable style={styles.learnCta} onPress={() => router.push("/learn")} accessibilityRole="button">
+          <Pressable style={styles.learnCta} onPress={() => router.push("/tools-resources")} accessibilityRole="button">
             <Ionicons name="compass-outline" size={22} color={colors.brand} />
             <Text style={styles.learnCtaText}>Guides, blog & resources</Text>
             <Ionicons name="open-outline" size={18} color={colors.placeholder} />

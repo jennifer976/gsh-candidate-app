@@ -45,6 +45,8 @@ export interface Job {
   postedBy?: unknown;
   createdAt?: string;
   mobility?: string[];
+  /** Generic perks; mobility may also appear here on legacy documents. */
+  benefits?: string[];
 }
 
 export interface GetJobsResponse {

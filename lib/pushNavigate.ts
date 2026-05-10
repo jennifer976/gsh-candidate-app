@@ -41,6 +41,8 @@ function navigateInternalPath(router: Router, pathname: string, search: string):
       router.push(`/external-job/${jid}`);
       return true;
     }
+    router.push("/curated-listings");
+    return true;
   }
 
   if (pathname.endsWith("/candidate/job-details")) {
@@ -131,7 +133,7 @@ function navigateInternalPath(router: Router, pathname: string, search: string):
   }
 
   if (norm.startsWith("/learn")) {
-    router.push("/learn");
+    router.push("/tools-resources");
     return true;
   }
   if (norm.startsWith("/candidate/tools")) {
@@ -139,7 +141,7 @@ function navigateInternalPath(router: Router, pathname: string, search: string):
     return true;
   }
 
-  router.push("/learn");
+  router.push("/tools-resources");
   return true;
 }
 

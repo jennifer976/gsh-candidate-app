@@ -142,12 +142,12 @@ export default function SettingsScreen() {
           </Pressable>
           <Pressable
             style={[cardSurfaceStyle(true), styles.linkRow]}
-            onPress={() => router.push("/learn")}
+            onPress={() => router.push("/tools-resources")}
             accessibilityRole="button"
           >
             <View style={styles.linkTextCol}>
-              <Text style={styles.linkTitle}>Guides & Visa wizard</Text>
-              <Text style={styles.linkSub}>Mobility tools and hub resources</Text>
+              <Text style={styles.linkTitle}>Tools & resources</Text>
+              <Text style={styles.linkSub}>Visa wizard, guides, blog, FAQs, legal</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
           </Pressable>

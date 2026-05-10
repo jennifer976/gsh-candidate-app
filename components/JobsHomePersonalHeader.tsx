@@ -62,9 +62,12 @@ export function JobsHomePersonalHeader({
   const greeting = `${timeGreeting()}${trimmed ? `, ${trimmed}` : ""}`;
 
   return (
-    <View style={[styles.wrap, cardSurfaceStyle(true)]}>
+    <View style={[styles.wrap, cardSurfaceStyle(false)]}>
       <Text style={styles.greeting}>{greeting}</Text>
-      <Text style={styles.sub}>Search sponsorship-friendly roles, track applications, and stay interview-ready.</Text>
+      <Text style={styles.sub}>
+        Search employer-posted roles on Global Sponsor Hub. Recruitment agencies and partner-curated wider-web roles are on
+        Curated listings — kept separate so it stays clear who posted the role.
+      </Text>
 
       {completionPct != null && completionPct < 100 ? (
         <Pressable onPress={onProfile} style={styles.progressPress} accessibilityRole="button">
@@ -108,9 +111,9 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 22,
-    fontFamily: fontFamily.extraBold,
+    fontFamily: fontFamily.bold,
     color: colors.textPrimary,
-    letterSpacing: -0.35,
+    letterSpacing: -0.4,
   },
   sub: {
     marginTop: 8,
@@ -136,8 +139,8 @@ const styles = StyleSheet.create({
   progressHint: {
     marginTop: 8,
     fontSize: 13,
-    fontFamily: fontFamily.semiBold,
-    color: colors.purpleTextDark,
+    fontFamily: fontFamily.medium,
+    color: colors.textSecondary,
   },
   readyRow: {
     flexDirection: "row",
@@ -147,9 +150,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: radii.md,
-    backgroundColor: "rgba(14, 205, 209, 0.1)",
+    backgroundColor: colors.surfaceMuted,
     borderWidth: 1,
-    borderColor: "rgba(14, 205, 209, 0.35)",
+    borderColor: colors.border,
   },
   readyText: {
     flex: 1,
@@ -174,14 +177,15 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   miniVal: {
-    fontSize: 20,
-    fontFamily: fontFamily.extraBold,
+    fontSize: 19,
+    fontFamily: fontFamily.bold,
     color: colors.textPrimary,
+    letterSpacing: -0.3,
   },
   miniLab: {
     marginTop: 4,
     fontSize: 11,
-    fontFamily: fontFamily.semiBold,
+    fontFamily: fontFamily.medium,
     color: colors.textMuted,
     textAlign: "center",
   },
@@ -206,6 +210,6 @@ const styles = StyleSheet.create({
   statsFallbackText: {
     fontSize: 14,
     fontFamily: fontFamily.semiBold,
-    color: colors.brand,
+    color: colors.textMarketing,
   },
 });

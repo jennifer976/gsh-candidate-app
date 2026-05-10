@@ -10,9 +10,11 @@ import {
 } from "@expo-google-fonts/inter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+SplashScreen.preventAutoHideAsync().catch(() => undefined);
 import { PushBootstrap } from "@/components/PushBootstrap";
 import { QueryFocusSync } from "@/components/QueryFocusSync";
 import { useAuthStore } from "@/lib/auth-store";
@@ -43,12 +45,14 @@ export default function RootLayout() {
     return unsub;
   }, []);
 
+  useEffect(() => {
+    if (hydrated && fontsLoaded) {
+      void SplashScreen.hideAsync();
+    }
+  }, [hydrated, fontsLoaded]);
+
   if (!hydrated || !fontsLoaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.surfaceMuted }}>
-        <ActivityIndicator size="large" color={colors.brand} />
-      </View>
-    );
+    return null;
   }
 
   return (
@@ -77,7 +81,8 @@ export default function RootLayout() {
           <Stack.Screen name="partners" options={{ title: "Partners" }} />
           <Stack.Screen name="offers" options={{ title: "Offers" }} />
           <Stack.Screen name="tools" options={{ title: "Career toolkit" }} />
-          <Stack.Screen name="learn" options={{ title: "Guides & resources" }} />
+          <Stack.Screen name="tools-resources" options={{ title: "Tools & resources" }} />
+          <Stack.Screen name="learn" options={{ title: "Guides & resources", headerShown: false }} />
           <Stack.Screen name="guides" options={{ headerShown: false }} />
           <Stack.Screen name="visa-wizard" options={{ title: "Visa wizard" }} />
           <Stack.Screen name="legal" options={{ headerShown: false }} />
@@ -85,6 +90,7 @@ export default function RootLayout() {
           <Stack.Screen name="news" options={{ title: "Immigration headlines" }} />
           <Stack.Screen name="faq" options={{ title: "FAQs" }} />
           <Stack.Screen name="contact" options={{ title: "Contact" }} />
+          <Stack.Screen name="curated-listings" options={{ title: "Curated listings" }} />
           <Stack.Screen name="external-job/[id]" options={{ title: "Curated role" }} />
           <Stack.Screen name="ats-assistant" options={{ title: "ATS assistant" }} />
           <Stack.Screen name="forgot-password" options={{ title: "Forgot password", presentation: "modal" }} />

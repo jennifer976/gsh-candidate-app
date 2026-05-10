@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -16,17 +16,11 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { JobsHomePersonalHeader } from "@/components/JobsHomePersonalHeader";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import {
-  fetchCandidateDashboard,
-  fetchOwnProfile,
-  fetchPublicExternalJobListings,
-  fetchPublicJobs,
-} from "@/lib/api-client";
+import { fetchCandidateDashboard, fetchOwnProfile, fetchPublicJobs } from "@/lib/api-client";
+import { getJobEmployerLabel, hubListingChips } from "@/lib/job-display";
 import { addRecentJobSearch, loadRecentJobSearches } from "@/lib/recent-job-searches";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
-import type { ExternalJobListingPublic, Job } from "@/types/models";
-
-type FeedTab = "hub" | "external";
+import type { Job } from "@/types/models";
 
 function formatSalary(job: Job): string {
   const cur = job.salaryCurrency || "GBP";
@@ -38,9 +32,65 @@ function formatSalary(job: Job): string {
   return "";
 }
 
+const CHIP_CAP = 3;
+
+function ChipStrip({ chips }: { chips: string[] }) {
+  if (chips.length === 0) return null;
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.chipStripContent}
+      style={styles.chipStrip}
+    >
+      {chips.map((c) => (
+        <View key={c} style={styles.listChip}>
+          <Text style={styles.listChipText} numberOfLines={1}>
+            {c}
+          </Text>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+
+function HubJobCard({ job, onPress }: { job: Job; onPress: () => void }) {
+  const employer = getJobEmployerLabel(job);
+  const chips = hubListingChips(job, CHIP_CAP);
+  const metaLine = [job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || "";
+  const meta =
+    [metaLine, job.jobType].filter((x) => typeof x === "string" && x.length > 0).join(" · ") || "";
+
+  return (
+    <Pressable style={[styles.card, cardSurfaceStyle(false)]} onPress={onPress} accessibilityRole="button">
+      <View style={styles.cardTop}>
+        <Text style={styles.cardTitle} numberOfLines={2}>
+          {job.title}
+        </Text>
+        <View style={[styles.kindBadge, styles.kindBadgeHub]}>
+          <Text style={styles.kindBadgeText}>Hub</Text>
+        </View>
+      </View>
+      <Text style={styles.cardCompany} numberOfLines={1}>
+        {employer}
+      </Text>
+      {meta ? (
+        <Text style={styles.cardMeta} numberOfLines={1}>
+          {meta}
+        </Text>
+      ) : null}
+      <ChipStrip chips={chips} />
+      {formatSalary(job) ? <Text style={styles.cardSalary}>{formatSalary(job)}</Text> : null}
+      <View style={styles.cardFooter}>
+        <Text style={styles.cardCta}>View role</Text>
+        <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+      </View>
+    </Pressable>
+  );
+}
+
 export default function JobsScreen() {
   const router = useRouter();
-  const [feedTab, setFeedTab] = useState<FeedTab>("hub");
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
   const [recent, setRecent] = useState<string[]>([]);
@@ -89,23 +139,6 @@ export default function JobsScreen() {
     staleTime: 60_000,
   });
 
-  const extInfinite = useInfiniteQuery({
-    queryKey: ["external-job-listings", "public", debouncedQ],
-    enabled: feedTab === "external",
-    initialPageParam: 1,
-    staleTime: 120_000,
-    queryFn: ({ pageParam }) =>
-      fetchPublicExternalJobListings({
-        q: debouncedQ || undefined,
-        page: pageParam,
-        perPage: 25,
-      }),
-    getNextPageParam: (lastPage, allPages) => {
-      const loaded = allPages.reduce((acc, p) => acc + p.data.length, 0);
-      return loaded < lastPage.total ? allPages.length + 1 : undefined;
-    },
-  });
-
   const firstName =
     profileQuery.data && typeof (profileQuery.data as { firstName?: unknown }).firstName === "string"
       ? String((profileQuery.data as { firstName: string }).firstName)
@@ -127,29 +160,16 @@ export default function JobsScreen() {
   }, [dashQuery.data]);
 
   const hubJobs = hubJobsQuery.data?.data ?? [];
-  const externalRows = useMemo(
-    () => extInfinite.data?.pages.flatMap((p) => p.data) ?? [],
-    [extInfinite.data]
-  );
 
-  const activeData = feedTab === "hub" ? hubJobs : externalRows;
-
-  const listBootloading =
-    feedTab === "hub"
-      ? hubJobsQuery.isLoading && !hubJobsQuery.data
-      : extInfinite.isLoading && !extInfinite.data;
-
-  const activeError = feedTab === "hub" ? hubJobsQuery.isError : extInfinite.isError;
+  const listBootloading = hubJobsQuery.isLoading && !hubJobsQuery.data;
+  const activeError = hubJobsQuery.isError;
 
   const onRefresh = useCallback(() => {
     setPullRefreshing(true);
-    void Promise.all([
-      hubJobsQuery.refetch(),
-      extInfinite.refetch(),
-      dashQuery.refetch(),
-      profileQuery.refetch(),
-    ]).finally(() => setPullRefreshing(false));
-  }, [hubJobsQuery, extInfinite, dashQuery, profileQuery]);
+    void Promise.all([hubJobsQuery.refetch(), dashQuery.refetch(), profileQuery.refetch()]).finally(() =>
+      setPullRefreshing(false),
+    );
+  }, [hubJobsQuery, dashQuery, profileQuery]);
 
   const listHeader = (
     <>
@@ -164,84 +184,86 @@ export default function JobsScreen() {
         onDashboard={() => router.push("/dashboard")}
       />
 
-      <Pressable
-        style={[styles.alertsBanner, cardSurfaceStyle(true)]}
-        onPress={() => router.push("/alerts")}
-        accessibilityRole="button"
-        accessibilityLabel="Job alerts and saved searches"
-      >
-        <View style={styles.alertsRow}>
-          <View style={styles.alertsIconWrap}>
-            <Ionicons name="notifications" size={22} color={colors.brand} />
-          </View>
-          <View style={styles.alertsTextCol}>
-            <Text style={styles.alertsBannerTitle}>Job alerts & saved searches</Text>
-            <Text style={styles.alertsBannerSub}>Matches, email prefs, keyword alerts</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={22} color={colors.textMuted} accessibilityElementsHidden />
-        </View>
-      </Pressable>
-
-      <Pressable
-        style={[cardSurfaceStyle(true), styles.learnBanner]}
-        onPress={() => router.push("/guides")}
-        accessibilityRole="button"
-        accessibilityLabel="Guides hub"
-      >
-        <View style={styles.learnRow}>
-          <View style={styles.learnIconWrap}>
-            <Ionicons name="book-outline" size={22} color={colors.teal} />
-          </View>
-          <View style={styles.learnTextCol}>
-            <Text style={styles.learnBannerTitle}>Guides hub</Text>
-            <Text style={styles.learnBannerSub}>Country guides & relocation pillars — inside the app</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={22} color={colors.textMuted} accessibilityElementsHidden />
-        </View>
-      </Pressable>
-
-      <Pressable
-        style={[styles.visaBanner, cardSurfaceStyle(true)]}
-        onPress={() => router.push("/visa-wizard")}
-        accessibilityRole="button"
-        accessibilityLabel="Open visa wizard"
-      >
-        <View style={styles.visaRow}>
-          <View style={styles.visaIconWrap}>
-            <Ionicons name="sparkles" size={22} color={colors.brand} />
-          </View>
-          <View style={styles.visaTextCol}>
-            <Text style={styles.visaBannerTitle}>Visa wizard</Text>
-            <Text style={styles.visaBannerSub}>Plan sponsorship mobility — interactive tool in the app</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={22} color={colors.textMuted} accessibilityElementsHidden />
-        </View>
-      </Pressable>
-
-      <View style={styles.feedToggleOuter}>
-        <Text style={styles.feedToggleLabel}>Job feed</Text>
-        <View style={styles.feedToggle}>
+      <View style={styles.hubSection}>
+        <Text style={styles.hubSectionLabel}>Your hub</Text>
+        <View style={styles.shortcutGrid}>
           <Pressable
-            style={[styles.feedChip, feedTab === "hub" && styles.feedChipOn]}
-            onPress={() => setFeedTab("hub")}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: feedTab === "hub" }}
+            style={[styles.shortcutTile, cardSurfaceStyle(false)]}
+            onPress={() => router.push("/dashboard")}
+            accessibilityRole="button"
+            accessibilityLabel="Open dashboard"
           >
-            <Text style={[styles.feedChipText, feedTab === "hub" && styles.feedChipTextOn]}>Employer postings</Text>
+            <View style={styles.shortcutIconWrap}>
+              <Ionicons name="stats-chart-outline" size={22} color={colors.textMarketing} />
+            </View>
+            <Text style={styles.shortcutTitle}>Dashboard</Text>
+            <Text style={styles.shortcutSub}>Stats & trends</Text>
           </Pressable>
           <Pressable
-            style={[styles.feedChip, feedTab === "external" && styles.feedChipOn]}
-            onPress={() => setFeedTab("external")}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: feedTab === "external" }}
+            style={[styles.shortcutTile, cardSurfaceStyle(false)]}
+            onPress={() => router.push("/alerts")}
+            accessibilityRole="button"
+            accessibilityLabel="Job alerts"
           >
-            <Text style={[styles.feedChipText, feedTab === "external" && styles.feedChipTextOn]}>Curated external</Text>
+            <View style={styles.shortcutIconWrap}>
+              <Ionicons name="notifications-outline" size={22} color={colors.textMarketing} />
+            </View>
+            <Text style={styles.shortcutTitle}>Alerts</Text>
+            <Text style={styles.shortcutSub}>Saved searches</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.shortcutTile, cardSurfaceStyle(false)]}
+            onPress={() => router.push("/tools-resources")}
+            accessibilityRole="button"
+            accessibilityLabel="Tools and resources"
+          >
+            <View style={styles.shortcutIconWrap}>
+              <Ionicons name="library-outline" size={22} color={colors.textMarketing} />
+            </View>
+            <Text style={styles.shortcutTitle}>Tools & resources</Text>
+            <Text style={styles.shortcutSub}>Guides, blog, legal</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.shortcutTile, cardSurfaceStyle(false)]}
+            onPress={() => router.push("/ats-assistant")}
+            accessibilityRole="button"
+            accessibilityLabel="ATS assistant"
+          >
+            <View style={styles.shortcutIconWrap}>
+              <Ionicons name="document-text-outline" size={22} color={colors.textMarketing} />
+            </View>
+            <Text style={styles.shortcutTitle}>ATS assistant</Text>
+            <Text style={styles.shortcutSub}>CV vs job match</Text>
           </Pressable>
         </View>
-        <Text style={styles.feedHint}>
-          {feedTab === "hub"
-            ? "Roles employers publish directly on Global Sponsor Hub."
-            : "Partner-curated & aggregated listings — apply on the employer’s ATS."}
+        <View style={styles.quickLinksRow}>
+          <Pressable onPress={() => router.push("/guides")} accessibilityRole="link">
+            <Text style={styles.quickLink}>Guides hub</Text>
+          </Pressable>
+          <Text style={styles.quickDot}> · </Text>
+          <Pressable onPress={() => router.push("/visa-wizard")} accessibilityRole="link">
+            <Text style={styles.quickLink}>Visa wizard</Text>
+          </Pressable>
+        </View>
+      </View>
+
+      <Pressable
+        style={[styles.curatedRow, cardSurfaceStyle(false)]}
+        onPress={() => router.push("/curated-listings")}
+        accessibilityRole="button"
+        accessibilityLabel="Open curated listings on a separate screen"
+      >
+        <View style={styles.curatedRowText}>
+          <Text style={styles.curatedRowTitle}>Curated listings</Text>
+          <Text style={styles.curatedRowSub}>Agency campaigns, partner-curated and wider-web — not mixed with employer posts below</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+      </Pressable>
+
+      <View style={styles.feedIntroOuter}>
+        <Text style={styles.feedIntroLabel}>Employer listings</Text>
+        <Text style={styles.feedIntroHint}>
+          Companies posting their own roles on Global Sponsor Hub. Recruitment agencies list separately under Curated above.
         </Text>
       </View>
 
@@ -250,17 +272,13 @@ export default function JobsScreen() {
           <Ionicons name="search" size={20} color={colors.placeholder} style={styles.searchIcon} />
           <TextInput
             style={styles.search}
-            placeholder={
-              feedTab === "hub"
-                ? "Search employer-posted roles…"
-                : "Search curated listings (title, company, location…)"
-            }
+            placeholder="Search employer-posted roles…"
             placeholderTextColor={colors.placeholder}
             value={q}
             onChangeText={setQ}
             autoCapitalize="none"
             autoCorrect={false}
-            accessibilityLabel="Search jobs"
+            accessibilityLabel="Search employer job listings"
             returnKeyType="search"
           />
           {q.length > 0 ? (
@@ -296,141 +314,51 @@ export default function JobsScreen() {
   const emptyBody = listBootloading ? (
     <View style={styles.emptyWrap}>
       <ActivityIndicator size="large" color={colors.brand} />
-      <Text style={styles.loadingHint}>{feedTab === "hub" ? "Finding employer roles…" : "Loading curated listings…"}</Text>
+      <Text style={styles.loadingHint}>Loading employer listings…</Text>
     </View>
   ) : activeError ? (
     <View style={styles.emptyWrap}>
       <Ionicons name="cloud-offline-outline" size={44} color={colors.textMuted} />
-      <Text style={styles.errTitle}>Could not load {feedTab === "hub" ? "jobs" : "curated listings"}</Text>
+      <Text style={styles.errTitle}>Could not load listings</Text>
       <Text style={styles.errSub}>Check your connection and pull down to retry.</Text>
-      <Pressable
-        style={styles.retryBtn}
-        onPress={() => void (feedTab === "hub" ? hubJobsQuery.refetch() : extInfinite.refetch())}
-        accessibilityRole="button"
-      >
+      <Pressable style={styles.retryBtn} onPress={() => void hubJobsQuery.refetch()} accessibilityRole="button">
         <Text style={styles.retryBtnText}>Try again</Text>
       </Pressable>
     </View>
-  ) : activeData.length === 0 ? (
+  ) : hubJobs.length === 0 ? (
     <View style={styles.emptyWrap}>
       <Ionicons name="search-outline" size={44} color={colors.borderStrong} />
       <Text style={styles.empty}>
-        {feedTab === "hub"
-          ? debouncedQ
-            ? "No employer-posted roles match that search yet — try another keyword."
-            : "No employer-posted roles right now. Pull to refresh or try curated external."
-          : debouncedQ
-            ? "No curated listings match that search — clear keywords or try employer postings."
-            : "No curated listings available yet. Pull to refresh."}
+        {debouncedQ
+          ? "No employer listings match that search — try another keyword."
+          : "No employer listings right now. Pull to refresh."}
       </Text>
       {debouncedQ ? (
         <Pressable style={styles.retryBtn} onPress={() => setQ("")} accessibilityRole="button">
           <Text style={styles.retryBtnText}>Clear search</Text>
         </Pressable>
-      ) : feedTab === "hub" ? (
-        <Pressable style={styles.secondaryCta} onPress={() => setFeedTab("external")} accessibilityRole="button">
-          <Text style={styles.secondaryCtaText}>Browse curated external →</Text>
-        </Pressable>
       ) : (
-        <Pressable style={styles.secondaryCta} onPress={() => setFeedTab("hub")} accessibilityRole="button">
-          <Text style={styles.secondaryCtaText}>Browse employer postings →</Text>
+        <Pressable style={styles.secondaryCta} onPress={() => router.push("/curated-listings")} accessibilityRole="button">
+          <Text style={styles.secondaryCtaText}>Browse curated listings (separate) →</Text>
         </Pressable>
       )}
     </View>
   ) : null;
 
-  const externalListFooter =
-    feedTab === "external" && extInfinite.hasNextPage ? (
-      <View style={styles.extLoadMore}>
-        {extInfinite.isFetchingNextPage ? (
-          <ActivityIndicator size="small" color={colors.brand} accessibilityLabel="Loading more listings" />
-        ) : null}
-      </View>
-    ) : null;
-
-  const onExternalEndReached = useCallback(() => {
-    if (feedTab !== "external") return;
-    if (extInfinite.hasNextPage && !extInfinite.isFetchingNextPage) {
-      void extInfinite.fetchNextPage();
-    }
-  }, [feedTab, extInfinite]);
-
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <FlatList
-          data={activeError ? [] : activeData}
-          keyExtractor={(item) => `${feedTab === "hub" ? "h" : "e"}-${item._id}`}
+          data={activeError ? [] : hubJobs}
+          keyExtractor={(item) => item._id}
           ListHeaderComponent={listHeader}
-          ListFooterComponent={externalListFooter}
           ListEmptyComponent={emptyBody}
           refreshControl={<RefreshControl refreshing={pullRefreshing} onRefresh={onRefresh} />}
-          contentContainerStyle={[styles.listPad, activeData.length === 0 && !listBootloading && styles.listPadGrow]}
+          contentContainerStyle={[styles.listPad, hubJobs.length === 0 && !listBootloading && styles.listPadGrow]}
           keyboardShouldPersistTaps="handled"
-          onEndReached={onExternalEndReached}
-          onEndReachedThreshold={0.35}
-          renderItem={({ item }) =>
-            feedTab === "hub" ? (
-              <Pressable
-                style={[styles.card, cardSurfaceStyle(true)]}
-                onPress={() => router.push(`/job/${(item as Job)._id}`)}
-                accessibilityRole="button"
-              >
-                <View style={styles.cardTop}>
-                  <Text style={styles.cardTitle} numberOfLines={2}>
-                    {(item as Job).title}
-                  </Text>
-                  <View style={[styles.kindBadge, styles.kindBadgeHub]}>
-                    <Text style={styles.kindBadgeText}>Hub</Text>
-                  </View>
-                </View>
-                <Text style={styles.cardCompany} numberOfLines={1}>
-                  {(item as Job).companyName || "Employer"}
-                </Text>
-                <Text style={styles.cardMeta} numberOfLines={1}>
-                  {[(item as Job).locationCity, (item as Job).locationCountry].filter(Boolean).join(", ") ||
-                    (item as Job).location ||
-                    ""}
-                  {(item as Job).jobType ? ` · ${(item as Job).jobType}` : ""}
-                </Text>
-                {formatSalary(item as Job) ? (
-                  <Text style={styles.cardSalary}>{formatSalary(item as Job)}</Text>
-                ) : null}
-                <View style={styles.cardFooter}>
-                  <Text style={styles.cardCta}>View role</Text>
-                  <Ionicons name="arrow-forward-circle" size={22} color={colors.teal} />
-                </View>
-              </Pressable>
-            ) : (
-              <Pressable
-                style={[styles.card, cardSurfaceStyle(true)]}
-                onPress={() => router.push(`/external-job/${(item as ExternalJobListingPublic)._id}`)}
-                accessibilityRole="button"
-              >
-                <View style={styles.cardTop}>
-                  <Text style={styles.cardTitle} numberOfLines={2}>
-                    {(item as ExternalJobListingPublic).title}
-                  </Text>
-                  <View style={[styles.kindBadge, styles.kindBadgeExt]}>
-                    <Text style={[styles.kindBadgeText, styles.kindBadgeTextExt]}>Curated</Text>
-                  </View>
-                </View>
-                <Text style={styles.cardCompany} numberOfLines={1}>
-                  {(item as ExternalJobListingPublic).companyName}
-                </Text>
-                <Text style={styles.cardMeta} numberOfLines={2}>
-                  {[(item as ExternalJobListingPublic).location, (item as ExternalJobListingPublic).country]
-                    .filter(Boolean)
-                    .join(" · ")}
-                  {(item as ExternalJobListingPublic).sponsorshipAvailable ? " · Sponsorship noted" : ""}
-                </Text>
-                <View style={styles.cardFooter}>
-                  <Text style={styles.cardCta}>Details & apply</Text>
-                  <Ionicons name="open-outline" size={22} color={colors.teal} />
-                </View>
-              </Pressable>
-            )
-          }
+          renderItem={({ item }) => (
+            <HubJobCard job={item as Job} onPress={() => router.push(`/job/${(item as Job)._id}`)} />
+          )}
         />
       </SafeAreaView>
     </GshScreenBackground>
@@ -439,109 +367,71 @@ export default function JobsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  alertsBanner: {
-    marginHorizontal: 16,
-    marginTop: 10,
+  hubSection: { marginHorizontal: 16, marginTop: 12 },
+  hubSectionLabel: {
+    fontSize: 11,
+    fontFamily: fontFamily.medium,
+    color: colors.textMuted,
+    letterSpacing: 0.4,
+    marginBottom: 12,
+  },
+  shortcutGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+  shortcutTile: {
+    flexBasis: "47%",
+    flexGrow: 1,
+    maxWidth: "48%",
     paddingVertical: 14,
     paddingHorizontal: 14,
+    borderRadius: radii.lg,
+    alignItems: "flex-start",
   },
-  alertsRow: { flexDirection: "row", alignItems: "center", gap: 12 },
-  alertsIconWrap: {
-    width: 44,
-    height: 44,
+  shortcutIconWrap: {
+    width: 36,
+    height: 36,
     borderRadius: radii.sm,
-    backgroundColor: colors.purpleMuted,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: colors.purpleBorder,
+    marginBottom: 10,
+    backgroundColor: colors.surfaceMuted,
   },
-  alertsTextCol: { flex: 1 },
-  alertsBannerTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.purpleTextDark },
-  alertsBannerSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.purpleText, lineHeight: 18 },
-  learnBanner: {
+  shortcutTitle: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textPrimary, letterSpacing: -0.2 },
+  shortcutSub: { marginTop: 3, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 16 },
+  quickLinksRow: {
+    marginTop: 14,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+  },
+  quickLink: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary },
+  quickDot: { fontSize: 13, color: colors.borderStrong },
+  curatedRow: {
     marginHorizontal: 16,
-    marginTop: 10,
-    paddingVertical: 12,
+    marginTop: 12,
+    paddingVertical: 14,
     paddingHorizontal: 14,
-    borderWidth: 1,
-    borderColor: "rgba(14, 205, 209, 0.28)",
-  },
-  learnRow: { flexDirection: "row", alignItems: "center", gap: 12 },
-  learnIconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: radii.sm,
-    backgroundColor: "rgba(14, 205, 209, 0.12)",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(14, 205, 209, 0.35)",
+    gap: 12,
+    borderRadius: radii.lg,
   },
-  learnTextCol: { flex: 1 },
-  learnBannerTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.textPrimary },
-  learnBannerSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 18 },
-  visaBanner: {
-    marginHorizontal: 16,
-    marginTop: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    borderWidth: 1,
-    borderColor: colors.purpleBorder,
-  },
-  visaRow: { flexDirection: "row", alignItems: "center", gap: 12 },
-  visaIconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: radii.sm,
-    backgroundColor: colors.purpleMuted,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: colors.purpleBorder,
-  },
-  visaTextCol: { flex: 1 },
-  visaBannerTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.purpleTextDark },
-  visaBannerSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.purpleText, lineHeight: 18 },
-  feedToggleOuter: { paddingHorizontal: 16, marginTop: 14, marginBottom: 4 },
-  feedToggleLabel: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
+  curatedRowText: { flex: 1 },
+  curatedRowTitle: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
+  curatedRowSub: { marginTop: 4, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 17 },
+  feedIntroOuter: { paddingHorizontal: 16, marginTop: 16, marginBottom: 4 },
+  feedIntroLabel: {
+    fontSize: 11,
+    fontFamily: fontFamily.medium,
     color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.75,
-    marginBottom: 8,
+    letterSpacing: 0.35,
+    marginBottom: 6,
   },
-  feedToggle: { flexDirection: "row", gap: 10 },
-  feedChip: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
-    alignItems: "center",
-  },
-  feedChipOn: {
-    borderColor: colors.brand,
-    backgroundColor: colors.purpleMuted,
-  },
-  feedChipText: {
-    fontSize: 13,
-    fontFamily: fontFamily.semiBold,
-    color: colors.textMuted,
-    textAlign: "center",
-  },
-  feedChipTextOn: {
-    color: colors.purpleTextDark,
-  },
-  feedHint: {
-    marginTop: 10,
+  feedIntroHint: {
     fontSize: 13,
     fontFamily: fontFamily.regular,
     color: colors.textMuted,
-    lineHeight: 18,
+    lineHeight: 19,
   },
   searchOuter: { paddingHorizontal: 16, paddingVertical: 12 },
   searchWrap: {
@@ -563,35 +453,35 @@ const styles = StyleSheet.create({
   },
   recentOuter: { paddingHorizontal: 16, marginBottom: 8 },
   recentLabel: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
+    fontSize: 11,
+    fontFamily: fontFamily.medium,
     color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.7,
+    letterSpacing: 0.35,
     marginBottom: 8,
   },
   recentScroll: { flexDirection: "row", gap: 8, paddingBottom: 4 },
   recentChip: {
     maxWidth: 220,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingVertical: 7,
+    paddingHorizontal: 12,
     borderRadius: radii.pill,
-    backgroundColor: colors.purpleMuted,
+    backgroundColor: colors.surfaceMuted,
     borderWidth: 1,
-    borderColor: colors.purpleBorder,
+    borderColor: colors.border,
   },
-  recentChipText: { fontSize: 14, fontFamily: fontFamily.medium, color: colors.purpleTextDark },
-  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 12 },
+  recentChipText: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary },
+  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 10 },
   listPadGrow: { flexGrow: 1 },
   card: {
-    padding: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
   },
   cardTop: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
-  cardTitle: { flex: 1, fontSize: 17, fontFamily: fontFamily.bold, color: colors.textPrimary, letterSpacing: -0.2 },
+  cardTitle: { flex: 1, fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.textPrimary, letterSpacing: -0.25 },
   kindBadge: {
     paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
     borderWidth: 1,
     alignSelf: "flex-start",
   },
@@ -599,26 +489,45 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceMuted,
     borderColor: colors.border,
   },
-  kindBadgeExt: {
-    backgroundColor: "rgba(14, 205, 209, 0.12)",
-    borderColor: "rgba(14, 205, 209, 0.4)",
+  kindBadgeText: { fontSize: 10, fontFamily: fontFamily.medium, color: colors.textMuted },
+  cardCompany: { marginTop: 10, fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
+  cardMeta: { marginTop: 3, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
+  chipStrip: {
+    marginTop: 10,
+    marginHorizontal: -2,
+    maxHeight: 28,
   },
-  kindBadgeText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.textMuted },
-  kindBadgeTextExt: { color: colors.textMarketing },
-  cardCompany: { marginTop: 8, fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textMarketing },
-  cardMeta: { marginTop: 4, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted },
+  chipStripContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingRight: 8,
+  },
+  listChip: {
+    paddingVertical: 4,
+    paddingHorizontal: 9,
+    borderRadius: radii.pill,
+    backgroundColor: colors.background,
+    borderWidth: 1,
+    borderColor: colors.border,
+    flexShrink: 0,
+  },
+  listChipText: {
+    fontSize: 11,
+    fontFamily: fontFamily.medium,
+    color: colors.textSecondary,
+    letterSpacing: 0.1,
+  },
   cardSalary: { marginTop: 10, fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.teal },
   cardFooter: {
-    marginTop: 14,
+    marginTop: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
-    gap: 6,
-    borderTopWidth: 1,
-    borderTopColor: colors.surfaceMuted,
-    paddingTop: 12,
+    gap: 4,
+    paddingTop: 10,
   },
-  cardCta: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.brand },
+  cardCta: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary },
   emptyWrap: { alignItems: "center", paddingHorizontal: 24, paddingVertical: 32, gap: 12 },
   loadingHint: { fontFamily: fontFamily.medium, fontSize: 15, color: colors.textMuted },
   errTitle: { fontFamily: fontFamily.semiBold, fontSize: 17, color: colors.textPrimary },
@@ -640,5 +549,4 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.regular,
     lineHeight: 22,
   },
-  extLoadMore: { paddingVertical: 20, alignItems: "center", justifyContent: "center" },
 });

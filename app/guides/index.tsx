@@ -97,7 +97,7 @@ export default function GuidesHubScreen() {
           <Text style={styles.section}>More learning</Text>
           <Pressable
             style={[styles.rowMuted, cardSurfaceStyle(true)]}
-            onPress={() => router.push("/learn")}
+            onPress={() => router.push("/tools-resources")}
             accessibilityRole="button"
           >
             <Ionicons name="library-outline" size={22} color={colors.textMuted} />

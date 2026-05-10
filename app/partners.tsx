@@ -43,7 +43,10 @@ export default function PartnersScreen() {
     <View style={styles.headWrap}>
       <Text style={styles.eyebrow}>Directory</Text>
       <Text style={styles.screenTitle}>Partner firms</Text>
-      <Text style={styles.lead}>Relocation, legal, and services — search to narrow the list.</Text>
+      <Text style={styles.lead}>
+        This directory lists partner firms you can contact for relocation and legal help. Your employer partner portal (job posts,
+        applicants, billing) lives on the web — not in this candidate app.
+      </Text>
       <View style={[cardSurfaceStyle(false), styles.searchInner]}>
         <TextInput
           style={styles.search}

@@ -1,12 +1,12 @@
 import { ActivityIndicator, Image, StyleSheet, Text } from "react-native";
-import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
+import Animated, { FadeIn, FadeInDown, ZoomIn } from "react-native-reanimated";
 import { colors, fontFamily } from "@/lib/theme";
 
 /** Matches native splash: hub mark on white (see app.json splash). */
 export function BrandedSplash() {
   return (
     <Animated.View entering={FadeIn.duration(420)} style={styles.root}>
-      <Animated.View entering={FadeInDown.duration(520).delay(60)}>
+      <Animated.View entering={ZoomIn.duration(520).delay(40)}>
         <Image
           source={require("../assets/brand-mark.webp")}
           style={styles.mark}

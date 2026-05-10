@@ -18,10 +18,10 @@ const LEARN_FIRST: RowDef[] = [
     icon: "compass-outline",
   },
   {
-    title: "More links & website extras",
-    subtitle: "Blog, FAQs, contact — via Guides & resources",
-    href: "/learn",
-    icon: "open-outline",
+    title: "Tools & resources",
+    subtitle: "ATS, career toolkit, blog, FAQs, legal — one hub",
+    href: "/tools-resources",
+    icon: "layers-outline",
   },
 ];
 
