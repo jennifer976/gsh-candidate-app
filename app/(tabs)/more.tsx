@@ -63,7 +63,7 @@ export default function MoreScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <Text style={styles.h1}>More</Text>
-          <Text style={styles.lead}>Jobs, partners, and tooling — plus the same guides and blog as on the website.</Text>
+          <Text style={styles.lead}>Home feed, partners, and tooling — plus the same guides and blog as on the website.</Text>
 
           <Text style={styles.section}>Learn & support</Text>
           {LEARN_FIRST.map((item) => (

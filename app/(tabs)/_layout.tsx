@@ -47,9 +47,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Jobs",
+          title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <TabGlyph focused={focused} color={color} filled="briefcase" outline="briefcase-outline" />
+            <TabGlyph focused={focused} color={color} filled="home" outline="home-outline" />
           ),
         }}
       />

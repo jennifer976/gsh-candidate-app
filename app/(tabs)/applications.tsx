@@ -95,7 +95,7 @@ export default function ApplicationsScreen() {
               <View style={styles.emptyWrap}>
                 <Ionicons name="document-text-outline" size={48} color={colors.borderStrong} />
                 <Text style={styles.empty}>No applications yet</Text>
-                <Text style={styles.emptySub}>Browse roles under Jobs and tap Apply when you are ready.</Text>
+                <Text style={styles.emptySub}>Browse roles from Home and tap Apply when you are ready.</Text>
               </View>
             }
           />

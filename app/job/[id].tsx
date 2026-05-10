@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -53,7 +54,9 @@ export default function JobDetailScreen() {
   const saveMut = useMutation({
     mutationFn: () => saveJob(jobId),
     onSuccess: () => {
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       void qc.invalidateQueries({ queryKey: ["saved-jobs"] });
+      void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
       Alert.alert("Saved", "Job saved to your list.");
     },
     onError: (e: unknown) => {
@@ -66,7 +69,9 @@ export default function JobDetailScreen() {
   const applyMut = useMutation({
     mutationFn: () => applyToJob(jobId, coverLetter.trim() || undefined, resumeUrl || undefined),
     onSuccess: () => {
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       void qc.invalidateQueries({ queryKey: ["applications"] });
+      void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
       Alert.alert("Application sent", "The employer will see your profile and CV for this role.", [
         { text: "OK", onPress: () => router.back() },
       ]);

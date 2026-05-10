@@ -82,7 +82,7 @@ export default function SavedJobsScreen() {
               <View style={styles.emptyWrap}>
                 <Ionicons name="bookmark-outline" size={48} color={colors.borderStrong} />
                 <Text style={styles.empty}>No saved jobs yet.</Text>
-                <Text style={styles.emptySub}>Browse the Jobs tab and save roles you like.</Text>
+                <Text style={styles.emptySub}>Browse the Home tab and save roles you like.</Text>
               </View>
             }
           />
