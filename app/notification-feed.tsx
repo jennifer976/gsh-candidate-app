@@ -19,6 +19,7 @@ import {
   markAppNotificationRead,
 } from "@/lib/api-client";
 import { getMarketingSiteUrl } from "@/lib/config";
+import { colors } from "@/lib/theme";
 import type { AppNotificationDto } from "@/types/models";
 
 function openNotificationLink(href: string | undefined, router: ReturnType<typeof useRouter>) {
@@ -122,7 +123,7 @@ export default function NotificationFeedScreen() {
 
       {baseQuery.isLoading ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#4f46e5" />
+          <ActivityIndicator size="large" color={colors.brand} />
         </View>
       ) : (
         <FlatList
@@ -167,38 +168,38 @@ export default function NotificationFeedScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   filters: { flexDirection: "row", alignItems: "center", paddingHorizontal: 12, paddingVertical: 10, gap: 8 },
   chip: {
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  chipOn: { backgroundColor: "#4f46e5", borderColor: "#4f46e5" },
-  chipText: { fontSize: 14, fontWeight: "600", color: "#475569" },
-  chipTextOn: { color: "#fff" },
+  chipOn: { backgroundColor: colors.chipOnBg, borderColor: colors.chipOnBorder },
+  chipText: { fontSize: 14, fontWeight: "600", color: colors.textSecondary },
+  chipTextOn: { color: colors.white },
   markAll: { marginLeft: "auto" },
-  markAllText: { color: "#4f46e5", fontWeight: "700", fontSize: 14 },
+  markAllText: { color: colors.brand, fontWeight: "700", fontSize: 14 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   listPad: { paddingHorizontal: 16, paddingBottom: 32 },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     padding: 14,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  unread: { borderColor: "#a5b4fc", backgroundColor: "#eef2ff" },
-  title: { fontSize: 16, fontWeight: "700", color: "#0f172a" },
-  body: { marginTop: 6, fontSize: 14, color: "#475569", lineHeight: 20 },
-  date: { marginTop: 8, fontSize: 12, color: "#94a3b8" },
+  unread: { borderColor: colors.unreadBorder, backgroundColor: colors.unreadBg },
+  title: { fontSize: 16, fontWeight: "700", color: colors.textPrimary },
+  body: { marginTop: 6, fontSize: 14, color: colors.textSecondary, lineHeight: 20 },
+  date: { marginTop: 8, fontSize: 12, color: colors.placeholder },
   dismiss: { alignSelf: "flex-end", marginTop: 8 },
-  dismissText: { fontSize: 13, color: "#b91c1c", fontWeight: "600" },
-  empty: { textAlign: "center", color: "#64748b", marginTop: 40 },
+  dismissText: { fontSize: 13, color: colors.error, fontWeight: "600" },
+  empty: { textAlign: "center", color: colors.textMuted, marginTop: 40 },
   loadMore: { alignItems: "center", paddingVertical: 16 },
-  loadMoreText: { color: "#4f46e5", fontWeight: "700", fontSize: 15 },
+  loadMoreText: { color: colors.brand, fontWeight: "700", fontSize: 15 },
 });

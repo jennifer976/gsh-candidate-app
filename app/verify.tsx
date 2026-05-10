@@ -1,19 +1,11 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { verifyOtpRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
+import { colors } from "@/lib/theme";
 
 export default function VerifyScreen() {
   const router = useRouter();
@@ -52,43 +44,32 @@ export default function VerifyScreen() {
           style={styles.input}
           autoCapitalize="characters"
           placeholder="123456"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={code}
           onChangeText={setCode}
         />
 
-        <Pressable style={[styles.primaryBtn, loading && styles.primaryBtnDisabled]} onPress={onSubmit} disabled={loading}>
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryBtnText}>Verify & continue</Text>}
-        </Pressable>
+        <GshGradientPrimaryButton title="Verify & continue" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   flex: { flex: 1, paddingHorizontal: 24, paddingTop: 16 },
-  lead: { fontSize: 15, color: "#475569", marginBottom: 20, lineHeight: 22 },
-  label: { fontSize: 13, fontWeight: "600", color: "#475569", marginBottom: 8 },
+  lead: { fontSize: 15, color: colors.textSecondary, marginBottom: 20, lineHeight: 22 },
+  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 18,
     letterSpacing: 2,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     marginBottom: 16,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
-  primaryBtn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  primaryBtnDisabled: { opacity: 0.7 },
-  primaryBtnText: { color: "#fff", fontSize: 17, fontWeight: "600" },
 });

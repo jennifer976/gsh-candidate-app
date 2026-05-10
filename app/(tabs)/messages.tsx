@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchConversations } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 import type { ConversationSummary } from "@/types/models";
 
 function formatWhen(iso: string) {
@@ -69,30 +70,30 @@ export default function MessagesScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   lead: {
     paddingHorizontal: 16,
     paddingTop: 8,
     paddingBottom: 12,
     fontSize: 14,
-    color: "#64748b",
+    color: colors.textMuted,
     lineHeight: 20,
   },
   listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 10 },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
   rowTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 },
-  counterparty: { flex: 1, fontSize: 16, fontWeight: "700", color: "#0f172a" },
-  when: { fontSize: 12, color: "#94a3b8" },
-  jobTitle: { marginTop: 6, fontSize: 14, fontWeight: "600", color: "#4f46e5" },
-  preview: { marginTop: 6, fontSize: 14, color: "#64748b", lineHeight: 20 },
+  counterparty: { flex: 1, fontSize: 16, fontWeight: "700", color: colors.textPrimary },
+  when: { fontSize: 12, color: colors.placeholder },
+  jobTitle: { marginTop: 6, fontSize: 14, fontWeight: "600", color: colors.brand },
+  preview: { marginTop: 6, fontSize: 14, color: colors.textMuted, lineHeight: 20 },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
-  muted: { color: "#64748b", fontSize: 15 },
-  err: { color: "#b91c1c", textAlign: "center" },
-  empty: { textAlign: "center", color: "#64748b", marginTop: 40, paddingHorizontal: 24, fontSize: 15, lineHeight: 22 },
+  muted: { color: colors.textMuted, fontSize: 15 },
+  err: { color: colors.error, textAlign: "center" },
+  empty: { textAlign: "center", color: colors.textMuted, marginTop: 40, paddingHorizontal: 24, fontSize: 15, lineHeight: 22 },
 });

@@ -1,19 +1,11 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { loginRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
+import { colors } from "@/lib/theme";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -64,7 +56,7 @@ export default function LoginScreen() {
           autoCorrect={false}
           keyboardType="email-address"
           placeholder="you@example.com"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={email}
           onChangeText={setEmail}
         />
@@ -74,14 +66,12 @@ export default function LoginScreen() {
           style={styles.input}
           secureTextEntry
           placeholder="••••••••"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={password}
           onChangeText={setPassword}
         />
 
-        <Pressable style={[styles.primaryBtn, loading && styles.primaryBtnDisabled]} onPress={onSubmit} disabled={loading}>
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryBtnText}>Sign in</Text>}
-        </Pressable>
+        <GshGradientPrimaryButton title="Sign in" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
 
         <Pressable style={[styles.linkWrap, styles.linkWrapTight]} onPress={() => router.push("/forgot-password")}>
           <Text style={styles.linkMuted}>Forgot password?</Text>
@@ -96,34 +86,25 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   flex: { flex: 1, paddingHorizontal: 24, paddingTop: 16 },
   header: { marginBottom: 28 },
-  title: { fontSize: 26, fontWeight: "700", color: "#0f172a" },
-  subtitle: { marginTop: 6, fontSize: 16, color: "#64748b", fontWeight: "500" },
-  label: { fontSize: 13, fontWeight: "600", color: "#475569", marginBottom: 8 },
+  title: { fontSize: 26, fontWeight: "700", color: colors.textPrimary },
+  subtitle: { marginTop: 6, fontSize: 16, color: colors.textMuted, fontWeight: "500" },
+  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     marginBottom: 16,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
-  primaryBtn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  primaryBtnDisabled: { opacity: 0.7 },
-  primaryBtnText: { color: "#fff", fontSize: 17, fontWeight: "600" },
   linkWrap: { marginTop: 24, alignItems: "center" },
   linkWrapTight: { marginTop: 14 },
-  link: { color: "#4f46e5", fontSize: 15, fontWeight: "500" },
-  linkMuted: { color: "#64748b", fontSize: 15, fontWeight: "500" },
+  link: { color: colors.brand, fontSize: 15, fontWeight: "500" },
+  linkMuted: { color: colors.textMuted, fontSize: 15, fontWeight: "500" },
 });

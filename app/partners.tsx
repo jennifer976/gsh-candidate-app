@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchPartners } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 import type { PartnerListItem } from "@/types/models";
 
 export default function PartnersScreen() {
@@ -42,14 +43,14 @@ export default function PartnersScreen() {
         <TextInput
           style={styles.search}
           placeholder="Search partners, categories…"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={q}
           onChangeText={setQ}
         />
       </View>
       {query.isLoading ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#4f46e5" />
+          <ActivityIndicator size="large" color={colors.brand} />
         </View>
       ) : (
         <FlatList
@@ -81,31 +82,31 @@ export default function PartnersScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   searchWrap: { paddingHorizontal: 16, paddingVertical: 12 },
   search: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   listPad: { paddingHorizontal: 16, paddingBottom: 32 },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  title: { fontSize: 17, fontWeight: "700", color: "#0f172a" },
-  cat: { marginTop: 6, fontSize: 13, fontWeight: "600", color: "#4f46e5" },
-  desc: { marginTop: 8, fontSize: 14, color: "#475569", lineHeight: 20 },
-  link: { marginTop: 10, fontSize: 15, fontWeight: "700", color: "#2563eb" },
-  empty: { textAlign: "center", color: "#64748b", marginTop: 40 },
+  title: { fontSize: 17, fontWeight: "700", color: colors.textPrimary },
+  cat: { marginTop: 6, fontSize: 13, fontWeight: "600", color: colors.accent },
+  desc: { marginTop: 8, fontSize: 14, color: colors.textSecondary, lineHeight: 20 },
+  link: { marginTop: 10, fontSize: 15, fontWeight: "700", color: colors.brand },
+  empty: { textAlign: "center", color: colors.textMuted, marginTop: 40 },
 });

@@ -15,7 +15,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.globalsponsorhub.candidate"
+      "bundleIdentifier": "com.globalsponsorhub.candidate",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.globalsponsorhub.candidate",
@@ -36,7 +39,7 @@
         "expo-notifications",
         {
           "icon": "./assets/icon.png",
-          "color": "#4f46e5",
+          "color": "#610a90",
           "defaultChannel": "default"
         }
       ]

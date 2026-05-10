@@ -1,6 +1,7 @@
 import { Redirect, Tabs } from "expo-router";
 import { Text } from "react-native";
 import { useAuthStore } from "@/lib/auth-store";
+import { colors, navHeader } from "@/lib/theme";
 
 export default function TabsLayout() {
   const token = useAuthStore((s) => s.token);
@@ -9,12 +10,10 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: "#f8fafc" },
-        headerTintColor: "#0f172a",
-        headerShadowVisible: false,
-        tabBarActiveTintColor: "#4f46e5",
-        tabBarInactiveTintColor: "#64748b",
-        tabBarStyle: { backgroundColor: "#fff", borderTopColor: "#e2e8f0" },
+        ...navHeader,
+        tabBarActiveTintColor: colors.brand,
+        tabBarInactiveTintColor: colors.textMuted,
+        tabBarStyle: { backgroundColor: colors.background, borderTopColor: colors.border },
       }}
     >
       <Tabs.Screen

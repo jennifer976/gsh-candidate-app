@@ -16,6 +16,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { fetchThreadMessages, sendThreadMessage } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
+import { colors } from "@/lib/theme";
 import { authUserId, type ThreadMessage } from "@/types/models";
 
 export default function ConversationScreen() {
@@ -75,7 +76,7 @@ export default function ConversationScreen() {
     >
       {threadQuery.isLoading ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#4f46e5" />
+          <ActivityIndicator size="large" color={colors.brand} />
         </View>
       ) : threadQuery.isError ? (
         <View style={styles.center}>
@@ -97,7 +98,7 @@ export default function ConversationScreen() {
             <TextInput
               style={styles.input}
               placeholder="Write a message…"
-              placeholderTextColor="#94a3b8"
+              placeholderTextColor={colors.placeholder}
               value={draft}
               onChangeText={setDraft}
               multiline
@@ -118,23 +119,23 @@ export default function ConversationScreen() {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: "#f8fafc" },
+  flex: { flex: 1, backgroundColor: colors.surfaceMuted },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
-  err: { color: "#b91c1c", marginBottom: 12 },
-  link: { color: "#4f46e5", fontWeight: "600" },
+  err: { color: colors.error, marginBottom: 12 },
+  link: { color: colors.brand, fontWeight: "600" },
   threadPad: { paddingHorizontal: 12, paddingVertical: 12 },
   bubbleWrap: { marginBottom: 8, maxWidth: "100%" },
   bubbleWrapMe: { alignSelf: "flex-end" },
   bubbleWrapThem: { alignSelf: "flex-start" },
   bubble: { maxWidth: "92%", borderRadius: 14, paddingHorizontal: 12, paddingVertical: 8 },
-  bubbleMe: { backgroundColor: "#4f46e5" },
-  bubbleThem: { backgroundColor: "#e2e8f0" },
+  bubbleMe: { backgroundColor: colors.brand },
+  bubbleThem: { backgroundColor: colors.border },
   bubbleText: { fontSize: 16, lineHeight: 22 },
-  bubbleTextMe: { color: "#fff" },
-  bubbleTextThem: { color: "#0f172a" },
+  bubbleTextMe: { color: colors.white },
+  bubbleTextThem: { color: colors.textPrimary },
   time: { marginTop: 4, fontSize: 11, alignSelf: "flex-end" },
   timeMe: { color: "rgba(255,255,255,0.75)" },
-  timeThem: { color: "#64748b" },
+  timeThem: { color: colors.textMuted },
   composer: {
     flexDirection: "row",
     alignItems: "flex-end",
@@ -142,22 +143,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: "#e2e8f0",
-    backgroundColor: "#fff",
+    borderTopColor: colors.border,
+    backgroundColor: colors.background,
   },
   input: {
     flex: 1,
     minHeight: 44,
     maxHeight: 120,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
-  sendBtn: { backgroundColor: "#4f46e5", borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12 },
+  sendBtn: { backgroundColor: colors.brand, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12 },
   sendDisabled: { opacity: 0.5 },
-  sendText: { color: "#fff", fontWeight: "700", fontSize: 15 },
+  sendText: { color: colors.white, fontWeight: "700", fontSize: 15 },
 });

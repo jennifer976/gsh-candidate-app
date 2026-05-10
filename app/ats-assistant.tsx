@@ -1,19 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { atsAnalyze, atsParseProfile } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 
 export default function AtsAssistantScreen() {
   const [cvText, setCvText] = useState("");
@@ -77,9 +68,7 @@ export default function AtsAssistantScreen() {
             placeholder="Paste CV text…"
             textAlignVertical="top"
           />
-          <Pressable style={[styles.btn, parseMut.isPending && styles.disabled]} onPress={() => parseMut.mutate()} disabled={parseMut.isPending}>
-            {parseMut.isPending ? <ActivityIndicator color="#fff" /> : <Text style={styles.btnText}>1. Parse CV</Text>}
-          </Pressable>
+          <GshGradientPrimaryButton title="1. Parse CV" onPress={() => parseMut.mutate()} loading={parseMut.isPending} containerStyle={{ marginTop: 10 }} />
 
           <Text style={styles.label}>Job description</Text>
           <TextInput
@@ -95,17 +84,13 @@ export default function AtsAssistantScreen() {
           <Text style={styles.label}>Role title (optional)</Text>
           <TextInput style={styles.input} value={role} onChangeText={setRole} placeholder="e.g. Software Engineer" />
 
-          <Pressable
-            style={[styles.btn, (!profileJson || analyzeMut.isPending) && styles.disabled]}
+          <GshGradientPrimaryButton
+            title="2. Run ATS-style analysis"
             onPress={() => analyzeMut.mutate()}
+            loading={analyzeMut.isPending}
             disabled={!profileJson || analyzeMut.isPending}
-          >
-            {analyzeMut.isPending ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.btnText}>2. Run ATS-style analysis</Text>
-            )}
-          </Pressable>
+            containerStyle={{ marginTop: 10 }}
+          />
 
           {analysisText ? (
             <View style={styles.result}>
@@ -120,48 +105,39 @@ export default function AtsAssistantScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   pad: { padding: 16, paddingBottom: 48 },
-  h1: { fontSize: 22, fontWeight: "800", color: "#0f172a", marginBottom: 8 },
+  h1: { fontSize: 22, fontWeight: "800", color: colors.textPrimary, marginBottom: 8 },
   warn: {
     fontSize: 12,
-    color: "#92400e",
-    backgroundColor: "#fffbeb",
+    color: colors.warningText,
+    backgroundColor: colors.warningBg,
     padding: 12,
     borderRadius: 12,
     marginBottom: 16,
     lineHeight: 18,
     borderWidth: 1,
-    borderColor: "#fde68a",
+    borderColor: colors.warningBorder,
   },
-  label: { fontSize: 13, fontWeight: "600", color: "#475569", marginBottom: 8, marginTop: 12 },
+  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8, marginTop: 12 },
   input: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     padding: 12,
     fontSize: 15,
-    backgroundColor: "#fff",
-    color: "#0f172a",
+    backgroundColor: colors.background,
+    color: colors.textPrimary,
   },
   area: { minHeight: 120 },
-  btn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  btnText: { color: "#fff", fontWeight: "800", fontSize: 16 },
-  disabled: { opacity: 0.5 },
   result: {
     marginTop: 20,
     padding: 14,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  resultTitle: { fontSize: 16, fontWeight: "800", color: "#0f172a", marginBottom: 8 },
+  resultTitle: { fontSize: 16, fontWeight: "800", color: colors.textPrimary, marginBottom: 8 },
   resultBody: { fontSize: 14, color: "#334155", lineHeight: 22 },
 });

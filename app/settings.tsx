@@ -13,7 +13,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { changePassword } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -83,9 +85,12 @@ export default function SettingsScreen() {
           <Text style={styles.label}>Confirm new password</Text>
           <TextInput style={styles.input} secureTextEntry value={confirm} onChangeText={setConfirm} autoCapitalize="none" />
 
-          <Pressable style={[styles.primaryBtn, mut.isPending && styles.disabled]} onPress={savePw} disabled={mut.isPending}>
-            <Text style={styles.primaryBtnText}>{mut.isPending ? "Saving…" : "Update password"}</Text>
-          </Pressable>
+          <GshGradientPrimaryButton
+            title={mut.isPending ? "Saving…" : "Update password"}
+            onPress={savePw}
+            disabled={mut.isPending}
+            containerStyle={{ marginTop: 8 }}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -93,39 +98,30 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   pad: { padding: 16, paddingBottom: 40 },
-  h1: { fontSize: 22, fontWeight: "800", color: "#0f172a", marginBottom: 16 },
+  h1: { fontSize: 22, fontWeight: "800", color: colors.textPrimary, marginBottom: 16 },
   linkRow: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     padding: 16,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  linkTitle: { fontSize: 16, fontWeight: "700", color: "#0f172a" },
-  linkSub: { marginTop: 4, fontSize: 13, color: "#64748b" },
-  section: { fontSize: 17, fontWeight: "700", color: "#0f172a", marginTop: 20, marginBottom: 12 },
-  label: { fontSize: 13, fontWeight: "600", color: "#475569", marginBottom: 8 },
+  linkTitle: { fontSize: 16, fontWeight: "700", color: colors.textPrimary },
+  linkSub: { marginTop: 4, fontSize: 13, color: colors.textMuted },
+  section: { fontSize: 17, fontWeight: "700", color: colors.textPrimary, marginTop: 20, marginBottom: 12 },
+  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     marginBottom: 12,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
-  primaryBtn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  primaryBtnText: { color: "#fff", fontWeight: "700", fontSize: 17 },
-  disabled: { opacity: 0.65 },
 });

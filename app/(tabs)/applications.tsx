@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchApplications, withdrawApplication } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 import type { Application, ApplicationJobRef } from "@/types/models";
 
 function statusStyle(status: string) {
@@ -99,28 +100,28 @@ export default function ApplicationsScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   listPad: { padding: 16, paddingBottom: 32, gap: 12 },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     overflow: "hidden",
   },
   cardMain: { padding: 16 },
-  title: { fontSize: 17, fontWeight: "700", color: "#0f172a" },
+  title: { fontSize: 17, fontWeight: "700", color: colors.textPrimary },
   company: { marginTop: 6, fontSize: 15, fontWeight: "600", color: "#334155" },
-  meta: { marginTop: 4, fontSize: 14, color: "#64748b" },
+  meta: { marginTop: 4, fontSize: 14, color: colors.textMuted },
   badge: { alignSelf: "flex-start", marginTop: 10, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
-  badgeText: { fontSize: 12, fontWeight: "700", color: "#0f172a" },
+  badgeText: { fontSize: 12, fontWeight: "700", color: colors.textPrimary },
   badgeGood: { backgroundColor: "#dcfce7" },
   badgeBad: { backgroundColor: "#fee2e2" },
-  badgeNeutral: { backgroundColor: "#e0e7ff" },
-  withdraw: { borderTopWidth: 1, borderTopColor: "#f1f5f9", paddingVertical: 12, alignItems: "center" },
-  withdrawText: { color: "#b91c1c", fontWeight: "600", fontSize: 15 },
+  badgeNeutral: { backgroundColor: colors.purpleMuted },
+  withdraw: { borderTopWidth: 1, borderTopColor: colors.surfaceMuted, paddingVertical: 12, alignItems: "center" },
+  withdrawText: { color: colors.error, fontWeight: "600", fontSize: 15 },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
-  muted: { color: "#64748b", fontSize: 15 },
-  err: { color: "#b91c1c", textAlign: "center" },
-  empty: { textAlign: "center", color: "#64748b", marginTop: 48, paddingHorizontal: 24, fontSize: 15, lineHeight: 22 },
+  muted: { color: colors.textMuted, fontSize: 15 },
+  err: { color: colors.error, textAlign: "center" },
+  empty: { textAlign: "center", color: colors.textMuted, marginTop: 48, paddingHorizontal: 24, fontSize: 15, lineHeight: 22 },
 });

@@ -12,7 +12,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { requestForgotPassword } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -47,9 +49,11 @@ export default function ForgotPasswordScreen() {
             onChangeText={setEmail}
             placeholder="you@example.com"
           />
-          <Pressable style={[styles.btn, mut.isPending && styles.disabled]} onPress={() => mut.mutate()} disabled={mut.isPending}>
-            <Text style={styles.btnText}>{mut.isPending ? "Sending…" : "Send reset link"}</Text>
-          </Pressable>
+          <GshGradientPrimaryButton
+            title={mut.isPending ? "Sending…" : "Send reset link"}
+            onPress={() => mut.mutate()}
+            disabled={mut.isPending}
+          />
           <Pressable style={styles.back} onPress={() => router.back()}>
             <Text style={styles.backText}>Back to sign in</Text>
           </Pressable>
@@ -60,30 +64,22 @@ export default function ForgotPasswordScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   pad: { padding: 24 },
-  h1: { fontSize: 24, fontWeight: "800", color: "#0f172a", marginBottom: 8 },
-  lead: { fontSize: 14, color: "#64748b", marginBottom: 20, lineHeight: 20 },
-  label: { fontSize: 13, fontWeight: "600", color: "#475569", marginBottom: 8 },
+  h1: { fontSize: 24, fontWeight: "800", color: colors.textPrimary, marginBottom: 8 },
+  lead: { fontSize: 14, color: colors.textMuted, marginBottom: 20, lineHeight: 20 },
+  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     marginBottom: 16,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
-  btn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-  },
-  btnText: { color: "#fff", fontWeight: "700", fontSize: 17 },
-  disabled: { opacity: 0.65 },
   back: { marginTop: 20, alignItems: "center" },
-  backText: { color: "#4f46e5", fontWeight: "600", fontSize: 15 },
+  backText: { color: colors.brand, fontWeight: "600", fontSize: 15 },
 });

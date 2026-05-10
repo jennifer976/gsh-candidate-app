@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchCandidateOffers, trackReferralCodeCopy } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 import type { CandidateOfferItem } from "@/types/models";
 
 export default function OffersScreen() {
@@ -56,33 +57,33 @@ export default function OffersScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
-  lead: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12, fontSize: 14, color: "#64748b", lineHeight: 20 },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
+  lead: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12, fontSize: 14, color: colors.textMuted, lineHeight: 20 },
   listPad: { paddingHorizontal: 16, paddingBottom: 32 },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  title: { fontSize: 17, fontWeight: "700", color: "#0f172a" },
-  biz: { marginTop: 6, fontSize: 14, fontWeight: "600", color: "#4f46e5" },
-  body: { marginTop: 10, fontSize: 14, color: "#475569", lineHeight: 20 },
+  title: { fontSize: 17, fontWeight: "700", color: colors.textPrimary },
+  biz: { marginTop: 6, fontSize: 14, fontWeight: "600", color: colors.brand },
+  body: { marginTop: 10, fontSize: 14, color: colors.textSecondary, lineHeight: 20 },
   codeRow: {
     marginTop: 14,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     gap: 12,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: colors.surfaceMuted,
     borderRadius: 10,
     padding: 12,
   },
-  code: { fontSize: 16, fontWeight: "800", color: "#0f172a", letterSpacing: 1 },
-  copyBtn: { backgroundColor: "#4f46e5", paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10 },
-  copyText: { color: "#fff", fontWeight: "700", fontSize: 14 },
-  exp: { marginTop: 10, fontSize: 12, color: "#64748b" },
-  empty: { textAlign: "center", color: "#64748b", marginTop: 40, paddingHorizontal: 24 },
+  code: { fontSize: 16, fontWeight: "800", color: colors.textPrimary, letterSpacing: 1 },
+  copyBtn: { backgroundColor: colors.brand, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10 },
+  copyText: { color: colors.white, fontWeight: "700", fontSize: 14 },
+  exp: { marginTop: 10, fontSize: 12, color: colors.textMuted },
+  empty: { textAlign: "center", color: colors.textMuted, marginTop: 40, paddingHorizontal: 24 },
 });

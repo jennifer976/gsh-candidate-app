@@ -13,7 +13,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { submitFeedback } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 
 const TYPES = ["feature", "issue", "update", "request"] as const;
 const PRIOS = ["low", "medium", "high"] as const;
@@ -89,9 +91,7 @@ export default function FeedbackScreen() {
             textAlignVertical="top"
           />
 
-          <Pressable style={[styles.primaryBtn, mut.isPending && styles.disabled]} onPress={send} disabled={mut.isPending}>
-            <Text style={styles.primaryBtnText}>{mut.isPending ? "Sending…" : "Submit"}</Text>
-          </Pressable>
+          <GshGradientPrimaryButton title={mut.isPending ? "Sending…" : "Submit"} onPress={send} disabled={mut.isPending} containerStyle={{ marginTop: 20 }} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -99,41 +99,32 @@ export default function FeedbackScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   pad: { padding: 16, paddingBottom: 40 },
-  h1: { fontSize: 22, fontWeight: "800", color: "#0f172a", marginBottom: 8 },
-  lead: { fontSize: 14, color: "#64748b", marginBottom: 16, lineHeight: 20 },
-  label: { fontSize: 13, fontWeight: "600", color: "#475569", marginBottom: 8, marginTop: 12 },
+  h1: { fontSize: 22, fontWeight: "800", color: colors.textPrimary, marginBottom: 8 },
+  lead: { fontSize: 14, color: colors.textMuted, marginBottom: 16, lineHeight: 20 },
+  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8, marginTop: 12 },
   row: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 8 },
   chip: {
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 10,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  chipOn: { backgroundColor: "#4f46e5", borderColor: "#4f46e5" },
-  chipText: { fontSize: 13, fontWeight: "600", color: "#475569", textTransform: "capitalize" },
-  chipTextOn: { color: "#fff" },
+  chipOn: { backgroundColor: colors.chipOnBg, borderColor: colors.chipOnBorder },
+  chipText: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, textTransform: "capitalize" },
+  chipTextOn: { color: colors.white },
   input: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,
-    backgroundColor: "#fff",
-    color: "#0f172a",
+    backgroundColor: colors.background,
+    color: colors.textPrimary,
   },
   area: { minHeight: 140 },
-  primaryBtn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  primaryBtnText: { color: "#fff", fontWeight: "700", fontSize: 17 },
-  disabled: { opacity: 0.65 },
 });

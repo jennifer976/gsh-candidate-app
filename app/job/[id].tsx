@@ -12,7 +12,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { applyToJob, fetchJobById, saveJob } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 
 function errMsg(e: unknown): string {
   if (e && typeof e === "object" && "message" in e) return String((e as { message: string }).message);
@@ -63,7 +65,7 @@ export default function JobDetailScreen() {
     return (
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#4f46e5" />
+          <ActivityIndicator size="large" color={colors.brand} />
         </View>
       </SafeAreaView>
     );
@@ -115,26 +117,22 @@ export default function JobDetailScreen() {
           style={styles.cover}
           multiline
           placeholder="A short note to the hiring team…"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={coverLetter}
           onChangeText={setCoverLetter}
         />
 
         <View style={styles.actions}>
-          <Pressable
-            style={[styles.primaryBtn, saveMut.isPending && styles.disabled]}
+          <GshGradientPrimaryButton
+            title={saveMut.isPending ? "Saving…" : "Save job"}
             onPress={() => saveMut.mutate()}
             disabled={saveMut.isPending}
-          >
-            <Text style={styles.primaryBtnText}>{saveMut.isPending ? "Saving…" : "Save job"}</Text>
-          </Pressable>
-          <Pressable
-            style={[styles.primaryBtn, applyMut.isPending && styles.disabled]}
+          />
+          <GshGradientPrimaryButton
+            title={applyMut.isPending ? "Applying…" : "Apply now"}
             onPress={() => applyMut.mutate()}
             disabled={applyMut.isPending}
-          >
-            <Text style={styles.primaryBtnText}>{applyMut.isPending ? "Applying…" : "Apply now"}</Text>
-          </Pressable>
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -142,36 +140,28 @@ export default function JobDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   pad: { padding: 20, paddingBottom: 40 },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
-  err: { color: "#b91c1c", marginBottom: 16, textAlign: "center", fontSize: 15 },
-  title: { fontSize: 24, fontWeight: "800", color: "#0f172a" },
+  err: { color: colors.error, marginBottom: 16, textAlign: "center", fontSize: 15 },
+  title: { fontSize: 24, fontWeight: "800", color: colors.textPrimary },
   company: { marginTop: 8, fontSize: 18, fontWeight: "600", color: "#334155" },
-  meta: { marginTop: 6, fontSize: 15, color: "#64748b" },
-  sectionTitle: { marginTop: 22, fontSize: 15, fontWeight: "700", color: "#0f172a" },
-  sectionBody: { marginTop: 8, fontSize: 15, color: "#475569", lineHeight: 22 },
+  meta: { marginTop: 6, fontSize: 15, color: colors.textMuted },
+  sectionTitle: { marginTop: 22, fontSize: 15, fontWeight: "700", color: colors.textPrimary },
+  sectionBody: { marginTop: 8, fontSize: 15, color: colors.textSecondary, lineHeight: 22 },
   cover: {
     marginTop: 10,
     minHeight: 100,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     padding: 12,
     fontSize: 15,
-    backgroundColor: "#fff",
-    color: "#0f172a",
+    backgroundColor: colors.background,
+    color: colors.textPrimary,
     textAlignVertical: "top",
   },
   actions: { marginTop: 20, gap: 12 },
-  primaryBtn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-  },
-  primaryBtnText: { color: "#fff", fontSize: 17, fontWeight: "700" },
-  disabled: { opacity: 0.7 },
   secondaryBtn: { marginTop: 12, paddingVertical: 12 },
-  secondaryBtnText: { color: "#4f46e5", fontWeight: "600", fontSize: 16 },
+  secondaryBtnText: { color: colors.brand, fontWeight: "600", fontSize: 16 },
 });

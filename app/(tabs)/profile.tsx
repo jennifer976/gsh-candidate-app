@@ -14,8 +14,10 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { fetchOwnProfile, updateProfile, uploadFileFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
+import { colors } from "@/lib/theme";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -149,13 +151,7 @@ export default function ProfileScreen() {
               keyboardType="url"
             />
 
-            <Pressable style={[styles.primaryBtn, saveMut.isPending && styles.disabled]} onPress={() => saveMut.mutate()} disabled={saveMut.isPending}>
-              {saveMut.isPending ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.primaryBtnText}>Save profile</Text>
-              )}
-            </Pressable>
+            <GshGradientPrimaryButton title="Save profile" onPress={() => saveMut.mutate()} loading={saveMut.isPending} containerStyle={{ marginTop: 8 }} />
 
             <Text style={[styles.label, { marginTop: 20 }]}>CV / resume</Text>
             {resumeUrl ? (
@@ -171,7 +167,7 @@ export default function ProfileScreen() {
               disabled={cvMut.isPending}
             >
               {cvMut.isPending ? (
-                <ActivityIndicator color="#4f46e5" />
+                <ActivityIndicator color={colors.brand} />
               ) : (
                 <Text style={styles.outlineBtnText}>{resumeUrl ? "Replace CV" : "Upload CV"}</Text>
               )}
@@ -188,51 +184,43 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   pad: { padding: 20, paddingBottom: 40 },
-  h1: { fontSize: 22, fontWeight: "700", color: "#0f172a", marginBottom: 8 },
-  body: { fontSize: 15, color: "#475569" },
+  h1: { fontSize: 22, fontWeight: "700", color: colors.textPrimary, marginBottom: 8 },
+  body: { fontSize: 15, color: colors.textSecondary },
   warn: { fontSize: 14, color: "#b45309", marginBottom: 12 },
-  completion: { fontSize: 15, fontWeight: "600", color: "#4f46e5", marginBottom: 8 },
-  email: { fontSize: 14, color: "#64748b", marginBottom: 16 },
-  label: { fontSize: 13, fontWeight: "600", color: "#475569", marginBottom: 8 },
+  completion: { fontSize: 15, fontWeight: "600", color: colors.brand, marginBottom: 8 },
+  email: { fontSize: 14, color: colors.textMuted, marginBottom: 16 },
+  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     marginBottom: 14,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
-  primaryBtn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  primaryBtnText: { color: "#fff", fontSize: 17, fontWeight: "600" },
   disabled: { opacity: 0.65 },
-  resumeHint: { fontSize: 13, color: "#64748b", marginBottom: 10, lineHeight: 18 },
+  resumeHint: { fontSize: 13, color: colors.textMuted, marginBottom: 10, lineHeight: 18 },
   outlineBtn: {
     borderWidth: 1,
-    borderColor: "#4f46e5",
+    borderColor: colors.brand,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
   },
-  outlineBtnText: { fontSize: 16, fontWeight: "600", color: "#4f46e5" },
+  outlineBtnText: { fontSize: 16, fontWeight: "600", color: colors.brand },
   signOut: {
     borderWidth: 1,
-    borderColor: "#cbd5e1",
+    borderColor: colors.borderStrong,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
   },
-  signOutText: { fontSize: 16, fontWeight: "600", color: "#b91c1c" },
+  signOutText: { fontSize: 16, fontWeight: "600", color: colors.error },
 });

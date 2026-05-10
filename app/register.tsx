@@ -1,18 +1,10 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { registerCandidate } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -50,7 +42,7 @@ export default function RegisterScreen() {
           autoCapitalize="none"
           keyboardType="email-address"
           placeholder="you@example.com"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={email}
           onChangeText={setEmail}
         />
@@ -60,14 +52,12 @@ export default function RegisterScreen() {
           style={styles.input}
           secureTextEntry
           placeholder="At least 8 characters"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={password}
           onChangeText={setPassword}
         />
 
-        <Pressable style={[styles.primaryBtn, loading && styles.primaryBtnDisabled]} onPress={onSubmit} disabled={loading}>
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryBtnText}>Continue</Text>}
-        </Pressable>
+        <GshGradientPrimaryButton title="Continue" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
 
         <Pressable style={styles.linkWrap} onPress={() => router.back()}>
           <Text style={styles.link}>Already have an account? Sign in</Text>
@@ -78,30 +68,21 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   flex: { flex: 1, paddingHorizontal: 24, paddingTop: 16 },
-  lead: { fontSize: 15, color: "#475569", marginBottom: 20, lineHeight: 22 },
-  label: { fontSize: 13, fontWeight: "600", color: "#475569", marginBottom: 8 },
+  lead: { fontSize: 15, color: colors.textSecondary, marginBottom: 20, lineHeight: 22 },
+  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     marginBottom: 16,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
-  primaryBtn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  primaryBtnDisabled: { opacity: 0.7 },
-  primaryBtnText: { color: "#fff", fontSize: 17, fontWeight: "600" },
   linkWrap: { marginTop: 24, alignItems: "center" },
-  link: { color: "#4f46e5", fontSize: 15, fontWeight: "500" },
+  link: { color: colors.brand, fontSize: 15, fontWeight: "500" },
 });

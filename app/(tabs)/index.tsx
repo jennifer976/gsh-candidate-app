@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchPublicJobs } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 import type { Job } from "@/types/models";
 
 function formatSalary(job: Job): string {
@@ -61,7 +62,7 @@ export default function JobsScreen() {
         <TextInput
           style={styles.search}
           placeholder="Search roles, skills, company…"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={q}
           onChangeText={setQ}
           autoCapitalize="none"
@@ -71,7 +72,7 @@ export default function JobsScreen() {
 
       {query.isLoading && !query.data ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#4f46e5" />
+          <ActivityIndicator size="large" color={colors.brand} />
         </View>
       ) : query.isError ? (
         <View style={styles.center}>
@@ -108,43 +109,43 @@ export default function JobsScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   alertsBanner: {
     marginHorizontal: 16,
     marginTop: 8,
     padding: 14,
     borderRadius: 14,
-    backgroundColor: "#eef2ff",
+    backgroundColor: colors.purpleMuted,
     borderWidth: 1,
-    borderColor: "#c7d2fe",
+    borderColor: colors.purpleBorder,
   },
-  alertsBannerTitle: { fontSize: 15, fontWeight: "700", color: "#3730a3" },
-  alertsBannerSub: { marginTop: 4, fontSize: 13, color: "#5b21b6" },
+  alertsBannerTitle: { fontSize: 15, fontWeight: "700", color: colors.purpleTextDark },
+  alertsBannerSub: { marginTop: 4, fontSize: 13, color: colors.purpleText },
   searchWrap: { paddingHorizontal: 16, paddingVertical: 12 },
   search: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
   listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 12 },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     marginBottom: 4,
   },
-  cardTitle: { fontSize: 17, fontWeight: "700", color: "#0f172a" },
+  cardTitle: { fontSize: 17, fontWeight: "700", color: colors.textPrimary },
   cardCompany: { marginTop: 6, fontSize: 15, fontWeight: "600", color: "#334155" },
-  cardMeta: { marginTop: 4, fontSize: 14, color: "#64748b" },
-  cardSalary: { marginTop: 8, fontSize: 14, fontWeight: "600", color: "#4f46e5" },
+  cardMeta: { marginTop: 4, fontSize: 14, color: colors.textMuted },
+  cardSalary: { marginTop: 8, fontSize: 14, fontWeight: "600", color: colors.accent },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
-  err: { color: "#b91c1c", textAlign: "center", fontSize: 15 },
-  empty: { textAlign: "center", color: "#64748b", marginTop: 40, paddingHorizontal: 24, fontSize: 15 },
+  err: { color: colors.error, textAlign: "center", fontSize: 15 },
+  empty: { textAlign: "center", color: colors.textMuted, marginTop: 40, paddingHorizontal: 24, fontSize: 15 },
 });

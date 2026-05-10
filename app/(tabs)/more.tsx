@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { colors } from "@/lib/theme";
 
 const LINKS: { title: string; subtitle: string; href: string }[] = [
   { title: "Dashboard", subtitle: "Applications, interviews, trends", href: "/dashboard" },
@@ -33,18 +34,18 @@ export default function MoreScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   pad: { padding: 16, paddingBottom: 40 },
-  h1: { fontSize: 24, fontWeight: "800", color: "#0f172a", marginBottom: 8 },
-  lead: { fontSize: 14, color: "#64748b", marginBottom: 16, lineHeight: 20 },
+  h1: { fontSize: 24, fontWeight: "800", color: colors.textPrimary, marginBottom: 8 },
+  lead: { fontSize: 14, color: colors.textMuted, marginBottom: 16, lineHeight: 20 },
   row: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     padding: 16,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  rowTitle: { fontSize: 17, fontWeight: "700", color: "#0f172a" },
-  rowSub: { marginTop: 4, fontSize: 14, color: "#64748b" },
+  rowTitle: { fontSize: 17, fontWeight: "700", color: colors.textPrimary },
+  rowSub: { marginTop: 4, fontSize: 14, color: colors.textMuted },
 });

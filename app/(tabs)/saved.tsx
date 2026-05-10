@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchSavedJobs, unsaveJob } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 import type { Job, SavedJobPopulated } from "@/types/models";
 
 export default function SavedJobsScreen() {
@@ -75,21 +76,21 @@ export default function SavedJobsScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   listPad: { paddingHorizontal: 16, paddingVertical: 12, paddingBottom: 24, gap: 12 },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  cardTitle: { fontSize: 17, fontWeight: "700", color: "#0f172a" },
+  cardTitle: { fontSize: 17, fontWeight: "700", color: colors.textPrimary },
   cardCompany: { marginTop: 6, fontSize: 15, fontWeight: "600", color: "#334155" },
   removeBtn: { alignSelf: "flex-start", marginTop: 12 },
-  removeText: { color: "#b91c1c", fontWeight: "600", fontSize: 15 },
+  removeText: { color: colors.error, fontWeight: "600", fontSize: 15 },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
-  muted: { color: "#64748b", fontSize: 15 },
-  err: { color: "#b91c1c", textAlign: "center" },
-  empty: { textAlign: "center", color: "#64748b", marginTop: 48, paddingHorizontal: 24, fontSize: 15 },
+  muted: { color: colors.textMuted, fontSize: 15 },
+  err: { color: colors.error, textAlign: "center" },
+  empty: { textAlign: "center", color: colors.textMuted, marginTop: 48, paddingHorizontal: 24, fontSize: 15 },
 });

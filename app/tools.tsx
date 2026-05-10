@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchCandidateDashboard } from "@/lib/api-client";
 import { getMarketingSiteUrl } from "@/lib/config";
+import { colors, gradient } from "@/lib/theme";
 
 const TIPS = [
   "Lead with measurable outcomes tied to impact.",
@@ -45,9 +47,11 @@ export default function ToolsScreen() {
           </View>
         ))}
 
-        <Pressable style={styles.primaryBtn} onPress={() => router.push("/ats-assistant")}>
-          <Text style={styles.primaryBtnText}>ATS match assistant</Text>
-          <Text style={styles.primarySub}>Paste your CV text & a job description</Text>
+        <Pressable style={styles.primaryBtnOuter} onPress={() => router.push("/ats-assistant")}>
+          <LinearGradient colors={[...gradient.authCTA]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.primaryBtn}>
+            <Text style={styles.primaryBtnText}>ATS match assistant</Text>
+            <Text style={styles.primarySub}>Paste your CV text & a job description</Text>
+          </LinearGradient>
         </Pressable>
 
         <Pressable
@@ -62,41 +66,40 @@ export default function ToolsScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   pad: { padding: 16, paddingBottom: 40 },
-  h1: { fontSize: 24, fontWeight: "800", color: "#0f172a", marginBottom: 8 },
-  lead: { fontSize: 14, color: "#64748b", marginBottom: 16, lineHeight: 20 },
+  h1: { fontSize: 24, fontWeight: "800", color: colors.textPrimary, marginBottom: 8 },
+  lead: { fontSize: 14, color: colors.textMuted, marginBottom: 16, lineHeight: 20 },
   scoreCard: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     marginBottom: 20,
   },
-  scoreLabel: { fontSize: 12, fontWeight: "700", color: "#64748b", textTransform: "uppercase" },
-  scoreVal: { fontSize: 36, fontWeight: "800", color: "#0d9488", marginTop: 4 },
-  link: { marginTop: 10, color: "#4f46e5", fontWeight: "700", fontSize: 15 },
-  section: { fontSize: 17, fontWeight: "700", color: "#0f172a", marginBottom: 10 },
+  scoreLabel: { fontSize: 12, fontWeight: "700", color: colors.textMuted, textTransform: "uppercase" },
+  scoreVal: { fontSize: 36, fontWeight: "800", color: colors.accent, marginTop: 4 },
+  link: { marginTop: 10, color: colors.brand, fontWeight: "700", fontSize: 15 },
+  section: { fontSize: 17, fontWeight: "700", color: colors.textPrimary, marginBottom: 10 },
   tip: { flexDirection: "row", gap: 8, marginBottom: 10, paddingRight: 8 },
-  bullet: { fontSize: 16, color: "#14b8a6", fontWeight: "800" },
-  tipText: { flex: 1, fontSize: 14, color: "#475569", lineHeight: 20 },
+  bullet: { fontSize: 16, color: colors.accent, fontWeight: "800" },
+  tipText: { flex: 1, fontSize: 14, color: colors.textSecondary, lineHeight: 20 },
+  primaryBtnOuter: { marginTop: 12, borderRadius: 14, overflow: "hidden" },
   primaryBtn: {
-    backgroundColor: "#4f46e5",
     borderRadius: 14,
     padding: 16,
-    marginTop: 12,
   },
-  primaryBtnText: { color: "#fff", fontWeight: "800", fontSize: 17 },
-  primarySub: { color: "rgba(255,255,255,0.85)", fontSize: 13, marginTop: 6 },
+  primaryBtnText: { color: colors.white, fontWeight: "800", fontSize: 17 },
+  primarySub: { color: "rgba(255,255,255,0.88)", fontSize: 13, marginTop: 6 },
   outlineBtn: {
     marginTop: 14,
     borderWidth: 1,
-    borderColor: "#cbd5e1",
+    borderColor: colors.borderStrong,
     borderRadius: 14,
     padding: 16,
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
   },
-  outlineBtnText: { color: "#334155", fontWeight: "700", fontSize: 15 },
+  outlineBtnText: { color: colors.textPrimary, fontWeight: "700", fontSize: 15 },
 });

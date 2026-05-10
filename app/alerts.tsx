@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import {
   createJobSearchAlert,
   deleteJobSearchAlert,
@@ -26,6 +27,7 @@ import {
   patchCandidateNotificationPrefs,
   patchJobSearchAlert,
 } from "@/lib/api-client";
+import { colors } from "@/lib/theme";
 import type { Job, JobMatchNotificationRow, JobSearchAlertDto } from "@/types/models";
 
 function resolveJobId(jobField: unknown): string | null {
@@ -143,7 +145,7 @@ export default function AlertsScreen() {
       >
         <Text style={styles.h1}>Notifications</Text>
         {prefsQuery.isLoading ? (
-          <ActivityIndicator style={{ marginVertical: 16 }} />
+          <ActivityIndicator style={{ marginVertical: 16 }} color={colors.brand} />
         ) : prefs ? (
           <View style={styles.card}>
             <RowSwitch
@@ -186,7 +188,7 @@ export default function AlertsScreen() {
         ) : null}
 
         {matchesQuery.isLoading ? (
-          <ActivityIndicator style={{ marginVertical: 12 }} />
+          <ActivityIndicator style={{ marginVertical: 12 }} color={colors.brand} />
         ) : (
           matches.map((row) => {
             const jid = resolveJobId(row.jobId);
@@ -247,24 +249,23 @@ export default function AlertsScreen() {
         <TextInput
           style={styles.input}
           placeholder="Label (optional)"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={newName}
           onChangeText={setNewName}
         />
         <TextInput
           style={styles.input}
           placeholder="Keywords (required), e.g. visa sponsorship engineer"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={colors.placeholder}
           value={newQ}
           onChangeText={setNewQ}
         />
-        <Pressable
-          style={[styles.primaryBtn, (!newQ.trim() || createSearch.isPending) && styles.disabled]}
+        <GshGradientPrimaryButton
+          title={createSearch.isPending ? "Saving…" : "Save alert"}
           onPress={() => createSearch.mutate()}
           disabled={!newQ.trim() || createSearch.isPending}
-        >
-          <Text style={styles.primaryBtnText}>{createSearch.isPending ? "Saving…" : "Save alert"}</Text>
-        </Pressable>
+          containerStyle={{ marginTop: 4 }}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -293,16 +294,16 @@ function formatFilters(f: Record<string, unknown>): string {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
   pad: { padding: 16, paddingBottom: 40 },
-  h1: { fontSize: 22, fontWeight: "800", color: "#0f172a", marginBottom: 12 },
-  h2: { fontSize: 17, fontWeight: "700", color: "#0f172a", marginBottom: 6 },
-  sub: { fontSize: 14, color: "#64748b", marginBottom: 12, lineHeight: 20 },
+  h1: { fontSize: 22, fontWeight: "800", color: colors.textPrimary, marginBottom: 12 },
+  h2: { fontSize: 17, fontWeight: "700", color: colors.textPrimary, marginBottom: 6 },
+  sub: { fontSize: 14, color: colors.textMuted, marginBottom: 12, lineHeight: 20 },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     paddingVertical: 8,
     marginBottom: 20,
   },
@@ -314,62 +315,54 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     gap: 12,
   },
-  switchLabel: { flex: 1, fontSize: 15, color: "#334155", fontWeight: "500" },
+  switchLabel: { flex: 1, fontSize: 15, color: colors.textSecondary, fontWeight: "500" },
   secondaryBtn: {
     alignSelf: "flex-start",
     marginBottom: 12,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 10,
-    backgroundColor: "#e0e7ff",
+    backgroundColor: colors.secondaryTintBg,
   },
-  secondaryBtnText: { color: "#3730a3", fontWeight: "700", fontSize: 14 },
+  secondaryBtnText: { color: colors.secondaryTintText, fontWeight: "700", fontSize: 14 },
   matchCard: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 12,
     padding: 14,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  matchUnread: { borderColor: "#a5b4fc", backgroundColor: "#eef2ff" },
-  matchTitle: { fontSize: 16, fontWeight: "700", color: "#0f172a" },
-  matchCo: { marginTop: 4, fontSize: 14, color: "#475569" },
-  matchHint: { marginTop: 6, fontSize: 12, color: "#64748b" },
-  empty: { color: "#64748b", fontSize: 14, marginBottom: 12 },
+  matchUnread: { borderColor: colors.unreadBorder, backgroundColor: colors.unreadBg },
+  matchTitle: { fontSize: 16, fontWeight: "700", color: colors.textPrimary },
+  matchCo: { marginTop: 4, fontSize: 14, color: colors.textSecondary },
+  matchHint: { marginTop: 6, fontSize: 12, color: colors.textMuted },
+  empty: { color: colors.textMuted, fontSize: 14, marginBottom: 12 },
   searchRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderRadius: 12,
     padding: 12,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
   },
-  searchName: { fontSize: 15, fontWeight: "700", color: "#0f172a" },
-  searchFilters: { marginTop: 4, fontSize: 13, color: "#64748b" },
+  searchName: { fontSize: 15, fontWeight: "700", color: colors.textPrimary },
+  searchFilters: { marginTop: 4, fontSize: 13, color: colors.textMuted },
   deleteBtn: { padding: 8 },
-  deleteText: { fontSize: 18, color: "#b91c1c", fontWeight: "700" },
+  deleteText: { fontSize: 18, color: colors.error, fontWeight: "700" },
   input: {
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     marginBottom: 10,
-    color: "#0f172a",
+    color: colors.textPrimary,
   },
-  primaryBtn: {
-    backgroundColor: "#4f46e5",
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: "center",
-    marginTop: 4,
-  },
-  primaryBtnText: { color: "#fff", fontWeight: "700", fontSize: 16 },
   disabled: { opacity: 0.55 },
 });

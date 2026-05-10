@@ -7,6 +7,7 @@ import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAuthStore } from "@/lib/auth-store";
 import { PushBootstrap } from "@/components/PushBootstrap";
+import { colors, navHeader } from "@/lib/theme";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,8 +27,8 @@ export default function RootLayout() {
 
   if (!hydrated) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#f8fafc" }}>
-        <ActivityIndicator size="large" color="#4f46e5" />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.surfaceMuted }}>
+        <ActivityIndicator size="large" color={colors.brand} />
       </View>
     );
   }
@@ -38,10 +39,8 @@ export default function RootLayout() {
         <PushBootstrap />
         <Stack
           screenOptions={{
-            headerStyle: { backgroundColor: "#f8fafc" },
-            headerTintColor: "#0f172a",
-            headerShadowVisible: false,
-            contentStyle: { backgroundColor: "#f8fafc" },
+            ...navHeader,
+            contentStyle: { backgroundColor: colors.surfaceMuted },
           }}
         >
           <Stack.Screen name="index" options={{ headerShown: false }} />
