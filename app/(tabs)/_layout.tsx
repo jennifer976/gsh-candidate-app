@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import { Redirect, Tabs } from "expo-router";
 import { Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuthStore } from "@/lib/auth-store";
 import { colors, fontFamily, navHeader } from "@/lib/theme";
 
@@ -13,7 +14,13 @@ function TabGlyph({ focused, color, filled, outline }: { focused: boolean; color
 
 export default function TabsLayout() {
   const token = useAuthStore((s) => s.token);
+  const insets = useSafeAreaInsets();
+
   if (!token) return <Redirect href="/login" />;
+
+  const bottomInset = Math.max(insets.bottom, Platform.OS === "android" ? 8 : 6);
+  const tabBarPaddingTop = 6;
+  const tabContentApprox = 52;
 
   return (
     <Tabs
@@ -25,9 +32,9 @@ export default function TabsLayout() {
           backgroundColor: colors.background,
           borderTopColor: colors.border,
           borderTopWidth: 1,
-          height: Platform.OS === "ios" ? 88 : 64,
-          paddingTop: 6,
-          paddingBottom: Platform.OS === "ios" ? 28 : 10,
+          paddingTop: tabBarPaddingTop,
+          paddingBottom: bottomInset,
+          height: tabContentApprox + tabBarPaddingTop + bottomInset,
         },
         tabBarLabelStyle: {
           fontFamily: fontFamily.medium,

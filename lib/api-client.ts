@@ -129,10 +129,14 @@ export async function unsaveJob(savedJobOrJobId: string) {
   });
 }
 
-export async function applyToJob(jobId: string, coverLetter?: string) {
+export async function applyToJob(jobId: string, coverLetter?: string, resume?: string) {
   return apiFetchJson("/applications", {
     method: "POST",
-    body: JSON.stringify({ jobId, coverLetter: coverLetter || undefined }),
+    body: JSON.stringify({
+      jobId,
+      coverLetter: coverLetter || undefined,
+      resume: resume?.trim() || undefined,
+    }),
   });
 }
 

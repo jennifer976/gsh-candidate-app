@@ -8,7 +8,7 @@ export function BrandedSplash() {
     <Animated.View entering={FadeIn.duration(420)} style={styles.root}>
       <Animated.View entering={FadeInDown.duration(520).delay(60)}>
         <Image
-          source={require("../assets/brand-mark.png")}
+          source={require("../assets/brand-mark.webp")}
           style={styles.mark}
           resizeMode="contain"
           accessibilityRole="image"
@@ -37,10 +37,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
   },
   mark: {
-    width: "58%",
-    maxWidth: 220,
+    width: "44%",
+    maxWidth: 168,
     aspectRatio: 1,
-    marginBottom: 20,
+    marginBottom: 18,
   },
   title: {
     fontSize: 22,

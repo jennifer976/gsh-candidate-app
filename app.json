@@ -5,11 +5,11 @@
     "scheme": "gsh-candidate",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/brand-mark.png",
+    "icon": "./assets/brand-icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/brand-mark.png",
+      "image": "./assets/brand-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,14 +23,14 @@
     "android": {
       "package": "com.globalsponsorhub.candidate",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/brand-mark.png",
+        "foregroundImage": "./assets/brand-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/brand-mark.png"
+      "favicon": "./assets/brand-icon.png"
     },
     "plugins": [
       "expo-router",
@@ -38,7 +38,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/brand-mark.png",
+          "icon": "./assets/brand-icon.png",
           "color": "#610a90",
           "defaultChannel": "default"
         }

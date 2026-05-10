@@ -15,7 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { applyToJob, fetchJobById, saveJob } from "@/lib/api-client";
+import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
 
 function errMsg(e: unknown): string {
@@ -37,6 +37,20 @@ export default function JobDetailScreen() {
     enabled: !!jobId,
   });
 
+  const profileQuery = useQuery({
+    queryKey: ["profile", "me"],
+    queryFn: fetchOwnProfile,
+  });
+
+  const resumeUrl =
+    profileQuery.data &&
+    typeof (profileQuery.data as { resume?: unknown }).resume === "string"
+      ? String((profileQuery.data as { resume: string }).resume).trim()
+      : "";
+
+  const profileReady = profileQuery.isSuccess;
+  const canApply = profileReady && resumeUrl.length > 0;
+
   const saveMut = useMutation({
     mutationFn: () => saveJob(jobId),
     onSuccess: () => {
@@ -51,15 +65,42 @@ export default function JobDetailScreen() {
   });
 
   const applyMut = useMutation({
-    mutationFn: () => applyToJob(jobId, coverLetter.trim() || undefined),
+    mutationFn: () => applyToJob(jobId, coverLetter.trim() || undefined, resumeUrl || undefined),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ["applications"] });
-      Alert.alert("Application sent", "The employer will see your profile for this role.", [
+      Alert.alert("Application sent", "The employer will see your profile and CV for this role.", [
         { text: "OK", onPress: () => router.back() },
       ]);
     },
     onError: (e: unknown) => Alert.alert("Could not apply", errMsg(e)),
   });
+
+  function onApplyPress() {
+    if (profileQuery.isLoading) {
+      Alert.alert("Please wait", "Loading your profile…");
+      return;
+    }
+    if (profileQuery.isError) {
+      Alert.alert(
+        "Profile unavailable",
+        "We couldn't load your profile. Check your connection, then open Profile to confirm your CV is uploaded.",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+    if (!resumeUrl) {
+      Alert.alert(
+        "CV required",
+        "Upload your CV on your profile before applying. Employers need your résumé to review your application.",
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Go to Profile", onPress: () => router.push("/(tabs)/profile") },
+        ]
+      );
+      return;
+    }
+    applyMut.mutate();
+  }
 
   const job = jobQuery.data;
 
@@ -136,6 +177,15 @@ export default function JobDetailScreen() {
             onChangeText={setCoverLetter}
           />
 
+          {profileReady && !resumeUrl ? (
+            <View style={styles.cvBanner}>
+              <Ionicons name="document-text-outline" size={22} color={colors.warningText} />
+              <Text style={styles.cvBannerText}>
+                Upload your CV on the Profile tab to apply. Employers only receive applications that include a résumé.
+              </Text>
+            </View>
+          ) : null}
+
           <View style={styles.actions}>
             <GshGradientPrimaryButton
               title={saveMut.isPending ? "Saving…" : "Save job"}
@@ -144,8 +194,8 @@ export default function JobDetailScreen() {
             />
             <GshGradientPrimaryButton
               title={applyMut.isPending ? "Applying…" : "Apply now"}
-              onPress={() => applyMut.mutate()}
-              disabled={applyMut.isPending}
+              onPress={onApplyPress}
+              disabled={applyMut.isPending || profileQuery.isLoading}
             />
           </View>
         </ScrollView>
@@ -191,6 +241,24 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     fontFamily: fontFamily.regular,
     textAlignVertical: "top",
+  },
+  cvBanner: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
+    marginTop: 16,
+    padding: 14,
+    borderRadius: 14,
+    backgroundColor: colors.warningBg,
+    borderWidth: 1,
+    borderColor: colors.warningBorder,
+  },
+  cvBannerText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: fontFamily.medium,
+    color: colors.warningText,
+    lineHeight: 20,
   },
   actions: { marginTop: 20, gap: 12 },
   secondaryBtn: {

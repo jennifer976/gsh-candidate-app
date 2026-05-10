@@ -63,7 +63,7 @@ export default function LoginScreen() {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.brandRow}>
-              <Image source={require("../assets/brand-mark.png")} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
+              <Image source={require("../assets/brand-mark.webp")} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
               <View>
                 <Text style={styles.title}>Global Sponsor Hub</Text>
                 <Text style={styles.subtitle}>Candidate sign in</Text>
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     paddingVertical: 28,
   },
   brandRow: { flexDirection: "row", alignItems: "center", gap: 14, marginBottom: 28 },
-  mark: { width: 52, height: 52 },
+  mark: { width: 44, height: 44 },
   title: { fontSize: 22, fontFamily: fontFamily.bold, color: colors.textPrimary, letterSpacing: -0.3 },
   subtitle: { marginTop: 4, fontSize: 15, fontFamily: fontFamily.medium, color: colors.textMuted },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },

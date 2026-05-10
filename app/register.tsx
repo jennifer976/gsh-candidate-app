@@ -56,7 +56,7 @@ export default function RegisterScreen() {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.brandRow}>
-              <Image source={require("../assets/brand-mark.png")} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
+              <Image source={require("../assets/brand-mark.webp")} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
               <Text style={styles.headline}>Join as a candidate</Text>
             </View>
 
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     paddingVertical: 28,
   },
   brandRow: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 12 },
-  mark: { width: 48, height: 48 },
+  mark: { width: 40, height: 40 },
   headline: { flex: 1, fontSize: 22, fontFamily: fontFamily.bold, color: colors.textPrimary, letterSpacing: -0.3 },
   lead: {
     fontSize: 15,
