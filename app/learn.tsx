@@ -4,12 +4,28 @@ import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { marketingUrl, openMarketingPath } from "@/lib/marketing-links";
+import { marketingUrl } from "@/lib/marketing-links";
 import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
 type WebRow = { title: string; subtitle: string; path: string; icon: IonName };
+
+function portalParams(path: string, title: string) {
+  return {
+    pathname: "/web-portal" as const,
+    params: { path: encodeURIComponent(path.startsWith("/") ? path : `/${path}`), title },
+  };
+}
+
+const CURATED_JOBS: WebRow[] = [
+  {
+    title: "Curated external roles",
+    subtitle: "Partner-sourced & aggregated sponsorship-friendly listings — same board as the website",
+    path: "/jobs/external",
+    icon: "briefcase-outline",
+  },
+];
 
 const WEB_LINKS: WebRow[] = [
   {
@@ -38,7 +54,7 @@ const WEB_LINKS: WebRow[] = [
   },
   {
     title: "Visa wizard",
-    subtitle: "Interactive tool on the website — plan next steps in-browser",
+    subtitle: "Interactive questionnaire — runs inside this viewer",
     path: "/tools/visa-wizard",
     icon: "sparkles-outline",
   },
@@ -64,13 +80,13 @@ function HubLinkRow({
   subtitle,
   icon,
   onPress,
-  external,
+  trailingIcon,
 }: {
   title: string;
   subtitle: string;
   icon: IonName;
   onPress: () => void;
-  external?: boolean;
+  trailingIcon?: IonName;
 }) {
   return (
     <Pressable style={[styles.row, cardSurfaceStyle(true)]} onPress={onPress} accessibilityRole="button">
@@ -81,7 +97,7 @@ function HubLinkRow({
         <Text style={styles.rowTitle}>{title}</Text>
         <Text style={styles.rowSub}>{subtitle}</Text>
       </View>
-      <Ionicons name={external ? "open-outline" : "chevron-forward"} size={20} color={colors.placeholder} />
+      <Ionicons name={trailingIcon ?? "chevron-forward"} size={20} color={colors.placeholder} />
     </Pressable>
   );
 }
@@ -97,10 +113,22 @@ export default function LearnHubScreen() {
             <Text style={styles.heroEyebrow}>Global Sponsor Hub</Text>
             <Text style={styles.heroTitle}>Guides, insight & support</Text>
             <Text style={styles.heroBody}>
-              The same relocation guides, resource hub, blog, and news as on the website — comfortable reading in your
-              browser.
+              Read guides, blog posts, FAQs, and the curated jobs board inside the app. Use the header buttons on each page
+              to reload or open in Safari / Chrome when you prefer.
             </Text>
           </View>
+
+          <Text style={styles.section}>Jobs</Text>
+          {CURATED_JOBS.map((item) => (
+            <HubLinkRow
+              key={item.path}
+              title={item.title}
+              subtitle={item.subtitle}
+              icon={item.icon}
+              trailingIcon="chevron-forward"
+              onPress={() => router.push(portalParams(item.path, item.title))}
+            />
+          ))}
 
           <Text style={styles.section}>Learn</Text>
           {WEB_LINKS.map((item) => (
@@ -109,8 +137,8 @@ export default function LearnHubScreen() {
               title={item.title}
               subtitle={item.subtitle}
               icon={item.icon}
-              external
-              onPress={() => void openMarketingPath(item.path)}
+              trailingIcon="chevron-forward"
+              onPress={() => router.push(portalParams(item.path, item.title))}
             />
           ))}
 
@@ -121,8 +149,8 @@ export default function LearnHubScreen() {
               title={item.title}
               subtitle={item.subtitle}
               icon={item.icon}
-              external
-              onPress={() => void openMarketingPath(item.path)}
+              trailingIcon="chevron-forward"
+              onPress={() => router.push(portalParams(item.path, item.title))}
             />
           ))}
 
@@ -134,7 +162,7 @@ export default function LearnHubScreen() {
             onPress={() => router.push("/feedback")}
           />
 
-          <Text style={styles.footnote}>Opens {marketingUrl("/").replace(/^https:\/\//, "")} in your browser.</Text>
+          <Text style={styles.footnote}>Powered by {marketingUrl("/").replace(/^https:\/\//, "")}</Text>
         </ScrollView>
       </SafeAreaView>
     </GshScreenBackground>

@@ -43,7 +43,8 @@
           "defaultChannel": "default"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ],
     "extra": {
       "apiUrl": "https://api.globalsponsorhub.com",

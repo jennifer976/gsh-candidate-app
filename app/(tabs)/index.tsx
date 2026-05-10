@@ -16,10 +16,17 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { JobsHomePersonalHeader } from "@/components/JobsHomePersonalHeader";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { fetchCandidateDashboard, fetchOwnProfile, fetchPublicJobs } from "@/lib/api-client";
+import {
+  fetchCandidateDashboard,
+  fetchOwnProfile,
+  fetchPublicExternalJobListings,
+  fetchPublicJobs,
+} from "@/lib/api-client";
 import { addRecentJobSearch, loadRecentJobSearches } from "@/lib/recent-job-searches";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
-import type { Job } from "@/types/models";
+import type { ExternalJobListingPublic, Job } from "@/types/models";
+
+type FeedTab = "hub" | "external";
 
 function formatSalary(job: Job): string {
   const cur = job.salaryCurrency || "GBP";
@@ -31,8 +38,28 @@ function formatSalary(job: Job): string {
   return "";
 }
 
+function externalMatchesQuery(listing: ExternalJobListingPublic, q: string): boolean {
+  const dq = q.trim().toLowerCase();
+  if (!dq) return true;
+  const tokens = dq.split(/\s+/).filter(Boolean);
+  const hay = [
+    listing.title,
+    listing.companyName,
+    listing.location,
+    listing.summary,
+    listing.country,
+    ...(listing.mobilityTags || []),
+    listing.agencyName,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return tokens.every((t) => hay.includes(t));
+}
+
 export default function JobsScreen() {
   const router = useRouter();
+  const [feedTab, setFeedTab] = useState<FeedTab>("hub");
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
   const [recent, setRecent] = useState<string[]>([]);
@@ -69,7 +96,7 @@ export default function JobsScreen() {
     staleTime: 45_000,
   });
 
-  const query = useQuery({
+  const hubJobsQuery = useQuery({
     queryKey: ["public-jobs", debouncedQ],
     queryFn: () =>
       fetchPublicJobs({
@@ -77,6 +104,12 @@ export default function JobsScreen() {
         page: 1,
         perPage: 25,
       }),
+  });
+
+  const extListQuery = useQuery({
+    queryKey: ["external-job-listings", "public"],
+    queryFn: () => fetchPublicExternalJobListings(),
+    staleTime: 120_000,
   });
 
   const firstName =
@@ -99,14 +132,26 @@ export default function JobsScreen() {
     };
   }, [dashQuery.data]);
 
+  const hubJobs = hubJobsQuery.data?.data ?? [];
+  const externalRows = extListQuery.data?.data ?? [];
+  const externalFiltered = useMemo(
+    () => externalRows.filter((row) => externalMatchesQuery(row, debouncedQ)),
+    [externalRows, debouncedQ]
+  );
+
+  const activeData = feedTab === "hub" ? hubJobs : externalFiltered;
+
+  const listBootloading =
+    feedTab === "hub" ? hubJobsQuery.isLoading && !hubJobsQuery.data : extListQuery.isLoading && !extListQuery.data;
+
+  const activeError = feedTab === "hub" ? hubJobsQuery.isError : extListQuery.isError;
+
   const onRefresh = useCallback(() => {
-    void query.refetch();
+    void hubJobsQuery.refetch();
+    void extListQuery.refetch();
     void dashQuery.refetch();
     void profileQuery.refetch();
-  }, [query, dashQuery, profileQuery]);
-
-  const jobs = query.data?.data ?? [];
-  const listBootloading = query.isLoading && !query.data;
+  }, [hubJobsQuery, extListQuery, dashQuery, profileQuery]);
 
   const listHeader = (
     <>
@@ -150,19 +195,50 @@ export default function JobsScreen() {
             <Ionicons name="book-outline" size={22} color={colors.teal} />
           </View>
           <View style={styles.learnTextCol}>
-            <Text style={styles.learnBannerTitle}>Guides, blog & resources</Text>
-            <Text style={styles.learnBannerSub}>Visa guides, articles, FAQs — open on the website</Text>
+            <Text style={styles.learnBannerTitle}>Guides, blog & curated board</Text>
+            <Text style={styles.learnBannerSub}>Browse content from globalsponsorhub.com inside the app viewer</Text>
           </View>
           <Ionicons name="chevron-forward" size={22} color={colors.textMuted} accessibilityElementsHidden />
         </View>
       </Pressable>
+
+      <View style={styles.feedToggleOuter}>
+        <Text style={styles.feedToggleLabel}>Job feed</Text>
+        <View style={styles.feedToggle}>
+          <Pressable
+            style={[styles.feedChip, feedTab === "hub" && styles.feedChipOn]}
+            onPress={() => setFeedTab("hub")}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: feedTab === "hub" }}
+          >
+            <Text style={[styles.feedChipText, feedTab === "hub" && styles.feedChipTextOn]}>Employer postings</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.feedChip, feedTab === "external" && styles.feedChipOn]}
+            onPress={() => setFeedTab("external")}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: feedTab === "external" }}
+          >
+            <Text style={[styles.feedChipText, feedTab === "external" && styles.feedChipTextOn]}>Curated external</Text>
+          </Pressable>
+        </View>
+        <Text style={styles.feedHint}>
+          {feedTab === "hub"
+            ? "Roles employers publish directly on Global Sponsor Hub."
+            : "Partner-curated & aggregated listings — apply on the employer’s ATS."}
+        </Text>
+      </View>
 
       <View style={styles.searchOuter}>
         <View style={styles.searchWrap}>
           <Ionicons name="search" size={20} color={colors.placeholder} style={styles.searchIcon} />
           <TextInput
             style={styles.search}
-            placeholder="Search roles, skills, company…"
+            placeholder={
+              feedTab === "hub"
+                ? "Search employer-posted roles…"
+                : "Filter curated listings by title, company, location…"
+            }
             placeholderTextColor={colors.placeholder}
             value={q}
             onChangeText={setQ}
@@ -204,67 +280,124 @@ export default function JobsScreen() {
   const emptyBody = listBootloading ? (
     <View style={styles.emptyWrap}>
       <ActivityIndicator size="large" color={colors.brand} />
-      <Text style={styles.loadingHint}>Finding roles…</Text>
+      <Text style={styles.loadingHint}>{feedTab === "hub" ? "Finding employer roles…" : "Loading curated listings…"}</Text>
     </View>
-  ) : query.isError ? (
+  ) : activeError ? (
     <View style={styles.emptyWrap}>
       <Ionicons name="cloud-offline-outline" size={44} color={colors.textMuted} />
-      <Text style={styles.errTitle}>Could not load jobs</Text>
+      <Text style={styles.errTitle}>Could not load {feedTab === "hub" ? "jobs" : "curated listings"}</Text>
       <Text style={styles.errSub}>Check your connection and pull down to retry.</Text>
-      <Pressable style={styles.retryBtn} onPress={() => void query.refetch()} accessibilityRole="button">
+      <Pressable
+        style={styles.retryBtn}
+        onPress={() => void (feedTab === "hub" ? hubJobsQuery.refetch() : extListQuery.refetch())}
+        accessibilityRole="button"
+      >
         <Text style={styles.retryBtnText}>Try again</Text>
       </Pressable>
     </View>
-  ) : jobs.length === 0 ? (
+  ) : activeData.length === 0 ? (
     <View style={styles.emptyWrap}>
       <Ionicons name="search-outline" size={44} color={colors.borderStrong} />
       <Text style={styles.empty}>
-        {debouncedQ ? "No roles match that search yet — try another keyword or browse all roles." : "No roles to show right now. Pull to refresh."}
+        {feedTab === "hub"
+          ? debouncedQ
+            ? "No employer-posted roles match that search yet — try another keyword."
+            : "No employer-posted roles right now. Pull to refresh or try curated external."
+          : debouncedQ
+            ? "No curated listings match that filter — clear search or try employer postings."
+            : "No curated listings available yet. Pull to refresh."}
       </Text>
       {debouncedQ ? (
         <Pressable style={styles.retryBtn} onPress={() => setQ("")} accessibilityRole="button">
           <Text style={styles.retryBtnText}>Clear search</Text>
         </Pressable>
-      ) : null}
+      ) : feedTab === "hub" ? (
+        <Pressable style={styles.secondaryCta} onPress={() => setFeedTab("external")} accessibilityRole="button">
+          <Text style={styles.secondaryCtaText}>Browse curated external →</Text>
+        </Pressable>
+      ) : (
+        <Pressable style={styles.secondaryCta} onPress={() => setFeedTab("hub")} accessibilityRole="button">
+          <Text style={styles.secondaryCtaText}>Browse employer postings →</Text>
+        </Pressable>
+      )}
     </View>
   ) : null;
+
+  const refreshing = hubJobsQuery.isFetching || extListQuery.isFetching || dashQuery.isFetching || profileQuery.isFetching;
 
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <FlatList
-          data={query.isError ? [] : jobs}
-          keyExtractor={(item) => item._id}
+          data={activeError ? [] : activeData}
+          keyExtractor={(item) => `${feedTab === "hub" ? "h" : "e"}-${item._id}`}
           ListHeaderComponent={listHeader}
           ListEmptyComponent={emptyBody}
-          refreshControl={
-            <RefreshControl refreshing={query.isFetching || dashQuery.isFetching} onRefresh={onRefresh} />
-          }
-          contentContainerStyle={[styles.listPad, jobs.length === 0 && !listBootloading && styles.listPadGrow]}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          contentContainerStyle={[styles.listPad, activeData.length === 0 && !listBootloading && styles.listPadGrow]}
           keyboardShouldPersistTaps="handled"
-          renderItem={({ item }) => (
-            <Pressable
-              style={[styles.card, cardSurfaceStyle(true)]}
-              onPress={() => router.push(`/job/${item._id}`)}
-              accessibilityRole="button"
-            >
-              <Text style={styles.cardTitle} numberOfLines={2}>
-                {item.title}
-              </Text>
-              <Text style={styles.cardCompany} numberOfLines={1}>
-                {item.companyName || "Employer"}
-              </Text>
-              <Text style={styles.cardMeta} numberOfLines={1}>
-                {[item.locationCity, item.locationCountry].filter(Boolean).join(", ") || item.location || ""}
-                {item.jobType ? ` · ${item.jobType}` : ""}
-              </Text>
-              {formatSalary(item) ? <Text style={styles.cardSalary}>{formatSalary(item)}</Text> : null}
-              <View style={styles.cardFooter}>
-                <Text style={styles.cardCta}>View role</Text>
-                <Ionicons name="arrow-forward-circle" size={22} color={colors.teal} />
-              </View>
-            </Pressable>
-          )}
+          renderItem={({ item }) =>
+            feedTab === "hub" ? (
+              <Pressable
+                style={[styles.card, cardSurfaceStyle(true)]}
+                onPress={() => router.push(`/job/${(item as Job)._id}`)}
+                accessibilityRole="button"
+              >
+                <View style={styles.cardTop}>
+                  <Text style={styles.cardTitle} numberOfLines={2}>
+                    {(item as Job).title}
+                  </Text>
+                  <View style={[styles.kindBadge, styles.kindBadgeHub]}>
+                    <Text style={styles.kindBadgeText}>Hub</Text>
+                  </View>
+                </View>
+                <Text style={styles.cardCompany} numberOfLines={1}>
+                  {(item as Job).companyName || "Employer"}
+                </Text>
+                <Text style={styles.cardMeta} numberOfLines={1}>
+                  {[(item as Job).locationCity, (item as Job).locationCountry].filter(Boolean).join(", ") ||
+                    (item as Job).location ||
+                    ""}
+                  {(item as Job).jobType ? ` · ${(item as Job).jobType}` : ""}
+                </Text>
+                {formatSalary(item as Job) ? (
+                  <Text style={styles.cardSalary}>{formatSalary(item as Job)}</Text>
+                ) : null}
+                <View style={styles.cardFooter}>
+                  <Text style={styles.cardCta}>View role</Text>
+                  <Ionicons name="arrow-forward-circle" size={22} color={colors.teal} />
+                </View>
+              </Pressable>
+            ) : (
+              <Pressable
+                style={[styles.card, cardSurfaceStyle(true)]}
+                onPress={() => router.push(`/external-job/${(item as ExternalJobListingPublic)._id}`)}
+                accessibilityRole="button"
+              >
+                <View style={styles.cardTop}>
+                  <Text style={styles.cardTitle} numberOfLines={2}>
+                    {(item as ExternalJobListingPublic).title}
+                  </Text>
+                  <View style={[styles.kindBadge, styles.kindBadgeExt]}>
+                    <Text style={[styles.kindBadgeText, styles.kindBadgeTextExt]}>Curated</Text>
+                  </View>
+                </View>
+                <Text style={styles.cardCompany} numberOfLines={1}>
+                  {(item as ExternalJobListingPublic).companyName}
+                </Text>
+                <Text style={styles.cardMeta} numberOfLines={2}>
+                  {[(item as ExternalJobListingPublic).location, (item as ExternalJobListingPublic).country]
+                    .filter(Boolean)
+                    .join(" · ")}
+                  {(item as ExternalJobListingPublic).sponsorshipAvailable ? " · Sponsorship noted" : ""}
+                </Text>
+                <View style={styles.cardFooter}>
+                  <Text style={styles.cardCta}>Details & apply</Text>
+                  <Ionicons name="open-outline" size={22} color={colors.teal} />
+                </View>
+              </Pressable>
+            )
+          }
         />
       </SafeAreaView>
     </GshScreenBackground>
@@ -315,6 +448,46 @@ const styles = StyleSheet.create({
   learnTextCol: { flex: 1 },
   learnBannerTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.textPrimary },
   learnBannerSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 18 },
+  feedToggleOuter: { paddingHorizontal: 16, marginTop: 14, marginBottom: 4 },
+  feedToggleLabel: {
+    fontSize: 12,
+    fontFamily: fontFamily.bold,
+    color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 0.75,
+    marginBottom: 8,
+  },
+  feedToggle: { flexDirection: "row", gap: 10 },
+  feedChip: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.background,
+    alignItems: "center",
+  },
+  feedChipOn: {
+    borderColor: colors.brand,
+    backgroundColor: colors.purpleMuted,
+  },
+  feedChipText: {
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
+    color: colors.textMuted,
+    textAlign: "center",
+  },
+  feedChipTextOn: {
+    color: colors.purpleTextDark,
+  },
+  feedHint: {
+    marginTop: 10,
+    fontSize: 13,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+    lineHeight: 18,
+  },
   searchOuter: { paddingHorizontal: 16, paddingVertical: 12 },
   searchWrap: {
     flexDirection: "row",
@@ -358,7 +531,25 @@ const styles = StyleSheet.create({
   card: {
     padding: 16,
   },
-  cardTitle: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.textPrimary, letterSpacing: -0.2 },
+  cardTop: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
+  cardTitle: { flex: 1, fontSize: 17, fontFamily: fontFamily.bold, color: colors.textPrimary, letterSpacing: -0.2 },
+  kindBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignSelf: "flex-start",
+  },
+  kindBadgeHub: {
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.border,
+  },
+  kindBadgeExt: {
+    backgroundColor: "rgba(14, 205, 209, 0.12)",
+    borderColor: "rgba(14, 205, 209, 0.4)",
+  },
+  kindBadgeText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.textMuted },
+  kindBadgeTextExt: { color: colors.textMarketing },
   cardCompany: { marginTop: 8, fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textMarketing },
   cardMeta: { marginTop: 4, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted },
   cardSalary: { marginTop: 10, fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.teal },
@@ -385,6 +576,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brand,
   },
   retryBtnText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.white },
+  secondaryCta: { marginTop: 8, paddingVertical: 12 },
+  secondaryCtaText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.brand },
   empty: {
     textAlign: "center",
     color: colors.textMuted,

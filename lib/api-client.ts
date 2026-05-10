@@ -108,6 +108,34 @@ export async function fetchPublicJobs(params: Record<string, string | number | u
   );
 }
 
+export async function fetchPublicExternalJobListings(sourceType?: string) {
+  const qs =
+    sourceType && sourceType.trim()
+      ? `?sourceType=${encodeURIComponent(sourceType.trim())}`
+      : "";
+  return apiFetchJson<import("@/types/models").ExternalJobListingsPublicResponse>(
+    `/external-job-listings/public${qs}`,
+    undefined,
+    { auth: false }
+  );
+}
+
+export async function fetchPublicExternalJobById(id: string) {
+  return apiFetchJson<import("@/types/models").ExternalJobListingPublic>(
+    `/external-job-listings/public/${encodeURIComponent(id)}`,
+    undefined,
+    { auth: false }
+  );
+}
+
+export async function recordExternalApplyClick(listingId: string) {
+  return apiFetchJson<{ applyUrl?: string }>(
+    `/external-job-listings/public/${encodeURIComponent(listingId)}/apply-click`,
+    { method: "POST" },
+    { auth: false }
+  );
+}
+
 export async function fetchJobById(id: string) {
   return apiFetchJson<import("@/types/models").Job>(`/jobs/${encodeURIComponent(id)}`);
 }

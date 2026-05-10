@@ -1,11 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import * as Linking from "expo-linking";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchCandidateDashboard } from "@/lib/api-client";
-import { marketingUrl } from "@/lib/marketing-links";
 import { colors, gradient } from "@/lib/theme";
 
 const TIPS = [
@@ -57,8 +55,17 @@ export default function ToolsScreen() {
           <Text style={styles.outlineBtnSub}>Visa guides, resource hub, FAQs — same content as the website</Text>
         </Pressable>
 
-        <Pressable style={styles.outlineBtn} onPress={() => void Linking.openURL(marketingUrl("/candidate/tools"))}>
-          <Text style={styles.outlineBtnText}>Open full toolkit on the web</Text>
+        <Pressable
+          style={styles.outlineBtn}
+          onPress={() =>
+            router.push({
+              pathname: "/web-portal",
+              params: { path: encodeURIComponent("/candidate/tools"), title: "Web toolkit" },
+            })
+          }
+        >
+          <Text style={styles.outlineBtnText}>Open full toolkit (web)</Text>
+          <Text style={styles.outlineBtnSub}>Runs inside the in-app viewer</Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>

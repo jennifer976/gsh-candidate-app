@@ -273,3 +273,28 @@ export interface ReferralCodesListResponse {
   page: number;
   perPage: number;
 }
+
+/** Curated / external listings (`GET /external-job-listings/public`). */
+export interface ExternalJobListingPublic {
+  _id: string;
+  title: string;
+  companyName: string;
+  location?: string;
+  applyUrl?: string;
+  summary?: string;
+  country?: string;
+  mobilityTags?: string[];
+  sponsorshipAvailable?: boolean;
+  relocationAvailable?: boolean;
+  sourceType?: string;
+  agencyName?: string;
+  agencyWebsite?: string;
+  expiresAt?: string;
+  isFeatured?: boolean;
+  hubListingUrl?: string;
+}
+
+export interface ExternalJobListingsPublicResponse {
+  hubCuratedBrowseUrl: string;
+  data: ExternalJobListingPublic[];
+}
