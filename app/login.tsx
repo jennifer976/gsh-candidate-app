@@ -1,11 +1,23 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { loginRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
-import { colors } from "@/lib/theme";
+import { colors, fontFamily } from "@/lib/theme";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -42,69 +54,88 @@ export default function LoginScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Global Sponsor Hub</Text>
-          <Text style={styles.subtitle}>Candidate</Text>
-        </View>
+    <GshScreenBackground>
+      <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.brandRow}>
+              <Image source={require("../assets/brand-mark.png")} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
+              <View>
+                <Text style={styles.title}>Global Sponsor Hub</Text>
+                <Text style={styles.subtitle}>Candidate sign in</Text>
+              </View>
+            </View>
 
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="email-address"
-          placeholder="you@example.com"
-          placeholderTextColor={colors.placeholder}
-          value={email}
-          onChangeText={setEmail}
-        />
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+              placeholder="you@example.com"
+              placeholderTextColor={colors.placeholder}
+              value={email}
+              onChangeText={setEmail}
+            />
 
-        <Text style={styles.label}>Password</Text>
-        <TextInput
-          style={styles.input}
-          secureTextEntry
-          placeholder="••••••••"
-          placeholderTextColor={colors.placeholder}
-          value={password}
-          onChangeText={setPassword}
-        />
+            <Text style={styles.label}>Password</Text>
+            <TextInput
+              style={styles.input}
+              secureTextEntry
+              placeholder="••••••••"
+              placeholderTextColor={colors.placeholder}
+              value={password}
+              onChangeText={setPassword}
+            />
 
-        <GshGradientPrimaryButton title="Sign in" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
+            <GshGradientPrimaryButton title="Sign in" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
 
-        <Pressable style={[styles.linkWrap, styles.linkWrapTight]} onPress={() => router.push("/forgot-password")}>
-          <Text style={styles.linkMuted}>Forgot password?</Text>
-        </Pressable>
+            <Pressable style={[styles.linkWrap, styles.linkWrapTight]} onPress={() => router.push("/forgot-password")}>
+              <Text style={styles.linkMuted}>Forgot password?</Text>
+            </Pressable>
 
-        <Pressable style={styles.linkWrap} onPress={() => router.push("/register")}>
-          <Text style={styles.link}>New here? Create a candidate account</Text>
-        </Pressable>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            <Pressable style={styles.linkWrap} onPress={() => router.push("/register")}>
+              <Text style={styles.link}>New here? Create a candidate account</Text>
+            </Pressable>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </GshScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
-  flex: { flex: 1, paddingHorizontal: 24, paddingTop: 16 },
-  header: { marginBottom: 28 },
-  title: { fontSize: 26, fontWeight: "700", color: colors.textPrimary },
-  subtitle: { marginTop: 6, fontSize: 16, color: colors.textMuted, fontWeight: "500" },
-  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
+  safe: { flex: 1 },
+  flex: { flex: 1 },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 28,
+  },
+  brandRow: { flexDirection: "row", alignItems: "center", gap: 14, marginBottom: 28 },
+  mark: { width: 52, height: 52 },
+  title: { fontSize: 22, fontFamily: fontFamily.bold, color: colors.textPrimary, letterSpacing: -0.3 },
+  subtitle: { marginTop: 4, fontSize: 15, fontFamily: fontFamily.medium, color: colors.textMuted },
+  label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
+    borderColor: "rgba(226, 232, 240, 0.92)",
+    borderRadius: 14,
     paddingHorizontal: 14,
-    paddingVertical: Platform.OS === "ios" ? 14 : 10,
+    paddingVertical: Platform.OS === "ios" ? 14 : 12,
     fontSize: 16,
     backgroundColor: colors.background,
     marginBottom: 16,
     color: colors.textPrimary,
+    fontFamily: fontFamily.regular,
   },
   linkWrap: { marginTop: 24, alignItems: "center" },
   linkWrapTight: { marginTop: 14 },
-  link: { color: colors.brand, fontSize: 15, fontWeight: "500" },
-  linkMuted: { color: colors.textMuted, fontSize: 15, fontWeight: "500" },
+  link: { color: colors.brand, fontSize: 15, fontFamily: fontFamily.semiBold },
+  linkMuted: { color: colors.textMuted, fontSize: 15, fontFamily: fontFamily.medium },
 });

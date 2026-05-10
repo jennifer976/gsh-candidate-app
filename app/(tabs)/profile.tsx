@@ -15,9 +15,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchOwnProfile, updateProfile, uploadFileFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
-import { colors } from "@/lib/theme";
+import { colors, fontFamily } from "@/lib/theme";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -109,10 +110,11 @@ export default function ProfileScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={["bottom"]}>
-      <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled">
-        <Text style={styles.h1}>Your profile</Text>
-        {profileQuery.isLoading ? (
+    <GshScreenBackground>
+      <SafeAreaView style={styles.safe} edges={["bottom"]}>
+        <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled">
+          <Text style={styles.h1}>Your profile</Text>
+          {profileQuery.isLoading ? (
           <Text style={styles.body}>Loading…</Text>
         ) : profileQuery.isError ? (
           <Text style={styles.warn}>Profile could not be loaded.</Text>
@@ -173,25 +175,26 @@ export default function ProfileScreen() {
               )}
             </Pressable>
           </>
-        )}
+          )}
 
-        <Pressable style={[styles.signOut, { marginTop: 28 }]} onPress={logout}>
-          <Text style={styles.signOutText}>Sign out</Text>
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+          <Pressable style={[styles.signOut, { marginTop: 28 }]} onPress={logout}>
+            <Text style={styles.signOutText}>Sign out</Text>
+          </Pressable>
+        </ScrollView>
+      </SafeAreaView>
+    </GshScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
+  safe: { flex: 1 },
   pad: { padding: 20, paddingBottom: 40 },
-  h1: { fontSize: 22, fontWeight: "700", color: colors.textPrimary, marginBottom: 8 },
-  body: { fontSize: 15, color: colors.textSecondary },
-  warn: { fontSize: 14, color: "#b45309", marginBottom: 12 },
-  completion: { fontSize: 15, fontWeight: "600", color: colors.brand, marginBottom: 8 },
-  email: { fontSize: 14, color: colors.textMuted, marginBottom: 16 },
-  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
+  h1: { fontSize: 24, fontFamily: fontFamily.extraBold, color: colors.textPrimary, marginBottom: 8, letterSpacing: -0.3 },
+  body: { fontSize: 15, fontFamily: fontFamily.regular, color: colors.textSecondary },
+  warn: { fontSize: 14, fontFamily: fontFamily.medium, color: "#b45309", marginBottom: 12 },
+  completion: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.brand, marginBottom: 8 },
+  email: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, marginBottom: 16 },
+  label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -199,12 +202,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,
+    fontFamily: fontFamily.regular,
     backgroundColor: colors.background,
     marginBottom: 14,
     color: colors.textPrimary,
   },
   disabled: { opacity: 0.65 },
-  resumeHint: { fontSize: 13, color: colors.textMuted, marginBottom: 10, lineHeight: 18 },
+  resumeHint: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, marginBottom: 10, lineHeight: 18 },
   outlineBtn: {
     borderWidth: 1,
     borderColor: colors.brand,
@@ -213,7 +217,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.background,
   },
-  outlineBtnText: { fontSize: 16, fontWeight: "600", color: colors.brand },
+  outlineBtnText: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.brand },
   signOut: {
     borderWidth: 1,
     borderColor: colors.borderStrong,
@@ -222,5 +226,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.background,
   },
-  signOutText: { fontSize: 16, fontWeight: "600", color: colors.error },
+  signOutText: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.error },
 });

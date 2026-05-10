@@ -1,5 +1,13 @@
 import "react-native-gesture-handler";
 import "@/lib/register-api-auth";
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+  Inter_800ExtraBold,
+  useFonts,
+} from "@expo-google-fonts/inter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
@@ -19,13 +27,20 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   const [hydrated, setHydrated] = useState(useAuthStore.persist.hasHydrated());
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_800ExtraBold,
+  });
 
   useEffect(() => {
     const unsub = useAuthStore.persist.onFinishHydration(() => setHydrated(true));
     return unsub;
   }, []);
 
-  if (!hydrated) {
+  if (!hydrated || !fontsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.surfaceMuted }}>
         <ActivityIndicator size="large" color={colors.brand} />

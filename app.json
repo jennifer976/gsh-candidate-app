@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "gsh-candidate-app",
+    "name": "Global Sponsor Hub",
     "slug": "gsh-candidate-app",
     "scheme": "gsh-candidate",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/brand-mark.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/brand-mark.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,14 +23,14 @@
     "android": {
       "package": "com.globalsponsorhub.candidate",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/brand-mark.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/brand-mark.png"
     },
     "plugins": [
       "expo-router",
@@ -38,11 +38,12 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/icon.png",
+          "icon": "./assets/brand-mark.png",
           "color": "#610a90",
           "defaultChannel": "default"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "extra": {
       "apiUrl": "https://api.globalsponsorhub.com",

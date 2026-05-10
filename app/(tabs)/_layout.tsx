@@ -1,7 +1,15 @@
+import { Ionicons } from "@expo/vector-icons";
+import type { ComponentProps } from "react";
 import { Redirect, Tabs } from "expo-router";
-import { Text } from "react-native";
+import { Platform } from "react-native";
 import { useAuthStore } from "@/lib/auth-store";
-import { colors, navHeader } from "@/lib/theme";
+import { colors, fontFamily, navHeader } from "@/lib/theme";
+
+type IonName = ComponentProps<typeof Ionicons>["name"];
+
+function TabGlyph({ focused, color, filled, outline }: { focused: boolean; color: string; filled: IonName; outline: IonName }) {
+  return <Ionicons name={focused ? filled : outline} size={24} color={color} />;
+}
 
 export default function TabsLayout() {
   const token = useAuthStore((s) => s.token);
@@ -13,17 +21,28 @@ export default function TabsLayout() {
         ...navHeader,
         tabBarActiveTintColor: colors.brand,
         tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle: { backgroundColor: colors.background, borderTopColor: colors.border },
+        tabBarStyle: {
+          backgroundColor: colors.background,
+          borderTopColor: colors.border,
+          borderTopWidth: 1,
+          height: Platform.OS === "ios" ? 88 : 64,
+          paddingTop: 6,
+          paddingBottom: Platform.OS === "ios" ? 28 : 10,
+        },
+        tabBarLabelStyle: {
+          fontFamily: fontFamily.medium,
+          fontSize: 11,
+          marginTop: 2,
+        },
+        tabBarHideOnKeyboard: true,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Jobs",
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }} accessibilityLabel="Jobs">
-              💼
-            </Text>
+          tabBarIcon: ({ color, focused }) => (
+            <TabGlyph focused={focused} color={color} filled="briefcase" outline="briefcase-outline" />
           ),
         }}
       />
@@ -31,10 +50,8 @@ export default function TabsLayout() {
         name="saved"
         options={{
           title: "Saved",
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }} accessibilityLabel="Saved jobs">
-              🔖
-            </Text>
+          tabBarIcon: ({ color, focused }) => (
+            <TabGlyph focused={focused} color={color} filled="bookmark" outline="bookmark-outline" />
           ),
         }}
       />
@@ -42,10 +59,8 @@ export default function TabsLayout() {
         name="applications"
         options={{
           title: "Applied",
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }} accessibilityLabel="Applications">
-              📋
-            </Text>
+          tabBarIcon: ({ color, focused }) => (
+            <TabGlyph focused={focused} color={color} filled="document-text" outline="document-text-outline" />
           ),
         }}
       />
@@ -53,10 +68,8 @@ export default function TabsLayout() {
         name="messages"
         options={{
           title: "Inbox",
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }} accessibilityLabel="Messages">
-              💬
-            </Text>
+          tabBarIcon: ({ color, focused }) => (
+            <TabGlyph focused={focused} color={color} filled="chatbubbles" outline="chatbubbles-outline" />
           ),
         }}
       />
@@ -64,10 +77,8 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }} accessibilityLabel="Profile">
-              👤
-            </Text>
+          tabBarIcon: ({ color, focused }) => (
+            <TabGlyph focused={focused} color={color} filled="person" outline="person-outline" />
           ),
         }}
       />
@@ -75,10 +86,13 @@ export default function TabsLayout() {
         name="more"
         options={{
           title: "More",
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }} accessibilityLabel="More">
-              ⋯
-            </Text>
+          tabBarIcon: ({ color, focused }) => (
+            <TabGlyph
+              focused={focused}
+              color={color}
+              filled="ellipsis-horizontal-circle"
+              outline="ellipsis-horizontal-circle-outline"
+            />
           ),
         }}
       />
