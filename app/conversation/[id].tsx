@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -14,14 +15,15 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchThreadMessages, sendThreadMessage } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
-import { colors } from "@/lib/theme";
+import { colors, fontFamily, radii } from "@/lib/theme";
 import { authUserId, type ThreadMessage } from "@/types/models";
 
 export default function ConversationScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const conversationId = String(id || "");
+  const conversationId = String(id || "").trim();
   const router = useRouter();
   const qc = useQueryClient();
   const insets = useSafeAreaInsets();
@@ -68,7 +70,22 @@ export default function ConversationScreen() {
     [me]
   );
 
+  if (!conversationId) {
+    return (
+      <GshScreenBackground>
+        <View style={styles.center}>
+          <Ionicons name="chatbubble-ellipses-outline" size={44} color={colors.borderStrong} />
+          <Text style={styles.err}>This conversation link is not valid.</Text>
+          <Pressable onPress={() => router.back()} accessibilityRole="button">
+            <Text style={styles.link}>Go back</Text>
+          </Pressable>
+        </View>
+      </GshScreenBackground>
+    );
+  }
+
   return (
+    <GshScreenBackground>
     <KeyboardAvoidingView
       style={styles.flex}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -80,9 +97,13 @@ export default function ConversationScreen() {
         </View>
       ) : threadQuery.isError ? (
         <View style={styles.center}>
+          <Ionicons name="cloud-offline-outline" size={44} color={colors.textMuted} />
           <Text style={styles.err}>Could not load thread.</Text>
-          <Pressable onPress={() => router.back()}>
-            <Text style={styles.link}>Go back</Text>
+          <Pressable onPress={() => void threadQuery.refetch()} accessibilityRole="button">
+            <Text style={styles.link}>Retry</Text>
+          </Pressable>
+          <Pressable onPress={() => router.back()} accessibilityRole="button">
+            <Text style={[styles.link, styles.linkMuted]}>Go back</Text>
           </Pressable>
         </View>
       ) : (
@@ -115,25 +136,27 @@ export default function ConversationScreen() {
         </>
       )}
     </KeyboardAvoidingView>
+    </GshScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: colors.surfaceMuted },
-  center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
-  err: { color: colors.error, marginBottom: 12 },
-  link: { color: colors.brand, fontWeight: "600" },
+  flex: { flex: 1, backgroundColor: "transparent" },
+  center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
+  err: { color: colors.textPrimary, marginBottom: 4, fontFamily: fontFamily.medium, textAlign: "center" },
+  link: { color: colors.brand, fontFamily: fontFamily.semiBold },
+  linkMuted: { color: colors.textMuted, marginTop: 4 },
   threadPad: { paddingHorizontal: 12, paddingVertical: 12 },
   bubbleWrap: { marginBottom: 8, maxWidth: "100%" },
   bubbleWrapMe: { alignSelf: "flex-end" },
   bubbleWrapThem: { alignSelf: "flex-start" },
-  bubble: { maxWidth: "92%", borderRadius: 14, paddingHorizontal: 12, paddingVertical: 8 },
+  bubble: { maxWidth: "92%", borderRadius: radii.md, paddingHorizontal: 12, paddingVertical: 8 },
   bubbleMe: { backgroundColor: colors.brand },
   bubbleThem: { backgroundColor: colors.border },
-  bubbleText: { fontSize: 16, lineHeight: 22 },
+  bubbleText: { fontSize: 16, lineHeight: 22, fontFamily: fontFamily.regular },
   bubbleTextMe: { color: colors.white },
   bubbleTextThem: { color: colors.textPrimary },
-  time: { marginTop: 4, fontSize: 11, alignSelf: "flex-end" },
+  time: { marginTop: 4, fontSize: 11, alignSelf: "flex-end", fontFamily: fontFamily.medium },
   timeMe: { color: "rgba(255,255,255,0.75)" },
   timeThem: { color: colors.textMuted },
   composer: {
@@ -152,13 +175,14 @@ const styles = StyleSheet.create({
     maxHeight: 120,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: radii.sm,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
+    fontFamily: fontFamily.regular,
     color: colors.textPrimary,
   },
-  sendBtn: { backgroundColor: colors.brand, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12 },
+  sendBtn: { backgroundColor: colors.brand, borderRadius: radii.sm, paddingHorizontal: 16, paddingVertical: 12 },
   sendDisabled: { opacity: 0.5 },
-  sendText: { color: colors.white, fontWeight: "700", fontSize: 15 },
+  sendText: { color: colors.white, fontFamily: fontFamily.bold, fontSize: 15 },
 });

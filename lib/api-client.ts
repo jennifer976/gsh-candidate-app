@@ -4,6 +4,14 @@ export interface ApiError {
   status: number;
 }
 
+const DEFAULT_FETCH_TIMEOUT_MS = 45_000;
+
+function isAbortError(e: unknown): boolean {
+  if (e instanceof DOMException && e.name === "AbortError") return true;
+  if (e instanceof Error && e.name === "AbortError") return true;
+  return false;
+}
+
 let getToken: () => string | null = () => null;
 
 /** Wire auth store once at startup so fetch helpers stay decoupled from Zustand internals. */
@@ -14,19 +22,57 @@ export function bindAuthTokenGetter(fn: () => string | null) {
 export async function apiFetchJson<T>(
   path: string,
   init?: RequestInit,
-  opts?: { auth?: boolean }
+  opts?: { auth?: boolean; timeoutMs?: number }
 ): Promise<T> {
   const auth = opts?.auth !== false;
+  const timeoutMs = opts?.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS;
   const token = auth ? getToken() : null;
   const url = `${getApiV1BaseUrl()}${path}`;
-  const response = await fetch(url, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...init?.headers,
-    },
-  });
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  const upstream = init?.signal;
+  const onUpstreamAbort = () => {
+    clearTimeout(timeoutId);
+    controller.abort(upstream?.reason);
+  };
+
+  if (upstream) {
+    if (upstream.aborted) {
+      clearTimeout(timeoutId);
+      throw upstream.reason ?? new Error("Request aborted");
+    }
+    upstream.addEventListener("abort", onUpstreamAbort, { once: true });
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...init?.headers,
+      },
+      signal: controller.signal,
+    });
+  } catch (e: unknown) {
+    clearTimeout(timeoutId);
+    upstream?.removeEventListener("abort", onUpstreamAbort);
+    if (isAbortError(e)) {
+      const cancelled = upstream?.aborted === true;
+      const err: ApiError = {
+        message: cancelled ? "Request cancelled" : "Request timed out",
+        status: 0,
+      };
+      throw err;
+    }
+    throw e;
+  }
+
+  clearTimeout(timeoutId);
+  upstream?.removeEventListener("abort", onUpstreamAbort);
 
   const text = await response.text();
 
@@ -108,13 +154,22 @@ export async function fetchPublicJobs(params: Record<string, string | number | u
   );
 }
 
-export async function fetchPublicExternalJobListings(sourceType?: string) {
-  const qs =
-    sourceType && sourceType.trim()
-      ? `?sourceType=${encodeURIComponent(sourceType.trim())}`
-      : "";
+export async function fetchPublicExternalJobListings(opts?: {
+  sourceType?: string;
+  q?: string;
+  page?: number;
+  perPage?: number;
+}) {
+  const q = new URLSearchParams();
+  const st = opts?.sourceType?.trim();
+  if (st) q.set("sourceType", st);
+  const search = opts?.q?.trim();
+  if (search) q.set("q", search);
+  if (opts?.page != null) q.set("page", String(opts.page));
+  if (opts?.perPage != null) q.set("perPage", String(opts.perPage));
+  const qs = q.toString();
   return apiFetchJson<import("@/types/models").ExternalJobListingsPublicResponse>(
-    `/external-job-listings/public${qs}`,
+    `/external-job-listings/public${qs ? `?${qs}` : ""}`,
     undefined,
     { auth: false }
   );

@@ -17,7 +17,8 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPublicExternalJobById, recordExternalApplyClick } from "@/lib/api-client";
 import { marketingUrl } from "@/lib/marketing-links";
-import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
+import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
+import { webPortalRoute } from "@/lib/web-portal-route";
 import type { ExternalJobListingPublic } from "@/types/models";
 
 function hubPortalPath(listing: ExternalJobListingPublic): string {
@@ -41,7 +42,7 @@ export default function ExternalJobDetailScreen() {
   const query = useQuery({
     queryKey: ["external-job", listingId],
     queryFn: () => fetchPublicExternalJobById(listingId),
-    enabled: !!listingId,
+    enabled: !!listingId.trim(),
   });
 
   const applyMut = useMutation({
@@ -61,6 +62,22 @@ export default function ExternalJobDetailScreen() {
       ),
   });
 
+  if (!listingId.trim()) {
+    return (
+      <GshScreenBackground>
+        <SafeAreaView style={styles.safe} edges={["bottom"]}>
+          <View style={styles.center}>
+            <Ionicons name="link-outline" size={44} color={colors.borderStrong} />
+            <Text style={styles.errTitle}>This listing link is not valid.</Text>
+            <Pressable style={styles.secondaryBtn} onPress={() => router.back()} accessibilityRole="button">
+              <Text style={styles.secondaryBtnText}>Go back</Text>
+            </Pressable>
+          </View>
+        </SafeAreaView>
+      </GshScreenBackground>
+    );
+  }
+
   if (query.isLoading) {
     return (
       <GshScreenBackground>
@@ -74,15 +91,19 @@ export default function ExternalJobDetailScreen() {
     );
   }
 
-  if (query.isError) {
+  if (query.isError || query.data == null) {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.safe} edges={["bottom"]}>
           <View style={styles.center}>
             <Ionicons name="document-text-outline" size={44} color={colors.borderStrong} />
             <Text style={styles.errTitle}>This curated role could not be loaded.</Text>
-            <Pressable style={styles.secondaryBtn} onPress={() => router.back()} accessibilityRole="button">
-              <Text style={styles.secondaryBtnText}>Go back</Text>
+            <Text style={styles.errSub}>Check your connection and try again.</Text>
+            <Pressable style={styles.secondaryBtn} onPress={() => void query.refetch()} accessibilityRole="button">
+              <Text style={styles.secondaryBtnText}>Retry</Text>
+            </Pressable>
+            <Pressable style={styles.secondaryBtnMuted} onPress={() => router.back()} accessibilityRole="button">
+              <Text style={styles.secondaryBtnMutedText}>Go back</Text>
             </Pressable>
           </View>
         </SafeAreaView>
@@ -91,20 +112,6 @@ export default function ExternalJobDetailScreen() {
   }
 
   const listing = query.data;
-  if (!listing) {
-    return (
-      <GshScreenBackground>
-        <SafeAreaView style={styles.safe} edges={["bottom"]}>
-          <View style={styles.center}>
-            <Text style={styles.errTitle}>Listing unavailable.</Text>
-            <Pressable style={styles.secondaryBtn} onPress={() => router.back()} accessibilityRole="button">
-              <Text style={styles.secondaryBtnText}>Go back</Text>
-            </Pressable>
-          </View>
-        </SafeAreaView>
-      </GshScreenBackground>
-    );
-  }
 
   const hubPath = hubPortalPath(listing);
 
@@ -165,15 +172,7 @@ export default function ExternalJobDetailScreen() {
             />
             <Pressable
               style={styles.outlineBtn}
-              onPress={() =>
-                router.push({
-                  pathname: "/web-portal",
-                  params: {
-                    path: encodeURIComponent(hubPath.startsWith("/") ? hubPath : `/${hubPath}`),
-                    title: "On hub",
-                  },
-                })
-              }
+              onPress={() => router.push(webPortalRoute(hubPath.startsWith("/") ? hubPath : `/${hubPath}`, "On hub"))}
               accessibilityRole="button"
             >
               <Text style={styles.outlineBtnText}>View listing page on hub</Text>
@@ -203,6 +202,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: fontFamily.semiBold,
     marginBottom: 8,
+  },
+  errSub: {
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    color: colors.textMuted,
+    textAlign: "center",
+    lineHeight: 20,
+    marginBottom: 8,
+    paddingHorizontal: 16,
   },
   hero: { padding: 18, marginBottom: 10 },
   badgeRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 12 },
@@ -242,7 +250,7 @@ const styles = StyleSheet.create({
   outlineBtn: {
     paddingVertical: 14,
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: radii.sm,
     borderWidth: 1,
     borderColor: colors.borderStrong,
     backgroundColor: colors.background,
@@ -253,10 +261,21 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
-    borderRadius: 12,
+    borderRadius: radii.sm,
     borderWidth: 1,
     borderColor: colors.brand,
     backgroundColor: colors.background,
   },
   secondaryBtnText: { color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 16, textAlign: "center" },
+  secondaryBtnMuted: {
+    marginTop: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  secondaryBtnMutedText: {
+    color: colors.textMuted,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    textAlign: "center",
+  },
 });

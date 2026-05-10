@@ -94,7 +94,8 @@ export default function DashboardScreen() {
             </Text>
           ))}
 
-          <Text style={styles.section}>Fresh listings</Text>
+          <Text style={styles.section}>Fresh hub listings</Text>
+          <Text style={styles.sectionHint}>Employer-posted roles on Global Sponsor Hub (last week).</Text>
           {d.latestJobs.slice(0, 8).map((job) => (
             <Pressable
               key={job._id}
@@ -113,6 +114,38 @@ export default function DashboardScreen() {
               <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
             </Pressable>
           ))}
+
+          {d.latestCuratedExternal && d.latestCuratedExternal.length > 0 ? (
+            <>
+              <Text style={styles.section}>Curated external</Text>
+              <Text style={styles.sectionHint}>
+                Partner-curated & aggregated roles (same board as the Jobs tab).
+                {typeof d.stats.curatedRolesPublished === "number"
+                  ? ` ${d.stats.curatedRolesPublished} live on the public hub.`
+                  : ""}
+              </Text>
+              {d.latestCuratedExternal.map((job) => (
+                <Pressable
+                  key={job._id}
+                  style={[styles.jobPickRow, cardSurfaceStyle(true)]}
+                  onPress={() => router.push(`/external-job/${job._id}`)}
+                  accessibilityRole="button"
+                >
+                  <View style={styles.jobPickText}>
+                    <Text style={styles.listTitle} numberOfLines={1}>
+                      {job.title}
+                    </Text>
+                    <Text style={styles.listSub} numberOfLines={2}>
+                      {job.companyName}
+                      {(job.location || job.country) && ` · ${[job.location, job.country].filter(Boolean).join(" · ")}`}
+                      {job.sponsorshipAvailable ? " · Sponsorship noted" : ""}
+                    </Text>
+                  </View>
+                  <Ionicons name="open-outline" size={20} color={colors.teal} />
+                </Pressable>
+              ))}
+            </>
+          ) : null}
 
           <Text style={styles.section}>Recent applications</Text>
           {d.recentApplications.slice(0, 8).map((a, i) => (
@@ -219,6 +252,13 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.bold,
     color: colors.textPrimary,
     marginTop: 18,
+    marginBottom: 6,
+  },
+  sectionHint: {
+    fontSize: 13,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+    lineHeight: 18,
     marginBottom: 10,
   },
   chartLine: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMarketing, marginBottom: 6 },

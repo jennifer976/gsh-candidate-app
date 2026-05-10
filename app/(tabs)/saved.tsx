@@ -41,6 +41,9 @@ export default function SavedJobsScreen() {
           <View style={styles.center}>
             <Ionicons name="alert-circle-outline" size={40} color={colors.error} />
             <Text style={styles.err}>Saved jobs could not be loaded.</Text>
+            <Pressable onPress={() => void query.refetch()} accessibilityRole="button" accessibilityLabel="Retry loading saved jobs">
+              <Text style={styles.retry}>Try again</Text>
+            </Pressable>
           </View>
         ) : (
           <FlatList
@@ -115,6 +118,7 @@ const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
   muted: { color: colors.textMuted, fontSize: 15, fontFamily: fontFamily.medium },
   err: { color: colors.error, textAlign: "center", fontFamily: fontFamily.medium },
+  retry: { color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 16, marginTop: 4 },
   emptyWrap: { alignItems: "center", paddingHorizontal: 24, marginTop: 48, gap: 8 },
   empty: { textAlign: "center", color: colors.textPrimary, fontFamily: fontFamily.semiBold, fontSize: 17 },
   emptySub: {

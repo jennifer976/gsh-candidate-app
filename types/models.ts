@@ -201,6 +201,16 @@ export interface DashboardJobListing {
   createdAt: string;
 }
 
+export interface DashboardCuratedListingRow {
+  _id: string;
+  title: string;
+  companyName: string;
+  location?: string;
+  country?: string;
+  sponsorshipAvailable?: boolean;
+  hubListingUrl?: string;
+}
+
 export interface CandidateDashboardResponse {
   profile: {
     completionPercentage: number;
@@ -210,11 +220,14 @@ export interface CandidateDashboardResponse {
     totalApplied: number;
     interviews: number;
     responses: number;
+    /** Live curated/external roles matching the public hub visibility rules. */
+    curatedRolesPublished?: number;
   };
   chartData: DashboardChartPoint[];
   savedJobs: DashboardSavedJobRow[];
   recentApplications: DashboardRecentApplication[];
   latestJobs: DashboardJobListing[];
+  latestCuratedExternal?: DashboardCuratedListingRow[];
 }
 
 export interface AppNotificationDto {
@@ -297,4 +310,7 @@ export interface ExternalJobListingPublic {
 export interface ExternalJobListingsPublicResponse {
   hubCuratedBrowseUrl: string;
   data: ExternalJobListingPublic[];
+  total: number;
+  page: number;
+  perPage: number;
 }

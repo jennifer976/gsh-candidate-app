@@ -17,11 +17,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-client";
-import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
+import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 function errMsg(e: unknown): string {
   if (e && typeof e === "object" && "message" in e) return String((e as { message: string }).message);
   return "Something went wrong.";
+}
+
+async function safeSuccessHaptic() {
+  try {
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  } catch {
+    /* Web / simulator — ignore */
+  }
 }
 
 export default function JobDetailScreen() {
@@ -35,7 +43,7 @@ export default function JobDetailScreen() {
   const jobQuery = useQuery({
     queryKey: ["job", jobId],
     queryFn: () => fetchJobById(jobId),
-    enabled: !!jobId,
+    enabled: !!jobId.trim(),
   });
 
   const profileQuery = useQuery({
@@ -54,7 +62,7 @@ export default function JobDetailScreen() {
   const saveMut = useMutation({
     mutationFn: () => saveJob(jobId),
     onSuccess: () => {
-      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      void safeSuccessHaptic();
       void qc.invalidateQueries({ queryKey: ["saved-jobs"] });
       void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
       Alert.alert("Saved", "Job saved to your list.");
@@ -69,7 +77,7 @@ export default function JobDetailScreen() {
   const applyMut = useMutation({
     mutationFn: () => applyToJob(jobId, coverLetter.trim() || undefined, resumeUrl || undefined),
     onSuccess: () => {
-      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      void safeSuccessHaptic();
       void qc.invalidateQueries({ queryKey: ["applications"] });
       void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
       Alert.alert("Application sent", "The employer will see your profile and CV for this role.", [
@@ -106,9 +114,23 @@ export default function JobDetailScreen() {
     applyMut.mutate();
   }
 
-  const job = jobQuery.data;
+  if (!jobId.trim()) {
+    return (
+      <GshScreenBackground>
+        <SafeAreaView style={styles.safe} edges={["bottom"]}>
+          <View style={styles.center}>
+            <Ionicons name="link-outline" size={44} color={colors.borderStrong} />
+            <Text style={styles.errTitle}>This job link is not valid.</Text>
+            <Pressable style={styles.secondaryBtn} onPress={() => router.back()} accessibilityRole="button">
+              <Text style={styles.secondaryBtnText}>Go back</Text>
+            </Pressable>
+          </View>
+        </SafeAreaView>
+      </GshScreenBackground>
+    );
+  }
 
-  if (jobQuery.isLoading || !job) {
+  if (jobQuery.isLoading) {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.safe} edges={["bottom"]}>
@@ -121,21 +143,27 @@ export default function JobDetailScreen() {
     );
   }
 
-  if (jobQuery.isError) {
+  if (jobQuery.isError || jobQuery.data == null) {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.safe} edges={["bottom"]}>
           <View style={styles.center}>
             <Ionicons name="document-text-outline" size={44} color={colors.borderStrong} />
             <Text style={styles.errTitle}>This job could not be loaded.</Text>
-            <Pressable style={styles.secondaryBtn} onPress={() => router.back()} accessibilityRole="button">
-              <Text style={styles.secondaryBtnText}>Go back</Text>
+            <Text style={styles.errSub}>Check your connection and try again.</Text>
+            <Pressable style={styles.secondaryBtn} onPress={() => void jobQuery.refetch()} accessibilityRole="button">
+              <Text style={styles.secondaryBtnText}>Retry</Text>
+            </Pressable>
+            <Pressable style={styles.secondaryBtnMuted} onPress={() => router.back()} accessibilityRole="button">
+              <Text style={styles.secondaryBtnMutedText}>Go back</Text>
             </Pressable>
           </View>
         </SafeAreaView>
       </GshScreenBackground>
     );
   }
+
+  const job = jobQuery.data;
 
   const location = [job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || "";
 
@@ -220,6 +248,15 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     marginBottom: 8,
   },
+  errSub: {
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    color: colors.textMuted,
+    textAlign: "center",
+    lineHeight: 20,
+    marginBottom: 8,
+    paddingHorizontal: 16,
+  },
   hero: { padding: 18, marginBottom: 8 },
   title: { fontSize: 24, fontFamily: fontFamily.extraBold, color: colors.textPrimary, letterSpacing: -0.4 },
   company: { marginTop: 10, fontSize: 17, fontFamily: fontFamily.semiBold, color: colors.textMarketing },
@@ -238,7 +275,7 @@ const styles = StyleSheet.create({
     minHeight: 100,
     borderWidth: 1,
     borderColor: "rgba(226, 232, 240, 0.92)",
-    borderRadius: 14,
+    borderRadius: radii.md,
     padding: 14,
     fontSize: 15,
     backgroundColor: colors.background,
@@ -252,7 +289,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 16,
     padding: 14,
-    borderRadius: 14,
+    borderRadius: radii.md,
     backgroundColor: colors.warningBg,
     borderWidth: 1,
     borderColor: colors.warningBorder,
@@ -269,10 +306,21 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
-    borderRadius: 12,
+    borderRadius: radii.sm,
     borderWidth: 1,
     borderColor: colors.brand,
     backgroundColor: colors.background,
   },
   secondaryBtnText: { color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 16, textAlign: "center" },
+  secondaryBtnMuted: {
+    marginTop: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  secondaryBtnMutedText: {
+    color: colors.textMuted,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    textAlign: "center",
+  },
 });

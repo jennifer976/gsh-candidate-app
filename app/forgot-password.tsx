@@ -13,8 +13,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { requestForgotPassword } from "@/lib/api-client";
-import { colors } from "@/lib/theme";
+import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -35,51 +36,81 @@ export default function ForgotPasswordScreen() {
   });
 
   return (
-    <SafeAreaView style={styles.safe} edges={["bottom"]}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-        <View style={styles.pad}>
-          <Text style={styles.h1}>Forgot password</Text>
-          <Text style={styles.lead}>We will email you a link to reset your password.</Text>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="you@example.com"
-          />
-          <GshGradientPrimaryButton
-            title={mut.isPending ? "Sending…" : "Send reset link"}
-            onPress={() => mut.mutate()}
-            disabled={mut.isPending}
-          />
-          <Pressable style={styles.back} onPress={() => router.back()}>
-            <Text style={styles.backText}>Back to sign in</Text>
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    <GshScreenBackground>
+      <SafeAreaView style={styles.safe} edges={["bottom"]}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
+          <View style={styles.pad}>
+            <Text style={styles.eyebrow}>Global Sponsor Hub</Text>
+            <Text style={styles.h1}>Forgot password</Text>
+            <Text style={styles.lead}>We will email you a link to reset your password.</Text>
+
+            <View style={[cardSurfaceStyle(false), styles.formCard]}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={setEmail}
+                placeholder="you@example.com"
+                placeholderTextColor={colors.placeholder}
+              />
+              <GshGradientPrimaryButton
+                title={mut.isPending ? "Sending…" : "Send reset link"}
+                onPress={() => mut.mutate()}
+                disabled={mut.isPending}
+              />
+            </View>
+
+            <Pressable style={styles.back} onPress={() => router.back()} accessibilityRole="button">
+              <Text style={styles.backText}>Back to sign in</Text>
+            </Pressable>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </GshScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
-  pad: { padding: 24 },
-  h1: { fontSize: 24, fontWeight: "800", color: colors.textPrimary, marginBottom: 8 },
-  lead: { fontSize: 14, color: colors.textMuted, marginBottom: 20, lineHeight: 20 },
-  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
+  safe: { flex: 1 },
+  pad: { padding: 24, flex: 1 },
+  eyebrow: {
+    fontFamily: fontFamily.bold,
+    fontSize: 11,
+    color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 10,
+  },
+  h1: { fontFamily: fontFamily.extraBold, fontSize: 26, letterSpacing: -0.35, color: colors.textPrimary, marginBottom: 8 },
+  lead: {
+    fontFamily: fontFamily.regular,
+    fontSize: 15,
+    color: colors.textMuted,
+    marginBottom: 20,
+    lineHeight: 22,
+  },
+  formCard: {
+    padding: 18,
+    marginBottom: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.teal,
+    backgroundColor: colors.background,
+  },
+  label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: radii.sm,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,
+    fontFamily: fontFamily.regular,
     backgroundColor: colors.background,
     marginBottom: 16,
     color: colors.textPrimary,
   },
-  back: { marginTop: 20, alignItems: "center" },
-  backText: { color: colors.brand, fontWeight: "600", fontSize: 15 },
+  back: { marginTop: 24, alignItems: "center", paddingVertical: 8 },
+  backText: { color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 15 },
 });

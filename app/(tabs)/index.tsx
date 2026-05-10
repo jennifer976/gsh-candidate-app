@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -23,6 +23,7 @@ import {
   fetchPublicJobs,
 } from "@/lib/api-client";
 import { addRecentJobSearch, loadRecentJobSearches } from "@/lib/recent-job-searches";
+import { WEB_PORTAL, webPortalRoute } from "@/lib/web-portal-route";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic, Job } from "@/types/models";
 
@@ -38,31 +39,13 @@ function formatSalary(job: Job): string {
   return "";
 }
 
-function externalMatchesQuery(listing: ExternalJobListingPublic, q: string): boolean {
-  const dq = q.trim().toLowerCase();
-  if (!dq) return true;
-  const tokens = dq.split(/\s+/).filter(Boolean);
-  const hay = [
-    listing.title,
-    listing.companyName,
-    listing.location,
-    listing.summary,
-    listing.country,
-    ...(listing.mobilityTags || []),
-    listing.agencyName,
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-  return tokens.every((t) => hay.includes(t));
-}
-
 export default function JobsScreen() {
   const router = useRouter();
   const [feedTab, setFeedTab] = useState<FeedTab>("hub");
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
   const [recent, setRecent] = useState<string[]>([]);
+  const [pullRefreshing, setPullRefreshing] = useState(false);
 
   useEffect(() => {
     void loadRecentJobSearches().then(setRecent);
@@ -104,12 +87,24 @@ export default function JobsScreen() {
         page: 1,
         perPage: 25,
       }),
+    staleTime: 60_000,
   });
 
-  const extListQuery = useQuery({
-    queryKey: ["external-job-listings", "public"],
-    queryFn: () => fetchPublicExternalJobListings(),
+  const extInfinite = useInfiniteQuery({
+    queryKey: ["external-job-listings", "public", debouncedQ],
+    enabled: feedTab === "external",
+    initialPageParam: 1,
     staleTime: 120_000,
+    queryFn: ({ pageParam }) =>
+      fetchPublicExternalJobListings({
+        q: debouncedQ || undefined,
+        page: pageParam,
+        perPage: 25,
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      const loaded = allPages.reduce((acc, p) => acc + p.data.length, 0);
+      return loaded < lastPage.total ? allPages.length + 1 : undefined;
+    },
   });
 
   const firstName =
@@ -133,25 +128,29 @@ export default function JobsScreen() {
   }, [dashQuery.data]);
 
   const hubJobs = hubJobsQuery.data?.data ?? [];
-  const externalRows = extListQuery.data?.data ?? [];
-  const externalFiltered = useMemo(
-    () => externalRows.filter((row) => externalMatchesQuery(row, debouncedQ)),
-    [externalRows, debouncedQ]
+  const externalRows = useMemo(
+    () => extInfinite.data?.pages.flatMap((p) => p.data) ?? [],
+    [extInfinite.data]
   );
 
-  const activeData = feedTab === "hub" ? hubJobs : externalFiltered;
+  const activeData = feedTab === "hub" ? hubJobs : externalRows;
 
   const listBootloading =
-    feedTab === "hub" ? hubJobsQuery.isLoading && !hubJobsQuery.data : extListQuery.isLoading && !extListQuery.data;
+    feedTab === "hub"
+      ? hubJobsQuery.isLoading && !hubJobsQuery.data
+      : extInfinite.isLoading && !extInfinite.data;
 
-  const activeError = feedTab === "hub" ? hubJobsQuery.isError : extListQuery.isError;
+  const activeError = feedTab === "hub" ? hubJobsQuery.isError : extInfinite.isError;
 
   const onRefresh = useCallback(() => {
-    void hubJobsQuery.refetch();
-    void extListQuery.refetch();
-    void dashQuery.refetch();
-    void profileQuery.refetch();
-  }, [hubJobsQuery, extListQuery, dashQuery, profileQuery]);
+    setPullRefreshing(true);
+    void Promise.all([
+      hubJobsQuery.refetch(),
+      extInfinite.refetch(),
+      dashQuery.refetch(),
+      profileQuery.refetch(),
+    ]).finally(() => setPullRefreshing(false));
+  }, [hubJobsQuery, extInfinite, dashQuery, profileQuery]);
 
   const listHeader = (
     <>
@@ -202,6 +201,24 @@ export default function JobsScreen() {
         </View>
       </Pressable>
 
+      <Pressable
+        style={[styles.visaBanner, cardSurfaceStyle(true)]}
+        onPress={() => router.push(webPortalRoute(WEB_PORTAL.visaWizard, "Visa wizard"))}
+        accessibilityRole="button"
+        accessibilityLabel="Open visa wizard"
+      >
+        <View style={styles.visaRow}>
+          <View style={styles.visaIconWrap}>
+            <Ionicons name="sparkles" size={22} color={colors.brand} />
+          </View>
+          <View style={styles.visaTextCol}>
+            <Text style={styles.visaBannerTitle}>Visa wizard</Text>
+            <Text style={styles.visaBannerSub}>Plan sponsorship mobility — same interactive tool as the website</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={22} color={colors.textMuted} accessibilityElementsHidden />
+        </View>
+      </Pressable>
+
       <View style={styles.feedToggleOuter}>
         <Text style={styles.feedToggleLabel}>Job feed</Text>
         <View style={styles.feedToggle}>
@@ -237,7 +254,7 @@ export default function JobsScreen() {
             placeholder={
               feedTab === "hub"
                 ? "Search employer-posted roles…"
-                : "Filter curated listings by title, company, location…"
+                : "Search curated listings (title, company, location…)"
             }
             placeholderTextColor={colors.placeholder}
             value={q}
@@ -289,7 +306,7 @@ export default function JobsScreen() {
       <Text style={styles.errSub}>Check your connection and pull down to retry.</Text>
       <Pressable
         style={styles.retryBtn}
-        onPress={() => void (feedTab === "hub" ? hubJobsQuery.refetch() : extListQuery.refetch())}
+        onPress={() => void (feedTab === "hub" ? hubJobsQuery.refetch() : extInfinite.refetch())}
         accessibilityRole="button"
       >
         <Text style={styles.retryBtnText}>Try again</Text>
@@ -304,7 +321,7 @@ export default function JobsScreen() {
             ? "No employer-posted roles match that search yet — try another keyword."
             : "No employer-posted roles right now. Pull to refresh or try curated external."
           : debouncedQ
-            ? "No curated listings match that filter — clear search or try employer postings."
+            ? "No curated listings match that search — clear keywords or try employer postings."
             : "No curated listings available yet. Pull to refresh."}
       </Text>
       {debouncedQ ? (
@@ -323,7 +340,21 @@ export default function JobsScreen() {
     </View>
   ) : null;
 
-  const refreshing = hubJobsQuery.isFetching || extListQuery.isFetching || dashQuery.isFetching || profileQuery.isFetching;
+  const externalListFooter =
+    feedTab === "external" && extInfinite.hasNextPage ? (
+      <View style={styles.extLoadMore}>
+        {extInfinite.isFetchingNextPage ? (
+          <ActivityIndicator size="small" color={colors.brand} accessibilityLabel="Loading more listings" />
+        ) : null}
+      </View>
+    ) : null;
+
+  const onExternalEndReached = useCallback(() => {
+    if (feedTab !== "external") return;
+    if (extInfinite.hasNextPage && !extInfinite.isFetchingNextPage) {
+      void extInfinite.fetchNextPage();
+    }
+  }, [feedTab, extInfinite]);
 
   return (
     <GshScreenBackground>
@@ -332,10 +363,13 @@ export default function JobsScreen() {
           data={activeError ? [] : activeData}
           keyExtractor={(item) => `${feedTab === "hub" ? "h" : "e"}-${item._id}`}
           ListHeaderComponent={listHeader}
+          ListFooterComponent={externalListFooter}
           ListEmptyComponent={emptyBody}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          refreshControl={<RefreshControl refreshing={pullRefreshing} onRefresh={onRefresh} />}
           contentContainerStyle={[styles.listPad, activeData.length === 0 && !listBootloading && styles.listPadGrow]}
           keyboardShouldPersistTaps="handled"
+          onEndReached={onExternalEndReached}
+          onEndReachedThreshold={0.35}
           renderItem={({ item }) =>
             feedTab === "hub" ? (
               <Pressable
@@ -448,6 +482,28 @@ const styles = StyleSheet.create({
   learnTextCol: { flex: 1 },
   learnBannerTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.textPrimary },
   learnBannerSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 18 },
+  visaBanner: {
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: colors.purpleBorder,
+  },
+  visaRow: { flexDirection: "row", alignItems: "center", gap: 12 },
+  visaIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: radii.sm,
+    backgroundColor: colors.purpleMuted,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: colors.purpleBorder,
+  },
+  visaTextCol: { flex: 1 },
+  visaBannerTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.purpleTextDark },
+  visaBannerSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.purpleText, lineHeight: 18 },
   feedToggleOuter: { paddingHorizontal: 16, marginTop: 14, marginBottom: 4 },
   feedToggleLabel: {
     fontSize: 12,
@@ -585,4 +641,5 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.regular,
     lineHeight: 22,
   },
+  extLoadMore: { paddingVertical: 20, alignItems: "center", justifyContent: "center" },
 });

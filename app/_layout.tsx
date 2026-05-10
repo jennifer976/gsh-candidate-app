@@ -13,14 +13,17 @@ import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useAuthStore } from "@/lib/auth-store";
 import { PushBootstrap } from "@/components/PushBootstrap";
+import { QueryFocusSync } from "@/components/QueryFocusSync";
+import { useAuthStore } from "@/lib/auth-store";
 import { colors, navHeader } from "@/lib/theme";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
     },
   },
 });
@@ -51,6 +54,7 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
+        <QueryFocusSync />
         <PushBootstrap />
         <Stack
           screenOptions={{

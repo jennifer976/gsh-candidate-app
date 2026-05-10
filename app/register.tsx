@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { registerCandidate } from "@/lib/api-client";
-import { colors, fontFamily } from "@/lib/theme";
+import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -33,7 +33,6 @@ export default function RegisterScreen() {
     setLoading(true);
     try {
       const data = await registerCandidate(e, password);
-      Alert.alert("Check your email", data.message || "We sent a verification code.");
       router.replace({ pathname: "/verify", params: { userId: data.userId } });
     } catch (err: unknown) {
       const msg = err && typeof err === "object" && "message" in err ? String((err as { message: string }).message) : "Signup failed";
@@ -62,28 +61,31 @@ export default function RegisterScreen() {
 
             <Text style={styles.lead}>Create a free account to save jobs and apply in one place.</Text>
 
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              placeholder="you@example.com"
-              placeholderTextColor={colors.placeholder}
-              value={email}
-              onChangeText={setEmail}
-            />
+            <View style={[cardSurfaceStyle(false), styles.formCard]}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="email-address"
+                placeholder="you@example.com"
+                placeholderTextColor={colors.placeholder}
+                value={email}
+                onChangeText={setEmail}
+              />
 
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              placeholder="At least 8 characters"
-              placeholderTextColor={colors.placeholder}
-              value={password}
-              onChangeText={setPassword}
-            />
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                placeholder="At least 8 characters"
+                placeholderTextColor={colors.placeholder}
+                value={password}
+                onChangeText={setPassword}
+              />
 
-            <GshGradientPrimaryButton title="Continue" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
+              <GshGradientPrimaryButton title="Continue" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
+            </View>
 
             <Pressable style={styles.linkWrap} onPress={() => router.back()}>
               <Text style={styles.link}>Already have an account? Sign in</Text>
@@ -115,10 +117,17 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
+  formCard: {
+    padding: 18,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.teal,
+    backgroundColor: colors.background,
+    marginBottom: 8,
+  },
   input: {
     borderWidth: 1,
     borderColor: "rgba(226, 232, 240, 0.92)",
-    borderRadius: 14,
+    borderRadius: radii.sm,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 12,
     fontSize: 16,

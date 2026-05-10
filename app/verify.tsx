@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { verifyOtpRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
-import { colors } from "@/lib/theme";
+import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function VerifyScreen() {
   const router = useRouter();
@@ -27,7 +28,8 @@ export default function VerifyScreen() {
       setAuth(data.token, data.user);
       router.replace("/(tabs)");
     } catch (err: unknown) {
-      const msg = err && typeof err === "object" && "message" in err ? String((err as { message: string }).message) : "Verification failed";
+      const msg =
+        err && typeof err === "object" && "message" in err ? String((err as { message: string }).message) : "Verification failed";
       Alert.alert("Could not verify", msg);
     } finally {
       setLoading(false);
@@ -35,41 +37,75 @@ export default function VerifyScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={["bottom"]}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
-        <Text style={styles.lead}>Enter the code we emailed you to activate your account.</Text>
+    <GshScreenBackground>
+      <SafeAreaView style={styles.safe} edges={["bottom"]}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
+          <Text style={styles.eyebrow}>Global Sponsor Hub</Text>
+          <Text style={styles.h1}>Verify email</Text>
+          <Text style={styles.lead}>Enter the code we emailed you to activate your candidate account.</Text>
 
-        <Text style={styles.label}>Verification code</Text>
-        <TextInput
-          style={styles.input}
-          autoCapitalize="characters"
-          placeholder="123456"
-          placeholderTextColor={colors.placeholder}
-          value={code}
-          onChangeText={setCode}
-        />
+          <View style={[cardSurfaceStyle(false), styles.card]}>
+            <Text style={styles.label}>Verification code</Text>
+            <TextInput
+              style={styles.input}
+              autoCapitalize="characters"
+              placeholder="123456"
+              placeholderTextColor={colors.placeholder}
+              value={code}
+              onChangeText={setCode}
+            />
 
-        <GshGradientPrimaryButton title="Verify & continue" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            <GshGradientPrimaryButton title="Verify & continue" onPress={onSubmit} loading={loading} />
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </GshScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
+  safe: { flex: 1 },
   flex: { flex: 1, paddingHorizontal: 24, paddingTop: 16 },
-  lead: { fontSize: 15, color: colors.textSecondary, marginBottom: 20, lineHeight: 22 },
-  label: { fontSize: 13, fontWeight: "600", color: colors.textSecondary, marginBottom: 8 },
+  eyebrow: {
+    fontFamily: fontFamily.bold,
+    fontSize: 11,
+    color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 10,
+  },
+  h1: {
+    fontFamily: fontFamily.extraBold,
+    fontSize: 26,
+    letterSpacing: -0.35,
+    color: colors.textPrimary,
+    marginBottom: 10,
+  },
+  lead: {
+    fontFamily: fontFamily.regular,
+    fontSize: 15,
+    color: colors.textMuted,
+    marginBottom: 22,
+    lineHeight: 22,
+  },
+  card: {
+    padding: 18,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.teal,
+    backgroundColor: colors.background,
+  },
+  label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: radii.sm,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 18,
     letterSpacing: 2,
+    fontFamily: fontFamily.semiBold,
     backgroundColor: colors.background,
-    marginBottom: 16,
+    marginBottom: 18,
     color: colors.textPrimary,
   },
 });

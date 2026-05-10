@@ -17,7 +17,7 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { loginRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
-import { colors, fontFamily } from "@/lib/theme";
+import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -70,29 +70,31 @@ export default function LoginScreen() {
               </View>
             </View>
 
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="email-address"
-              placeholder="you@example.com"
-              placeholderTextColor={colors.placeholder}
-              value={email}
-              onChangeText={setEmail}
-            />
+            <View style={[cardSurfaceStyle(false), styles.formCard]}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="email-address"
+                placeholder="you@example.com"
+                placeholderTextColor={colors.placeholder}
+                value={email}
+                onChangeText={setEmail}
+              />
 
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              placeholder="••••••••"
-              placeholderTextColor={colors.placeholder}
-              value={password}
-              onChangeText={setPassword}
-            />
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                placeholder="••••••••"
+                placeholderTextColor={colors.placeholder}
+                value={password}
+                onChangeText={setPassword}
+              />
 
-            <GshGradientPrimaryButton title="Sign in" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
+              <GshGradientPrimaryButton title="Sign in" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
+            </View>
 
             <Pressable style={[styles.linkWrap, styles.linkWrapTight]} onPress={() => router.push("/forgot-password")}>
               <Text style={styles.linkMuted}>Forgot password?</Text>
@@ -121,11 +123,18 @@ const styles = StyleSheet.create({
   mark: { width: 44, height: 44 },
   title: { fontSize: 22, fontFamily: fontFamily.bold, color: colors.textPrimary, letterSpacing: -0.3 },
   subtitle: { marginTop: 4, fontSize: 15, fontFamily: fontFamily.medium, color: colors.textMuted },
+  formCard: {
+    padding: 18,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.teal,
+    backgroundColor: colors.background,
+    marginBottom: 8,
+  },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
     borderColor: "rgba(226, 232, 240, 0.92)",
-    borderRadius: 14,
+    borderRadius: radii.sm,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 12,
     fontSize: 16,

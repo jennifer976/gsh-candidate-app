@@ -1,9 +1,11 @@
+import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchCandidateOffers, trackReferralCodeCopy } from "@/lib/api-client";
-import { colors } from "@/lib/theme";
+import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { CandidateOfferItem } from "@/types/models";
 
 export default function OffersScreen() {
@@ -24,53 +26,102 @@ export default function OffersScreen() {
 
   const rows = query.data?.data ?? [];
 
+  const header = (
+    <View style={styles.headWrap}>
+      <Text style={styles.eyebrow}>Perks</Text>
+      <Text style={styles.screenTitle}>Offers & codes</Text>
+      <Text style={styles.lead}>Partner perks and discount codes for candidates.</Text>
+    </View>
+  );
+
   return (
-    <SafeAreaView style={styles.safe} edges={["bottom"]}>
-      <Text style={styles.lead}>Partner perks & discount codes for candidates.</Text>
-      <FlatList
-        data={rows}
-        keyExtractor={(item) => item._id}
-        refreshControl={<RefreshControl refreshing={query.isFetching} onRefresh={() => query.refetch()} />}
-        contentContainerStyle={styles.listPad}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.biz}>{item.partner?.businessName || item.businessName || "Partner"}</Text>
-            <Text style={styles.body}>{item.description}</Text>
-            <View style={styles.codeRow}>
-              <Text style={styles.code}>{item.referral_code}</Text>
-              <Pressable style={styles.copyBtn} onPress={() => void copyCode(item)}>
-                <Text style={styles.copyText}>Copy</Text>
-              </Pressable>
+    <GshScreenBackground>
+      <SafeAreaView style={styles.safe} edges={["bottom"]}>
+        <FlatList
+          data={rows}
+          keyExtractor={(item) => item._id}
+          refreshControl={<RefreshControl refreshing={query.isFetching} onRefresh={() => query.refetch()} />}
+          contentContainerStyle={[styles.listPad, rows.length === 0 && styles.listPadEmpty]}
+          ListHeaderComponent={header}
+          renderItem={({ item }) => (
+            <View style={[cardSurfaceStyle(false), styles.card]}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.biz}>{item.partner?.businessName || item.businessName || "Partner"}</Text>
+              <Text style={styles.body}>{item.description}</Text>
+              <View style={styles.codeRow}>
+                <Text style={styles.code}>{item.referral_code}</Text>
+                <Pressable style={styles.copyBtn} onPress={() => void copyCode(item)} accessibilityRole="button">
+                  <Text style={styles.copyText}>Copy</Text>
+                </Pressable>
+              </View>
+              {item.expiryDate ? (
+                <Text style={styles.exp}>Expires {new Date(item.expiryDate).toLocaleDateString()}</Text>
+              ) : null}
             </View>
-            {item.expiryDate ? (
-              <Text style={styles.exp}>Expires {new Date(item.expiryDate).toLocaleDateString()}</Text>
-            ) : null}
-          </View>
-        )}
-        ListEmptyComponent={
-          query.isLoading ? null : <Text style={styles.empty}>No public offers right now. Check back soon.</Text>
-        }
-      />
-    </SafeAreaView>
+          )}
+          ListEmptyComponent={
+            query.isLoading ? (
+              <ActivityIndicator style={{ marginVertical: 48 }} color={colors.brand} accessibilityLabel="Loading offers" />
+            ) : query.isError ? (
+              <View style={[styles.emptyCard, cardSurfaceStyle(false)]}>
+                <Ionicons name="cloud-offline-outline" size={40} color={colors.textMuted} style={{ alignSelf: "center" }} />
+                <Text style={[styles.empty, { marginTop: 12 }]}>Offers could not be loaded.</Text>
+                <Pressable
+                  style={styles.retryBtn}
+                  onPress={() => void query.refetch()}
+                  accessibilityRole="button"
+                  accessibilityLabel="Retry loading offers"
+                >
+                  <Text style={styles.retryBtnText}>Try again</Text>
+                </Pressable>
+              </View>
+            ) : (
+              <View style={[styles.emptyCard, cardSurfaceStyle(false)]}>
+                <Text style={styles.empty}>No public offers right now. Check back soon.</Text>
+              </View>
+            )
+          }
+        />
+      </SafeAreaView>
+    </GshScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.surfaceMuted },
-  lead: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12, fontSize: 14, color: colors.textMuted, lineHeight: 20 },
+  safe: { flex: 1 },
+  headWrap: { paddingHorizontal: 16, paddingBottom: 12 },
+  eyebrow: {
+    fontFamily: fontFamily.bold,
+    fontSize: 11,
+    color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  screenTitle: {
+    fontFamily: fontFamily.extraBold,
+    fontSize: 26,
+    letterSpacing: -0.35,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  lead: {
+    fontFamily: fontFamily.regular,
+    fontSize: 15,
+    color: colors.textMuted,
+    lineHeight: 22,
+    paddingBottom: 4,
+  },
   listPad: { paddingHorizontal: 16, paddingBottom: 32 },
+  listPadEmpty: { flexGrow: 1 },
   card: {
-    backgroundColor: colors.background,
-    borderRadius: 14,
     padding: 16,
     marginBottom: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
+    backgroundColor: colors.background,
   },
-  title: { fontSize: 17, fontWeight: "700", color: colors.textPrimary },
-  biz: { marginTop: 6, fontSize: 14, fontWeight: "600", color: colors.brand },
-  body: { marginTop: 10, fontSize: 14, color: colors.textSecondary, lineHeight: 20 },
+  title: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.textPrimary },
+  biz: { marginTop: 6, fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.brand },
+  body: { marginTop: 10, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 21 },
   codeRow: {
     marginTop: 14,
     flexDirection: "row",
@@ -78,12 +129,47 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 12,
     backgroundColor: colors.surfaceMuted,
-    borderRadius: 10,
+    borderRadius: radii.sm,
     padding: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
-  code: { fontSize: 16, fontWeight: "800", color: colors.textPrimary, letterSpacing: 1 },
-  copyBtn: { backgroundColor: colors.brand, paddingHorizontal: 16, paddingVertical: 10, borderRadius: 10 },
-  copyText: { color: colors.white, fontWeight: "700", fontSize: 14 },
-  exp: { marginTop: 10, fontSize: 12, color: colors.textMuted },
-  empty: { textAlign: "center", color: colors.textMuted, marginTop: 40, paddingHorizontal: 24 },
+  code: {
+    fontSize: 16,
+    fontFamily: fontFamily.extraBold,
+    color: colors.textPrimary,
+    letterSpacing: 1,
+    flex: 1,
+  },
+  copyBtn: {
+    backgroundColor: colors.brand,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: radii.sm,
+  },
+  copyText: { color: colors.white, fontFamily: fontFamily.bold, fontSize: 14 },
+  exp: { marginTop: 10, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
+  emptyCard: {
+    paddingVertical: 28,
+    paddingHorizontal: 16,
+    marginHorizontal: 16,
+    marginTop: 8,
+    backgroundColor: colors.background,
+  },
+  empty: {
+    textAlign: "center",
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  retryBtn: {
+    marginTop: 16,
+    alignSelf: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 22,
+    borderRadius: radii.md,
+    backgroundColor: colors.brand,
+  },
+  retryBtnText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.white },
 });
