@@ -1,4 +1,4 @@
-import Parser from "rss-parser";
+import { XMLParser } from "fast-xml-parser";
 
 export type RssHeadline = {
   title: string;
@@ -7,13 +7,102 @@ export type RssHeadline = {
   source: string;
 };
 
-const parser = new Parser({
-  timeout: 20000,
-  headers: {
-    "User-Agent": "GlobalSponsorHub-CandidateApp/1.0",
-    Accept: "application/rss+xml, application/xml, text/xml, */*",
-  },
+const xmlParser = new XMLParser({
+  ignoreAttributes: false,
+  attributeNamePrefix: "@_",
+  trimValues: true,
 });
+
+function asArray<T>(x: T | T[] | undefined): T[] {
+  if (x == null) return [];
+  return Array.isArray(x) ? x : [x];
+}
+
+function textContent(v: unknown): string | undefined {
+  if (v == null) return undefined;
+  if (typeof v === "string") {
+    const t = v.trim();
+    return t || undefined;
+  }
+  if (typeof v === "object" && v !== null && "#text" in v) {
+    const t = (v as { "#text"?: string })["#text"];
+    return typeof t === "string" ? t.trim() || undefined : undefined;
+  }
+  return undefined;
+}
+
+type ParsedItem = { title?: string; link?: string; isoDate?: string };
+
+function parseAtomEntry(entry: Record<string, unknown>): ParsedItem {
+  const itemTitle = textContent(entry.title);
+  let link: string | undefined;
+  const links = asArray(entry.link as object | object[] | undefined);
+  for (const l of links) {
+    if (l && typeof l === "object" && "@_href" in l) {
+      const attrs = l as Record<string, string | undefined>;
+      const href = attrs["@_href"];
+      const rel = attrs["@_rel"];
+      if (href && (!rel || rel === "alternate")) {
+        link = href;
+        break;
+      }
+    }
+  }
+  if (!link && entry.link && typeof entry.link === "object") {
+    const l = entry.link as Record<string, string | undefined>;
+    if (typeof l["@_href"] === "string") link = l["@_href"];
+  }
+  const updated = entry.updated ?? entry.published;
+  let isoDate: string | undefined;
+  if (typeof updated === "string") isoDate = updated;
+  else isoDate = textContent(updated);
+  return { title: itemTitle, link, isoDate };
+}
+
+function parseFeedXml(xml: string): { feedTitle?: string; items: ParsedItem[] } {
+  let root: Record<string, unknown>;
+  try {
+    root = xmlParser.parse(xml) as Record<string, unknown>;
+  } catch {
+    return { items: [] };
+  }
+
+  const feed = root.feed as Record<string, unknown> | undefined;
+  if (feed) {
+    const feedTitle = textContent(feed.title);
+    const entries = asArray(feed.entry as Record<string, unknown> | Record<string, unknown>[] | undefined);
+    const items = entries.map((e) => parseAtomEntry(e));
+    return { feedTitle, items };
+  }
+
+  const rss = root.rss as { channel?: Record<string, unknown> | Record<string, unknown>[] } | undefined;
+  const channelRaw = rss?.channel;
+  const channel = Array.isArray(channelRaw) ? channelRaw[0] : channelRaw;
+  if (!channel || typeof channel !== "object") {
+    return { items: [] };
+  }
+
+  const feedTitle =
+    typeof channel.title === "string"
+      ? channel.title.trim()
+      : textContent(channel.title);
+  const rawItems = asArray(channel.item as Record<string, unknown> | Record<string, unknown>[] | undefined);
+  const items: ParsedItem[] = rawItems.map((item) => {
+    const title =
+      typeof item.title === "string" ? item.title.trim() : textContent(item.title);
+    let link: string | undefined;
+    if (typeof item.link === "string") link = item.link.trim();
+    else link = textContent(item.link);
+    const pubDate = item.pubDate;
+    const isoDate =
+      typeof pubDate === "string"
+        ? pubDate.trim()
+        : textContent(pubDate) ?? (typeof item["dc:date"] === "string" ? item["dc:date"] : undefined);
+    return { title, link, isoDate };
+  });
+
+  return { feedTitle: feedTitle ?? undefined, items };
+}
 
 const DEFAULT_RSS_FEEDS = [
   "https://freemovement.org.uk/feed/",
@@ -95,6 +184,25 @@ function hostnameLabel(url: string): string {
   }
 }
 
+async function fetchAndParseFeed(url: string): Promise<{ title?: string; items: ParsedItem[] }> {
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), 20_000);
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        "User-Agent": "GlobalSponsorHub-CandidateApp/1.0",
+        Accept: "application/rss+xml, application/xml, application/atom+xml, text/xml, */*",
+      },
+    });
+    if (!res.ok) return { items: [] };
+    const xml = await res.text();
+    return parseFeedXml(xml);
+  } finally {
+    clearTimeout(t);
+  }
+}
+
 /**
  * Immigration-focused RSS headlines (third-party publishers — not globalsponsorhub.com).
  */
@@ -104,15 +212,15 @@ export async function fetchImmigrationRssHeadlines(): Promise<RssHeadline[]> {
 
   for (const url of urls) {
     try {
-      const feed = await parser.parseURL(url);
+      const { title: parsedFeedTitle, items } = await fetchAndParseFeed(url);
       const source =
-        feed.title?.replace(/\s*(\(RSS\)|RSS|Feed).*$/i, "").trim() || hostnameLabel(url);
-      for (const item of (feed.items ?? []).slice(0, 10)) {
+        parsedFeedTitle?.replace(/\s*(\(RSS\)|RSS|Feed).*$/i, "").trim() || hostnameLabel(url);
+      for (const item of items.slice(0, 10)) {
         const link = item.link?.trim();
         const title = item.title?.trim();
         if (!link || !title) continue;
         if (!shouldIncludeHeadline(title)) continue;
-        const isoDate = item.isoDate || item.pubDate;
+        const isoDate = item.isoDate;
         if (!isWithinFreshnessWindow(isoDate)) continue;
         all.push({ title, link, isoDate, source });
       }
