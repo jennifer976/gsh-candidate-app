@@ -14,23 +14,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPublicExternalJobById, recordExternalApplyClick } from "@/lib/api-client";
-import { marketingUrl } from "@/lib/marketing-links";
-import { openExternalHttpsUrl, openMarketingBrowser } from "@/lib/openMarketingBrowser";
+import { openExternalHttpsUrl } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic } from "@/types/models";
-
-function hubPortalPath(listing: ExternalJobListingPublic): string {
-  const url = listing.hubListingUrl?.trim();
-  if (url) {
-    try {
-      const u = new URL(url);
-      return u.pathname + u.search;
-    } catch {
-      /* ignore */
-    }
-  }
-  return `/jobs/external?job=${encodeURIComponent(String(listing._id))}`;
-}
 
 export default function ExternalJobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -55,7 +41,7 @@ export default function ExternalJobDetailScreen() {
     onError: (e: unknown) =>
       Alert.alert(
         "Could not open apply link",
-        e instanceof Error ? e.message : "Try opening the hub listing in your browser.",
+        e instanceof Error ? e.message : "Try again from the Jobs tab.",
         [{ text: "OK" }]
       ),
   });
@@ -110,8 +96,6 @@ export default function ExternalJobDetailScreen() {
   }
 
   const listing = query.data;
-
-  const hubPath = hubPortalPath(listing);
 
   return (
     <GshScreenBackground>
@@ -168,12 +152,8 @@ export default function ExternalJobDetailScreen() {
               onPress={() => applyMut.mutate()}
               disabled={applyMut.isPending}
             />
-            <Pressable
-              style={styles.outlineBtn}
-              onPress={() => void openMarketingBrowser(hubPath.startsWith("/") ? hubPath : `/${hubPath}`)}
-              accessibilityRole="button"
-            >
-              <Text style={styles.outlineBtnText}>View listing on hub (browser)</Text>
+            <Pressable style={styles.outlineBtn} onPress={() => router.push("/(tabs)")} accessibilityRole="button">
+              <Text style={styles.outlineBtnText}>Back to Jobs feed</Text>
             </Pressable>
           </View>
         </ScrollView>

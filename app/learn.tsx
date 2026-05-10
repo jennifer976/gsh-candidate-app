@@ -4,62 +4,36 @@ import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { marketingUrl } from "@/lib/marketing-links";
-import { MARKETING_PATHS } from "@/lib/marketing-paths";
-import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
+import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
 import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
 type WebRow = { title: string; subtitle: string; path: string; icon: IonName };
 
-const CURATED_JOBS: WebRow[] = [
-  {
-    title: "Curated external roles",
-    subtitle: "Partner-sourced board on globalsponsorhub.com — opens in your browser",
-    path: "/jobs/external",
-    icon: "briefcase-outline",
-  },
-];
-
-const WEB_LINKS: WebRow[] = [
-  {
-    title: "Guides",
-    subtitle: "Visa & relocation guides, country hubs, and how-to paths",
-    path: "/guides",
-    icon: "map-outline",
-  },
-  {
-    title: "Resources",
-    subtitle: "Templates, checklists, and curated relocation resources",
-    path: "/resources",
-    icon: "folder-open-outline",
-  },
+const MORE_IN_APP_ROWS: WebRow[] = [
   {
     title: "Blog",
-    subtitle: "Articles on sponsorship, careers, and moving abroad",
-    path: "/blog",
+    subtitle: "Articles from our CMS — same content as the public site, inside the app",
+    path: "blog",
     icon: "newspaper-outline",
   },
   {
-    title: "Global News",
-    subtitle: "Updates and stories from the Global Sponsor Hub team",
-    path: "/global-news",
+    title: "Immigration headlines",
+    subtitle: "RSS from trusted publishers — opens publisher articles only",
+    path: "news",
     icon: "globe-outline",
   },
-];
-
-const SUPPORT_WEB: WebRow[] = [
   {
     title: "FAQs",
-    subtitle: "Answers to common questions about accounts and sponsorship",
-    path: "/faqs",
+    subtitle: "Candidate help topics",
+    path: "faq",
     icon: "help-circle-outline",
   },
   {
     title: "Contact",
-    subtitle: "Reach the team — partnerships, press, and general enquiries",
-    path: "/contact",
+    subtitle: "Email support@globalsponsorhub.com",
+    path: "contact",
     icon: "mail-outline",
   },
 ];
@@ -102,53 +76,53 @@ export default function LearnHubScreen() {
             <Text style={styles.heroEyebrow}>Global Sponsor Hub</Text>
             <Text style={styles.heroTitle}>Guides, insight & support</Text>
             <Text style={styles.heroBody}>
-              Explore sponsorship-friendly mobility tools, guides, and the curated jobs board — the same trusted content
-              as globalsponsorhub.com. Links open in your device browser so consent preferences and legal notices stay on the website.
+              Guides, visa wizard, legal policies, blog, FAQs, and contact routes stay in this shell — no full marketing
+              website views.
             </Text>
           </View>
 
-          <Text style={styles.section}>Sponsorship & visas</Text>
+          <Text style={styles.section}>In the app</Text>
+          <HubLinkRow
+            title="Guides hub"
+            subtitle="Country guides, pillars, relocation checklists — native cards"
+            icon="map-outline"
+            onPress={() => router.push("/guides")}
+          />
           <HubLinkRow
             title="Visa wizard"
-            subtitle="Step-by-step questionnaire — opens on globalsponsorhub.com in your browser"
+            subtitle="Same interactive checklist as the website — runs entirely here"
             icon="sparkles-outline"
-            trailingIcon="chevron-forward"
-            onPress={() => void openMarketingBrowser(MARKETING_PATHS.visaWizard)}
+            onPress={() => router.push("/visa-wizard")}
           />
 
           <Text style={styles.section}>Jobs</Text>
-          {CURATED_JOBS.map((item) => (
-            <HubLinkRow
-              key={item.path}
-              title={item.title}
-              subtitle={item.subtitle}
-              icon={item.icon}
-              trailingIcon="chevron-forward"
-              onPress={() => void openMarketingBrowser(item.path)}
-            />
-          ))}
+          <HubLinkRow
+            title="Curated external roles"
+            subtitle="Opens your Jobs tab — switch to “External” at the top"
+            icon="briefcase-outline"
+            onPress={() => navigateGuideLink(router, "/jobs/external")}
+          />
 
-          <Text style={styles.section}>Learn</Text>
-          {WEB_LINKS.map((item) => (
+          <Text style={styles.section}>More in the app</Text>
+          <HubLinkRow
+            title="Legal & policies"
+            subtitle="Privacy, terms, cookies, acceptable use — bundled for offline-friendly reading"
+            icon="shield-checkmark-outline"
+            onPress={() => router.push("/legal")}
+          />
+          <HubLinkRow
+            title="Guides hub (again)"
+            subtitle="Country corridors, pillars, relocation checklists"
+            icon="folder-open-outline"
+            onPress={() => router.push("/guides")}
+          />
+          {MORE_IN_APP_ROWS.map((item) => (
             <HubLinkRow
               key={item.path}
               title={item.title}
               subtitle={item.subtitle}
               icon={item.icon}
-              trailingIcon="chevron-forward"
-              onPress={() => void openMarketingBrowser(item.path)}
-            />
-          ))}
-
-          <Text style={styles.section}>Help</Text>
-          {SUPPORT_WEB.map((item) => (
-            <HubLinkRow
-              key={item.path}
-              title={item.title}
-              subtitle={item.subtitle}
-              icon={item.icon}
-              trailingIcon="chevron-forward"
-              onPress={() => void openMarketingBrowser(item.path)}
+              onPress={() => router.push(`/${item.path}`)}
             />
           ))}
 
@@ -159,8 +133,6 @@ export default function LearnHubScreen() {
             icon="chatbox-ellipses-outline"
             onPress={() => router.push("/feedback")}
           />
-
-          <Text style={styles.footnote}>Powered by {marketingUrl("/").replace(/^https:\/\//, "")}</Text>
         </ScrollView>
       </SafeAreaView>
     </GshScreenBackground>
@@ -226,12 +198,4 @@ const styles = StyleSheet.create({
   rowText: { flex: 1 },
   rowTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.textPrimary },
   rowSub: { marginTop: 4, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 19 },
-  footnote: {
-    marginTop: 20,
-    fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: colors.placeholder,
-    textAlign: "center",
-    lineHeight: 18,
-  },
 });

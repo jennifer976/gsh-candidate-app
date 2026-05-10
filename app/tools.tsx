@@ -6,8 +6,6 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchCandidateDashboard } from "@/lib/api-client";
-import { MARKETING_PATHS } from "@/lib/marketing-paths";
-import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, gradient, radii } from "@/lib/theme";
 
 const TIPS = [
@@ -29,7 +27,7 @@ export default function ToolsScreen() {
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <Text style={styles.h1}>Career toolkit</Text>
           <Text style={styles.lead}>
-            Sponsorship mobility tools, CV alignment, and the same guides as the Global Sponsor Hub website.
+            Sponsorship mobility tools and CV alignment — visa wizard and guides hub stay inside this app.
           </Text>
 
           {pct != null ? (
@@ -45,7 +43,7 @@ export default function ToolsScreen() {
           <Text style={styles.section}>Visa & mobility</Text>
           <Pressable
             style={styles.primaryBtnOuter}
-            onPress={() => void openMarketingBrowser(MARKETING_PATHS.visaWizard)}
+            onPress={() => router.push("/visa-wizard")}
             accessibilityRole="button"
             accessibilityLabel="Open visa wizard"
           >
@@ -54,7 +52,7 @@ export default function ToolsScreen() {
                 <Ionicons name="sparkles" size={22} color={colors.white} />
                 <View style={styles.primaryBtnTextCol}>
                   <Text style={styles.primaryBtnText}>Visa wizard</Text>
-                  <Text style={styles.primarySub}>Interactive questionnaire — sponsorship routes & next steps</Text>
+                  <Text style={styles.primarySub}>Interactive questionnaire in the app — sponsorship routes & next steps</Text>
                 </View>
               </View>
             </LinearGradient>
@@ -81,17 +79,14 @@ export default function ToolsScreen() {
             </LinearGradient>
           </Pressable>
 
-          <Pressable style={styles.outlineBtn} onPress={() => router.push("/learn")}>
-            <Text style={styles.outlineBtnText}>Guides, blog & resources</Text>
-            <Text style={styles.outlineBtnSub}>Opens guides and articles in your browser</Text>
+          <Pressable style={styles.outlineBtn} onPress={() => router.push("/guides")}>
+            <Text style={styles.outlineBtnText}>Guides hub</Text>
+            <Text style={styles.outlineBtnSub}>Country corridors & checklists — native in-app</Text>
           </Pressable>
 
-          <Pressable
-            style={styles.outlineBtn}
-            onPress={() => void openMarketingBrowser(MARKETING_PATHS.candidateTools)}
-          >
-            <Text style={styles.outlineBtnText}>Open full toolkit (web)</Text>
-            <Text style={styles.outlineBtnSub}>Opens in Safari or Chrome — same consent & legal pages as the website</Text>
+          <Pressable style={styles.outlineBtn} onPress={() => router.push("/learn")}>
+            <Text style={styles.outlineBtnText}>Guides & resources</Text>
+            <Text style={styles.outlineBtnSub}>Blog, news feeds, FAQs, legal — native screens, not the marketing site</Text>
           </Pressable>
       </ScrollView>
     </SafeAreaView>

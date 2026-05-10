@@ -19,8 +19,7 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { changePassword, deleteCandidateAccount } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
-import { LEGAL_PATHS } from "@/lib/marketing-paths";
-import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
+import { LEGAL_IN_APP } from "@/lib/legal/inAppRoutes";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function SettingsScreen() {
@@ -182,63 +181,61 @@ export default function SettingsScreen() {
           />
 
           <Text style={[styles.groupLabel, styles.groupSpaced]}>Legal</Text>
-          <Text style={styles.sectionHint}>
-            Privacy, terms, and cookie preferences are managed on our website. These links open in your browser.
-          </Text>
+          <Text style={styles.sectionHint}>Policies are readable inside the app (same wording as the public site).</Text>
           <Pressable
             style={[cardSurfaceStyle(true), styles.linkRow]}
-            onPress={() => void openMarketingBrowser(LEGAL_PATHS.hub)}
+            onPress={() => router.push(LEGAL_IN_APP.hub)}
             accessibilityRole="button"
           >
             <View style={styles.linkTextCol}>
               <Text style={styles.linkTitle}>Legal hub</Text>
               <Text style={styles.linkSub}>Terms, privacy, cookies, acceptable use</Text>
             </View>
-            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+            <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
           </Pressable>
           <Pressable
             style={[cardSurfaceStyle(true), styles.linkRow]}
-            onPress={() => void openMarketingBrowser(LEGAL_PATHS.privacy)}
+            onPress={() => router.push(LEGAL_IN_APP.privacy)}
             accessibilityRole="button"
           >
             <View style={styles.linkTextCol}>
               <Text style={styles.linkTitle}>Privacy policy</Text>
               <Text style={styles.linkSub}>How we handle personal data</Text>
             </View>
-            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+            <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
           </Pressable>
           <Pressable
             style={[cardSurfaceStyle(true), styles.linkRow]}
-            onPress={() => void openMarketingBrowser(LEGAL_PATHS.terms)}
+            onPress={() => router.push(LEGAL_IN_APP.terms)}
             accessibilityRole="button"
           >
             <View style={styles.linkTextCol}>
               <Text style={styles.linkTitle}>Terms & conditions</Text>
               <Text style={styles.linkSub}>Using Global Sponsor Hub services</Text>
             </View>
-            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+            <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
           </Pressable>
           <Pressable
             style={[cardSurfaceStyle(true), styles.linkRow]}
-            onPress={() => void openMarketingBrowser(LEGAL_PATHS.cookies)}
+            onPress={() => router.push(LEGAL_IN_APP.cookies)}
             accessibilityRole="button"
           >
             <View style={styles.linkTextCol}>
               <Text style={styles.linkTitle}>Cookie policy</Text>
               <Text style={styles.linkSub}>Cookies and similar tech on our sites</Text>
             </View>
-            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+            <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
           </Pressable>
           <Pressable
             style={[cardSurfaceStyle(true), styles.linkRow]}
-            onPress={() => void openMarketingBrowser(LEGAL_PATHS.acceptableUse)}
+            onPress={() => router.push(LEGAL_IN_APP.acceptableUse)}
             accessibilityRole="button"
           >
             <View style={styles.linkTextCol}>
               <Text style={styles.linkTitle}>Acceptable use</Text>
               <Text style={styles.linkSub}>Fair use of messaging, listings, and platform features</Text>
             </View>
-            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+            <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
           </Pressable>
 
           <Text style={[styles.groupLabel, styles.groupSpaced]}>Delete account</Text>

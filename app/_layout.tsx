@@ -78,6 +78,13 @@ export default function RootLayout() {
           <Stack.Screen name="offers" options={{ title: "Offers" }} />
           <Stack.Screen name="tools" options={{ title: "Career toolkit" }} />
           <Stack.Screen name="learn" options={{ title: "Guides & resources" }} />
+          <Stack.Screen name="guides" options={{ headerShown: false }} />
+          <Stack.Screen name="visa-wizard" options={{ title: "Visa wizard" }} />
+          <Stack.Screen name="legal" options={{ headerShown: false }} />
+          <Stack.Screen name="blog" options={{ headerShown: false }} />
+          <Stack.Screen name="news" options={{ title: "Immigration headlines" }} />
+          <Stack.Screen name="faq" options={{ title: "FAQs" }} />
+          <Stack.Screen name="contact" options={{ title: "Contact" }} />
           <Stack.Screen name="external-job/[id]" options={{ title: "Curated role" }} />
           <Stack.Screen name="ats-assistant" options={{ title: "ATS assistant" }} />
           <Stack.Screen name="forgot-password" options={{ title: "Forgot password", presentation: "modal" }} />

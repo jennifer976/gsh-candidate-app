@@ -1,54 +1,45 @@
+import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
-import { LEGAL_PATHS } from "@/lib/marketing-paths";
-import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
+import { LEGAL_IN_APP } from "@/lib/legal/inAppRoutes";
 import { colors, fontFamily } from "@/lib/theme";
 
 /**
- * In-app entry points to website-hosted legal pages (system browser).
- * Used on auth screens so policies are reachable before sign-in.
+ * In-app links to bundled legal screens (readable before sign-in).
  */
 export function LegalConsentRegisterNote() {
+  const router = useRouter();
+
   return (
     <Text style={styles.consent}>
       By continuing, you agree to our{" "}
-      <Text
-        accessibilityRole="link"
-        style={styles.link}
-        onPress={() => void openMarketingBrowser(LEGAL_PATHS.terms)}
-      >
+      <Text accessibilityRole="link" style={styles.link} onPress={() => router.push(LEGAL_IN_APP.terms)}>
         Terms
       </Text>{" "}
       and{" "}
-      <Text
-        accessibilityRole="link"
-        style={styles.link}
-        onPress={() => void openMarketingBrowser(LEGAL_PATHS.privacy)}
-      >
+      <Text accessibilityRole="link" style={styles.link} onPress={() => router.push(LEGAL_IN_APP.privacy)}>
         Privacy Policy
       </Text>
-      . Legal pages open in your browser.
+      .
     </Text>
   );
 }
 
 export function LegalConsentFooterRow() {
+  const router = useRouter();
+
   const mk = (path: string, label: string) => (
-    <Text
-      accessibilityRole="link"
-      style={styles.footerLink}
-      onPress={() => void openMarketingBrowser(path)}
-    >
+    <Text accessibilityRole="link" style={styles.footerLink} onPress={() => router.push(path)}>
       {label}
     </Text>
   );
 
   return (
     <View style={styles.footerRow}>
-      {mk(LEGAL_PATHS.terms, "Terms")}
+      {mk(LEGAL_IN_APP.terms, "Terms")}
       <Text style={styles.footerSep}> · </Text>
-      {mk(LEGAL_PATHS.privacy, "Privacy")}
+      {mk(LEGAL_IN_APP.privacy, "Privacy")}
       <Text style={styles.footerSep}> · </Text>
-      {mk(LEGAL_PATHS.cookies, "Cookies")}
+      {mk(LEGAL_IN_APP.cookies, "Cookies")}
     </View>
   );
 }

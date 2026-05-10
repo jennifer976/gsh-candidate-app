@@ -23,8 +23,6 @@ import {
   fetchPublicJobs,
 } from "@/lib/api-client";
 import { addRecentJobSearch, loadRecentJobSearches } from "@/lib/recent-job-searches";
-import { MARKETING_PATHS } from "@/lib/marketing-paths";
-import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic, Job } from "@/types/models";
 
@@ -186,17 +184,17 @@ export default function JobsScreen() {
 
       <Pressable
         style={[cardSurfaceStyle(true), styles.learnBanner]}
-        onPress={() => router.push("/learn")}
+        onPress={() => router.push("/guides")}
         accessibilityRole="button"
-        accessibilityLabel="Guides blog and resources"
+        accessibilityLabel="Guides hub"
       >
         <View style={styles.learnRow}>
           <View style={styles.learnIconWrap}>
             <Ionicons name="book-outline" size={22} color={colors.teal} />
           </View>
           <View style={styles.learnTextCol}>
-            <Text style={styles.learnBannerTitle}>Guides, blog & curated board</Text>
-            <Text style={styles.learnBannerSub}>Opens guides and hub links in your device browser</Text>
+            <Text style={styles.learnBannerTitle}>Guides hub</Text>
+            <Text style={styles.learnBannerSub}>Country guides & relocation pillars — inside the app</Text>
           </View>
           <Ionicons name="chevron-forward" size={22} color={colors.textMuted} accessibilityElementsHidden />
         </View>
@@ -204,7 +202,7 @@ export default function JobsScreen() {
 
       <Pressable
         style={[styles.visaBanner, cardSurfaceStyle(true)]}
-        onPress={() => void openMarketingBrowser(MARKETING_PATHS.visaWizard)}
+        onPress={() => router.push("/visa-wizard")}
         accessibilityRole="button"
         accessibilityLabel="Open visa wizard"
       >
@@ -214,7 +212,7 @@ export default function JobsScreen() {
           </View>
           <View style={styles.visaTextCol}>
             <Text style={styles.visaBannerTitle}>Visa wizard</Text>
-            <Text style={styles.visaBannerSub}>Plan sponsorship mobility — same interactive tool as the website</Text>
+            <Text style={styles.visaBannerSub}>Plan sponsorship mobility — interactive tool in the app</Text>
           </View>
           <Ionicons name="chevron-forward" size={22} color={colors.textMuted} accessibilityElementsHidden />
         </View>

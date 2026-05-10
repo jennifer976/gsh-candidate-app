@@ -4,8 +4,6 @@ import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { MARKETING_PATHS } from "@/lib/marketing-paths";
-import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
@@ -14,10 +12,16 @@ type RowDef = { title: string; subtitle: string; href: string; icon: IonName };
 
 const LEARN_FIRST: RowDef[] = [
   {
-    title: "Guides, blog & resources",
-    subtitle: "Visa guides, articles, news, FAQs — open on globalsponsorhub.com",
-    href: "/learn",
+    title: "Guides hub",
+    subtitle: "Country guides & pillars — in the app",
+    href: "/guides",
     icon: "compass-outline",
+  },
+  {
+    title: "More links & website extras",
+    subtitle: "Blog, FAQs, contact — via Guides & resources",
+    href: "/learn",
+    icon: "open-outline",
   },
 ];
 
@@ -65,14 +69,14 @@ export default function MoreScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <Text style={styles.h1}>More</Text>
-          <Text style={styles.lead}>Home feed, partners, and tooling — plus the same guides and blog as on the website.</Text>
+          <Text style={styles.lead}>Home feed, partners, and tooling — visa wizard and guides stay inside the app.</Text>
 
           <Text style={styles.section}>Learn & support</Text>
           <RowLink
             title="Visa wizard"
-            subtitle="Sponsorship & mobility questionnaire — opens on globalsponsorhub.com"
+            subtitle="Sponsorship & mobility questionnaire — runs in the app"
             icon="sparkles-outline"
-            onPress={() => void openMarketingBrowser(MARKETING_PATHS.visaWizard)}
+            onPress={() => router.push("/visa-wizard")}
           />
           {LEARN_FIRST.map((item) => (
             <RowLink

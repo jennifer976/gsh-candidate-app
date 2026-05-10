@@ -1,0 +1,77 @@
+import { getPublicSupabase } from "@/lib/supabasePublic";
+
+export type BlogListRow = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  featured_image: string | null;
+  created_at: string;
+  category?: { name: string; slug: string } | null;
+};
+
+export type BlogSectionRow = {
+  id: string;
+  type: string;
+  order_index: number;
+  content: Record<string, unknown>;
+};
+
+type BlogListRaw = Omit<BlogListRow, "category"> & {
+  category: { name: string; slug: string } | { name: string; slug: string }[] | null | undefined;
+};
+
+export async function fetchPublishedBlogList(): Promise<BlogListRow[]> {
+  const sb = getPublicSupabase();
+  if (!sb) return [];
+  const { data, error } = await sb
+    .from("blogs")
+    .select(`id, title, slug, description, featured_image, created_at, category:categories(name, slug)`)
+    .eq("is_published", true)
+    .order("created_at", { ascending: false });
+  if (error || !data) return [];
+  return (data as BlogListRaw[]).map((row): BlogListRow => {
+    const c = row.category;
+    const category = Array.isArray(c) ? (c[0] ?? null) : (c ?? null);
+    return {
+      id: row.id,
+      title: row.title,
+      slug: row.slug,
+      description: row.description,
+      featured_image: row.featured_image,
+      created_at: row.created_at,
+      category,
+    };
+  });
+}
+
+export async function fetchBlogArticleBySlug(slug: string): Promise<{
+  blog: BlogListRow & { author_byline?: string | null };
+  sections: BlogSectionRow[];
+} | null> {
+  const sb = getPublicSupabase();
+  if (!sb) return null;
+  const { data: blog, error: blogError } = await sb
+    .from("blogs")
+    .select(`*, category:categories(name, slug)`)
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .maybeSingle();
+  if (blogError || !blog) return null;
+
+  const braw = blog as BlogListRaw & { author_byline?: string | null };
+  const c = braw.category;
+  const categoryNorm = Array.isArray(c) ? (c[0] ?? null) : (c ?? null);
+  const blogNorm = { ...braw, category: categoryNorm } as BlogListRow & { author_byline?: string | null };
+
+  const { data: sections } = await sb
+    .from("blog_sections")
+    .select("id, type, order_index, content")
+    .eq("blog_id", (blog as { id: string }).id)
+    .order("order_index", { ascending: true });
+
+  return {
+    blog: blogNorm,
+    sections: (sections ?? []) as BlogSectionRow[],
+  };
+}

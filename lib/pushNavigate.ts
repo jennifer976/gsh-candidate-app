@@ -1,7 +1,6 @@
 import * as Linking from "expo-linking";
 import type { Router } from "expo-router";
 import { getMarketingSiteUrl } from "@/lib/config";
-import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 
 function normalizeHostname(host: string): string {
   return host.toLowerCase().replace(/^www\./, "");
@@ -19,6 +18,22 @@ function isOurMarketingHost(host: string): boolean {
 
 function navigateInternalPath(router: Router, pathname: string, search: string): boolean {
   const qs = new URLSearchParams(search.startsWith("?") ? search.slice(1) : "");
+
+  if (pathname.endsWith("/tools/visa-wizard")) {
+    router.push("/visa-wizard");
+    return true;
+  }
+
+  if (pathname === "/guides") {
+    router.push("/guides");
+    return true;
+  }
+
+  const countryGuide = pathname.match(/^\/guides\/country\/([^/]+)$/);
+  if (countryGuide?.[1]) {
+    router.push(`/guides/country/${countryGuide[1]}`);
+    return true;
+  }
 
   if (pathname.endsWith("/jobs/external")) {
     const jid = qs.get("job");
@@ -68,12 +83,68 @@ function navigateInternalPath(router: Router, pathname: string, search: string):
     return true;
   }
 
-  void openMarketingBrowser(`${pathname}${search}`);
+  const norm = pathname.replace(/\/+$/, "") || "/";
+
+  const blogMatch = norm.match(/^\/blog(?:\/([^/?]+))?$/);
+  if (blogMatch) {
+    const slug = blogMatch[1];
+    router.push(slug ? `/blog/${slug}` : "/blog");
+    return true;
+  }
+
+  if (norm === "/faqs" || norm === "/faq") {
+    router.push("/faq");
+    return true;
+  }
+  if (norm === "/contact") {
+    router.push("/contact");
+    return true;
+  }
+  if (norm === "/global-news") {
+    router.push("/news");
+    return true;
+  }
+  if (norm === "/resources") {
+    router.push("/guides");
+    return true;
+  }
+
+  if (norm === "/privacy-policy") {
+    router.push("/legal/privacy-policy");
+    return true;
+  }
+  if (norm === "/terms-and-conditions" || norm === "/terms") {
+    router.push("/legal/terms-and-conditions");
+    return true;
+  }
+  if (norm === "/cookie-policy") {
+    router.push("/legal/cookie-policy");
+    return true;
+  }
+  if (norm === "/acceptable-use") {
+    router.push("/legal/acceptable-use");
+    return true;
+  }
+  if (norm === "/legal") {
+    router.push("/legal");
+    return true;
+  }
+
+  if (norm.startsWith("/learn")) {
+    router.push("/learn");
+    return true;
+  }
+  if (norm.startsWith("/candidate/tools")) {
+    router.push("/tools");
+    return true;
+  }
+
+  router.push("/learn");
   return true;
 }
 
 /**
- * Routes notification `link` payloads into in-app screens when possible; opens the system browser for third-party URLs.
+ * Routes notification `link` payloads into in-app screens when possible; opens the system browser only for non–Global Sponsor Hub hosts.
  */
 export function navigateFromPushLink(router: Router, link: string): boolean {
   const trimmed = link.trim();

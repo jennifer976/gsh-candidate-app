@@ -1,7 +1,6 @@
 /**
- * Canonical paths on www (same host as `extra.siteUrl` / EXPO_PUBLIC_SITE_URL).
- * Open with {@link openMarketingBrowser} so users get the full website — cookie banner,
- * legal pages, and sign-in — outside the native shell.
+ * Canonical paths on the public website (deep links, SEO). The candidate app maps these to in-app routes —
+ * it does not load the marketing site for candidate flows.
  */
 export const MARKETING_PATHS = {
   visaWizard: "/tools/visa-wizard",
@@ -10,7 +9,7 @@ export const MARKETING_PATHS = {
   candidateTools: "/candidate/tools",
 } as const;
 
-/** Policy URLs shared with the marketing site (App Store / Play privacy links may point here too). */
+/** Legacy www paths (still valid on web); prefer `LEGAL_IN_APP` from `@/lib/legal/inAppRoutes` in the Expo app. */
 export const LEGAL_PATHS = {
   hub: "/legal",
   privacy: "/privacy-policy",
