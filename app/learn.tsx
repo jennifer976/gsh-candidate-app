@@ -14,7 +14,7 @@ type WebRow = { title: string; subtitle: string; path: string; icon: IonName };
 const MORE_IN_APP_ROWS: WebRow[] = [
   {
     title: "Blog",
-    subtitle: "Articles from our CMS — same content as the public site, inside the app",
+    subtitle: "Editorial articles — same catalogue as globalsponsorhub.com when linked",
     path: "blog",
     icon: "newspaper-outline",
   },
@@ -76,21 +76,21 @@ export default function LearnHubScreen() {
             <Text style={styles.heroEyebrow}>Global Sponsor Hub</Text>
             <Text style={styles.heroTitle}>Guides, insight & support</Text>
             <Text style={styles.heroBody}>
-              Guides, visa wizard, legal policies, blog, FAQs, and contact routes stay in this shell — no full marketing
-              website views.
+              Guides, visa wizard, legal policies, blog, FAQs, and contact are built into this app so you can stay signed in.
+              Some long reads open on our website in your browser when you choose that option.
             </Text>
           </View>
 
           <Text style={styles.section}>In the app</Text>
           <HubLinkRow
             title="Guides hub"
-            subtitle="Country guides, pillars, relocation checklists — native cards"
+            subtitle="Country guides, topic summaries, relocation checklists"
             icon="map-outline"
             onPress={() => router.push("/guides")}
           />
           <HubLinkRow
             title="Visa wizard"
-            subtitle="Same interactive checklist as the website — runs entirely here"
+            subtitle="Interactive checklist — same flow as on our website"
             icon="sparkles-outline"
             onPress={() => router.push("/visa-wizard")}
           />
@@ -106,7 +106,7 @@ export default function LearnHubScreen() {
           <Text style={styles.section}>More in the app</Text>
           <HubLinkRow
             title="Legal & policies"
-            subtitle="Privacy, terms, cookies, acceptable use — bundled for offline-friendly reading"
+            subtitle="Privacy, terms, cookies, acceptable use — included in the app"
             icon="shield-checkmark-outline"
             onPress={() => router.push("/legal")}
           />

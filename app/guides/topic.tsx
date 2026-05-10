@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
 import { getGuideTopicStub } from "@/lib/guides/topicStubs";
+import { openWebsitePath } from "@/lib/openWebsite";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function GuideTopicScreen() {
@@ -20,8 +21,17 @@ export default function GuideTopicScreen() {
             <View style={[styles.card, cardSurfaceStyle(true)]}>
               <Text style={styles.title}>Topic unavailable</Text>
               <Text style={styles.body}>
-                We could not load this summary in the app. Try another topic from the guides hub, or check FAQs.
+                We could not show a short summary for this link. You can open the full guide on our website or pick another topic.
               </Text>
+              {hrefRaw.startsWith("/") ? (
+                <Pressable
+                  style={[styles.primaryOutline, styles.primaryOutlineWeb]}
+                  onPress={() => void openWebsitePath(hrefRaw)}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.primaryOutlineText}>Open guide on website</Text>
+                </Pressable>
+              ) : null}
               <Pressable style={styles.primaryOutline} onPress={() => router.push("/guides")} accessibilityRole="button">
                 <Text style={styles.primaryOutlineText}>Back to guides hub</Text>
               </Pressable>
@@ -44,11 +54,23 @@ export default function GuideTopicScreen() {
                   </View>
                 ))}
               </View>
+              {hrefRaw.startsWith("/") ? (
+                <Pressable
+                  style={[styles.primaryOutline, styles.primaryOutlineWeb, cardSurfaceStyle(false)]}
+                  onPress={() => void openWebsitePath(hrefRaw)}
+                  accessibilityRole="button"
+                  accessibilityLabel="Open full guide on website"
+                >
+                  <Text style={styles.primaryOutlineText}>Read full guide on website</Text>
+                  <Text style={styles.primaryOutlineSub}>Opens the same article as globalsponsorhub.com in your browser.</Text>
+                </Pressable>
+              ) : null}
             </>
           )}
 
           <Text style={styles.footerHint}>
-            Summaries are educational only. Prefer official immigration sources for eligibility decisions.
+            In-app topic pages are short mobile summaries. The website has the full guide (sections, tables, and links).
+            Summaries are educational only — confirm eligibility with official government sources.
           </Text>
 
           <Pressable style={styles.linkBtn} onPress={() => router.push("/guides")} accessibilityRole="button">
@@ -100,6 +122,7 @@ const styles = StyleSheet.create({
   linkBtn: { paddingVertical: 10 },
   linkBtnText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.brand },
   primaryOutlineSpaced: { marginTop: 12 },
+  primaryOutlineWeb: { marginTop: 6 },
   primaryOutline: {
     marginTop: 16,
     borderWidth: 1,
@@ -109,4 +132,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   primaryOutlineText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.brand },
+  primaryOutlineSub: {
+    marginTop: 6,
+    fontFamily: fontFamily.regular,
+    fontSize: 13,
+    color: colors.textMuted,
+    textAlign: "center",
+    lineHeight: 18,
+    paddingHorizontal: 8,
+  },
 });

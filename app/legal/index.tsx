@@ -21,8 +21,8 @@ export default function LegalHubScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <Text style={styles.lead}>
-            Legal documents are bundled in this app — you do not need to open the marketing website. Last reviewed
-            alignment: {LEGAL_LAST_UPDATED}.
+            These policies are included here so you can read them anytime in the app. Last reviewed alignment:{" "}
+            {LEGAL_LAST_UPDATED}.
           </Text>
           {ROWS.map((r) => (
             <Pressable

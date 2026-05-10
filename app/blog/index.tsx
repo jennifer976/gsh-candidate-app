@@ -3,12 +3,25 @@ import { useRouter } from "expo-router";
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { fetchPublishedBlogList } from "@/lib/content/blogQueries";
+import { fetchPublishedBlogList, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
+import { openWebsitePath } from "@/lib/openWebsite";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function BlogIndexScreen() {
   const router = useRouter();
-  const q = useQuery({ queryKey: ["blogs", "published"], queryFn: fetchPublishedBlogList, staleTime: 120_000 });
+  const q = useQuery({
+    queryKey: ["blogs", "published"],
+    queryFn: fetchPublishedBlogList,
+    staleTime: 120_000,
+    retry: (count, err) => {
+      if (err instanceof SupabaseNotConfiguredError) return false;
+      return count < 2;
+    },
+  });
+
+  function openWebBlog() {
+    void openWebsitePath("/blog");
+  }
 
   return (
     <GshScreenBackground>
@@ -17,17 +30,33 @@ export default function BlogIndexScreen() {
           <View style={styles.center}>
             <ActivityIndicator size="large" color={colors.brand} />
           </View>
+        ) : q.isError ? (
+          <ScrollView contentContainerStyle={styles.pad}>
+            <Text style={styles.emptyTitle}>
+              {q.error instanceof SupabaseNotConfiguredError ? "Blog not linked yet" : "Could not load articles"}
+            </Text>
+            <Text style={styles.emptyBody}>
+              {q.error instanceof SupabaseNotConfiguredError
+                ? "Articles come from the same place as our website. This install has not been linked to that service yet — you can read every post on globalsponsorhub.com."
+                : "Check your connection, then try again or open the blog on our website."}
+            </Text>
+            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={openWebBlog} accessibilityRole="button">
+              <Text style={styles.primaryOutlineText}>Open blog on website</Text>
+            </Pressable>
+          </ScrollView>
         ) : q.data?.length === 0 ? (
           <ScrollView contentContainerStyle={styles.pad}>
-            <Text style={styles.emptyTitle}>Blog unavailable</Text>
+            <Text style={styles.emptyTitle}>No articles to show</Text>
             <Text style={styles.emptyBody}>
-              Connect Supabase for published posts: set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY (same
-              project as the website CMS). Articles then load here — still no browser required.
+              Nothing is published here at the moment. You may find posts on the website.
             </Text>
+            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={openWebBlog} accessibilityRole="button">
+              <Text style={styles.primaryOutlineText}>Open blog on website</Text>
+            </Pressable>
           </ScrollView>
         ) : (
           <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-            <Text style={styles.lead}>Editorial posts from the Global Sponsor Hub CMS — rendered natively.</Text>
+            <Text style={styles.lead}>Latest articles — same catalogue as globalsponsorhub.com.</Text>
             {q.data?.map((b) => (
               <Pressable
                 key={b.id}
@@ -73,4 +102,13 @@ const styles = StyleSheet.create({
   desc: { marginTop: 8, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 20 },
   emptyTitle: { fontSize: 18, fontFamily: fontFamily.bold, color: colors.textPrimary, marginBottom: 10 },
   emptyBody: { fontSize: 15, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 22 },
+  primaryOutline: {
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: colors.brand,
+    borderRadius: radii.sm,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  primaryOutlineText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.brand },
 });

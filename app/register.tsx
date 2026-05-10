@@ -37,9 +37,15 @@ export default function RegisterScreen() {
       router.replace({ pathname: "/verify", params: { userId: data.userId } });
     } catch (err: unknown) {
       const msg = err && typeof err === "object" && "message" in err ? String((err as { message: string }).message) : "Signup failed";
-      const securityHint =
-        /security verification/i.test(msg) &&
-        "The API expects a mobile signup key in this app build (not a visible checkbox). For local runs, set EXPO_PUBLIC_GSH_MOBILE_REGISTRATION_KEY in .env to match the API’s MOBILE_APP_REGISTRATION_KEY. For EAS builds, add the same name as an EAS secret and rebuild.";
+      const devVerificationHint =
+        "Developer hint: set EXPO_PUBLIC_GSH_MOBILE_REGISTRATION_KEY in .env (local) or EAS secrets (production builds) to match the API MOBILE_APP_REGISTRATION_KEY.";
+      const userVerificationHint =
+        "Signup verification failed for this app version. Please try again later or contact support if it keeps happening.";
+      const securityHint = /security verification/i.test(msg)
+        ? __DEV__
+          ? `${userVerificationHint}\n\n${devVerificationHint}`
+          : userVerificationHint
+        : "";
       Alert.alert("Could not register", securityHint || msg);
     } finally {
       setLoading(false);

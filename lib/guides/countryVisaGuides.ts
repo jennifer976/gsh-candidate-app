@@ -1,5 +1,6 @@
 /**
- * Copied from global_sponsor_hub-fe/src/data/countryVisaGuides.ts — keep in sync when country guides change on web.
+ * Kept in sync with `global_sponsor_hub-fe/src/data/countryVisaGuides.ts`.
+ * Country guides in the app are the same sections as on the website. Topic pillars use short stubs + website link (see `topicStubs.ts`).
  */
 export type CountryVisaGuidePartnerLink = {
   label: string;

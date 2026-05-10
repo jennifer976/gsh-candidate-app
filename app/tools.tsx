@@ -81,12 +81,12 @@ export default function ToolsScreen() {
 
           <Pressable style={styles.outlineBtn} onPress={() => router.push("/guides")}>
             <Text style={styles.outlineBtnText}>Guides hub</Text>
-            <Text style={styles.outlineBtnSub}>Country corridors & checklists — native in-app</Text>
+            <Text style={styles.outlineBtnSub}>Country corridors, topics, and checklists</Text>
           </Pressable>
 
           <Pressable style={styles.outlineBtn} onPress={() => router.push("/learn")}>
             <Text style={styles.outlineBtnText}>Guides & resources</Text>
-            <Text style={styles.outlineBtnSub}>Blog, news feeds, FAQs, legal — native screens, not the marketing site</Text>
+            <Text style={styles.outlineBtnSub}>Blog, news, FAQs, legal, and more</Text>
           </Pressable>
       </ScrollView>
     </SafeAreaView>

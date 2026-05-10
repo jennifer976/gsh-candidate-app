@@ -1,4 +1,7 @@
-/** Short in-app summaries keyed by www path (aligned with global_sponsor_hub-fe seoGuideNav). */
+/**
+ * Short in-app summaries keyed by website path (same URLs as global_sponsor_hub-fe seo pillar guides).
+ * Full articles (many sections, tables, links) live on the website — users reach them via “Read full guide on website”.
+ */
 export type GuideTopicStub = {
   title: string;
   intro: string;

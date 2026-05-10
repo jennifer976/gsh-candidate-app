@@ -23,8 +23,8 @@ export default function ImmigrationNewsScreen() {
         ) : (
           <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
             <Text style={styles.lead}>
-              Immigration & mobility headlines from third‑party publishers (government agencies, NGOs, and commentary).
-              Tapping a row opens the publisher’s site — not the Global Sponsor Hub marketing domain.
+              Immigration and mobility headlines from third‑party publishers (government agencies, NGOs, and analysts).
+              Tapping a row opens that publisher’s website so you can read the full story.
             </Text>
             {(q.data ?? []).map((h, i) => (
               <Pressable

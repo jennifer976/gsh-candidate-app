@@ -4,7 +4,8 @@ import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BlogArticleBody } from "@/components/BlogArticleBody";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { fetchBlogArticleBySlug } from "@/lib/content/blogQueries";
+import { fetchBlogArticleBySlug, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
+import { openWebsitePath } from "@/lib/openWebsite";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function BlogArticleScreen() {
@@ -17,7 +18,15 @@ export default function BlogArticleScreen() {
     queryKey: ["blog", decoded],
     queryFn: () => fetchBlogArticleBySlug(decoded),
     enabled: decoded.length > 0,
+    retry: (count, err) => {
+      if (err instanceof SupabaseNotConfiguredError) return false;
+      return count < 2;
+    },
   });
+
+  function openThisArticleOnWeb() {
+    void openWebsitePath(`/blog/${encodeURIComponent(decoded)}`);
+  }
 
   if (q.isLoading) {
     return (
@@ -29,12 +38,37 @@ export default function BlogArticleScreen() {
     );
   }
 
+  if (q.isError) {
+    const notConfigured = q.error instanceof SupabaseNotConfiguredError;
+    return (
+      <GshScreenBackground>
+        <SafeAreaView style={styles.center} edges={["bottom"]}>
+          <Text style={styles.err}>{notConfigured ? "Article unavailable in-app" : "Could not load this article"}</Text>
+          <Text style={styles.errBody}>
+            {notConfigured
+              ? "Open this piece on our website instead."
+              : "Check your connection or try again on the website."}
+          </Text>
+          <Pressable style={styles.primaryOutline} onPress={openThisArticleOnWeb} accessibilityRole="button">
+            <Text style={styles.linkStrong}>Open on website</Text>
+          </Pressable>
+          <Pressable onPress={() => router.back()} accessibilityRole="button">
+            <Text style={styles.link}>Go back</Text>
+          </Pressable>
+        </SafeAreaView>
+      </GshScreenBackground>
+    );
+  }
+
   if (!q.data) {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.center} edges={["bottom"]}>
-          <Text style={styles.err}>Article not found.</Text>
-          <Pressable onPress={() => router.back()}>
+          <Text style={styles.err}>We could not find that article.</Text>
+          <Pressable style={styles.primaryOutline} onPress={openThisArticleOnWeb} accessibilityRole="button">
+            <Text style={styles.linkStrong}>Try on website</Text>
+          </Pressable>
+          <Pressable onPress={() => router.back()} accessibilityRole="button">
             <Text style={styles.link}>Go back</Text>
           </Pressable>
         </SafeAreaView>
@@ -78,6 +112,17 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 24, fontFamily: fontFamily.extraBold, color: colors.textPrimary, letterSpacing: -0.35 },
   desc: { marginTop: 10, fontSize: 15, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 22 },
-  err: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.textPrimary },
+  err: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.textPrimary, textAlign: "center" },
+  errBody: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, textAlign: "center", lineHeight: 20 },
   link: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.brand },
+  linkStrong: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.brand },
+  primaryOutline: {
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: colors.brand,
+    borderRadius: radii.sm,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: "center",
+  },
 });

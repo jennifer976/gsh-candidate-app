@@ -20,8 +20,8 @@ export default function GuidesHubScreen() {
             <Text style={styles.heroEyebrow}>Learn in the app</Text>
             <Text style={styles.heroTitle}>Resources & guides</Text>
             <Text style={styles.heroBody}>
-              Country corridors, sponsorship pillars, and relocation checklists — formatted for mobile. Your account stays
-              signed in when you use the back button.
+              Country corridor guides match the long-form articles on our website. Jobs and hiring topics open as short
+              in-app summaries — use “Read full guide on website” on any topic for the complete article.
             </Text>
           </View>
 
@@ -42,7 +42,9 @@ export default function GuidesHubScreen() {
           </Pressable>
 
           <Text style={styles.section}>Jobs & hiring context</Text>
-          <Text style={styles.sectionHint}>Short in-app summaries; use Jobs and Partners tabs for actions.</Text>
+          <Text style={styles.sectionHint}>
+            Summaries only — full pillar guides with every section live on globalsponsorhub.com (button on each topic).
+          </Text>
           {SEO_PILLAR_NAV_LINKS.map((g) => (
             <Pressable
               key={g.href}

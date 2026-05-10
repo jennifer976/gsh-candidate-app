@@ -17,8 +17,8 @@ export default function ContactScreen() {
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <Text style={styles.h1}>Contact</Text>
           <Text style={styles.lead}>
-            Reach the team for account issues, billing questions on web subscriptions, or partnerships — without leaving
-            your signed‑in app shell for our marketing site.
+            Reach the team for account issues, billing on subscriptions you bought through our website, or partnerships — all
+            from this screen.
           </Text>
 
           <View style={[styles.card, cardSurfaceStyle(true)]}>
