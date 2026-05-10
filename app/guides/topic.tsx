@@ -2,7 +2,9 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { PillarGuideContent } from "@/components/PillarGuideContent";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
+import { getPillarPageByPath } from "@/lib/guides/seo/getPillarByPath";
 import { getGuideTopicStub } from "@/lib/guides/topicStubs";
 import { openWebsitePath } from "@/lib/openWebsite";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -11,17 +13,33 @@ export default function GuideTopicScreen() {
   const router = useRouter();
   const { q } = useLocalSearchParams<{ q: string }>();
   const hrefRaw = decodeURIComponent(typeof q === "string" ? q : "");
+  const pillar = getPillarPageByPath(hrefRaw);
   const stub = getGuideTopicStub(hrefRaw);
 
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          {!stub ? (
+          {pillar ? (
+            <>
+              <View style={[styles.card, cardSurfaceStyle(true)]}>
+                <PillarGuideContent config={pillar} router={router} />
+              </View>
+              <Pressable style={styles.linkBtn} onPress={() => router.push("/guides")} accessibilityRole="button">
+                <Text style={styles.linkBtnText}>Browse more guides</Text>
+              </Pressable>
+              <Pressable style={styles.linkBtn} onPress={() => navigateGuideLink(router, "/jobs")} accessibilityRole="button">
+                <Text style={styles.linkBtnText}>Back to Jobs tab</Text>
+              </Pressable>
+              <Pressable style={styles.linkBtn} onPress={() => navigateGuideLink(router, "/partners/directory")} accessibilityRole="button">
+                <Text style={styles.linkBtnText}>Partner directory</Text>
+              </Pressable>
+            </>
+          ) : !stub ? (
             <View style={[styles.card, cardSurfaceStyle(true)]}>
               <Text style={styles.title}>Topic unavailable</Text>
               <Text style={styles.body}>
-                We could not show a short summary for this link. You can open the full guide on our website or pick another topic.
+                We could not load this guide in the app. Try another topic from the guides hub, or open it on our website.
               </Text>
               {hrefRaw.startsWith("/") ? (
                 <Pressable
@@ -29,7 +47,7 @@ export default function GuideTopicScreen() {
                   onPress={() => void openWebsitePath(hrefRaw)}
                   accessibilityRole="button"
                 >
-                  <Text style={styles.primaryOutlineText}>Open guide on website</Text>
+                  <Text style={styles.primaryOutlineText}>Open on website</Text>
                 </Pressable>
               ) : null}
               <Pressable style={styles.primaryOutline} onPress={() => router.push("/guides")} accessibilityRole="button">
@@ -54,35 +72,14 @@ export default function GuideTopicScreen() {
                   </View>
                 ))}
               </View>
-              {hrefRaw.startsWith("/") ? (
-                <Pressable
-                  style={[styles.primaryOutline, styles.primaryOutlineWeb, cardSurfaceStyle(false)]}
-                  onPress={() => void openWebsitePath(hrefRaw)}
-                  accessibilityRole="button"
-                  accessibilityLabel="Open full guide on website"
-                >
-                  <Text style={styles.primaryOutlineText}>Read full guide on website</Text>
-                  <Text style={styles.primaryOutlineSub}>Opens the same article as globalsponsorhub.com in your browser.</Text>
-                </Pressable>
-              ) : null}
+              <Pressable style={styles.primaryOutline} onPress={() => navigateGuideLink(router, "/partners/directory")} accessibilityRole="button">
+                <Text style={styles.primaryOutlineText}>Open partner directory in app</Text>
+              </Pressable>
+              <Text style={styles.footerHint}>
+                Short overview — directory listings are browsed inside this app from the Partners tab or button above.
+              </Text>
             </>
           )}
-
-          <Text style={styles.footerHint}>
-            In-app topic pages are short mobile summaries. The website has the full guide (sections, tables, and links).
-            Summaries are educational only — confirm eligibility with official government sources.
-          </Text>
-
-          <Pressable style={styles.linkBtn} onPress={() => router.push("/guides")} accessibilityRole="button">
-            <Text style={styles.linkBtnText}>Browse more guides</Text>
-          </Pressable>
-
-          <Pressable style={styles.linkBtn} onPress={() => navigateGuideLink(router, "/jobs")} accessibilityRole="button">
-            <Text style={styles.linkBtnText}>Back to Jobs tab</Text>
-          </Pressable>
-          <Pressable style={styles.linkBtn} onPress={() => navigateGuideLink(router, "/partners/directory")} accessibilityRole="button">
-            <Text style={styles.linkBtnText}>Partner directory</Text>
-          </Pressable>
         </ScrollView>
       </SafeAreaView>
     </GshScreenBackground>
@@ -132,13 +129,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   primaryOutlineText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.brand },
-  primaryOutlineSub: {
-    marginTop: 6,
-    fontFamily: fontFamily.regular,
-    fontSize: 13,
-    color: colors.textMuted,
-    textAlign: "center",
-    lineHeight: 18,
-    paddingHorizontal: 8,
-  },
 });

@@ -20,8 +20,8 @@ export default function GuidesHubScreen() {
             <Text style={styles.heroEyebrow}>Learn in the app</Text>
             <Text style={styles.heroTitle}>Resources & guides</Text>
             <Text style={styles.heroBody}>
-              Country corridor guides match the long-form articles on our website. Jobs and hiring topics open as short
-              in-app summaries — use “Read full guide on website” on any topic for the complete article.
+              Topic guides use the same articles as globalsponsorhub.com (intro, sections, FAQs, and tables). Country corridor
+              guides match the website word-for-word. The partner directory shortcut opens inside the app.
             </Text>
           </View>
 
@@ -42,9 +42,7 @@ export default function GuidesHubScreen() {
           </Pressable>
 
           <Text style={styles.section}>Jobs & hiring context</Text>
-          <Text style={styles.sectionHint}>
-            Summaries only — full pillar guides with every section live on globalsponsorhub.com (button on each topic).
-          </Text>
+          <Text style={styles.sectionHint}>Full-length guides — same copy as the website.</Text>
           {SEO_PILLAR_NAV_LINKS.map((g) => (
             <Pressable
               key={g.href}
