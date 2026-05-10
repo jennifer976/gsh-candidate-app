@@ -17,7 +17,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.globalsponsorhub.candidate",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": ["remote-notification"]
       }
     },
     "android": {
@@ -49,6 +50,7 @@
     "extra": {
       "apiUrl": "https://api.globalsponsorhub.com",
       "siteUrl": "https://www.globalsponsorhub.com",
+      "privacyPolicyUrl": "https://www.globalsponsorhub.com/privacy-policy",
       "router": {},
       "eas": {
         "projectId": "7de27b37-fe11-4dd5-8f6a-413693433a1f"

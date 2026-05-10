@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { LegalConsentRegisterNote } from "@/components/LegalConsentLinks";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { registerCandidate } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -86,6 +87,8 @@ export default function RegisterScreen() {
 
               <GshGradientPrimaryButton title="Continue" onPress={onSubmit} loading={loading} containerStyle={{ marginTop: 8 }} />
             </View>
+
+            <LegalConsentRegisterNote />
 
             <Pressable style={styles.linkWrap} onPress={() => router.back()}>
               <Text style={styles.link}>Already have an account? Sign in</Text>

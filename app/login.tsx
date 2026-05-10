@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { loginRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -103,6 +104,8 @@ export default function LoginScreen() {
             <Pressable style={styles.linkWrap} onPress={() => router.push("/register")}>
               <Text style={styles.link}>New here? Create a candidate account</Text>
             </Pressable>
+
+            <LegalConsentFooterRow />
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>

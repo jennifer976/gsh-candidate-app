@@ -23,7 +23,8 @@ import {
   fetchPublicJobs,
 } from "@/lib/api-client";
 import { addRecentJobSearch, loadRecentJobSearches } from "@/lib/recent-job-searches";
-import { WEB_PORTAL, webPortalRoute } from "@/lib/web-portal-route";
+import { MARKETING_PATHS } from "@/lib/marketing-paths";
+import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic, Job } from "@/types/models";
 
@@ -195,7 +196,7 @@ export default function JobsScreen() {
           </View>
           <View style={styles.learnTextCol}>
             <Text style={styles.learnBannerTitle}>Guides, blog & curated board</Text>
-            <Text style={styles.learnBannerSub}>Browse content from globalsponsorhub.com inside the app viewer</Text>
+            <Text style={styles.learnBannerSub}>Opens guides and hub links in your device browser</Text>
           </View>
           <Ionicons name="chevron-forward" size={22} color={colors.textMuted} accessibilityElementsHidden />
         </View>
@@ -203,7 +204,7 @@ export default function JobsScreen() {
 
       <Pressable
         style={[styles.visaBanner, cardSurfaceStyle(true)]}
-        onPress={() => router.push(webPortalRoute(WEB_PORTAL.visaWizard, "Visa wizard"))}
+        onPress={() => void openMarketingBrowser(MARKETING_PATHS.visaWizard)}
         accessibilityRole="button"
         accessibilityLabel="Open visa wizard"
       >

@@ -17,14 +17,35 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { changePassword } from "@/lib/api-client";
+import { changePassword, deleteCandidateAccount } from "@/lib/api-client";
+import { useAuthStore } from "@/lib/auth-store";
+import { LEGAL_PATHS } from "@/lib/marketing-paths";
+import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function SettingsScreen() {
   const router = useRouter();
+  const clearAuth = useAuthStore((s) => s.clearAuth);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
+
+  const deleteMut = useMutation({
+    mutationFn: () => deleteCandidateAccount(deletePassword),
+    onSuccess: () => {
+      setDeletePassword("");
+      clearAuth();
+      Alert.alert("Account deleted", "Your candidate account and related data have been removed.", [
+        { text: "OK", onPress: () => router.replace("/login") },
+      ]);
+    },
+    onError: (e: unknown) =>
+      Alert.alert(
+        "Could not delete account",
+        e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Try again or contact support."
+      ),
+  });
 
   const mut = useMutation({
     mutationFn: () => changePassword(currentPassword, newPassword),
@@ -40,6 +61,25 @@ export default function SettingsScreen() {
         e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Try again."
       ),
   });
+
+  function confirmDeleteAccount() {
+    if (deletePassword.length < 1) {
+      Alert.alert("Password required", "Enter your current password to confirm deletion.");
+      return;
+    }
+    Alert.alert(
+      "Delete account permanently?",
+      "This removes your candidate profile, applications, saved jobs, messages, and notification preferences. You cannot undo this.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete account",
+          style: "destructive",
+          onPress: () => deleteMut.mutate(),
+        },
+      ]
+    );
+  }
 
   function savePw() {
     if (newPassword.length < 8) {
@@ -140,6 +180,92 @@ export default function SettingsScreen() {
             disabled={mut.isPending}
             containerStyle={{ marginTop: 8 }}
           />
+
+          <Text style={[styles.groupLabel, styles.groupSpaced]}>Legal</Text>
+          <Text style={styles.sectionHint}>
+            Privacy, terms, and cookie preferences are managed on our website. These links open in your browser.
+          </Text>
+          <Pressable
+            style={[cardSurfaceStyle(true), styles.linkRow]}
+            onPress={() => void openMarketingBrowser(LEGAL_PATHS.hub)}
+            accessibilityRole="button"
+          >
+            <View style={styles.linkTextCol}>
+              <Text style={styles.linkTitle}>Legal hub</Text>
+              <Text style={styles.linkSub}>Terms, privacy, cookies, acceptable use</Text>
+            </View>
+            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+          </Pressable>
+          <Pressable
+            style={[cardSurfaceStyle(true), styles.linkRow]}
+            onPress={() => void openMarketingBrowser(LEGAL_PATHS.privacy)}
+            accessibilityRole="button"
+          >
+            <View style={styles.linkTextCol}>
+              <Text style={styles.linkTitle}>Privacy policy</Text>
+              <Text style={styles.linkSub}>How we handle personal data</Text>
+            </View>
+            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+          </Pressable>
+          <Pressable
+            style={[cardSurfaceStyle(true), styles.linkRow]}
+            onPress={() => void openMarketingBrowser(LEGAL_PATHS.terms)}
+            accessibilityRole="button"
+          >
+            <View style={styles.linkTextCol}>
+              <Text style={styles.linkTitle}>Terms & conditions</Text>
+              <Text style={styles.linkSub}>Using Global Sponsor Hub services</Text>
+            </View>
+            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+          </Pressable>
+          <Pressable
+            style={[cardSurfaceStyle(true), styles.linkRow]}
+            onPress={() => void openMarketingBrowser(LEGAL_PATHS.cookies)}
+            accessibilityRole="button"
+          >
+            <View style={styles.linkTextCol}>
+              <Text style={styles.linkTitle}>Cookie policy</Text>
+              <Text style={styles.linkSub}>Cookies and similar tech on our sites</Text>
+            </View>
+            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+          </Pressable>
+          <Pressable
+            style={[cardSurfaceStyle(true), styles.linkRow]}
+            onPress={() => void openMarketingBrowser(LEGAL_PATHS.acceptableUse)}
+            accessibilityRole="button"
+          >
+            <View style={styles.linkTextCol}>
+              <Text style={styles.linkTitle}>Acceptable use</Text>
+              <Text style={styles.linkSub}>Fair use of messaging, listings, and platform features</Text>
+            </View>
+            <Ionicons name="open-outline" size={20} color={colors.placeholder} />
+          </Pressable>
+
+          <Text style={[styles.groupLabel, styles.groupSpaced]}>Delete account</Text>
+          <Text style={styles.sectionHint}>
+            Permanently delete your candidate account and associated data. Employer and partner accounts must be closed via
+            the website or support.
+          </Text>
+          <Text style={styles.label}>Confirm with your password</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            value={deletePassword}
+            onChangeText={setDeletePassword}
+            autoCapitalize="none"
+            editable={!deleteMut.isPending}
+            placeholder="Current password"
+            placeholderTextColor={colors.placeholder}
+          />
+          <Pressable
+            style={[styles.deleteAccountBtn, deleteMut.isPending && styles.deleteAccountBtnDisabled]}
+            onPress={confirmDeleteAccount}
+            disabled={deleteMut.isPending}
+            accessibilityRole="button"
+            accessibilityLabel="Permanently delete candidate account"
+          >
+            <Text style={styles.deleteAccountBtnText}>{deleteMut.isPending ? "Deleting…" : "Permanently delete account"}</Text>
+          </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -209,5 +335,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     marginBottom: 12,
     color: colors.textPrimary,
+  },
+  deleteAccountBtn: {
+    marginTop: 4,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: radii.sm,
+    borderWidth: 1,
+    borderColor: colors.error,
+    backgroundColor: colors.background,
+    alignItems: "center",
+  },
+  deleteAccountBtnDisabled: { opacity: 0.55 },
+  deleteAccountBtnText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    color: colors.error,
   },
 });

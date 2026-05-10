@@ -1,6 +1,7 @@
 import * as Linking from "expo-linking";
 import type { Router } from "expo-router";
 import { getMarketingSiteUrl } from "@/lib/config";
+import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 
 function normalizeHostname(host: string): string {
   return host.toLowerCase().replace(/^www\./, "");
@@ -67,8 +68,7 @@ function navigateInternalPath(router: Router, pathname: string, search: string):
     return true;
   }
 
-  const pathEnc = encodeURIComponent(pathname + search);
-  router.push({ pathname: "/web-portal", params: { path: pathEnc, title: "Open" } });
+  void openMarketingBrowser(`${pathname}${search}`);
   return true;
 }
 

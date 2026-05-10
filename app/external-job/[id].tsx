@@ -1,11 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import * as WebBrowser from "expo-web-browser";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ActivityIndicator,
   Alert,
-  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -17,8 +15,8 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPublicExternalJobById, recordExternalApplyClick } from "@/lib/api-client";
 import { marketingUrl } from "@/lib/marketing-links";
+import { openExternalHttpsUrl, openMarketingBrowser } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
-import { webPortalRoute } from "@/lib/web-portal-route";
 import type { ExternalJobListingPublic } from "@/types/models";
 
 function hubPortalPath(listing: ExternalJobListingPublic): string {
@@ -52,12 +50,12 @@ export default function ExternalJobDetailScreen() {
       if (!url || !/^https?:\/\//i.test(url)) {
         throw new Error("No valid apply URL for this listing.");
       }
-      await WebBrowser.openBrowserAsync(url);
+      await openExternalHttpsUrl(url);
     },
     onError: (e: unknown) =>
       Alert.alert(
         "Could not open apply link",
-        e instanceof Error ? e.message : "Try opening the hub listing in the viewer.",
+        e instanceof Error ? e.message : "Try opening the hub listing in your browser.",
         [{ text: "OK" }]
       ),
   });
@@ -172,17 +170,10 @@ export default function ExternalJobDetailScreen() {
             />
             <Pressable
               style={styles.outlineBtn}
-              onPress={() => router.push(webPortalRoute(hubPath.startsWith("/") ? hubPath : `/${hubPath}`, "On hub"))}
+              onPress={() => void openMarketingBrowser(hubPath.startsWith("/") ? hubPath : `/${hubPath}`)}
               accessibilityRole="button"
             >
-              <Text style={styles.outlineBtnText}>View listing page on hub</Text>
-            </Pressable>
-            <Pressable
-              style={styles.outlineBtn}
-              onPress={() => void Linking.openURL(marketingUrl(hubPath.startsWith("/") ? hubPath : `/${hubPath}`))}
-              accessibilityRole="button"
-            >
-              <Text style={styles.outlineBtnText}>Open hub URL externally</Text>
+              <Text style={styles.outlineBtnText}>View listing on hub (browser)</Text>
             </Pressable>
           </View>
         </ScrollView>

@@ -449,6 +449,14 @@ export async function changePassword(currentPassword: string, newPassword: strin
   });
 }
 
+/** Candidate-only: permanent deletion for App Store / Play compliance. */
+export async function deleteCandidateAccount(password: string) {
+  return apiFetchJson<{ message: string }>("/auth/delete-account", {
+    method: "POST",
+    body: JSON.stringify({ password }),
+  });
+}
+
 // —— Partners directory ——
 
 export async function fetchPartners(params?: Record<string, string | number | undefined>) {

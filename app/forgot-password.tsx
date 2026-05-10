@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { requestForgotPassword } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -65,6 +66,8 @@ export default function ForgotPasswordScreen() {
             <Pressable style={styles.back} onPress={() => router.back()} accessibilityRole="button">
               <Text style={styles.backText}>Back to sign in</Text>
             </Pressable>
+
+            <LegalConsentFooterRow />
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>

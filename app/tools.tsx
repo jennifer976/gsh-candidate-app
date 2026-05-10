@@ -6,7 +6,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchCandidateDashboard } from "@/lib/api-client";
-import { WEB_PORTAL, webPortalRoute } from "@/lib/web-portal-route";
+import { MARKETING_PATHS } from "@/lib/marketing-paths";
+import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, gradient, radii } from "@/lib/theme";
 
 const TIPS = [
@@ -44,7 +45,7 @@ export default function ToolsScreen() {
           <Text style={styles.section}>Visa & mobility</Text>
           <Pressable
             style={styles.primaryBtnOuter}
-            onPress={() => router.push(webPortalRoute(WEB_PORTAL.visaWizard, "Visa wizard"))}
+            onPress={() => void openMarketingBrowser(MARKETING_PATHS.visaWizard)}
             accessibilityRole="button"
             accessibilityLabel="Open visa wizard"
           >
@@ -82,15 +83,15 @@ export default function ToolsScreen() {
 
           <Pressable style={styles.outlineBtn} onPress={() => router.push("/learn")}>
             <Text style={styles.outlineBtnText}>Guides, blog & resources</Text>
-            <Text style={styles.outlineBtnSub}>Visa guides, resource hub, FAQs — same content as the website</Text>
+            <Text style={styles.outlineBtnSub}>Opens guides and articles in your browser</Text>
           </Pressable>
 
           <Pressable
             style={styles.outlineBtn}
-            onPress={() => router.push(webPortalRoute(WEB_PORTAL.candidateTools, "Web toolkit"))}
+            onPress={() => void openMarketingBrowser(MARKETING_PATHS.candidateTools)}
           >
             <Text style={styles.outlineBtnText}>Open full toolkit (web)</Text>
-            <Text style={styles.outlineBtnSub}>Runs inside the in-app viewer</Text>
+            <Text style={styles.outlineBtnSub}>Opens in Safari or Chrome — same consent & legal pages as the website</Text>
           </Pressable>
       </ScrollView>
     </SafeAreaView>

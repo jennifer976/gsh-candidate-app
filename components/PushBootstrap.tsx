@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { useRouter } from "expo-router";
@@ -6,6 +7,43 @@ import { Platform } from "react-native";
 import { registerCandidatePushToken } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { navigateFromPushLink } from "@/lib/pushNavigate";
+
+const HANDLED_PUSH_KEYS_STORAGE = "@gsh_handled_push_open_keys_v1";
+const MAX_HANDLED_PUSH_KEYS = 100;
+
+async function loadHandledPushKeys(): Promise<Set<string>> {
+  try {
+    const raw = await AsyncStorage.getItem(HANDLED_PUSH_KEYS_STORAGE);
+    if (!raw) return new Set();
+    const arr = JSON.parse(raw) as unknown;
+    return new Set(Array.isArray(arr) ? arr.filter((x) => typeof x === "string") : []);
+  } catch {
+    return new Set();
+  }
+}
+
+async function persistHandledPushKey(key: string): Promise<void> {
+  try {
+    const raw = await AsyncStorage.getItem(HANDLED_PUSH_KEYS_STORAGE);
+    const arr = raw ? (JSON.parse(raw) as string[]) : [];
+    if (!Array.isArray(arr)) return;
+    if (!arr.includes(key)) {
+      arr.push(key);
+      while (arr.length > MAX_HANDLED_PUSH_KEYS) arr.shift();
+      await AsyncStorage.setItem(HANDLED_PUSH_KEYS_STORAGE, JSON.stringify(arr));
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+function pushOpenDedupeKey(response: Notifications.NotificationResponse): string {
+  const id = response.notification.request.identifier;
+  const date = response.notification.date;
+  const data = response.notification.request.content.data as Record<string, unknown>;
+  const link = typeof data?.link === "string" ? data.link : "";
+  return `${id}|${String(date)}|${link}`;
+}
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -27,11 +65,15 @@ export function PushBootstrap() {
   const handledNotificationIds = useRef(new Set<string>());
 
   const handleNotificationOpen = useCallback(
-    (response: Notifications.NotificationResponse | null) => {
+    async (response: Notifications.NotificationResponse | null) => {
       if (!response) return;
-      const id = response.notification.request.identifier;
-      if (handledNotificationIds.current.has(id)) return;
-      handledNotificationIds.current.add(id);
+      const dedupeKey = pushOpenDedupeKey(response);
+      if (handledNotificationIds.current.has(dedupeKey)) return;
+      const stored = await loadHandledPushKeys();
+      if (stored.has(dedupeKey)) return;
+      handledNotificationIds.current.add(dedupeKey);
+      await persistHandledPushKey(dedupeKey);
+
       const data = response.notification.request.content.data as Record<string, unknown>;
       const link = typeof data.link === "string" ? data.link.trim() : "";
       if (!link) return;
@@ -42,7 +84,7 @@ export function PushBootstrap() {
 
   useEffect(() => {
     const sub = Notifications.addNotificationResponseReceivedListener((response) => {
-      handleNotificationOpen(response);
+      void handleNotificationOpen(response);
     });
     return () => sub.remove();
   }, [handleNotificationOpen]);
@@ -50,7 +92,7 @@ export function PushBootstrap() {
   useEffect(() => {
     let cancelled = false;
     void Notifications.getLastNotificationResponseAsync().then((response) => {
-      if (!cancelled) handleNotificationOpen(response);
+      if (!cancelled) void handleNotificationOpen(response);
     });
     return () => {
       cancelled = true;

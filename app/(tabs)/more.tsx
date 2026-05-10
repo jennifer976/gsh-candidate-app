@@ -4,7 +4,8 @@ import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { WEB_PORTAL, webPortalRoute } from "@/lib/web-portal-route";
+import { MARKETING_PATHS } from "@/lib/marketing-paths";
+import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
@@ -69,9 +70,9 @@ export default function MoreScreen() {
           <Text style={styles.section}>Learn & support</Text>
           <RowLink
             title="Visa wizard"
-            subtitle="Sponsorship & mobility questionnaire — opens inside the app viewer"
+            subtitle="Sponsorship & mobility questionnaire — opens on globalsponsorhub.com"
             icon="sparkles-outline"
-            onPress={() => router.push(webPortalRoute(WEB_PORTAL.visaWizard, "Visa wizard"))}
+            onPress={() => void openMarketingBrowser(MARKETING_PATHS.visaWizard)}
           />
           {LEARN_FIRST.map((item) => (
             <RowLink

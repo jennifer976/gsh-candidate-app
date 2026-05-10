@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { verifyOtpRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -57,6 +58,8 @@ export default function VerifyScreen() {
 
             <GshGradientPrimaryButton title="Verify & continue" onPress={onSubmit} loading={loading} />
           </View>
+
+          <LegalConsentFooterRow />
         </KeyboardAvoidingView>
       </SafeAreaView>
     </GshScreenBackground>

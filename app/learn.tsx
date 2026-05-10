@@ -5,7 +5,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { marketingUrl } from "@/lib/marketing-links";
-import { WEB_PORTAL, webPortalRoute } from "@/lib/web-portal-route";
+import { MARKETING_PATHS } from "@/lib/marketing-paths";
+import { openMarketingBrowser } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
@@ -15,7 +16,7 @@ type WebRow = { title: string; subtitle: string; path: string; icon: IonName };
 const CURATED_JOBS: WebRow[] = [
   {
     title: "Curated external roles",
-    subtitle: "Partner-sourced & aggregated sponsorship-friendly listings — same board as the website",
+    subtitle: "Partner-sourced board on globalsponsorhub.com — opens in your browser",
     path: "/jobs/external",
     icon: "briefcase-outline",
   },
@@ -102,17 +103,17 @@ export default function LearnHubScreen() {
             <Text style={styles.heroTitle}>Guides, insight & support</Text>
             <Text style={styles.heroBody}>
               Explore sponsorship-friendly mobility tools, guides, and the curated jobs board — the same trusted content
-              as globalsponsorhub.com. Use the header on each page to reload or open in your browser when you prefer.
+              as globalsponsorhub.com. Links open in your device browser so consent preferences and legal notices stay on the website.
             </Text>
           </View>
 
           <Text style={styles.section}>Sponsorship & visas</Text>
           <HubLinkRow
             title="Visa wizard"
-            subtitle="Step-by-step questionnaire — clarify route options and what to prepare next (runs in this viewer)"
+            subtitle="Step-by-step questionnaire — opens on globalsponsorhub.com in your browser"
             icon="sparkles-outline"
             trailingIcon="chevron-forward"
-            onPress={() => router.push(webPortalRoute(WEB_PORTAL.visaWizard, "Visa wizard"))}
+            onPress={() => void openMarketingBrowser(MARKETING_PATHS.visaWizard)}
           />
 
           <Text style={styles.section}>Jobs</Text>
@@ -123,7 +124,7 @@ export default function LearnHubScreen() {
               subtitle={item.subtitle}
               icon={item.icon}
               trailingIcon="chevron-forward"
-              onPress={() => router.push(webPortalRoute(item.path, item.title))}
+              onPress={() => void openMarketingBrowser(item.path)}
             />
           ))}
 
@@ -135,7 +136,7 @@ export default function LearnHubScreen() {
               subtitle={item.subtitle}
               icon={item.icon}
               trailingIcon="chevron-forward"
-              onPress={() => router.push(webPortalRoute(item.path, item.title))}
+              onPress={() => void openMarketingBrowser(item.path)}
             />
           ))}
 
@@ -147,7 +148,7 @@ export default function LearnHubScreen() {
               subtitle={item.subtitle}
               icon={item.icon}
               trailingIcon="chevron-forward"
-              onPress={() => router.push(webPortalRoute(item.path, item.title))}
+              onPress={() => void openMarketingBrowser(item.path)}
             />
           ))}
 
