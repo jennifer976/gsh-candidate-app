@@ -65,8 +65,8 @@ export function JobsHomePersonalHeader({
     <View style={[styles.wrap, cardSurfaceStyle(false)]}>
       <Text style={styles.greeting}>{greeting}</Text>
       <Text style={styles.sub}>
-        Search employer-posted roles on Global Sponsor Hub. Recruitment agencies and partner-curated wider-web roles are on
-        Curated listings — kept separate so it stays clear who posted the role.
+        Use the Employer / Curated tabs below to switch feeds. Employer is direct company posts; Curated is external links
+        (often agencies) — kept separate so it stays clear who posted the role.
       </Text>
 
       {completionPct != null && completionPct < 100 ? (

@@ -138,7 +138,23 @@ export async function verifyOtpRequest(userId: string, code: string) {
 }
 
 export async function fetchOwnProfile(): Promise<Record<string, unknown>> {
-  return apiFetchJson("/profile/me");
+  try {
+    return await apiFetchJson<Record<string, unknown>>("/profile/me");
+  } catch (e: unknown) {
+    const err = e as ApiError;
+    /** New accounts may not have a Profile row yet — backend returns 404; allow creating one in-app. */
+    if (err.status === 404) {
+      return {
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        location: "",
+        linkedin_profile: "",
+        profileCompletion: 0,
+      };
+    }
+    throw e;
+  }
 }
 
 export async function fetchPublicJobs(params: Record<string, string | number | undefined>) {

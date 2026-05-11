@@ -78,6 +78,26 @@ export const shellGradient = {
  * Card elevation approximating `--gsh-shadow-card` + optional purple lift
  * (`.gsh-marketing-card-surface--interactive`).
  */
+/** Curated / agency external listings — distinct purple shell vs employer Hub cards. */
+export function cardCuratedSurfaceStyle(interactive?: boolean): ViewStyle {
+  const base: ViewStyle = {
+    backgroundColor: colors.purpleMuted,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.purpleBorder,
+  };
+  if (Platform.OS === "android") {
+    return { ...base, elevation: interactive ? 4 : 2 };
+  }
+  return {
+    ...base,
+    shadowColor: colors.purple,
+    shadowOffset: { width: 0, height: interactive ? 4 : 2 },
+    shadowOpacity: interactive ? 0.12 : 0.06,
+    shadowRadius: interactive ? 14 : 10,
+  };
+}
+
 export function cardSurfaceStyle(interactive?: boolean): ViewStyle {
   const base: ViewStyle = {
     backgroundColor: colors.background,

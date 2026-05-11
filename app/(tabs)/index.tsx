@@ -14,13 +14,20 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobsHomePersonalHeader } from "@/components/JobsHomePersonalHeader";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { fetchCandidateDashboard, fetchOwnProfile, fetchPublicJobs } from "@/lib/api-client";
+import {
+  fetchCandidateDashboard,
+  fetchOwnProfile,
+  fetchPublicExternalJobListings,
+  fetchPublicJobs,
+} from "@/lib/api-client";
 import { getJobEmployerLabel, hubListingChips } from "@/lib/job-display";
+import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
 import { addRecentJobSearch, loadRecentJobSearches } from "@/lib/recent-job-searches";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
-import type { Job } from "@/types/models";
+import type { ExternalJobListingPublic, Job } from "@/types/models";
 
 function formatSalary(job: Job): string {
   const cur = job.salaryCurrency || "GBP";
@@ -32,27 +39,7 @@ function formatSalary(job: Job): string {
   return "";
 }
 
-const CHIP_CAP = 3;
-
-function ChipStrip({ chips }: { chips: string[] }) {
-  if (chips.length === 0) return null;
-  return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.chipStripContent}
-      style={styles.chipStrip}
-    >
-      {chips.map((c) => (
-        <View key={c} style={styles.listChip}>
-          <Text style={styles.listChipText} numberOfLines={1}>
-            {c}
-          </Text>
-        </View>
-      ))}
-    </ScrollView>
-  );
-}
+const CHIP_CAP = 4;
 
 function HubJobCard({ job, onPress }: { job: Job; onPress: () => void }) {
   const employer = getJobEmployerLabel(job);
@@ -63,23 +50,36 @@ function HubJobCard({ job, onPress }: { job: Job; onPress: () => void }) {
 
   return (
     <Pressable style={[styles.card, cardSurfaceStyle(false)]} onPress={onPress} accessibilityRole="button">
-      <View style={styles.cardTop}>
-        <Text style={styles.cardTitle} numberOfLines={2}>
-          {job.title}
-        </Text>
+      <Text style={styles.cardTitle} numberOfLines={2}>
+        {job.title}
+      </Text>
+      <View style={styles.badgeRow}>
         <View style={[styles.kindBadge, styles.kindBadgeHub]}>
-          <Text style={styles.kindBadgeText}>Hub</Text>
+          <Text style={styles.kindBadgeText}>Employer</Text>
         </View>
       </View>
       <Text style={styles.cardCompany} numberOfLines={1}>
         {employer}
       </Text>
       {meta ? (
-        <Text style={styles.cardMeta} numberOfLines={1}>
+        <Text style={styles.cardMeta} numberOfLines={2}>
           {meta}
         </Text>
       ) : null}
-      <ChipStrip chips={chips} />
+      {chips.length > 0 ? (
+        <View style={styles.chipWrap}>
+          {chips.map((c) => {
+            const pal = mobilityChipStyle(c);
+            return (
+              <View key={c} style={[styles.listChip, pal.wrap]}>
+                <Text style={[styles.listChipText, pal.text]} numberOfLines={2}>
+                  {c}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      ) : null}
       {formatSalary(job) ? <Text style={styles.cardSalary}>{formatSalary(job)}</Text> : null}
       <View style={styles.cardFooter}>
         <Text style={styles.cardCta}>View role</Text>
@@ -91,6 +91,7 @@ function HubJobCard({ job, onPress }: { job: Job; onPress: () => void }) {
 
 export default function JobsScreen() {
   const router = useRouter();
+  const [feedTab, setFeedTab] = useState<"employer" | "curated">("employer");
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
   const [recent, setRecent] = useState<string[]>([]);
@@ -128,6 +129,7 @@ export default function JobsScreen() {
     staleTime: 45_000,
   });
 
+  /** Employer + curated load together so switching tabs hits React Query cache first (prefetch). */
   const hubJobsQuery = useQuery({
     queryKey: ["public-jobs", debouncedQ],
     queryFn: () =>
@@ -135,6 +137,17 @@ export default function JobsScreen() {
         q: debouncedQ || undefined,
         page: 1,
         perPage: 25,
+      }),
+    staleTime: 60_000,
+  });
+
+  const curatedJobsQuery = useQuery({
+    queryKey: ["external-job-listings", "home-tab", debouncedQ],
+    queryFn: () =>
+      fetchPublicExternalJobListings({
+        q: debouncedQ || undefined,
+        page: 1,
+        perPage: 35,
       }),
     staleTime: 60_000,
   });
@@ -160,16 +173,26 @@ export default function JobsScreen() {
   }, [dashQuery.data]);
 
   const hubJobs = hubJobsQuery.data?.data ?? [];
+  const curatedJobs = curatedJobsQuery.data?.data ?? [];
 
-  const listBootloading = hubJobsQuery.isLoading && !hubJobsQuery.data;
-  const activeError = hubJobsQuery.isError;
+  const listRows = feedTab === "employer" ? hubJobs : curatedJobs;
+
+  const listBootloading =
+    feedTab === "employer"
+      ? hubJobsQuery.isLoading && !hubJobsQuery.data
+      : curatedJobsQuery.isLoading && !curatedJobsQuery.data;
+
+  const activeError = feedTab === "employer" ? hubJobsQuery.isError : curatedJobsQuery.isError;
 
   const onRefresh = useCallback(() => {
     setPullRefreshing(true);
-    void Promise.all([hubJobsQuery.refetch(), dashQuery.refetch(), profileQuery.refetch()]).finally(() =>
-      setPullRefreshing(false),
-    );
-  }, [hubJobsQuery, dashQuery, profileQuery]);
+    void Promise.all([
+      hubJobsQuery.refetch(),
+      curatedJobsQuery.refetch(),
+      dashQuery.refetch(),
+      profileQuery.refetch(),
+    ]).finally(() => setPullRefreshing(false));
+  }, [hubJobsQuery, curatedJobsQuery, dashQuery, profileQuery]);
 
   const listHeader = (
     <>
@@ -247,38 +270,59 @@ export default function JobsScreen() {
         </View>
       </View>
 
-      <Pressable
-        style={[styles.curatedRow, cardSurfaceStyle(false)]}
-        onPress={() => router.push("/curated-listings")}
-        accessibilityRole="button"
-        accessibilityLabel="Open curated listings on a separate screen"
-      >
-        <View style={styles.curatedRowText}>
-          <Text style={styles.curatedRowTitle}>Curated listings</Text>
-          <Text style={styles.curatedRowSub}>Agency campaigns, partner-curated and wider-web — not mixed with employer posts below</Text>
+      <View style={styles.feedTabsOuter}>
+        <Text style={styles.feedTabsLabel}>Job feed</Text>
+        <View style={styles.feedTabsRow}>
+          <Pressable
+            style={[styles.feedTab, feedTab === "employer" && styles.feedTabActive]}
+            onPress={() => setFeedTab("employer")}
+            accessibilityRole="button"
+            accessibilityState={{ selected: feedTab === "employer" }}
+          >
+            <Text style={[styles.feedTabText, feedTab === "employer" && styles.feedTabTextActive]}>Employer</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.feedTab, feedTab === "curated" && styles.feedTabActiveCurated]}
+            onPress={() => setFeedTab("curated")}
+            accessibilityRole="button"
+            accessibilityState={{ selected: feedTab === "curated" }}
+          >
+            <Text style={[styles.feedTabText, feedTab === "curated" && styles.feedTabTextActiveCurated]}>Curated</Text>
+          </Pressable>
         </View>
-        <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
-      </Pressable>
-
-      <View style={styles.feedIntroOuter}>
-        <Text style={styles.feedIntroLabel}>Employer listings</Text>
-        <Text style={styles.feedIntroHint}>
-          Companies posting their own roles on Global Sponsor Hub. Recruitment agencies list separately under Curated above.
-        </Text>
       </View>
+
+      {feedTab === "employer" ? (
+        <View style={styles.feedIntroOuter}>
+          <Text style={styles.feedIntroLabel}>Employer listings</Text>
+          <Text style={styles.feedIntroHint}>
+            Direct employer posts on Global Sponsor Hub. Switch to Curated for agency-submitted and wider-web links (apply on external sites).
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.feedIntroOuter}>
+          <Text style={styles.feedIntroLabel}>Curated external roles</Text>
+          <Text style={styles.feedIntroHint}>
+            Hand-picked or agency-submitted links to careers hosted elsewhere. You apply on the employer or ATS site — not inside this app.
+          </Text>
+          <Pressable onPress={() => router.push("/curated-listings")} accessibilityRole="link" style={styles.feedIntroLinkWrap}>
+            <Text style={styles.feedIntroLink}>Open full curated browser →</Text>
+          </Pressable>
+        </View>
+      )}
 
       <View style={styles.searchOuter}>
         <View style={styles.searchWrap}>
           <Ionicons name="search" size={20} color={colors.placeholder} style={styles.searchIcon} />
           <TextInput
             style={styles.search}
-            placeholder="Search employer-posted roles…"
+            placeholder={feedTab === "employer" ? "Search employer roles…" : "Search curated roles…"}
             placeholderTextColor={colors.placeholder}
             value={q}
             onChangeText={setQ}
             autoCapitalize="none"
             autoCorrect={false}
-            accessibilityLabel="Search employer job listings"
+            accessibilityLabel={feedTab === "employer" ? "Search employer job listings" : "Search curated external job listings"}
             returnKeyType="search"
           />
           {q.length > 0 ? (
@@ -314,32 +358,46 @@ export default function JobsScreen() {
   const emptyBody = listBootloading ? (
     <View style={styles.emptyWrap}>
       <ActivityIndicator size="large" color={colors.brand} />
-      <Text style={styles.loadingHint}>Loading employer listings…</Text>
+      <Text style={styles.loadingHint}>
+        {feedTab === "employer" ? "Loading employer listings…" : "Loading curated listings…"}
+      </Text>
     </View>
   ) : activeError ? (
     <View style={styles.emptyWrap}>
       <Ionicons name="cloud-offline-outline" size={44} color={colors.textMuted} />
       <Text style={styles.errTitle}>Could not load listings</Text>
       <Text style={styles.errSub}>Check your connection and pull down to retry.</Text>
-      <Pressable style={styles.retryBtn} onPress={() => void hubJobsQuery.refetch()} accessibilityRole="button">
+      <Pressable
+        style={styles.retryBtn}
+        onPress={() => void (feedTab === "employer" ? hubJobsQuery.refetch() : curatedJobsQuery.refetch())}
+        accessibilityRole="button"
+      >
         <Text style={styles.retryBtnText}>Try again</Text>
       </Pressable>
     </View>
-  ) : hubJobs.length === 0 ? (
+  ) : listRows.length === 0 ? (
     <View style={styles.emptyWrap}>
       <Ionicons name="search-outline" size={44} color={colors.borderStrong} />
       <Text style={styles.empty}>
-        {debouncedQ
-          ? "No employer listings match that search — try another keyword."
-          : "No employer listings right now. Pull to refresh."}
+        {feedTab === "employer"
+          ? debouncedQ
+            ? "No employer listings match that search — try another keyword."
+            : "No employer listings right now. Pull to refresh."
+          : debouncedQ
+            ? "No curated listings match that search — try another keyword."
+            : "No curated listings right now. Pull to refresh."}
       </Text>
       {debouncedQ ? (
         <Pressable style={styles.retryBtn} onPress={() => setQ("")} accessibilityRole="button">
           <Text style={styles.retryBtnText}>Clear search</Text>
         </Pressable>
+      ) : feedTab === "employer" ? (
+        <Pressable style={styles.secondaryCta} onPress={() => setFeedTab("curated")} accessibilityRole="button">
+          <Text style={styles.secondaryCtaText}>Try curated listings →</Text>
+        </Pressable>
       ) : (
         <Pressable style={styles.secondaryCta} onPress={() => router.push("/curated-listings")} accessibilityRole="button">
-          <Text style={styles.secondaryCtaText}>Browse curated listings (separate) →</Text>
+          <Text style={styles.secondaryCtaText}>Open full curated browser →</Text>
         </Pressable>
       )}
     </View>
@@ -349,16 +407,26 @@ export default function JobsScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <FlatList
-          data={activeError ? [] : hubJobs}
+          data={activeError ? [] : listRows}
           keyExtractor={(item) => item._id}
           ListHeaderComponent={listHeader}
           ListEmptyComponent={emptyBody}
           refreshControl={<RefreshControl refreshing={pullRefreshing} onRefresh={onRefresh} />}
-          contentContainerStyle={[styles.listPad, hubJobs.length === 0 && !listBootloading && styles.listPadGrow]}
+          contentContainerStyle={[
+            styles.listPad,
+            listRows.length === 0 && !listBootloading && styles.listPadGrow,
+          ]}
           keyboardShouldPersistTaps="handled"
-          renderItem={({ item }) => (
-            <HubJobCard job={item as Job} onPress={() => router.push(`/job/${(item as Job)._id}`)} />
-          )}
+          renderItem={({ item }) =>
+            feedTab === "employer" ? (
+              <HubJobCard job={item as Job} onPress={() => router.push(`/job/${(item as Job)._id}`)} />
+            ) : (
+              <CuratedExternalJobCard
+                job={item as ExternalJobListingPublic}
+                onPress={() => router.push(`/external-job/${(item as ExternalJobListingPublic)._id}`)}
+              />
+            )
+          }
         />
       </SafeAreaView>
     </GshScreenBackground>
@@ -406,20 +474,37 @@ const styles = StyleSheet.create({
   },
   quickLink: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary },
   quickDot: { fontSize: 13, color: colors.borderStrong },
-  curatedRow: {
-    marginHorizontal: 16,
-    marginTop: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    borderRadius: radii.lg,
+  feedTabsOuter: { marginHorizontal: 16, marginTop: 14 },
+  feedTabsLabel: {
+    fontSize: 11,
+    fontFamily: fontFamily.medium,
+    color: colors.textMuted,
+    letterSpacing: 0.35,
+    marginBottom: 8,
   },
-  curatedRowText: { flex: 1 },
-  curatedRowTitle: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
-  curatedRowSub: { marginTop: 4, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 17 },
-  feedIntroOuter: { paddingHorizontal: 16, marginTop: 16, marginBottom: 4 },
+  feedTabsRow: { flexDirection: "row", gap: 10 },
+  feedTab: {
+    flex: 1,
+    paddingVertical: 11,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.background,
+  },
+  feedTabActive: {
+    borderColor: "rgba(14, 205, 209, 0.55)",
+    backgroundColor: "rgba(14, 205, 209, 0.09)",
+  },
+  feedTabActiveCurated: {
+    borderColor: colors.purpleBorder,
+    backgroundColor: colors.purpleMuted,
+  },
+  feedTabText: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.textMuted },
+  feedTabTextActive: { color: colors.navy },
+  feedTabTextActiveCurated: { color: colors.purpleTextDark },
+  feedIntroOuter: { paddingHorizontal: 16, marginTop: 14, marginBottom: 4 },
   feedIntroLabel: {
     fontSize: 11,
     fontFamily: fontFamily.medium,
@@ -433,6 +518,8 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     lineHeight: 19,
   },
+  feedIntroLinkWrap: { marginTop: 10, alignSelf: "flex-start" },
+  feedIntroLink: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
   searchOuter: { paddingHorizontal: 16, paddingVertical: 12 },
   searchWrap: {
     flexDirection: "row",
@@ -476,8 +563,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 18,
   },
-  cardTop: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
-  cardTitle: { flex: 1, fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.textPrimary, letterSpacing: -0.25 },
+  cardTitle: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.textPrimary, letterSpacing: -0.25 },
+  badgeRow: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", gap: 8 },
   kindBadge: {
     paddingHorizontal: 8,
     paddingVertical: 3,
@@ -486,31 +573,23 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   kindBadgeHub: {
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.border,
+    backgroundColor: "rgba(14, 205, 209, 0.12)",
+    borderColor: "rgba(14, 205, 209, 0.35)",
   },
-  kindBadgeText: { fontSize: 10, fontFamily: fontFamily.medium, color: colors.textMuted },
+  kindBadgeText: { fontSize: 10, fontFamily: fontFamily.bold, color: "#0f766e", letterSpacing: 0.15 },
+  chipWrap: {
+    marginTop: 10,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+  },
   cardCompany: { marginTop: 10, fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
   cardMeta: { marginTop: 3, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
-  chipStrip: {
-    marginTop: 10,
-    marginHorizontal: -2,
-    maxHeight: 28,
-  },
-  chipStripContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    paddingRight: 8,
-  },
   listChip: {
-    paddingVertical: 4,
-    paddingHorizontal: 9,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: radii.pill,
-    backgroundColor: colors.background,
-    borderWidth: 1,
-    borderColor: colors.border,
-    flexShrink: 0,
+    maxWidth: "100%",
   },
   listChipText: {
     fontSize: 11,

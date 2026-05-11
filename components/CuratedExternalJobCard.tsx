@@ -1,29 +1,28 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { curatedListingPrimaryBadge } from "@/lib/curated-listing-labels";
 import { externalListingChips } from "@/lib/job-display";
-import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
+import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
+import { cardCuratedSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic } from "@/types/models";
 
 const CHIP_CAP = 3;
 
-function ChipStrip({ chips }: { chips: string[] }) {
+function ChipWrap({ chips }: { chips: string[] }) {
   if (chips.length === 0) return null;
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.chipStripContent}
-      style={styles.chipStrip}
-    >
-      {chips.map((c) => (
-        <View key={c} style={styles.listChip}>
-          <Text style={styles.listChipText} numberOfLines={1}>
-            {c}
-          </Text>
-        </View>
-      ))}
-    </ScrollView>
+    <View style={styles.chipWrap}>
+      {chips.map((c) => {
+        const pal = mobilityChipStyle(c);
+        return (
+          <View key={c} style={[styles.listChip, pal.wrap]}>
+            <Text style={[styles.listChipText, pal.text]} numberOfLines={2}>
+              {c}
+            </Text>
+          </View>
+        );
+      })}
+    </View>
   );
 }
 
@@ -33,13 +32,15 @@ export function CuratedExternalJobCard({ job, onPress }: { job: ExternalJobListi
   const primaryBadge = curatedListingPrimaryBadge(job);
 
   return (
-    <Pressable style={[styles.card, cardSurfaceStyle(false)]} onPress={onPress} accessibilityRole="button">
+    <Pressable style={[styles.card, cardCuratedSurfaceStyle(false)]} onPress={onPress} accessibilityRole="button">
       <View style={styles.cardTop}>
         <Text style={styles.cardTitle} numberOfLines={2}>
           {job.title}
         </Text>
-        <View style={[styles.kindBadge, primaryBadge === "Agency" ? styles.kindBadgeAgency : undefined]}>
-          <Text style={[styles.kindBadgeText, primaryBadge === "Agency" ? styles.kindBadgeTextAgency : undefined]}>
+      </View>
+      <View style={styles.badgeRow}>
+        <View style={[styles.kindBadge, primaryBadge === "Agency" ? styles.kindBadgeAgency : styles.kindBadgeCurated]}>
+          <Text style={[styles.kindBadgeText, primaryBadge === "Agency" ? styles.kindBadgeTextAgency : styles.kindBadgeTextCurated]}>
             {primaryBadge === "Agency" ? "Agency" : "Curated"}
           </Text>
         </View>
@@ -57,7 +58,7 @@ export function CuratedExternalJobCard({ job, onPress }: { job: ExternalJobListi
           {loc}
         </Text>
       ) : null}
-      <ChipStrip chips={chips} />
+      <ChipWrap chips={chips} />
       <View style={styles.cardFooter}>
         <Text style={styles.cardCta}>Details & apply</Text>
         <Ionicons name="open-outline" size={18} color={colors.textMuted} />
@@ -71,20 +72,24 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 18,
   },
-  cardTop: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
-  cardTitle: { flex: 1, fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.textPrimary, letterSpacing: -0.25 },
+  cardTop: { width: "100%" },
+  badgeRow: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  cardTitle: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.textPrimary, letterSpacing: -0.25 },
   kindBadge: {
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
     borderWidth: 1,
     alignSelf: "flex-start",
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.border,
   },
-  kindBadgeText: { fontSize: 10, fontFamily: fontFamily.medium, color: colors.textMuted },
+  kindBadgeCurated: {
+    backgroundColor: colors.secondaryTintBg,
+    borderColor: colors.purpleBorder,
+  },
+  kindBadgeText: { fontSize: 10, fontFamily: fontFamily.bold, letterSpacing: 0.2 },
+  kindBadgeTextCurated: { color: colors.secondaryTintText },
   kindBadgeAgency: {
-    backgroundColor: colors.purpleMuted,
+    backgroundColor: "#faf5ff",
     borderColor: colors.purpleBorder,
   },
   kindBadgeTextAgency: { color: colors.purpleTextDark },
@@ -96,30 +101,22 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   cardMeta: { marginTop: 3, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
-  chipStrip: {
+  chipWrap: {
     marginTop: 10,
-    marginHorizontal: -2,
-    maxHeight: 28,
-  },
-  chipStripContent: {
     flexDirection: "row",
-    alignItems: "center",
+    flexWrap: "wrap",
     gap: 6,
-    paddingRight: 8,
   },
   listChip: {
-    paddingVertical: 4,
-    paddingHorizontal: 9,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: radii.pill,
-    backgroundColor: colors.background,
     borderWidth: 1,
-    borderColor: colors.border,
-    flexShrink: 0,
+    maxWidth: "100%",
   },
   listChipText: {
     fontSize: 11,
     fontFamily: fontFamily.medium,
-    color: colors.textSecondary,
     letterSpacing: 0.1,
   },
   cardFooter: {
