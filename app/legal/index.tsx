@@ -1,7 +1,9 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { LEGAL_LAST_UPDATED } from "@/lib/legal/appLegalDocs";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -20,10 +22,13 @@ export default function LegalHubScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <Text style={styles.lead}>
-            These policies are included here so you can read them anytime in the app. Last reviewed alignment:{" "}
-            {LEGAL_LAST_UPDATED}.
-          </Text>
+          <GshScreenIntro
+            eyebrow="Legal"
+            title="Policies"
+            subtitle={`These policies are included here so you can read them anytime in the app. Last reviewed alignment: ${LEGAL_LAST_UPDATED}.`}
+            style={{ marginBottom: 12 }}
+          />
+          <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
           {ROWS.map((r) => (
             <Pressable
               key={r.slug}
@@ -50,20 +55,14 @@ export default function LegalHubScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 40, gap: 12 },
-  lead: {
-    fontSize: 15,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-    lineHeight: 22,
-    marginBottom: 8,
-  },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 4 },
   row: {
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
     paddingVertical: 14,
     paddingHorizontal: 14,
-    borderRadius: radii.md,
+    borderRadius: radii.lg,
   },
   iconCircle: {
     width: 46,
@@ -76,6 +75,6 @@ const styles = StyleSheet.create({
     borderColor: colors.purpleBorder,
   },
   textCol: { flex: 1 },
-  title: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.textPrimary },
+  title: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy },
   sub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 18 },
 });

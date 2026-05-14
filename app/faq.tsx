@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { LayoutAnimation, Platform, Pressable, ScrollView, StyleSheet, Text, UIManager, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { FAQ_ITEMS } from "@/lib/content/faqData";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -30,10 +31,15 @@ export default function FaqScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <Text style={styles.lead}>Answers about Global Sponsor Hub — formatted for the candidate app.</Text>
-          {grouped.map(([category, items]) => (
+          <GshScreenIntro
+            eyebrow="Help"
+            title="FAQs"
+            subtitle="Answers about Global Sponsor Hub — formatted for quick reading on mobile."
+            style={{ marginBottom: 8 }}
+          />
+          {grouped.map(([category, items], idx) => (
             <View key={category} style={styles.section}>
-              <Text style={styles.sectionTitle}>{category}</Text>
+              <GshSectionTitle title={category} topSpacing={idx === 0 ? "none" : "sm"} />
               {items.map((item) => {
                 const key = `${category}::${item.question}`;
                 const isOpen = open === key;
@@ -58,18 +64,9 @@ export default function FaqScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 48, gap: 16 },
-  lead: { fontSize: 15, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 22 },
   section: { gap: 10 },
-  sectionTitle: {
-    marginTop: 8,
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.75,
-  },
-  card: { padding: 14, borderRadius: radii.md },
-  q: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.textPrimary, paddingRight: 56 },
+  card: { padding: 14, borderRadius: radii.lg },
+  q: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy, paddingRight: 56 },
   toggle: {
     position: "absolute",
     right: 14,

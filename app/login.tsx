@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -15,6 +16,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { loginRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -65,11 +67,12 @@ export default function LoginScreen() {
           >
             <View style={styles.brandRow}>
               <Image source={require("../assets/brand-mark.webp")} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
-              <View>
-                <Text style={styles.title}>Global Sponsor Hub</Text>
-                <Text style={styles.subtitle}>Candidate sign in</Text>
+              <View style={styles.brandText}>
+                <GshScreenIntro eyebrow="Global Sponsor Hub" title="Sign in" subtitle="Candidate access to saved jobs, applications, and messages." />
               </View>
             </View>
+
+            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
 
             <View style={[cardSurfaceStyle(false), styles.formCard]}>
               <Text style={styles.label}>Email</Text>
@@ -122,14 +125,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 28,
   },
-  brandRow: { flexDirection: "row", alignItems: "center", gap: 14, marginBottom: 28 },
+  brandRow: { flexDirection: "row", alignItems: "center", gap: 14, marginBottom: 20 },
   mark: { width: 44, height: 44 },
-  title: { fontSize: 22, fontFamily: fontFamily.bold, color: colors.textPrimary, letterSpacing: -0.3 },
-  subtitle: { marginTop: 4, fontSize: 15, fontFamily: fontFamily.medium, color: colors.textMuted },
+  brandText: { flex: 1 },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
   formCard: {
-    padding: 18,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.teal,
+    padding: 20,
+    borderRadius: radii.lg,
     backgroundColor: colors.background,
     marginBottom: 8,
   },
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "rgba(226, 232, 240, 0.92)",
-    borderRadius: radii.sm,
+    borderRadius: radii.md,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 12,
     fontSize: 16,

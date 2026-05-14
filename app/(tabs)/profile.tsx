@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshCompletionStrip, GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchOwnProfile, updateProfile, uploadFileFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -190,19 +191,19 @@ export default function ProfileScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled">
-          <Text style={styles.h1}>Your profile</Text>
-          {!profileQuery.isLoading && !profileQuery.isError && completion === 0 ? (
-            <Text style={styles.welcome}>Welcome — add a few details below so applications go smoothly.</Text>
-          ) : null}
+          <GshScreenIntro
+            eyebrow="Account"
+            title="Your profile"
+            subtitle="Keep your basics current so applications, CV uploads, and employer messages stay smooth."
+            style={{ marginBottom: 12 }}
+          />
           {profileQuery.isLoading ? (
           <Text style={styles.body}>Loading…</Text>
         ) : profileQuery.isError ? (
           <Text style={styles.warn}>Profile could not be loaded.</Text>
         ) : (
           <>
-            {completion != null ? (
-              <Text style={styles.completion}>Profile completion: {completion}%</Text>
-            ) : null}
+            {completion != null ? <GshCompletionStrip pct={completion} /> : null}
             <Text style={styles.email}>Signed in as {user?.email ?? "—"}</Text>
 
             <Text style={styles.label}>First name</Text>
@@ -347,17 +348,8 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 20, paddingBottom: 40 },
-  h1: { fontSize: 24, fontFamily: fontFamily.extraBold, color: colors.textPrimary, marginBottom: 8, letterSpacing: -0.3 },
-  welcome: {
-    fontSize: 14,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-    marginBottom: 14,
-    lineHeight: 20,
-  },
   body: { fontSize: 15, fontFamily: fontFamily.regular, color: colors.textSecondary },
   warn: { fontSize: 14, fontFamily: fontFamily.medium, color: "#b45309", marginBottom: 12 },
-  completion: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.brand, marginBottom: 8 },
   email: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, marginBottom: 16 },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   input: {

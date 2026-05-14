@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LegalDocView } from "@/components/LegalDocView";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { LEGAL_DOCUMENTS, type LegalDocId } from "@/lib/legal/appLegalDocs";
 import { colors, fontFamily } from "@/lib/theme";
@@ -27,7 +28,7 @@ export default function LegalDocumentScreen() {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.center} edges={["bottom"]}>
-          <Text style={styles.err}>Document not found.</Text>
+          <GshScreenIntro title="Document not found" subtitle="That legal document is not in this app build." style={{ marginBottom: 12 }} />
           <Pressable onPress={() => router.back()} accessibilityRole="button">
             <Text style={styles.link}>Go back</Text>
           </Pressable>
@@ -47,6 +48,5 @@ export default function LegalDocumentScreen() {
 
 const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 16 },
-  err: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
   link: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.brand },
 });

@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -14,9 +15,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
+import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPublicExternalJobListings } from "@/lib/api-client";
-import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
+import { cardCuratedSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function CuratedListingsScreen() {
   const router = useRouter();
@@ -102,11 +104,20 @@ export default function CuratedListingsScreen() {
 
   const listHeader = (
     <>
-      <View style={[styles.intro, cardSurfaceStyle(false)]}>
-        <Text style={styles.introTitle}>Agencies & curated wider web</Text>
+      <View style={styles.listHeadTop}>
+        <GshScreenIntro
+          eyebrow="Jobs"
+          title="Curated listings"
+          subtitle="Recruitment agencies and partner-curated outbound listings — separate from the main employer job feed on Discover."
+          style={{ marginBottom: 10 }}
+        />
+        <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+      </View>
+      <View style={[styles.intro, cardCuratedSurfaceStyle(false)]}>
+        <GshSectionTitle title="About this feed" topSpacing="none" style={{ marginTop: 0, marginBottom: 8 }} />
         <Text style={styles.introBody}>
-          Recruitment agencies and partner-curated outbound listings live here — not on the main employer job feed. Direct
-          employers posting their own roles stay on the Jobs tab.
+          Tap a row to open the listing. When a role lives on an external site, you will leave the app to apply or enquire, as
+          shown on the card.
         </Text>
       </View>
       <View style={styles.searchOuter}>
@@ -161,23 +172,19 @@ export default function CuratedListingsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
+  listHeadTop: { paddingHorizontal: 16, marginBottom: 4 },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 8 },
   intro: {
     marginHorizontal: 16,
     marginBottom: 8,
-    padding: 14,
+    padding: 16,
     borderRadius: radii.lg,
   },
-  introTitle: {
-    fontSize: 13,
-    fontFamily: fontFamily.semiBold,
-    color: colors.textPrimary,
-  },
   introBody: {
-    marginTop: 6,
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: fontFamily.regular,
     color: colors.textMuted,
-    lineHeight: 19,
+    lineHeight: 21,
   },
   searchOuter: { paddingHorizontal: 16, paddingVertical: 8 },
   searchWrap: {
@@ -201,7 +208,7 @@ const styles = StyleSheet.create({
   listPadGrow: { flexGrow: 1 },
   emptyWrap: { alignItems: "center", paddingHorizontal: 24, paddingVertical: 32, gap: 12 },
   loadingHint: { fontFamily: fontFamily.medium, fontSize: 15, color: colors.textMuted },
-  errTitle: { fontFamily: fontFamily.semiBold, fontSize: 17, color: colors.textPrimary },
+  errTitle: { fontFamily: fontFamily.semiBold, fontSize: 17, color: colors.navy },
   errSub: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, textAlign: "center", lineHeight: 20 },
   retryBtn: {
     marginTop: 8,

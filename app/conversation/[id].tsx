@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -74,7 +75,9 @@ export default function ConversationScreen() {
     return (
       <GshScreenBackground>
         <View style={styles.center}>
-          <Ionicons name="chatbubble-ellipses-outline" size={44} color={colors.borderStrong} />
+          <View style={styles.emptyIcon}>
+            <Ionicons name="chatbubble-ellipses-outline" size={40} color={colors.brand} />
+          </View>
           <Text style={styles.err}>This conversation link is not valid.</Text>
           <Pressable onPress={() => router.back()} accessibilityRole="button">
             <Text style={styles.link}>Go back</Text>
@@ -86,88 +89,143 @@ export default function ConversationScreen() {
 
   return (
     <GshScreenBackground>
-    <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={insets.top + 48}
-    >
-      {threadQuery.isLoading ? (
-        <View style={styles.center}>
-          <ActivityIndicator size="large" color={colors.brand} />
-        </View>
-      ) : threadQuery.isError ? (
-        <View style={styles.center}>
-          <Ionicons name="cloud-offline-outline" size={44} color={colors.textMuted} />
-          <Text style={styles.err}>Could not load thread.</Text>
-          <Pressable onPress={() => void threadQuery.refetch()} accessibilityRole="button">
-            <Text style={styles.link}>Retry</Text>
-          </Pressable>
-          <Pressable onPress={() => router.back()} accessibilityRole="button">
-            <Text style={[styles.link, styles.linkMuted]}>Go back</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <>
-          <FlatList
-            data={messages}
-            keyExtractor={(m) => m._id}
-            renderItem={renderItem}
-            inverted
-            contentContainerStyle={styles.threadPad}
-          />
-          <View style={[styles.composer, { paddingBottom: Math.max(insets.bottom, 12) }]}>
-            <TextInput
-              style={styles.input}
-              placeholder="Write a message…"
-              placeholderTextColor={colors.placeholder}
-              value={draft}
-              onChangeText={setDraft}
-              multiline
-              maxLength={8000}
-            />
-            <Pressable
-              style={[styles.sendBtn, (!draft.trim() || sendMut.isPending) && styles.sendDisabled]}
-              onPress={() => sendMut.mutate()}
-              disabled={!draft.trim() || sendMut.isPending}
-            >
-              <Text style={styles.sendText}>Send</Text>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={insets.top + 48}
+      >
+        {threadQuery.isLoading ? (
+          <View style={styles.center}>
+            <ActivityIndicator size="large" color={colors.brand} />
+            <Text style={styles.loadingText}>Loading thread…</Text>
+          </View>
+        ) : threadQuery.isError ? (
+          <View style={styles.center}>
+            <View style={styles.emptyIcon}>
+              <Ionicons name="cloud-offline-outline" size={40} color={colors.teal} />
+            </View>
+            <Text style={styles.err}>Could not load thread.</Text>
+            <Pressable onPress={() => void threadQuery.refetch()} accessibilityRole="button">
+              <Text style={styles.link}>Retry</Text>
+            </Pressable>
+            <Pressable onPress={() => router.back()} accessibilityRole="button">
+              <Text style={[styles.link, styles.linkMuted]}>Go back</Text>
             </Pressable>
           </View>
-        </>
-      )}
-    </KeyboardAvoidingView>
+        ) : (
+          <View style={styles.threadShell}>
+            <FlatList
+              style={styles.threadList}
+              data={messages}
+              keyExtractor={(m) => m._id}
+              renderItem={renderItem}
+              inverted
+              contentContainerStyle={styles.threadPad}
+            />
+            <LinearGradient
+              colors={["rgba(97,10,144,0.06)", "rgba(14,205,209,0.08)"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.threadTip}
+            >
+              <Ionicons name="shield-checkmark-outline" size={20} color={colors.navy} />
+              <Text style={styles.threadTipText}>
+                Keep it professional — clear updates help employers respond faster.
+              </Text>
+            </LinearGradient>
+            <View style={[styles.composer, { paddingBottom: Math.max(insets.bottom, 12) }]}>
+              <TextInput
+                style={styles.input}
+                placeholder="Write a message…"
+                placeholderTextColor={colors.placeholder}
+                value={draft}
+                onChangeText={setDraft}
+                multiline
+                maxLength={8000}
+              />
+              <Pressable
+                style={[styles.sendBtn, (!draft.trim() || sendMut.isPending) && styles.sendDisabled]}
+                onPress={() => sendMut.mutate()}
+                disabled={!draft.trim() || sendMut.isPending}
+                accessibilityRole="button"
+                accessibilityLabel="Send message"
+              >
+                <Ionicons name="send" size={20} color={colors.white} />
+              </Pressable>
+            </View>
+          </View>
+        )}
+      </KeyboardAvoidingView>
     </GshScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: "transparent" },
+  threadShell: { flex: 1 },
+  threadList: { flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
-  err: { color: colors.textPrimary, marginBottom: 4, fontFamily: fontFamily.medium, textAlign: "center" },
+  loadingText: { fontFamily: fontFamily.medium, fontSize: 15, color: colors.textMuted },
+  emptyIcon: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: colors.purpleMuted,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: colors.purpleBorder,
+    marginBottom: 4,
+  },
+  err: { color: colors.navy, marginBottom: 4, fontFamily: fontFamily.semiBold, textAlign: "center", fontSize: 16 },
   link: { color: colors.brand, fontFamily: fontFamily.semiBold },
   linkMuted: { color: colors.textMuted, marginTop: 4 },
   threadPad: { paddingHorizontal: 12, paddingVertical: 12 },
-  bubbleWrap: { marginBottom: 8, maxWidth: "100%" },
+  threadTip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginHorizontal: 12,
+    marginBottom: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  threadTipText: {
+    flex: 1,
+    fontSize: 13,
+    fontFamily: fontFamily.regular,
+    color: colors.textMarketing,
+    lineHeight: 18,
+  },
+  bubbleWrap: { marginBottom: 10, maxWidth: "100%" },
   bubbleWrapMe: { alignSelf: "flex-end" },
   bubbleWrapThem: { alignSelf: "flex-start" },
-  bubble: { maxWidth: "92%", borderRadius: radii.md, paddingHorizontal: 12, paddingVertical: 8 },
+  bubble: { maxWidth: "88%", borderRadius: radii.lg, paddingHorizontal: 14, paddingVertical: 10 },
   bubbleMe: { backgroundColor: colors.brand },
-  bubbleThem: { backgroundColor: colors.border },
+  bubbleThem: { backgroundColor: colors.surfaceMuted, borderWidth: 1, borderColor: colors.border },
   bubbleText: { fontSize: 16, lineHeight: 22, fontFamily: fontFamily.regular },
   bubbleTextMe: { color: colors.white },
   bubbleTextThem: { color: colors.textPrimary },
-  time: { marginTop: 4, fontSize: 11, alignSelf: "flex-end", fontFamily: fontFamily.medium },
+  time: { marginTop: 6, fontSize: 11, alignSelf: "flex-end", fontFamily: fontFamily.medium },
   timeMe: { color: "rgba(255,255,255,0.75)" },
   timeThem: { color: colors.textMuted },
   composer: {
     flexDirection: "row",
     alignItems: "flex-end",
-    gap: 8,
+    gap: 10,
     paddingHorizontal: 12,
-    paddingTop: 8,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: colors.border,
     backgroundColor: colors.background,
+    shadowColor: "#0f172a",
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 8,
   },
   input: {
     flex: 1,
@@ -175,14 +233,21 @@ const styles = StyleSheet.create({
     maxHeight: 120,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radii.sm,
-    paddingHorizontal: 12,
+    borderRadius: radii.lg,
+    paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 16,
     fontFamily: fontFamily.regular,
     color: colors.textPrimary,
+    backgroundColor: colors.surfaceMuted,
   },
-  sendBtn: { backgroundColor: colors.brand, borderRadius: radii.sm, paddingHorizontal: 16, paddingVertical: 12 },
-  sendDisabled: { opacity: 0.5 },
-  sendText: { color: colors.white, fontFamily: fontFamily.bold, fontSize: 15 },
+  sendBtn: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.brand,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sendDisabled: { opacity: 0.45 },
 });

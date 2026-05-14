@@ -38,7 +38,7 @@ export default function TabsLayout() {
         },
         tabBarLabelStyle: {
           fontFamily: fontFamily.medium,
-          fontSize: 11,
+          fontSize: 10,
           marginTop: 2,
         },
         tabBarHideOnKeyboard: true,
@@ -48,6 +48,7 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Discover",
+          headerShown: false,
           tabBarLabel: "Discover",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="grid" outline="grid-outline" />
@@ -68,7 +69,7 @@ export default function TabsLayout() {
         name="applications"
         options={{
           title: "Applications",
-          tabBarLabel: "Applications",
+          tabBarLabel: "Applied",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="clipboard" outline="clipboard-outline" />
           ),
@@ -78,7 +79,7 @@ export default function TabsLayout() {
         name="messages"
         options={{
           title: "Messages",
-          tabBarLabel: "Messages",
+          tabBarLabel: "Chats",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="chatbubbles" outline="chatbubbles-outline" />
           ),

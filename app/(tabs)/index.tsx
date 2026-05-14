@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -14,7 +15,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { DiscoverExploreChips, DiscoverFeaturedStrip } from "@/components/CandidateDiscoverRails";
+import { DiscoverExploreChips, DiscoverFeaturedStrip, DiscoverMobilityChips } from "@/components/CandidateDiscoverRails";
 import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobsHomePersonalHeader } from "@/components/JobsHomePersonalHeader";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
@@ -211,14 +212,82 @@ export default function JobsScreen() {
         onDashboard={() => router.push("/dashboard")}
       />
 
-      <DiscoverFeaturedStrip jobs={featuredJobs} onOpen={(id) => router.push(`/job/${id}`)} />
+      <View style={styles.searchOuter}>
+        <View style={styles.searchWrap}>
+          <Ionicons name="search" size={20} color={colors.placeholder} style={styles.searchIcon} />
+          <TextInput
+            style={styles.search}
+            placeholder={
+              feedTab === "employer" ? "Search jobs, companies or keywords." : "Search curated roles…"
+            }
+            placeholderTextColor={colors.placeholder}
+            value={q}
+            onChangeText={setQ}
+            autoCapitalize="none"
+            autoCorrect={false}
+            accessibilityLabel={feedTab === "employer" ? "Search employer job listings" : "Search curated external job listings"}
+            returnKeyType="search"
+          />
+          <Pressable
+            onPress={() => router.push("/alerts")}
+            hitSlop={10}
+            style={styles.searchFilterBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Job alerts and saved searches"
+          >
+            <Ionicons name="options-outline" size={22} color={colors.placeholder} />
+          </Pressable>
+          {q.length > 0 ? (
+            <Pressable onPress={() => setQ("")} hitSlop={12} accessibilityRole="button" accessibilityLabel="Clear search">
+              <Ionicons name="close-circle" size={22} color={colors.placeholder} />
+            </Pressable>
+          ) : null}
+        </View>
+      </View>
+
+      {recent.length > 0 ? (
+        <View style={styles.recentOuter}>
+          <Text style={styles.recentLabel}>Recent searches</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.recentScroll}>
+            {recent.map((term) => (
+              <Pressable
+                key={term}
+                style={styles.recentChip}
+                onPress={() => setQ(term)}
+                accessibilityRole="button"
+              >
+                <Text style={styles.recentChipText} numberOfLines={1}>
+                  {term}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+      ) : null}
+
+      <DiscoverMobilityChips
+        onPick={(term) => {
+          setFeedTab("employer");
+          setQ(term);
+        }}
+      />
+
+      <DiscoverFeaturedStrip
+        jobs={featuredJobs}
+        onOpen={(id) => router.push(`/job/${id}`)}
+        onViewAll={() => {
+          setFeedTab("employer");
+          setQ("");
+        }}
+      />
+
       <DiscoverExploreChips query={q} onPick={setQ} />
 
       <View style={styles.hubSection}>
         <Text style={styles.hubSectionLabel}>Your hub</Text>
-        <View style={styles.shortcutGrid}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hubScroll}>
           <Pressable
-            style={[styles.shortcutTile, cardSurfaceStyle(false)]}
+            style={[styles.shortcutTileH, cardSurfaceStyle(false)]}
             onPress={() => router.push("/dashboard")}
             accessibilityRole="button"
             accessibilityLabel="Open dashboard"
@@ -230,7 +299,7 @@ export default function JobsScreen() {
             <Text style={styles.shortcutSub}>Stats & trends</Text>
           </Pressable>
           <Pressable
-            style={[styles.shortcutTile, cardSurfaceStyle(false)]}
+            style={[styles.shortcutTileH, cardSurfaceStyle(false)]}
             onPress={() => router.push("/alerts")}
             accessibilityRole="button"
             accessibilityLabel="Job alerts"
@@ -242,7 +311,7 @@ export default function JobsScreen() {
             <Text style={styles.shortcutSub}>Saved searches</Text>
           </Pressable>
           <Pressable
-            style={[styles.shortcutTile, cardSurfaceStyle(false)]}
+            style={[styles.shortcutTileH, cardSurfaceStyle(false)]}
             onPress={() => router.push("/tools-resources")}
             accessibilityRole="button"
             accessibilityLabel="Tools and resources"
@@ -250,11 +319,11 @@ export default function JobsScreen() {
             <View style={styles.shortcutIconWrap}>
               <Ionicons name="library-outline" size={22} color={colors.textMarketing} />
             </View>
-            <Text style={styles.shortcutTitle}>Tools & resources</Text>
-            <Text style={styles.shortcutSub}>Guides, blog, legal</Text>
+            <Text style={styles.shortcutTitle}>Tools</Text>
+            <Text style={styles.shortcutSub}>Guides & legal</Text>
           </Pressable>
           <Pressable
-            style={[styles.shortcutTile, cardSurfaceStyle(false)]}
+            style={[styles.shortcutTileH, cardSurfaceStyle(false)]}
             onPress={() => router.push("/ats-assistant")}
             accessibilityRole="button"
             accessibilityLabel="ATS assistant"
@@ -262,10 +331,10 @@ export default function JobsScreen() {
             <View style={styles.shortcutIconWrap}>
               <Ionicons name="document-text-outline" size={22} color={colors.textMarketing} />
             </View>
-            <Text style={styles.shortcutTitle}>ATS assistant</Text>
-            <Text style={styles.shortcutSub}>CV vs job match</Text>
+            <Text style={styles.shortcutTitle}>ATS match</Text>
+            <Text style={styles.shortcutSub}>CV vs job</Text>
           </Pressable>
-        </View>
+        </ScrollView>
         <View style={styles.quickLinksRow}>
           <Pressable onPress={() => router.push("/guides")} accessibilityRole="link">
             <Text style={styles.quickLink}>Guides hub</Text>
@@ -317,48 +386,6 @@ export default function JobsScreen() {
           </Pressable>
         </View>
       )}
-
-      <View style={styles.searchOuter}>
-        <View style={styles.searchWrap}>
-          <Ionicons name="search" size={20} color={colors.placeholder} style={styles.searchIcon} />
-          <TextInput
-            style={styles.search}
-            placeholder={feedTab === "employer" ? "Search employer roles…" : "Search curated roles…"}
-            placeholderTextColor={colors.placeholder}
-            value={q}
-            onChangeText={setQ}
-            autoCapitalize="none"
-            autoCorrect={false}
-            accessibilityLabel={feedTab === "employer" ? "Search employer job listings" : "Search curated external job listings"}
-            returnKeyType="search"
-          />
-          {q.length > 0 ? (
-            <Pressable onPress={() => setQ("")} hitSlop={12} accessibilityRole="button" accessibilityLabel="Clear search">
-              <Ionicons name="close-circle" size={22} color={colors.placeholder} />
-            </Pressable>
-          ) : null}
-        </View>
-      </View>
-
-      {recent.length > 0 ? (
-        <View style={styles.recentOuter}>
-          <Text style={styles.recentLabel}>Recent searches</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.recentScroll}>
-            {recent.map((term) => (
-              <Pressable
-                key={term}
-                style={styles.recentChip}
-                onPress={() => setQ(term)}
-                accessibilityRole="button"
-              >
-                <Text style={styles.recentChipText} numberOfLines={1}>
-                  {term}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-      ) : null}
     </>
   );
 
@@ -415,7 +442,13 @@ export default function JobsScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <View style={styles.discoverShell}>
           <View style={[styles.discoverTopBar, { paddingTop: Math.max(insets.top, 10) }]}>
-            <Text style={styles.discoverTopTitle}>Discover</Text>
+            <Image
+              source={require("../../assets/brand-mark.webp")}
+              style={styles.discoverTopLogo}
+              resizeMode="contain"
+              accessibilityLabel="Global Sponsor Hub"
+              accessibilityIgnoresInvertColors
+            />
             <View style={styles.discoverTopActions}>
               <Pressable
                 onPress={() => router.push("/notification-feed")}
@@ -478,27 +511,24 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: "rgba(255,255,255,0.14)",
   },
-  discoverTopTitle: {
-    fontSize: 22,
-    fontFamily: fontFamily.extraBold,
-    color: colors.white,
-    letterSpacing: -0.35,
+  discoverTopLogo: {
+    width: 44,
+    height: 44,
   },
   discoverTopActions: { flexDirection: "row", alignItems: "center" },
   discoverTopIconBtn: { padding: 8, marginLeft: 2 },
-  hubSection: { marginHorizontal: 16, marginTop: 12 },
+  hubSection: { marginTop: 12 },
   hubSectionLabel: {
+    marginHorizontal: 16,
     fontSize: 11,
     fontFamily: fontFamily.medium,
     color: colors.textMuted,
     letterSpacing: 0.4,
-    marginBottom: 12,
+    marginBottom: 10,
   },
-  shortcutGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
-  shortcutTile: {
-    flexBasis: "47%",
-    flexGrow: 1,
-    maxWidth: "48%",
+  hubScroll: { paddingHorizontal: 16, gap: 10, paddingBottom: 2 },
+  shortcutTileH: {
+    width: 138,
     paddingVertical: 14,
     paddingHorizontal: 14,
     borderRadius: radii.lg,
@@ -571,17 +601,18 @@ const styles = StyleSheet.create({
   },
   feedIntroLinkWrap: { marginTop: 10, alignSelf: "flex-start" },
   feedIntroLink: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
-  searchOuter: { paddingHorizontal: 16, paddingVertical: 12 },
+  searchOuter: { paddingHorizontal: 16, paddingTop: 4, paddingBottom: 8 },
   searchWrap: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.background,
-    borderRadius: radii.md,
+    borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: "rgba(226, 232, 240, 0.92)",
     paddingHorizontal: 12,
   },
   searchIcon: { marginRight: 4 },
+  searchFilterBtn: { padding: 4, marginLeft: 4 },
   search: {
     flex: 1,
     paddingVertical: 12,
@@ -660,7 +691,7 @@ const styles = StyleSheet.create({
   cardCta: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary },
   emptyWrap: { alignItems: "center", paddingHorizontal: 24, paddingVertical: 32, gap: 12 },
   loadingHint: { fontFamily: fontFamily.medium, fontSize: 15, color: colors.textMuted },
-  errTitle: { fontFamily: fontFamily.semiBold, fontSize: 17, color: colors.textPrimary },
+  errTitle: { fontFamily: fontFamily.semiBold, fontSize: 17, color: colors.navy },
   errSub: { fontFamily: fontFamily.regular, fontSize: 14, color: colors.textMuted, textAlign: "center", lineHeight: 20 },
   retryBtn: {
     marginTop: 8,

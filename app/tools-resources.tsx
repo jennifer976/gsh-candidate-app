@@ -3,37 +3,11 @@ import type { ComponentProps } from "react";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshNavyHeroCard, GshLinkRow, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { cardSurfaceStyle, colors, fontFamily } from "@/lib/theme";
+import { fontFamily } from "@/lib/theme";
 
-type IonName = ComponentProps<typeof Ionicons>["name"];
-
-type RowDef = { title: string; subtitle: string; path?: string; icon: IonName; onPress?: () => void };
-
-function HubLinkRow({
-  title,
-  subtitle,
-  icon,
-  onPress,
-}: {
-  title: string;
-  subtitle: string;
-  icon: IonName;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable style={[styles.row, cardSurfaceStyle(true)]} onPress={onPress} accessibilityRole="button">
-      <View style={styles.iconCircle}>
-        <Ionicons name={icon} size={22} color={colors.brand} />
-      </View>
-      <View style={styles.rowText}>
-        <Text style={styles.rowTitle}>{title}</Text>
-        <Text style={styles.rowSub}>{subtitle}</Text>
-      </View>
-      <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
-    </Pressable>
-  );
-}
+type RowDef = { title: string; subtitle: string; path?: string; icon: ComponentProps<typeof Ionicons>["name"]; accent: "teal" | "purple" | "ocean" };
 
 /** Primary hub: career tools, guides, blog, legal — one screen for discoverability. */
 export default function ToolsAndResourcesScreen() {
@@ -42,27 +16,31 @@ export default function ToolsAndResourcesScreen() {
   const resourceRows: RowDef[] = [
     {
       title: "Blog",
-      subtitle: "Editorial articles — same catalogue as globalsponsorhub.com when linked",
+      subtitle: "Editorial articles from the team and partners",
       path: "blog",
       icon: "newspaper-outline",
+      accent: "ocean",
     },
     {
       title: "Immigration headlines",
-      subtitle: "RSS from trusted publishers — opens publisher sites",
+      subtitle: "RSS from trusted publishers — opens in browser",
       path: "news",
       icon: "globe-outline",
+      accent: "teal",
     },
     {
       title: "FAQs",
       subtitle: "Candidate help topics",
       path: "faq",
       icon: "help-circle-outline",
+      accent: "purple",
     },
     {
       title: "Contact",
-      subtitle: "Email support@globalsponsorhub.com",
+      subtitle: "support@globalsponsorhub.com",
       path: "contact",
       icon: "mail-outline",
+      accent: "purple",
     },
   ];
 
@@ -70,73 +48,84 @@ export default function ToolsAndResourcesScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <View style={[styles.hero, cardSurfaceStyle(true)]}>
-            <Text style={styles.heroEyebrow}>Global Sponsor Hub</Text>
-            <Text style={styles.heroTitle}>Tools & resources</Text>
-            <Text style={styles.heroBody}>
-              Career tools, guides, visa planning, and reading — without leaving your signed-in session. Some links open the
-              public website when needed.
-            </Text>
-          </View>
+          <GshNavyHeroCard
+            title="Tools & resources"
+            footer={
+              <View style={styles.heroFoot}>
+                <Ionicons name="sparkles" size={16} color="rgba(255,255,255,0.9)" />
+                <Text style={styles.heroFootText}>Built for mobile-first workflows</Text>
+              </View>
+            }
+          >
+            Career tools, guides, visa planning, and reading — without leaving your session. External links open in-app browser when needed.
+          </GshNavyHeroCard>
 
-          <Text style={styles.section}>Career tools</Text>
-          <HubLinkRow
+          <GshSectionTitle title="Career tools" topSpacing="none" />
+          <GshLinkRow
             title="ATS match assistant"
             subtitle="Paste your CV and a job description — keyword alignment for employer systems"
             icon="document-text-outline"
+            accent="teal"
             onPress={() => router.push("/ats-assistant")}
           />
-          <HubLinkRow
+          <GshLinkRow
             title="Career toolkit"
-            subtitle="CV tips, profile strength, guides entry — full toolkit screen"
+            subtitle="CV tips, profile strength, and the full toolkit screen"
             icon="library-outline"
+            accent="purple"
             onPress={() => router.push("/tools")}
           />
 
-          <Text style={styles.section}>Guides & mobility</Text>
-          <HubLinkRow
+          <GshSectionTitle title="Guides & mobility" />
+          <GshLinkRow
             title="Guides hub"
             subtitle="Country guides, sponsorship pillars, relocation topics"
             icon="map-outline"
+            accent="purple"
             onPress={() => router.push("/guides")}
           />
-          <HubLinkRow
+          <GshLinkRow
             title="Visa wizard"
             subtitle="Interactive checklist — sponsorship routes and next steps"
             icon="sparkles-outline"
+            accent="teal"
             onPress={() => router.push("/visa-wizard")}
           />
 
-          <Text style={styles.section}>Jobs</Text>
-          <HubLinkRow
+          <GshSectionTitle title="Jobs" />
+          <GshLinkRow
             title="Curated listings"
-            subtitle="Agency and partner-curated wider-web roles — not on the main employer job feed"
+            subtitle="Agency and partner-curated roles — separate from the main employer feed"
             icon="briefcase-outline"
+            accent="ocean"
             onPress={() => router.push("/curated-listings")}
           />
 
-          <Text style={styles.section}>Reading & help</Text>
-          <HubLinkRow
+          <GshSectionTitle title="Reading & help" />
+          <GshLinkRow
             title="Legal & policies"
-            subtitle="Privacy, terms, cookies, acceptable use — in the app"
+            subtitle="Privacy, terms, cookies, and acceptable use"
             icon="shield-checkmark-outline"
+            accent="purple"
             onPress={() => router.push("/legal")}
           />
           {resourceRows.map((item) => (
-            <HubLinkRow
+            <GshLinkRow
               key={item.path ?? item.title}
               title={item.title}
               subtitle={item.subtitle}
               icon={item.icon}
+              accent={item.accent}
               onPress={() => router.push(`/${item.path}`)}
             />
           ))}
 
-          <Text style={styles.section}>This app</Text>
-          <HubLinkRow
+          <GshSectionTitle title="This app" />
+          <GshLinkRow
             title="Feedback & support"
             subtitle="Report bugs or suggest features"
             icon="chatbox-ellipses-outline"
+            accent="teal"
             onPress={() => router.push("/feedback")}
           />
         </ScrollView>
@@ -147,61 +136,11 @@ export default function ToolsAndResourcesScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 48, gap: 10 },
-  hero: {
-    padding: 18,
-    marginBottom: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.teal,
+  pad: { padding: 16, paddingBottom: 48, gap: 12 },
+  heroFoot: { flexDirection: "row", alignItems: "center", gap: 8 },
+  heroFootText: {
+    fontSize: 13,
+    fontFamily: fontFamily.medium,
+    color: "rgba(255,255,255,0.82)",
   },
-  heroEyebrow: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  heroTitle: {
-    fontSize: 22,
-    fontFamily: fontFamily.extraBold,
-    color: colors.textPrimary,
-    letterSpacing: -0.35,
-    marginBottom: 10,
-  },
-  heroBody: {
-    fontSize: 15,
-    fontFamily: fontFamily.regular,
-    color: colors.textMarketing,
-    lineHeight: 22,
-  },
-  section: {
-    marginTop: 18,
-    marginBottom: 6,
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-    paddingVertical: 14,
-    paddingHorizontal: 14,
-  },
-  iconCircle: {
-    width: 46,
-    height: 46,
-    borderRadius: 12,
-    backgroundColor: colors.purpleMuted,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: colors.purpleBorder,
-  },
-  rowText: { flex: 1 },
-  rowTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.textPrimary },
-  rowSub: { marginTop: 4, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 19 },
 });

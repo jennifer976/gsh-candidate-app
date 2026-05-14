@@ -1,8 +1,10 @@
+import { LinearGradient } from "expo-linear-gradient";
 import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
@@ -15,11 +17,13 @@ export default function ContactScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <Text style={styles.h1}>Contact</Text>
-          <Text style={styles.lead}>
-            Reach the team for account issues, billing on subscriptions you bought through our website, or partnerships — all
-            from this screen.
-          </Text>
+          <GshScreenIntro
+            eyebrow="Support"
+            title="Contact"
+            subtitle="Reach the team for account issues, billing on subscriptions you bought through our website, or partnerships — all from this screen."
+            style={{ marginBottom: 14 }}
+          />
+          <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
 
           <View style={[styles.card, cardSurfaceStyle(true)]}>
             <Text style={styles.label}>Email</Text>
@@ -47,10 +51,9 @@ export default function ContactScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 40 },
-  h1: { fontSize: 26, fontFamily: fontFamily.extraBold, color: colors.textPrimary, marginBottom: 10, letterSpacing: -0.35 },
-  lead: { fontSize: 15, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 22, marginBottom: 20 },
-  card: { padding: 18, borderRadius: radii.md, marginBottom: 16 },
-  label: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.textMuted, textTransform: "uppercase", letterSpacing: 0.7 },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
+  card: { padding: 18, borderRadius: radii.lg, marginBottom: 16 },
+  label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 6 },
   email: { marginTop: 8, fontSize: 17, fontFamily: fontFamily.semiBold, color: colors.brand },
   hint: { marginTop: 10, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 19 },
   foot: { marginTop: 24, fontSize: 13, fontFamily: fontFamily.regular, color: colors.placeholder, lineHeight: 19 },

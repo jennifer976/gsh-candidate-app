@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -14,6 +15,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { submitFeedback } from "@/lib/api-client";
 import { colors, fontFamily, radii } from "@/lib/theme";
@@ -59,9 +61,14 @@ export default function FeedbackScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-            <Text style={styles.eyebrow}>Global Sponsor Hub</Text>
-            <Text style={styles.h1}>Feedback</Text>
-            <Text style={styles.lead}>Tell us what to improve — bugs, ideas, or UX friction.</Text>
+            <GshScreenIntro
+              eyebrow="Global Sponsor Hub"
+              title="Feedback"
+              subtitle="Tell us what to improve — bugs, ideas, or UX friction. We read every submission."
+              style={{ marginBottom: 16 }}
+            />
+
+            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
 
             <Text style={styles.label}>Type</Text>
             <View style={styles.row}>
@@ -93,7 +100,7 @@ export default function FeedbackScreen() {
               ))}
             </View>
 
-            <Text style={[styles.groupLabel, styles.groupSpaced]}>Details</Text>
+            <GshSectionTitle title="Details" topSpacing="md" />
             <Text style={styles.label}>Title</Text>
             <TextInput
               style={styles.input}
@@ -130,38 +137,7 @@ export default function FeedbackScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 40 },
-  eyebrow: {
-    fontFamily: fontFamily.bold,
-    fontSize: 11,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  h1: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 26,
-    letterSpacing: -0.35,
-    color: colors.textPrimary,
-    marginBottom: 8,
-  },
-  lead: {
-    fontFamily: fontFamily.regular,
-    fontSize: 15,
-    color: colors.textMuted,
-    marginBottom: 18,
-    lineHeight: 22,
-  },
-  groupLabel: {
-    fontFamily: fontFamily.bold,
-    fontSize: 12,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.75,
-    marginBottom: 8,
-    marginTop: 4,
-  },
-  groupSpaced: { marginTop: 18 },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 16 },
   label: {
     fontSize: 13,
     fontFamily: fontFamily.semiBold,

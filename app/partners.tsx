@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPartners } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -41,12 +42,12 @@ export default function PartnersScreen() {
 
   const header = (
     <View style={styles.headWrap}>
-      <Text style={styles.eyebrow}>Directory</Text>
-      <Text style={styles.screenTitle}>Partner firms</Text>
-      <Text style={styles.lead}>
-        This directory lists partner firms you can contact for relocation and legal help. Your employer partner portal (job posts,
-        applicants, billing) lives on the web — not in this candidate app.
-      </Text>
+      <GshScreenIntro
+        eyebrow="Directory"
+        title="Partner firms"
+        subtitle="Partner firms you can contact for relocation and legal help. Your employer partner portal (job posts, applicants, billing) lives on the web — not in this candidate app."
+        style={{ marginBottom: 14 }}
+      />
       <View style={[cardSurfaceStyle(false), styles.searchInner]}>
         <TextInput
           style={styles.search}
@@ -129,35 +130,14 @@ export default function PartnersScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   headWrap: { paddingHorizontal: 16, paddingBottom: 12 },
-  eyebrow: {
-    fontFamily: fontFamily.bold,
-    fontSize: 11,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  screenTitle: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 26,
-    letterSpacing: -0.35,
-    color: colors.textPrimary,
-    marginBottom: 8,
-  },
-  lead: {
-    fontFamily: fontFamily.regular,
-    fontSize: 14,
-    color: colors.textMuted,
-    lineHeight: 21,
-    marginBottom: 14,
-  },
   searchInner: {
     paddingHorizontal: 2,
     paddingVertical: 2,
     backgroundColor: colors.background,
+    borderRadius: radii.lg,
   },
   search: {
-    borderRadius: radii.sm,
+    borderRadius: radii.md,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
@@ -176,7 +156,7 @@ const styles = StyleSheet.create({
   errTitle: {
     fontFamily: fontFamily.semiBold,
     fontSize: 17,
-    color: colors.textPrimary,
+    color: colors.navy,
     textAlign: "center",
   },
   errSub: {
@@ -200,8 +180,9 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     backgroundColor: colors.background,
+    borderRadius: radii.lg,
   },
-  title: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.textPrimary },
+  title: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy },
   cat: { marginTop: 6, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.accent },
   desc: { marginTop: 8, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 20 },
   link: { marginTop: 12, fontSize: 15, fontFamily: fontFamily.bold, color: colors.brand },

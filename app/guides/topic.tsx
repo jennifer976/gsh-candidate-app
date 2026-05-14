@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { PillarGuideContent } from "@/components/PillarGuideContent";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
@@ -37,10 +38,7 @@ export default function GuideTopicScreen() {
             </>
           ) : !stub ? (
             <View style={[styles.card, cardSurfaceStyle(true)]}>
-              <Text style={styles.title}>Topic unavailable</Text>
-              <Text style={styles.body}>
-                We could not load this guide in the app. Try another topic from the guides hub, or open it on our website.
-              </Text>
+              <GshScreenIntro eyebrow="Guides" title="Topic unavailable" subtitle="Try another topic from the hub, or open this page on our website." style={{ marginBottom: 12 }} />
               {hrefRaw.startsWith("/") ? (
                 <Pressable
                   style={[styles.primaryOutline, styles.primaryOutlineWeb]}
@@ -64,7 +62,7 @@ export default function GuideTopicScreen() {
                 <Text style={styles.body}>{stub.intro}</Text>
               </View>
               <View style={[styles.card, cardSurfaceStyle(true)]}>
-                <Text style={styles.sectionLabel}>Key points</Text>
+                <GshSectionTitle title="Key points" topSpacing="none" style={{ marginTop: 0, marginBottom: 10 }} />
                 {stub.bullets.map((b, i) => (
                   <View key={i} style={styles.bulletRow}>
                     <Text style={styles.bullet}>•</Text>
@@ -89,23 +87,15 @@ export default function GuideTopicScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 40, gap: 14 },
-  card: { padding: 18, borderRadius: radii.md },
+  card: { padding: 18, borderRadius: radii.lg },
   title: {
     fontSize: 22,
     fontFamily: fontFamily.extraBold,
-    color: colors.textPrimary,
+    color: colors.navy,
     letterSpacing: -0.35,
     marginBottom: 12,
   },
   body: { fontSize: 15, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 23 },
-  sectionLabel: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.75,
-    marginBottom: 12,
-  },
   bulletRow: { flexDirection: "row", gap: 10, marginBottom: 10 },
   bullet: { fontSize: 16, color: colors.accent, fontFamily: fontFamily.bold },
   bulletText: { flex: 1, fontSize: 15, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 22 },

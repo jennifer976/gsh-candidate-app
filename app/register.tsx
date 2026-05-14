@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -15,6 +16,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { LegalConsentRegisterNote } from "@/components/LegalConsentLinks";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { registerCandidate } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -63,10 +65,15 @@ export default function RegisterScreen() {
           >
             <View style={styles.brandRow}>
               <Image source={require("../assets/brand-mark.webp")} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
-              <Text style={styles.headline}>Join as a candidate</Text>
             </View>
 
-            <Text style={styles.lead}>Create a free account to save jobs and apply in one place.</Text>
+            <GshScreenIntro
+              eyebrow="Global Sponsor Hub"
+              title="Join as a candidate"
+              subtitle="Create a free account to save jobs and apply in one place."
+              style={{ marginBottom: 16 }}
+            />
+            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
 
             <View style={[cardSurfaceStyle(false), styles.formCard]}>
               <Text style={styles.label}>Email</Text>
@@ -115,28 +122,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 28,
   },
-  brandRow: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 12 },
-  mark: { width: 40, height: 40 },
-  headline: { flex: 1, fontSize: 22, fontFamily: fontFamily.bold, color: colors.textPrimary, letterSpacing: -0.3 },
-  lead: {
-    fontSize: 15,
-    fontFamily: fontFamily.regular,
-    color: colors.textMarketing,
-    marginBottom: 22,
-    lineHeight: 22,
-  },
+  brandRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 14 },
+  mark: { width: 44, height: 44 },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   formCard: {
-    padding: 18,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.teal,
+    padding: 20,
+    borderRadius: radii.lg,
     backgroundColor: colors.background,
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
     borderColor: "rgba(226, 232, 240, 0.92)",
-    borderRadius: radii.sm,
+    borderRadius: radii.md,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 12,
     fontSize: 16,

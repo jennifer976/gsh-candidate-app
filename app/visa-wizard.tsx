@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
@@ -12,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import {
   type CandidateInput,
@@ -127,13 +129,21 @@ export default function VisaWizardScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          <GshScreenIntro
+            eyebrow="Mobility"
+            title="Visa wizard"
+            subtitle="Indicative routes from an in-app checklist — not legal advice. Always confirm with official government sources."
+            style={{ marginBottom: 12 }}
+          />
+          <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+
           <View style={[styles.banner, cardSurfaceStyle(true)]}>
             <Text style={styles.bannerStrong}>{VW.disclaimerStrong}</Text>
             <Text style={styles.bannerRest}>{VW.disclaimerRest}</Text>
           </View>
 
           <View style={[styles.card, cardSurfaceStyle(true)]}>
-            <Text style={styles.cardTitle}>{VW.sectionProfile}</Text>
+            <GshSectionTitle title={VW.sectionProfile} topSpacing="none" style={{ marginBottom: 12 }} />
 
             <ChipRow
               label={VW.targetCountry}
@@ -215,7 +225,7 @@ export default function VisaWizardScreen() {
           </View>
 
           <View style={[styles.card, cardSurfaceStyle(true)]}>
-            <Text style={styles.cardTitle}>{VW.sectionRoutes}</Text>
+            <GshSectionTitle title={VW.sectionRoutes} topSpacing="none" style={{ marginBottom: 10 }} />
             <Text style={styles.lead}>{VW.routesLead}</Text>
             <Text style={styles.footnote}>{VW.tierFootnote}</Text>
 
@@ -290,7 +300,7 @@ export default function VisaWizardScreen() {
           </View>
 
           <Pressable style={styles.bottomNav} onPress={() => router.push("/(tabs)")} accessibilityRole="button">
-            <Text style={styles.bottomNavText}>Back to Jobs tab</Text>
+            <Text style={styles.bottomNavText}>Back to Discover</Text>
           </Pressable>
         </ScrollView>
       </SafeAreaView>
@@ -301,6 +311,7 @@ export default function VisaWizardScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 48, gap: 14 },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 4 },
   banner: {
     padding: 14,
     borderLeftWidth: 4,
@@ -309,7 +320,6 @@ const styles = StyleSheet.create({
   bannerStrong: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.textPrimary, marginBottom: 6 },
   bannerRest: { fontFamily: fontFamily.regular, fontSize: 13, color: colors.textMuted, lineHeight: 19 },
   card: { padding: 16, borderRadius: radii.md },
-  cardTitle: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.textPrimary, marginBottom: 14 },
   fieldBlock: { marginBottom: 14 },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   hint: { fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted, marginTop: 6, marginBottom: 12, lineHeight: 17 },
@@ -359,11 +369,9 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   situationHeading: {
-    fontSize: 11,
-    fontFamily: fontFamily.bold,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.6,
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
+    color: colors.textSecondary,
     marginBottom: 8,
   },
   situationBullet: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 19, marginBottom: 6 },
@@ -386,9 +394,9 @@ const styles = StyleSheet.create({
   },
   tierPillText: { fontSize: 11, fontFamily: fontFamily.bold },
   block: { marginTop: 12 },
-  blockTitleOk: { fontSize: 11, fontFamily: fontFamily.bold, color: "#065f46", textTransform: "uppercase", letterSpacing: 0.5 },
+  blockTitleOk: { fontSize: 13, fontFamily: fontFamily.semiBold, color: "#065f46", marginBottom: 4 },
   blockLiOk: { fontSize: 12, fontFamily: fontFamily.regular, color: "#064e3b", marginTop: 6, lineHeight: 18 },
-  blockTitleWarn: { fontSize: 11, fontFamily: fontFamily.bold, color: "#9f1239", textTransform: "uppercase", letterSpacing: 0.5 },
+  blockTitleWarn: { fontSize: 13, fontFamily: fontFamily.semiBold, color: "#9f1239", marginBottom: 4 },
   blockLiWarn: { fontSize: 12, fontFamily: fontFamily.regular, color: "#881337", marginTop: 6, lineHeight: 18 },
   officialLink: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 12 },
   officialLinkText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },

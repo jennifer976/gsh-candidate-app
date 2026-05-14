@@ -4,6 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshLinkRow, GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchCandidateDashboard } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily, gradient, radii } from "@/lib/theme";
@@ -25,10 +26,14 @@ export default function ToolsScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <Text style={styles.h1}>Career toolkit</Text>
-          <Text style={styles.lead}>
-            Sponsorship mobility tools and CV alignment — visa wizard and guides hub stay inside this app.
-          </Text>
+          <GshScreenIntro
+            eyebrow="Mobility & CV"
+            title="Career toolkit"
+            subtitle="Sponsorship mobility tools and CV alignment — visa wizard and guides hub stay inside this app."
+            style={{ marginBottom: 12 }}
+          />
+
+          <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
 
           {pct != null ? (
             <View style={[styles.scoreCard, cardSurfaceStyle(true)]}>
@@ -40,7 +45,7 @@ export default function ToolsScreen() {
             </View>
           ) : null}
 
-          <Text style={styles.section}>Visa & mobility</Text>
+          <GshSectionTitle title="Visa & mobility" topSpacing={pct != null ? "md" : "sm"} />
           <Pressable
             style={styles.primaryBtnOuter}
             onPress={() => router.push("/visa-wizard")}
@@ -58,10 +63,9 @@ export default function ToolsScreen() {
             </LinearGradient>
           </Pressable>
 
-          <Text style={styles.section}>CV & applications</Text>
-          <Text style={styles.sectionHint}>Stand out to employers and ATS parsers.</Text>
+          <GshSectionTitle title="CV & applications" hint="Stand out to employers and ATS parsers." />
 
-          <Text style={styles.sectionMuted}>Quick tips</Text>
+          <GshSectionTitle title="Quick tips" topSpacing="sm" />
           {TIPS.map((tip) => (
             <View key={tip} style={styles.tip}>
               <Text style={styles.bullet}>•</Text>
@@ -69,27 +73,29 @@ export default function ToolsScreen() {
             </View>
           ))}
 
-          <Pressable
-            style={[styles.primaryBtnOuter, styles.atsBtn]}
-            onPress={() => router.push("/ats-assistant")}
-          >
+          <Pressable style={[styles.primaryBtnOuter, styles.atsBtn]} onPress={() => router.push("/ats-assistant")}>
             <LinearGradient colors={[...gradient.authCTA]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.primaryBtn}>
               <Text style={styles.primaryBtnText}>ATS match assistant</Text>
               <Text style={styles.primarySub}>Paste your CV text & a job description</Text>
             </LinearGradient>
           </Pressable>
 
-          <Pressable style={styles.outlineBtn} onPress={() => router.push("/guides")}>
-            <Text style={styles.outlineBtnText}>Guides hub</Text>
-            <Text style={styles.outlineBtnSub}>Country corridors, topics, and checklists</Text>
-          </Pressable>
-
-          <Pressable style={styles.outlineBtn} onPress={() => router.push("/tools-resources")}>
-            <Text style={styles.outlineBtnText}>Tools & resources</Text>
-            <Text style={styles.outlineBtnSub}>Blog, news, FAQs, legal, and more</Text>
-          </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+          <GshLinkRow
+            title="Guides hub"
+            subtitle="Country corridors, topics, and checklists"
+            icon="book-outline"
+            accent="teal"
+            onPress={() => router.push("/guides")}
+          />
+          <GshLinkRow
+            title="Tools & resources"
+            subtitle="Blog, news, FAQs, legal, and more"
+            icon="grid-outline"
+            accent="purple"
+            onPress={() => router.push("/tools-resources")}
+          />
+        </ScrollView>
+      </SafeAreaView>
     </GshScreenBackground>
   );
 }
@@ -97,75 +103,30 @@ export default function ToolsScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 40 },
-  h1: { fontSize: 26, fontFamily: fontFamily.extraBold, color: colors.textPrimary, marginBottom: 8, letterSpacing: -0.35 },
-  lead: { fontSize: 15, fontFamily: fontFamily.regular, color: colors.textMuted, marginBottom: 16, lineHeight: 22 },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
   scoreCard: {
-    borderRadius: radii.md,
+    borderRadius: radii.lg,
     padding: 16,
-    marginBottom: 20,
+    marginBottom: 4,
   },
   scoreLabel: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
     color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.6,
   },
   scoreVal: { fontSize: 36, fontFamily: fontFamily.extraBold, color: colors.accent, marginTop: 4 },
   link: { marginTop: 10, color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 15 },
-  section: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.75,
-    marginTop: 8,
-    marginBottom: 10,
-  },
-  sectionHint: {
-    fontSize: 14,
-    fontFamily: fontFamily.regular,
-    color: colors.textMarketing,
-    marginTop: -6,
-    marginBottom: 12,
-    lineHeight: 20,
-  },
-  sectionMuted: {
-    fontSize: 14,
-    fontFamily: fontFamily.semiBold,
-    color: colors.textPrimary,
-    marginBottom: 10,
-  },
   tip: { flexDirection: "row", gap: 8, marginBottom: 10, paddingRight: 8 },
   bullet: { fontSize: 16, color: colors.accent, fontFamily: fontFamily.extraBold },
   tipText: { flex: 1, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 20 },
-  primaryBtnOuter: { marginTop: 0, marginBottom: 4, borderRadius: radii.md, overflow: "hidden" },
+  primaryBtnOuter: { marginTop: 0, marginBottom: 4, borderRadius: radii.lg, overflow: "hidden" },
   atsBtn: { marginTop: 14 },
   primaryBtn: {
-    borderRadius: radii.md,
+    borderRadius: radii.lg,
     padding: 16,
   },
   primaryBtnRow: { flexDirection: "row", alignItems: "center", gap: 14 },
   primaryBtnTextCol: { flex: 1 },
   primaryBtnText: { color: colors.white, fontFamily: fontFamily.extraBold, fontSize: 17 },
   primarySub: { color: "rgba(255,255,255,0.88)", fontSize: 13, marginTop: 6, fontFamily: fontFamily.regular, lineHeight: 18 },
-  outlineBtn: {
-    marginTop: 14,
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-    borderRadius: radii.md,
-    padding: 16,
-    alignItems: "center",
-    backgroundColor: colors.background,
-  },
-  outlineBtnText: { color: colors.textPrimary, fontFamily: fontFamily.bold, fontSize: 15 },
-  outlineBtnSub: {
-    marginTop: 6,
-    fontSize: 13,
-    color: colors.textMuted,
-    fontFamily: fontFamily.regular,
-    textAlign: "center",
-    lineHeight: 18,
-    paddingHorizontal: 8,
-  },
 });

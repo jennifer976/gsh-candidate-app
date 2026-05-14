@@ -1,9 +1,11 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { verifyOtpRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -46,19 +48,20 @@ export default function VerifyScreen() {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-          <View style={styles.flex}>
-            <Text style={styles.eyebrow}>Global Sponsor Hub</Text>
-            <Text style={styles.h1}>Verify email</Text>
-            <Text style={styles.lead}>
-              This link is missing your account reference. Go back to sign up, or sign in if you already verified.
-            </Text>
+          <ScrollView contentContainerStyle={styles.scrollMiss} keyboardShouldPersistTaps="handled">
+            <GshScreenIntro
+              eyebrow="Global Sponsor Hub"
+              title="Verify email"
+              subtitle="This link is missing your account reference. Go back to sign up, or sign in if you already verified."
+              style={{ marginBottom: 20 }}
+            />
             <Pressable style={styles.missBtn} onPress={() => router.replace("/register")} accessibilityRole="button">
               <Text style={styles.missBtnText}>Create account</Text>
             </Pressable>
             <Pressable style={styles.missLink} onPress={() => router.replace("/login")} accessibilityRole="button">
               <Text style={styles.missLinkText}>Sign in instead</Text>
             </Pressable>
-          </View>
+          </ScrollView>
         </SafeAreaView>
       </GshScreenBackground>
     );
@@ -68,25 +71,32 @@ export default function VerifyScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
-          <Text style={styles.eyebrow}>Global Sponsor Hub</Text>
-          <Text style={styles.h1}>Verify email</Text>
-          <Text style={styles.lead}>Enter the code we emailed you to activate your candidate account.</Text>
-
-          <View style={[cardSurfaceStyle(false), styles.card]}>
-            <Text style={styles.label}>Verification code</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize="characters"
-              placeholder="123456"
-              placeholderTextColor={colors.placeholder}
-              value={code}
-              onChangeText={setCode}
+          <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+            <GshScreenIntro
+              eyebrow="Global Sponsor Hub"
+              title="Verify email"
+              subtitle="Enter the code we emailed you to activate your candidate account."
+              style={{ marginBottom: 16 }}
             />
 
-            <GshGradientPrimaryButton title="Verify & continue" onPress={onSubmit} loading={loading} />
-          </View>
+            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
 
-          <LegalConsentFooterRow />
+            <View style={[cardSurfaceStyle(false), styles.card]}>
+              <Text style={styles.label}>Verification code</Text>
+              <TextInput
+                style={styles.input}
+                autoCapitalize="characters"
+                placeholder="123456"
+                placeholderTextColor={colors.placeholder}
+                value={code}
+                onChangeText={setCode}
+              />
+
+              <GshGradientPrimaryButton title="Verify & continue" onPress={onSubmit} loading={loading} />
+            </View>
+
+            <LegalConsentFooterRow />
+          </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </GshScreenBackground>
@@ -95,40 +105,20 @@ export default function VerifyScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  flex: { flex: 1, paddingHorizontal: 24, paddingTop: 16 },
-  eyebrow: {
-    fontFamily: fontFamily.bold,
-    fontSize: 11,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 10,
-  },
-  h1: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 26,
-    letterSpacing: -0.35,
-    color: colors.textPrimary,
-    marginBottom: 10,
-  },
-  lead: {
-    fontFamily: fontFamily.regular,
-    fontSize: 15,
-    color: colors.textMuted,
-    marginBottom: 22,
-    lineHeight: 22,
-  },
+  flex: { flex: 1 },
+  scroll: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 16, paddingBottom: 32 },
+  scrollMiss: { flexGrow: 1, paddingHorizontal: 24, paddingVertical: 28, justifyContent: "center" },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
   card: {
-    padding: 18,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.teal,
+    padding: 20,
+    borderRadius: radii.lg,
     backgroundColor: colors.background,
   },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radii.sm,
+    borderRadius: radii.md,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 18,
@@ -139,7 +129,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   missBtn: {
-    marginTop: 20,
+    marginTop: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
     borderRadius: radii.md,

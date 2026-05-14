@@ -1,7 +1,9 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { useQuery } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchImmigrationRssHeadlines } from "@/lib/content/rssImmigration";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -22,10 +24,13 @@ export default function ImmigrationNewsScreen() {
           </View>
         ) : (
           <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-            <Text style={styles.lead}>
-              Immigration and mobility headlines from third‑party publishers (government agencies, NGOs, and analysts).
-              Tapping a row opens that publisher’s website so you can read the full story.
-            </Text>
+            <GshScreenIntro
+              eyebrow="News"
+              title="Immigration headlines"
+              subtitle="Headlines from third‑party publishers (government agencies, NGOs, and analysts). Tapping a row opens that publisher’s website."
+              style={{ marginBottom: 12 }}
+            />
+            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
             {(q.data ?? []).map((h, i) => (
               <Pressable
                 key={`${h.link}-${i}`}
@@ -55,7 +60,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   pad: { padding: 16, paddingBottom: 40, gap: 12 },
-  lead: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 21, marginBottom: 8 },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 8 },
   row: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -63,8 +68,8 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: radii.md,
   },
-  source: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.teal, textTransform: "uppercase", letterSpacing: 0.6 },
-  title: { marginTop: 6, fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.textPrimary, lineHeight: 22 },
+  source: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.teal, letterSpacing: 0.2 },
+  title: { marginTop: 6, fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.navy, lineHeight: 22 },
   date: { marginTop: 6, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
   open: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
   empty: { fontSize: 14, color: colors.textMuted, fontFamily: fontFamily.regular, textAlign: "center", marginTop: 24 },

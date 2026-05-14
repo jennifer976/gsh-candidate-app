@@ -1,7 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
+import type { ComponentProps } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { DashboardJobListing } from "@/types/models";
+
+type IonName = ComponentProps<typeof Ionicons>["name"];
+
+const MOBILITY_CHIPS: { label: string; q: string; icon: IonName; bg: string; border: string; iconColor: string }[] = [
+  { label: "Visa Sponsorship", q: "visa sponsorship", icon: "id-card-outline", bg: "#e6fffa", border: "#99f6e4", iconColor: "#0f766e" },
+  { label: "Relocation", q: "relocation support", icon: "airplane-outline", bg: "#f5f3ff", border: "#ddd6fe", iconColor: "#5b21b6" },
+  { label: "Global Hiring", q: "international hiring global", icon: "globe-outline", bg: "#e0f2fe", border: "#7dd3fc", iconColor: "#0369a1" },
+];
 
 const EXPLORE_CHIPS: { label: string; q: string }[] = [
   { label: "All", q: "" },
@@ -17,6 +26,29 @@ function chipActive(currentQ: string, chipQ: string): boolean {
   const t = chipQ.trim().toLowerCase();
   if (t === "") return c === "";
   return c === t;
+}
+
+export function DiscoverMobilityChips({ onPick }: { onPick: (q: string) => void }) {
+  return (
+    <View style={styles.mobilityOuter}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.mobilityScroll}>
+        {MOBILITY_CHIPS.map((chip) => (
+          <Pressable
+            key={chip.label}
+            onPress={() => onPick(chip.q)}
+            style={[styles.mobilityChip, { backgroundColor: chip.bg, borderColor: chip.border }]}
+            accessibilityRole="button"
+            accessibilityLabel={chip.label}
+          >
+            <Ionicons name={chip.icon} size={18} color={chip.iconColor} />
+            <Text style={styles.mobilityChipText} numberOfLines={2}>
+              {chip.label}
+            </Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+    </View>
+  );
 }
 
 export function DiscoverExploreChips({ query, onPick }: { query: string; onPick: (next: string) => void }) {
@@ -48,17 +80,23 @@ export function DiscoverExploreChips({ query, onPick }: { query: string; onPick:
 export function DiscoverFeaturedStrip({
   jobs,
   onOpen,
+  onViewAll,
 }: {
   jobs: DashboardJobListing[];
   onOpen: (id: string) => void;
+  onViewAll?: () => void;
 }) {
   if (jobs.length === 0) return null;
 
   return (
     <View style={styles.featuredOuter}>
-      <View style={styles.featuredHead}>
-        <Text style={styles.featuredTitle}>Fresh on the Hub</Text>
-        <Text style={styles.featuredSub}>Direct employer posts — tap to open</Text>
+      <View style={styles.featuredHeadRow}>
+        <Text style={styles.featuredSectionTitle}>Featured opportunities</Text>
+        {onViewAll ? (
+          <Pressable onPress={onViewAll} accessibilityRole="button" accessibilityLabel="View all featured opportunities">
+            <Text style={styles.featuredViewAll}>View all</Text>
+          </Pressable>
+        ) : null}
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.featuredScroll}>
         {jobs.map((job) => (
@@ -89,6 +127,25 @@ export function DiscoverFeaturedStrip({
 }
 
 const styles = StyleSheet.create({
+  mobilityOuter: { marginTop: 4, marginBottom: 2 },
+  mobilityScroll: { paddingHorizontal: 16, gap: 10, paddingBottom: 2 },
+  mobilityChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    maxWidth: 200,
+  },
+  mobilityChipText: {
+    flex: 1,
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+    letterSpacing: -0.15,
+  },
   exploreOuter: { marginTop: 4, marginBottom: 2 },
   exploreLabel: {
     marginHorizontal: 16,
@@ -117,21 +174,26 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   exploreChipTextActive: { color: colors.navy },
-  featuredOuter: { marginTop: 4 },
-  featuredHead: { paddingHorizontal: 16, marginBottom: 10 },
-  featuredTitle: {
-    fontSize: 11,
-    fontFamily: fontFamily.medium,
-    color: colors.textMuted,
-    letterSpacing: 0.35,
-    textTransform: "uppercase",
+  featuredOuter: { marginTop: 8 },
+  featuredHeadRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    gap: 12,
   },
-  featuredSub: {
-    marginTop: 4,
-    fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-    lineHeight: 18,
+  featuredSectionTitle: {
+    flex: 1,
+    fontSize: 17,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+    letterSpacing: -0.35,
+  },
+  featuredViewAll: {
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: colors.brand,
   },
   featuredScroll: { paddingHorizontal: 16, gap: 10, paddingBottom: 4 },
   featuredCard: {

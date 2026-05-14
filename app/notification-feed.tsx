@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import {
   dismissAppNotification,
@@ -109,12 +110,12 @@ export default function NotificationFeedScreen() {
 
   const listHeader = (
     <View style={styles.headWrap}>
-      <Text style={styles.eyebrow}>Global Sponsor Hub</Text>
-      <Text style={styles.screenTitle}>Notification inbox</Text>
-      <Text style={styles.lead}>
-        Updates from applications, employers, and your account. Items with links open inside the app — same routing as
-        push notifications.
-      </Text>
+      <GshScreenIntro
+        eyebrow="Global Sponsor Hub"
+        title="Notification inbox"
+        subtitle="Updates from applications, employers, and your account. Items with links open inside the app — same routing as push notifications."
+        style={{ marginBottom: 12 }}
+      />
       <View style={styles.filters}>
         <Pressable
           style={[styles.chip, filter === "all" && styles.chipOn]}
@@ -244,28 +245,6 @@ export default function NotificationFeedScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   headWrap: { paddingHorizontal: 16, paddingBottom: 12 },
-  eyebrow: {
-    fontFamily: fontFamily.bold,
-    fontSize: 11,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  screenTitle: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 26,
-    letterSpacing: -0.35,
-    color: colors.textPrimary,
-    marginBottom: 8,
-  },
-  lead: {
-    fontFamily: fontFamily.regular,
-    fontSize: 14,
-    color: colors.textMuted,
-    lineHeight: 21,
-    marginBottom: 14,
-  },
   filters: { flexDirection: "row", alignItems: "center", gap: 8 },
   chip: {
     paddingHorizontal: 14,
@@ -315,10 +294,11 @@ const styles = StyleSheet.create({
   card: {
     padding: 16,
     marginBottom: 12,
+    borderRadius: radii.lg,
     backgroundColor: colors.background,
   },
   unread: { borderColor: colors.unreadBorder, backgroundColor: colors.unreadBg },
-  title: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.textPrimary },
+  title: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy },
   body: { marginTop: 6, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 20 },
   date: { marginTop: 8, fontSize: 12, fontFamily: fontFamily.regular, color: colors.placeholder },
   dismiss: { alignSelf: "flex-end", marginTop: 8 },

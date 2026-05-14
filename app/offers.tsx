@@ -3,6 +3,7 @@ import * as Clipboard from "expo-clipboard";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchCandidateOffers, trackReferralCodeCopy } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -28,9 +29,7 @@ export default function OffersScreen() {
 
   const header = (
     <View style={styles.headWrap}>
-      <Text style={styles.eyebrow}>Perks</Text>
-      <Text style={styles.screenTitle}>Offers & codes</Text>
-      <Text style={styles.lead}>Partner perks and discount codes for candidates.</Text>
+      <GshScreenIntro eyebrow="Perks" title="Offers & codes" subtitle="Partner perks and discount codes for candidates." />
     </View>
   );
 
@@ -90,36 +89,15 @@ export default function OffersScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   headWrap: { paddingHorizontal: 16, paddingBottom: 12 },
-  eyebrow: {
-    fontFamily: fontFamily.bold,
-    fontSize: 11,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  screenTitle: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 26,
-    letterSpacing: -0.35,
-    color: colors.textPrimary,
-    marginBottom: 8,
-  },
-  lead: {
-    fontFamily: fontFamily.regular,
-    fontSize: 15,
-    color: colors.textMuted,
-    lineHeight: 22,
-    paddingBottom: 4,
-  },
   listPad: { paddingHorizontal: 16, paddingBottom: 32 },
   listPadEmpty: { flexGrow: 1 },
   card: {
     padding: 16,
     marginBottom: 12,
     backgroundColor: colors.background,
+    borderRadius: radii.lg,
   },
-  title: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.textPrimary },
+  title: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy },
   biz: { marginTop: 6, fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.brand },
   body: { marginTop: 10, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 21 },
   codeRow: {

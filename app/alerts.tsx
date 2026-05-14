@@ -18,6 +18,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import {
   createJobSearchAlert,
   deleteJobSearchAlert,
@@ -154,11 +155,12 @@ export default function AlertsScreen() {
         }} />}
         contentContainerStyle={styles.pad}
       >
-        <Text style={styles.h1}>Notifications</Text>
-        <Text style={styles.intro}>
-          Pushes mirror important updates when you are signed in, allow notifications on your device, and leave push on
-          below — tapping a notification opens the right screen when a link is included.
-        </Text>
+        <GshScreenIntro
+          eyebrow="Stay in the loop"
+          title="Alerts & notifications"
+          subtitle="Control email, job alerts, and push. When you are signed in, pushes mirror important updates — tapping opens the right screen when a link is included."
+          style={{ marginBottom: 4 }}
+        />
         {prefsBoot ? (
           <ActivityIndicator style={{ marginVertical: 16 }} color={colors.brand} />
         ) : prefsErrNoData ? (
@@ -210,7 +212,7 @@ export default function AlertsScreen() {
           </View>
         ) : null}
 
-        <Text style={styles.section}>New role matches</Text>
+        <GshSectionTitle title="New role matches" topSpacing="md" />
         <Text style={styles.sub}>
           {matchesErrNoData
             ? "Matches could not be loaded."
@@ -273,7 +275,7 @@ export default function AlertsScreen() {
           </View>
         ) : null}
 
-        <Text style={[styles.section, styles.sectionSpaced]}>Saved searches</Text>
+        <GshSectionTitle title="Saved searches" topSpacing="lg" />
         <Text style={styles.sub}>We notify you when new listings match your filters.</Text>
 
         {searchesBoot ? (
@@ -320,7 +322,7 @@ export default function AlertsScreen() {
           ))
         )}
 
-        <Text style={[styles.section, styles.sectionSpacedTight]}>Add saved search</Text>
+        <GshSectionTitle title="Add saved search" topSpacing="md" />
         <TextInput
           style={styles.input}
           placeholder="Label (optional)"
@@ -373,30 +375,6 @@ function formatFilters(f: Record<string, unknown>): string {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 40 },
-  h1: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 26,
-    letterSpacing: -0.35,
-    color: colors.textPrimary,
-    marginBottom: 8,
-  },
-  intro: {
-    fontFamily: fontFamily.regular,
-    fontSize: 14,
-    color: colors.textMuted,
-    lineHeight: 21,
-    marginBottom: 16,
-  },
-  section: {
-    fontFamily: fontFamily.bold,
-    fontSize: 12,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.75,
-    marginBottom: 8,
-  },
-  sectionSpaced: { marginTop: 8 },
-  sectionSpacedTight: { marginTop: 22 },
   sub: {
     fontFamily: fontFamily.regular,
     fontSize: 14,
@@ -483,6 +461,7 @@ const styles = StyleSheet.create({
   matchCard: {
     padding: 16,
     marginBottom: 12,
+    borderRadius: radii.lg,
     backgroundColor: colors.background,
   },
   matchUnread: { borderColor: colors.unreadBorder, backgroundColor: colors.unreadBg },

@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshLinkRow, GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { listCountryVisaGuideSummaries } from "@/lib/guides/countryVisaGuides";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
@@ -16,100 +17,89 @@ export default function GuidesHubScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <View style={[styles.hero, cardSurfaceStyle(true)]}>
-            <Text style={styles.heroEyebrow}>Learn in the app</Text>
-            <Text style={styles.heroTitle}>Resources & guides</Text>
-            <Text style={styles.heroBody}>
-              Topic guides use the same articles as globalsponsorhub.com (intro, sections, FAQs, and tables). Country corridor
-              guides match the website word-for-word. The partner directory shortcut opens inside the app.
-            </Text>
-          </View>
+          <GshScreenIntro
+            eyebrow="Learn in the app"
+            title="Resources & guides"
+            subtitle="Topic guides mirror globalsponsorhub.com. Country corridors match the website. Partners and jobs open inside the app."
+            style={{ marginBottom: 8 }}
+          />
 
-          <Text style={styles.section}>Visa orientation</Text>
-          <Pressable
-            style={[styles.row, cardSurfaceStyle(true)]}
+          <GshSectionTitle title="Visa orientation" topSpacing="none" />
+          <GshLinkRow
+            title="Visa wizard"
+            subtitle="Interactive checklist — same logic as the website, runs entirely here."
+            icon="sparkles-outline"
+            accent="teal"
             onPress={() => router.push("/visa-wizard")}
-            accessibilityRole="button"
-          >
-            <View style={styles.iconCircle}>
-              <Ionicons name="sparkles-outline" size={22} color={colors.brand} />
-            </View>
-            <View style={styles.rowText}>
-              <Text style={styles.rowTitle}>Visa wizard</Text>
-              <Text style={styles.rowSub}>Interactive checklist — same logic as the website, runs entirely here.</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
-          </Pressable>
+          />
 
-          <Text style={styles.section}>Jobs & hiring context</Text>
-          <Text style={styles.sectionHint}>Full-length guides — same copy as the website.</Text>
+          <GshSectionTitle title="Jobs & hiring context" hint="Full-length guides — same copy as the website." />
           {SEO_PILLAR_NAV_LINKS.map((g) => (
             <Pressable
               key={g.href}
-              style={[styles.tile, cardSurfaceStyle(true)]}
-              onPress={() =>
-                router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(g.href) } })
-              }
+              style={[styles.pillarTile, cardSurfaceStyle(true)]}
+              onPress={() => router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(g.href) } })}
               accessibilityRole="button"
             >
-              <Text style={styles.tileTitle}>{g.label}</Text>
-              <Text style={styles.tileSub}>Open guide →</Text>
+              <View style={styles.pillarAccent} />
+              <View style={styles.pillarBody}>
+                <Text style={styles.pillarTitle}>{g.label}</Text>
+                <Text style={styles.pillarCta}>Open guide</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.brand} />
             </Pressable>
           ))}
 
-          <Text style={styles.section}>Country corridors</Text>
+          <GshSectionTitle title="Country corridors" />
           {countries.map((g) => (
             <Pressable
               key={g.slug}
-              style={[styles.row, cardSurfaceStyle(true)]}
+              style={[styles.countryRow, cardSurfaceStyle(true)]}
               onPress={() => router.push(`/guides/country/${g.slug}`)}
               accessibilityRole="button"
             >
-              <View style={styles.iconCircleMuted}>
+              <View style={styles.countryIcon}>
                 <Ionicons name="earth-outline" size={22} color={colors.teal} />
               </View>
-              <View style={styles.rowText}>
-                <Text style={styles.tileEyebrow}>{g.countryLabel}</Text>
-                <Text style={styles.rowTitle}>{g.title}</Text>
-                <Text style={styles.rowSub} numberOfLines={3}>
+              <View style={styles.countryText}>
+                <Text style={styles.countryEyebrow}>{g.countryLabel}</Text>
+                <Text style={styles.countryTitle}>{g.title}</Text>
+                <Text style={styles.countryExcerpt} numberOfLines={3}>
                   {g.excerpt}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
+              <Ionicons name="chevron-forward" size={20} color={colors.navy} />
             </Pressable>
           ))}
 
-          <Text style={styles.section}>Move safely</Text>
+          <GshSectionTitle title="Move safely" />
           {RELOCATION_RESOURCES_NAV_LINKS.map((g) => (
             <Pressable
               key={g.href}
-              style={[styles.tile, cardSurfaceStyle(true)]}
-              onPress={() =>
-                router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(g.href) } })
-              }
+              style={[styles.pillarTile, cardSurfaceStyle(true)]}
+              onPress={() => router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(g.href) } })}
               accessibilityRole="button"
             >
-              <Text style={styles.tileTitle}>{g.label}</Text>
-              <Text style={styles.tileSub}>Open checklist →</Text>
+              <View style={[styles.pillarAccent, styles.pillarAccentPurple]} />
+              <View style={styles.pillarBody}>
+                <Text style={styles.pillarTitle}>{g.label}</Text>
+                <Text style={styles.pillarCta}>Open checklist</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={colors.brand} />
             </Pressable>
           ))}
 
-          <Text style={styles.section}>More learning</Text>
-          <Pressable
-            style={[styles.rowMuted, cardSurfaceStyle(true)]}
+          <GshSectionTitle title="More learning" />
+          <GshLinkRow
+            title="Tools & resources hub"
+            subtitle="Blog, RSS headlines, FAQs, legal — all in-app from one place."
+            icon="library-outline"
+            accent="purple"
             onPress={() => router.push("/tools-resources")}
-            accessibilityRole="button"
-          >
-            <Ionicons name="library-outline" size={22} color={colors.textMuted} />
-            <View style={styles.rowText}>
-              <Text style={styles.rowTitle}>Guides & resources hub</Text>
-              <Text style={styles.rowSub}>Blog, RSS headlines, FAQs, legal — all in-app from one place.</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={colors.placeholder} />
-          </Pressable>
+          />
 
           <Pressable style={styles.inlineBtn} onPress={() => navigateGuideLink(router, "/jobs")} accessibilityRole="button">
-            <Text style={styles.inlineBtnText}>Go to Jobs tab</Text>
+            <Text style={styles.inlineBtnText}>Go to Discover tab</Text>
           </Pressable>
           <Pressable
             style={styles.inlineBtn}
@@ -126,107 +116,51 @@ export default function GuidesHubScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 48, gap: 10 },
-  hero: {
-    padding: 18,
-    marginBottom: 6,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.teal,
-  },
-  heroEyebrow: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  heroTitle: {
-    fontSize: 22,
-    fontFamily: fontFamily.extraBold,
-    color: colors.textPrimary,
-    letterSpacing: -0.35,
-    marginBottom: 10,
-  },
-  heroBody: {
-    fontSize: 15,
-    fontFamily: fontFamily.regular,
-    color: colors.textMarketing,
-    lineHeight: 22,
-  },
-  section: {
-    marginTop: 18,
-    marginBottom: 8,
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
-  },
-  sectionHint: {
-    fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-    lineHeight: 19,
-    marginBottom: 8,
-    marginTop: -4,
-  },
-  row: {
+  pad: { padding: 16, paddingBottom: 48, gap: 12 },
+  pillarTile: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 14,
-    paddingVertical: 14,
-    paddingHorizontal: 14,
+    borderRadius: radii.lg,
+    overflow: "hidden",
+    marginBottom: 0,
+    paddingRight: 8,
   },
-  rowMuted: {
+  pillarAccent: { width: 4, alignSelf: "stretch", backgroundColor: colors.teal },
+  pillarAccentPurple: { backgroundColor: colors.purple },
+  pillarBody: { flex: 1, paddingVertical: 16, paddingHorizontal: 14 },
+  pillarTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.2 },
+  pillarCta: { marginTop: 6, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
+  countryRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 14,
+    gap: 12,
     paddingVertical: 14,
     paddingHorizontal: 14,
-    opacity: 0.95,
+    borderRadius: radii.lg,
   },
-  iconCircle: {
-    width: 46,
-    height: 46,
-    borderRadius: 12,
-    backgroundColor: colors.purpleMuted,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: colors.purpleBorder,
-  },
-  iconCircleMuted: {
-    width: 46,
-    height: 46,
-    borderRadius: 12,
+  countryIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: radii.md,
     backgroundColor: "rgba(14, 205, 209, 0.12)",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "rgba(14, 205, 209, 0.35)",
   },
-  rowText: { flex: 1, minWidth: 0 },
-  tileEyebrow: {
-    fontSize: 11,
-    fontFamily: fontFamily.bold,
+  countryText: { flex: 1, minWidth: 0 },
+  countryEyebrow: {
+    fontSize: 12,
+    fontFamily: fontFamily.semiBold,
     color: colors.teal,
-    textTransform: "uppercase",
-    letterSpacing: 0.6,
+    letterSpacing: 0.2,
     marginBottom: 4,
   },
-  rowTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.textPrimary },
-  rowSub: { marginTop: 4, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 19 },
-  tile: {
-    paddingVertical: 14,
-    paddingHorizontal: 14,
-    borderRadius: radii.sm,
-  },
-  tileTitle: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
-  tileSub: { marginTop: 6, fontSize: 13, fontFamily: fontFamily.medium, color: colors.brand },
+  countryTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy },
+  countryExcerpt: { marginTop: 4, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 19 },
   inlineBtn: {
     alignSelf: "flex-start",
-    marginTop: 6,
+    marginTop: 4,
     paddingVertical: 10,
     paddingHorizontal: 4,
   },

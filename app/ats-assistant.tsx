@@ -1,8 +1,10 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { atsAnalyze, atsParseProfile } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -56,12 +58,15 @@ export default function AtsAssistantScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-            <Text style={styles.eyebrow}>Career toolkit</Text>
-            <Text style={styles.h1}>ATS assistant</Text>
-            <Text style={styles.warn}>
-              Educational only — not hiring advice. Paste plain text from your CV (PDF → copy text).
-            </Text>
+            <GshScreenIntro
+              eyebrow="Career toolkit"
+              title="ATS assistant"
+              subtitle="Educational only — not hiring advice. Paste plain text from your CV (PDF → copy text)."
+              style={{ marginBottom: 12 }}
+            />
+            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
 
+            <GshSectionTitle title="Your CV" topSpacing="none" />
             <Text style={styles.label}>CV text</Text>
             <TextInput
               style={[styles.input, styles.area]}
@@ -79,6 +84,7 @@ export default function AtsAssistantScreen() {
               containerStyle={{ marginTop: 10 }}
             />
 
+            <GshSectionTitle title="Job context" />
             <Text style={styles.label}>Job description</Text>
             <TextInput
               style={[styles.input, styles.area]}
@@ -116,7 +122,7 @@ export default function AtsAssistantScreen() {
 
             {analysisText ? (
               <View style={[cardSurfaceStyle(false), styles.result]}>
-                <Text style={styles.resultTitle}>Result</Text>
+                <GshSectionTitle title="Result" topSpacing="none" style={{ marginBottom: 10 }} />
                 <Text style={styles.resultBody}>{analysisText}</Text>
               </View>
             ) : null}
@@ -130,39 +136,13 @@ export default function AtsAssistantScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 48 },
-  eyebrow: {
-    fontFamily: fontFamily.bold,
-    fontSize: 11,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  h1: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 26,
-    letterSpacing: -0.35,
-    color: colors.textPrimary,
-    marginBottom: 12,
-  },
-  warn: {
-    fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: colors.warningText,
-    backgroundColor: colors.warningBg,
-    padding: 14,
-    borderRadius: radii.sm,
-    marginBottom: 16,
-    lineHeight: 19,
-    borderWidth: 1,
-    borderColor: colors.warningBorder,
-  },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 14 },
   label: {
     fontSize: 13,
     fontFamily: fontFamily.semiBold,
     color: colors.textSecondary,
     marginBottom: 8,
-    marginTop: 12,
+    marginTop: 4,
   },
   input: {
     borderWidth: 1,
@@ -181,12 +161,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     borderLeftWidth: 4,
     borderLeftColor: colors.brand,
-  },
-  resultTitle: {
-    fontSize: 16,
-    fontFamily: fontFamily.extraBold,
-    color: colors.textPrimary,
-    marginBottom: 10,
+    borderRadius: radii.md,
   },
   resultBody: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 22 },
 });

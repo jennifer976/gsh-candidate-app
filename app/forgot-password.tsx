@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -6,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -14,6 +16,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
+import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { requestForgotPassword } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -40,10 +43,15 @@ export default function ForgotPasswordScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-          <View style={styles.pad}>
-            <Text style={styles.eyebrow}>Global Sponsor Hub</Text>
-            <Text style={styles.h1}>Forgot password</Text>
-            <Text style={styles.lead}>We will email you a link to reset your password.</Text>
+          <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+            <GshScreenIntro
+              eyebrow="Global Sponsor Hub"
+              title="Forgot password"
+              subtitle="We will email you a link to reset your password."
+              style={{ marginBottom: 16 }}
+            />
+
+            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
 
             <View style={[cardSurfaceStyle(false), styles.formCard]}>
               <Text style={styles.label}>Email</Text>
@@ -68,7 +76,7 @@ export default function ForgotPasswordScreen() {
             </Pressable>
 
             <LegalConsentFooterRow />
-          </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </GshScreenBackground>
@@ -77,35 +85,19 @@ export default function ForgotPasswordScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 24, flex: 1 },
-  eyebrow: {
-    fontFamily: fontFamily.bold,
-    fontSize: 11,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 10,
-  },
-  h1: { fontFamily: fontFamily.extraBold, fontSize: 26, letterSpacing: -0.35, color: colors.textPrimary, marginBottom: 8 },
-  lead: {
-    fontFamily: fontFamily.regular,
-    fontSize: 15,
-    color: colors.textMuted,
-    marginBottom: 20,
-    lineHeight: 22,
-  },
+  pad: { padding: 24, flexGrow: 1, paddingBottom: 40 },
+  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
   formCard: {
-    padding: 18,
+    padding: 20,
     marginBottom: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.teal,
+    borderRadius: radii.lg,
     backgroundColor: colors.background,
   },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radii.sm,
+    borderRadius: radii.md,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 14 : 10,
     fontSize: 16,

@@ -12,11 +12,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { curatedListingPrimaryBadge, normalizeAgencyWebsite } from "@/lib/curated-listing-labels";
 import { fetchPublicExternalJobById, recordExternalApplyClick } from "@/lib/api-client";
 import { openExternalHttpsUrl } from "@/lib/openMarketingBrowser";
-import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
+import { cardCuratedSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic } from "@/types/models";
 
 export default function ExternalJobDetailScreen() {
@@ -104,40 +105,43 @@ export default function ExternalJobDetailScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <View style={[styles.hero, cardSurfaceStyle(true)]}>
-            <View style={styles.badgeRow}>
-              <View style={[styles.badge, primaryBadge === "Agency" && styles.badgeAgency]}>
-                <Text style={[styles.badgeText, primaryBadge === "Agency" && styles.badgeTextAgency]}>
-                  {primaryBadge === "Agency" ? "Agency listing" : "GSH curated"}
-                </Text>
-              </View>
-              {listing.isFeatured ? (
-                <View style={[styles.badge, styles.badgeFeatured]}>
-                  <Text style={styles.badgeTextFeatured}>Featured</Text>
+          <View style={[styles.heroShell, cardCuratedSurfaceStyle(true)]}>
+            <View style={styles.heroAccent} />
+            <View style={styles.heroInner}>
+              <View style={styles.badgeRow}>
+                <View style={[styles.badge, primaryBadge === "Agency" && styles.badgeAgency]}>
+                  <Text style={[styles.badgeText, primaryBadge === "Agency" && styles.badgeTextAgency]}>
+                    {primaryBadge === "Agency" ? "Agency listing" : "GSH curated"}
+                  </Text>
                 </View>
-              ) : null}
+                {listing.isFeatured ? (
+                  <View style={[styles.badge, styles.badgeFeatured]}>
+                    <Text style={styles.badgeTextFeatured}>Featured</Text>
+                  </View>
+                ) : null}
+              </View>
+              <Text style={styles.title}>{listing.title}</Text>
+              <Text style={styles.company}>{listing.companyName}</Text>
+              <Text style={styles.meta}>{[listing.location, listing.country].filter(Boolean).join(" · ")}</Text>
+              {(listing.sponsorshipAvailable || listing.relocationAvailable) && (
+                <Text style={styles.tags}>
+                  {listing.sponsorshipAvailable ? "Sponsorship noted · " : ""}
+                  {listing.relocationAvailable ? "Relocation support noted" : ""}
+                </Text>
+              )}
             </View>
-            <Text style={styles.title}>{listing.title}</Text>
-            <Text style={styles.company}>{listing.companyName}</Text>
-            <Text style={styles.meta}>{[listing.location, listing.country].filter(Boolean).join(" · ")}</Text>
-            {(listing.sponsorshipAvailable || listing.relocationAvailable) && (
-              <Text style={styles.tags}>
-                {listing.sponsorshipAvailable ? "Sponsorship noted · " : ""}
-                {listing.relocationAvailable ? "Relocation support noted" : ""}
-              </Text>
-            )}
           </View>
 
           {listing.summary ? (
             <>
-              <Text style={styles.sectionTitle}>Summary</Text>
+              <GshSectionTitle title="Summary" topSpacing="sm" />
               <Text style={styles.body}>{listing.summary}</Text>
             </>
           ) : null}
 
           {listing.mobilityTags && listing.mobilityTags.length > 0 ? (
             <>
-              <Text style={styles.sectionTitle}>Mobility</Text>
+              <GshSectionTitle title="Mobility" />
               <Text style={styles.body}>{listing.mobilityTags.join(" · ")}</Text>
             </>
           ) : null}
@@ -186,10 +190,10 @@ const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
   loadingHint: { fontFamily: fontFamily.medium, fontSize: 15, color: colors.textMuted },
   errTitle: {
-    color: colors.textPrimary,
+    color: colors.navy,
     textAlign: "center",
-    fontSize: 16,
-    fontFamily: fontFamily.semiBold,
+    fontSize: 17,
+    fontFamily: fontFamily.bold,
     marginBottom: 8,
   },
   errSub: {
@@ -201,7 +205,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingHorizontal: 16,
   },
-  hero: { padding: 18, marginBottom: 10 },
+  heroShell: { flexDirection: "row", marginBottom: 12, borderRadius: radii.lg, overflow: "hidden" },
+  heroAccent: { width: 5, backgroundColor: colors.purple },
+  heroInner: { flex: 1, padding: 18 },
   badgeRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 12 },
   badge: {
     alignSelf: "flex-start",
@@ -217,11 +223,10 @@ const styles = StyleSheet.create({
   badgeTextAgency: { color: colors.purpleTextDark },
   badgeFeatured: { backgroundColor: "rgba(14, 205, 209, 0.14)", borderColor: "rgba(14, 205, 209, 0.45)" },
   badgeTextFeatured: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.textMarketing },
-  title: { fontSize: 22, fontFamily: fontFamily.extraBold, color: colors.textPrimary, letterSpacing: -0.35 },
+  title: { fontSize: 22, fontFamily: fontFamily.extraBold, color: colors.navy, letterSpacing: -0.35 },
   company: { marginTop: 10, fontSize: 17, fontFamily: fontFamily.semiBold, color: colors.textMarketing },
   meta: { marginTop: 8, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted },
   tags: { marginTop: 10, fontSize: 14, fontFamily: fontFamily.medium, color: colors.teal },
-  sectionTitle: { marginTop: 20, fontSize: 14, fontFamily: fontFamily.bold, color: colors.textPrimary },
   body: {
     marginTop: 8,
     fontSize: 15,

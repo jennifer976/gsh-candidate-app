@@ -8,13 +8,6 @@ export type HomeQuickStats = {
   interviews: number;
 };
 
-function timeGreeting(): string {
-  const h = new Date().getHours();
-  if (h < 12) return "Good morning";
-  if (h < 17) return "Good afternoon";
-  return "Good evening";
-}
-
 function MiniStat({
   label,
   value,
@@ -59,14 +52,12 @@ export function JobsHomePersonalHeader({
   onDashboard,
 }: Props) {
   const trimmed = firstName?.trim();
-  const greeting = `${timeGreeting()}${trimmed ? `, ${trimmed}` : ""}`;
+  const greeting = trimmed ? `Hello, ${trimmed}!` : "Hello!";
 
   return (
     <View style={[styles.wrap, cardSurfaceStyle(false)]}>
       <Text style={styles.greeting}>{greeting}</Text>
-      <Text style={styles.sub}>
-        Browse employer posts and curated external links below. Employer is on-platform; Curated opens careers hosted elsewhere.
-      </Text>
+      <Text style={styles.sub}>Explore global opportunities with sponsorship.</Text>
 
       {completionPct != null && completionPct < 100 ? (
         <Pressable onPress={onProfile} style={styles.progressPress} accessibilityRole="button">
@@ -109,10 +100,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   greeting: {
-    fontSize: 22,
+    fontSize: 24,
     fontFamily: fontFamily.bold,
-    color: colors.textPrimary,
-    letterSpacing: -0.4,
+    color: colors.navy,
+    letterSpacing: -0.45,
   },
   sub: {
     marginTop: 8,
