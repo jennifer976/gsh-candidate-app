@@ -96,7 +96,7 @@ export default function RegisterScreen() {
 
             <LegalConsentRegisterNote />
 
-            <Pressable style={styles.linkWrap} onPress={() => router.back()}>
+            <Pressable style={styles.linkWrap} onPress={() => router.replace("/login")}>
               <Text style={styles.link}>Already have an account? Sign in</Text>
             </Pressable>
           </ScrollView>

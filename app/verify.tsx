@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { useMemo, useState } from "react";
+import { Alert, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
@@ -11,13 +11,18 @@ import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function VerifyScreen() {
   const router = useRouter();
-  const { userId } = useLocalSearchParams<{ userId: string }>();
+  const params = useLocalSearchParams<{ userId?: string | string[] }>();
+  const userIdParam = useMemo(() => {
+    const raw = params.userId;
+    if (Array.isArray(raw)) return raw[0] ?? "";
+    return raw ?? "";
+  }, [params.userId]);
   const setAuth = useAuthStore((s) => s.setAuth);
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function onSubmit() {
-    const uid = String(userId || "").trim();
+    const uid = String(userIdParam || "").trim();
     const c = code.trim();
     if (!uid || !c) {
       Alert.alert("Missing code", "Enter the verification code from your email.");
@@ -37,9 +42,31 @@ export default function VerifyScreen() {
     }
   }
 
+  if (!userIdParam.trim()) {
+    return (
+      <GshScreenBackground>
+        <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
+          <View style={styles.flex}>
+            <Text style={styles.eyebrow}>Global Sponsor Hub</Text>
+            <Text style={styles.h1}>Verify email</Text>
+            <Text style={styles.lead}>
+              This link is missing your account reference. Go back to sign up, or sign in if you already verified.
+            </Text>
+            <Pressable style={styles.missBtn} onPress={() => router.replace("/register")} accessibilityRole="button">
+              <Text style={styles.missBtnText}>Create account</Text>
+            </Pressable>
+            <Pressable style={styles.missLink} onPress={() => router.replace("/login")} accessibilityRole="button">
+              <Text style={styles.missLinkText}>Sign in instead</Text>
+            </Pressable>
+          </View>
+        </SafeAreaView>
+      </GshScreenBackground>
+    );
+  }
+
   return (
     <GshScreenBackground>
-      <SafeAreaView style={styles.safe} edges={["bottom"]}>
+      <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
           <Text style={styles.eyebrow}>Global Sponsor Hub</Text>
           <Text style={styles.h1}>Verify email</Text>
@@ -111,4 +138,15 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     color: colors.textPrimary,
   },
+  missBtn: {
+    marginTop: 20,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: radii.md,
+    backgroundColor: colors.brand,
+    alignItems: "center",
+  },
+  missBtnText: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.white },
+  missLink: { marginTop: 20, alignItems: "center" },
+  missLinkText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.brand },
 });
