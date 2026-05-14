@@ -465,11 +465,11 @@ export async function changePassword(currentPassword: string, newPassword: strin
   });
 }
 
-/** Candidate-only: permanent deletion for App Store / Play compliance. */
-export async function deleteCandidateAccount(password: string) {
+/** Self-service permanent deletion (password + reason required by API). */
+export async function deleteCandidateAccount(password: string, reason: string) {
   return apiFetchJson<{ message: string }>("/auth/delete-account", {
     method: "POST",
-    body: JSON.stringify({ password }),
+    body: JSON.stringify({ password, reason }),
   });
 }
 

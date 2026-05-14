@@ -2,13 +2,13 @@ import { ActivityIndicator, Image, StyleSheet, Text } from "react-native";
 import Animated, { FadeIn, FadeInDown, ZoomIn } from "react-native-reanimated";
 import { colors, fontFamily } from "@/lib/theme";
 
-/** In-app splash after native splash — matches app.json (navy + artwork). */
+/** In-app splash after native splash — matches app.config (navy + artwork). */
 export function BrandedSplash() {
   return (
     <Animated.View entering={FadeIn.duration(420)} style={styles.root}>
       <Animated.View entering={ZoomIn.duration(520).delay(40)}>
         <Image
-          source={require("../assets/splash-artwork.png")}
+          source={require("../assets/splash-artwork.jpg")}
           style={styles.artwork}
           resizeMode="contain"
           accessibilityRole="image"

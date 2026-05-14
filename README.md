@@ -14,7 +14,7 @@ Then open in **Expo Go** (Android/iOS) or press `a` / `i` for emulators.
 
 ## Configuration
 
-- Default API: `https://api.globalsponsorhub.com` (see `app.json` → `expo.extra.apiUrl`).
+- Default API: `https://api.globalsponsorhub.com` (see `app.config.js` → `expo.extra.apiUrl`).
 - Override: set `EXPO_PUBLIC_API_URL` to your API origin (no `/api/v1` suffix), or change `extra.apiUrl`.
 
 ## Phase 2 features

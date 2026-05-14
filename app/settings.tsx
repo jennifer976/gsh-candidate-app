@@ -29,11 +29,15 @@ export default function SettingsScreen() {
   const [newPassword, setNewPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [deletePassword, setDeletePassword] = useState("");
+  const [deleteReason, setDeleteReason] = useState("");
+  const [deleteConfirmed, setDeleteConfirmed] = useState(false);
 
   const deleteMut = useMutation({
-    mutationFn: () => deleteCandidateAccount(deletePassword),
+    mutationFn: () => deleteCandidateAccount(deletePassword, deleteReason.trim()),
     onSuccess: () => {
       setDeletePassword("");
+      setDeleteReason("");
+      setDeleteConfirmed(false);
       clearAuth();
       Alert.alert("Account deleted", "Your candidate account and related data have been removed.", [
         { text: "OK", onPress: () => router.replace("/login") },
@@ -62,13 +66,21 @@ export default function SettingsScreen() {
   });
 
   function confirmDeleteAccount() {
+    if (!deleteConfirmed) {
+      Alert.alert("Confirmation required", "Check the box to confirm you understand this action is permanent.");
+      return;
+    }
+    if (deleteReason.trim().length < 10) {
+      Alert.alert("Reason required", "Please enter a reason of at least 10 characters.");
+      return;
+    }
     if (deletePassword.length < 1) {
       Alert.alert("Password required", "Enter your current password to confirm deletion.");
       return;
     }
     Alert.alert(
       "Delete account permanently?",
-      "This removes your candidate profile, applications, saved jobs, messages, and notification preferences. You cannot undo this.",
+      "This removes your profile, applications, saved jobs, messages, and notification preferences. You cannot undo this.",
       [
         { text: "Cancel", style: "cancel" },
         {
@@ -238,31 +250,58 @@ export default function SettingsScreen() {
             <Ionicons name="chevron-forward" size={20} color={colors.placeholder} />
           </Pressable>
 
-          <Text style={[styles.groupLabel, styles.groupSpaced]}>Delete account</Text>
-          <Text style={styles.sectionHint}>
-            Permanently delete your candidate account and associated data. Employer and partner accounts must be closed via
-            the website or support.
-          </Text>
-          <Text style={styles.label}>Confirm with your password</Text>
-          <TextInput
-            style={styles.input}
-            secureTextEntry
-            value={deletePassword}
-            onChangeText={setDeletePassword}
-            autoCapitalize="none"
-            editable={!deleteMut.isPending}
-            placeholder="Current password"
-            placeholderTextColor={colors.placeholder}
-          />
-          <Pressable
-            style={[styles.deleteAccountBtn, deleteMut.isPending && styles.deleteAccountBtnDisabled]}
-            onPress={confirmDeleteAccount}
-            disabled={deleteMut.isPending}
-            accessibilityRole="button"
-            accessibilityLabel="Permanently delete candidate account"
-          >
-            <Text style={styles.deleteAccountBtnText}>{deleteMut.isPending ? "Deleting…" : "Permanently delete account"}</Text>
-          </Pressable>
+          <Text style={[styles.groupLabel, styles.groupSpaced]}>Danger zone</Text>
+          <View style={styles.dangerCard}>
+            <Text style={styles.dangerTitle}>Delete account</Text>
+            <Text style={styles.sectionHint}>
+              Permanently delete your Global Sponsor Hub account and related data. This cannot be undone. Employer and
+              partner accounts can also use self-delete on the website (Settings).
+            </Text>
+            <Text style={styles.label}>Reason for leaving (required, min 10 characters)</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={deleteReason}
+              onChangeText={setDeleteReason}
+              editable={!deleteMut.isPending}
+              placeholder="For example: I no longer need this account…"
+              placeholderTextColor={colors.placeholder}
+              multiline
+              maxLength={4000}
+              textAlignVertical="top"
+            />
+            <Text style={styles.label}>Current password</Text>
+            <TextInput
+              style={styles.input}
+              secureTextEntry
+              value={deletePassword}
+              onChangeText={setDeletePassword}
+              autoCapitalize="none"
+              editable={!deleteMut.isPending}
+              placeholder="Current password"
+              placeholderTextColor={colors.placeholder}
+            />
+            <Pressable
+              style={styles.understandRow}
+              onPress={() => setDeleteConfirmed((v) => !v)}
+              disabled={deleteMut.isPending}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: deleteConfirmed }}
+            >
+              <View style={[styles.checkboxOuter, deleteConfirmed && styles.checkboxOuterOn]}>
+                {deleteConfirmed ? <Ionicons name="checkmark" size={16} color={colors.background} /> : null}
+              </View>
+              <Text style={styles.understandText}>I understand this will permanently delete my account and associated data.</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.deleteAccountBtn, deleteMut.isPending && styles.deleteAccountBtnDisabled]}
+              onPress={confirmDeleteAccount}
+              disabled={deleteMut.isPending}
+              accessibilityRole="button"
+              accessibilityLabel="Permanently delete account"
+            >
+              <Text style={styles.deleteAccountBtnText}>{deleteMut.isPending ? "Deleting…" : "Permanently delete account"}</Text>
+            </Pressable>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -332,6 +371,52 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     marginBottom: 12,
     color: colors.textPrimary,
+  },
+  dangerCard: {
+    borderWidth: 1,
+    borderColor: colors.error,
+    borderRadius: radii.sm,
+    padding: 14,
+    backgroundColor: "rgba(220, 38, 38, 0.06)",
+  },
+  dangerTitle: {
+    fontFamily: fontFamily.bold,
+    fontSize: 16,
+    color: colors.error,
+    marginBottom: 4,
+  },
+  textArea: {
+    minHeight: 96,
+    paddingTop: 12,
+  },
+  understandRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  checkboxOuter: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: colors.error,
+    marginTop: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.background,
+  },
+  checkboxOuterOn: {
+    backgroundColor: colors.error,
+    borderColor: colors.error,
+  },
+  understandText: {
+    flex: 1,
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    color: colors.textPrimary,
+    lineHeight: 20,
   },
   deleteAccountBtn: {
     marginTop: 4,
