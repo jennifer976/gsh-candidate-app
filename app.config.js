@@ -13,7 +13,7 @@ module.exports = () => ({
     userInterfaceStyle: "light",
     newArchEnabled: true,
     splash: {
-      image: "./assets/splash-artwork.jpg",
+      image: "./assets/splash-icon.png",
       resizeMode: "contain",
       backgroundColor: "#0d194e",
     },
