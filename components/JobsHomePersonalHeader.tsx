@@ -65,8 +65,7 @@ export function JobsHomePersonalHeader({
     <View style={[styles.wrap, cardSurfaceStyle(false)]}>
       <Text style={styles.greeting}>{greeting}</Text>
       <Text style={styles.sub}>
-        Use the Employer / Curated tabs below to switch feeds. Employer is direct company posts; Curated is external links
-        (often agencies) — kept separate so it stays clear who posted the role.
+        Browse employer posts and curated external links below. Employer is on-platform; Curated opens careers hosted elsewhere.
       </Text>
 
       {completionPct != null && completionPct < 100 ? (
@@ -90,7 +89,7 @@ export function JobsHomePersonalHeader({
         </View>
       ) : stats ? (
         <View style={styles.statsRow}>
-          <MiniStat label="Applied" value={stats.applied} onPress={onApplied} />
+          <MiniStat label="Applications" value={stats.applied} onPress={onApplied} />
           <MiniStat label="Saved" value={stats.saved} onPress={onSaved} />
           <MiniStat label="Interviews" value={stats.interviews} onPress={onDashboard} />
         </View>

@@ -47,9 +47,10 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Discover",
+          tabBarLabel: "Discover",
           tabBarIcon: ({ color, focused }) => (
-            <TabGlyph focused={focused} color={color} filled="home" outline="home-outline" />
+            <TabGlyph focused={focused} color={color} filled="grid" outline="grid-outline" />
           ),
         }}
       />
@@ -57,6 +58,7 @@ export default function TabsLayout() {
         name="saved"
         options={{
           title: "Saved",
+          tabBarLabel: "Saved",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="bookmark" outline="bookmark-outline" />
           ),
@@ -65,16 +67,18 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="applications"
         options={{
-          title: "Applied",
+          title: "Applications",
+          tabBarLabel: "Applications",
           tabBarIcon: ({ color, focused }) => (
-            <TabGlyph focused={focused} color={color} filled="document-text" outline="document-text-outline" />
+            <TabGlyph focused={focused} color={color} filled="clipboard" outline="clipboard-outline" />
           ),
         }}
       />
       <Tabs.Screen
         name="messages"
         options={{
-          title: "Inbox",
+          title: "Messages",
+          tabBarLabel: "Messages",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="chatbubbles" outline="chatbubbles-outline" />
           ),
@@ -84,6 +88,7 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: "Profile",
+          tabBarLabel: "Profile",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="person" outline="person-outline" />
           ),
@@ -92,14 +97,10 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="more"
         options={{
-          title: "More",
+          title: "Menu",
+          tabBarLabel: "Menu",
           tabBarIcon: ({ color, focused }) => (
-            <TabGlyph
-              focused={focused}
-              color={color}
-              filled="ellipsis-horizontal-circle"
-              outline="ellipsis-horizontal-circle-outline"
-            />
+            <TabGlyph focused={focused} color={color} filled="menu" outline="menu-outline" />
           ),
         }}
       />

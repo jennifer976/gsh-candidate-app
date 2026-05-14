@@ -13,7 +13,8 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { DiscoverExploreChips, DiscoverFeaturedStrip } from "@/components/CandidateDiscoverRails";
 import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobsHomePersonalHeader } from "@/components/JobsHomePersonalHeader";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
@@ -91,6 +92,7 @@ function HubJobCard({ job, onPress }: { job: Job; onPress: () => void }) {
 
 export default function JobsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [feedTab, setFeedTab] = useState<"employer" | "curated">("employer");
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
@@ -194,6 +196,8 @@ export default function JobsScreen() {
     ]).finally(() => setPullRefreshing(false));
   }, [hubJobsQuery, curatedJobsQuery, dashQuery, profileQuery]);
 
+  const featuredJobs = dashQuery.data?.latestJobs?.slice(0, 8) ?? [];
+
   const listHeader = (
     <>
       <JobsHomePersonalHeader
@@ -206,6 +210,9 @@ export default function JobsScreen() {
         onSaved={() => router.push("/(tabs)/saved")}
         onDashboard={() => router.push("/dashboard")}
       />
+
+      <DiscoverFeaturedStrip jobs={featuredJobs} onOpen={(id) => router.push(`/job/${id}`)} />
+      <DiscoverExploreChips query={q} onPick={setQ} />
 
       <View style={styles.hubSection}>
         <Text style={styles.hubSectionLabel}>Your hub</Text>
@@ -406,7 +413,29 @@ export default function JobsScreen() {
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <FlatList
+        <View style={styles.discoverShell}>
+          <View style={[styles.discoverTopBar, { paddingTop: Math.max(insets.top, 10) }]}>
+            <Text style={styles.discoverTopTitle}>Discover</Text>
+            <View style={styles.discoverTopActions}>
+              <Pressable
+                onPress={() => router.push("/notification-feed")}
+                style={styles.discoverTopIconBtn}
+                accessibilityRole="button"
+                accessibilityLabel="Notifications"
+              >
+                <Ionicons name="notifications-outline" size={22} color={colors.white} />
+              </Pressable>
+              <Pressable
+                onPress={() => router.push("/(tabs)/messages")}
+                style={styles.discoverTopIconBtn}
+                accessibilityRole="button"
+                accessibilityLabel="Messages"
+              >
+                <Ionicons name="chatbubbles-outline" size={22} color={colors.white} />
+              </Pressable>
+            </View>
+          </View>
+          <FlatList
           data={activeError ? [] : listRows}
           keyExtractor={(item) => item._id}
           ListHeaderComponent={listHeader}
@@ -417,6 +446,7 @@ export default function JobsScreen() {
             listRows.length === 0 && !listBootloading && styles.listPadGrow,
           ]}
           keyboardShouldPersistTaps="handled"
+          style={styles.discoverList}
           renderItem={({ item }) =>
             feedTab === "employer" ? (
               <HubJobCard job={item as Job} onPress={() => router.push(`/job/${(item as Job)._id}`)} />
@@ -428,6 +458,7 @@ export default function JobsScreen() {
             )
           }
         />
+        </View>
       </SafeAreaView>
     </GshScreenBackground>
   );
@@ -435,6 +466,26 @@ export default function JobsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
+  discoverShell: { flex: 1 },
+  discoverList: { flex: 1 },
+  discoverTopBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: colors.navy,
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "rgba(255,255,255,0.14)",
+  },
+  discoverTopTitle: {
+    fontSize: 22,
+    fontFamily: fontFamily.extraBold,
+    color: colors.white,
+    letterSpacing: -0.35,
+  },
+  discoverTopActions: { flexDirection: "row", alignItems: "center" },
+  discoverTopIconBtn: { padding: 8, marginLeft: 2 },
   hubSection: { marginHorizontal: 16, marginTop: 12 },
   hubSectionLabel: {
     fontSize: 11,

@@ -68,8 +68,10 @@ export default function MoreScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <Text style={styles.h1}>More</Text>
-          <Text style={styles.lead}>Home feed, partners, and tooling — visa wizard and guides stay inside the app.</Text>
+          <Text style={styles.h1}>Menu</Text>
+          <Text style={styles.lead}>
+            Guides, tools, partners, alerts, and settings — everything beyond your main tabs lives here.
+          </Text>
 
           <Text style={styles.section}>Learn & support</Text>
           <RowLink
