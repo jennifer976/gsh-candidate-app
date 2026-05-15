@@ -10,8 +10,6 @@ export function resolveUploadAssetUrl(url?: string | null): string {
   if (/^https?:\/\//i.test(u)) return u;
   const origin = getApiOrigin();
   const path = u.startsWith("/") ? u : `/${u}`;
-  if (path.startsWith("/api/")) return `${origin}${path}`;
-  // Upload routes are mounted at /api/v1/uploads (not API root /uploads).
-  if (path.startsWith("/uploads/")) return `${origin}/api/v1${path}`;
+  // Static files are served at `{origin}/uploads` (see API `app.use("/uploads", ...)`).
   return `${origin}${path}`;
 }
