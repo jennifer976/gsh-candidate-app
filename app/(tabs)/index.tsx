@@ -231,6 +231,25 @@ export default function JobsScreen() {
       ? String((profileQuery.data as { firstName: string }).firstName)
       : "";
 
+  const profileCompletion = useMemo(() => {
+    const p = profileQuery.data as Record<string, unknown> | null | undefined;
+    if (!p) return 0;
+    const fields = [
+      p.firstName,
+      p.lastName,
+      p.jobTitle,
+      p.bio,
+      (p.skills as unknown[] | undefined)?.length,
+      (p.targetCountries as unknown[] | undefined)?.length,
+      (p.preferredJobTypes as unknown[] | undefined)?.length,
+      p.cvUrl,
+    ];
+    const filled = fields.filter(Boolean).length;
+    return Math.round((filled / fields.length) * 100);
+  }, [profileQuery.data]);
+
+  const showCompletionBar = profileCompletion > 0 && profileCompletion < 80;
+
   const savedJobIdByListingId = useMemo(() => {
     const m = new Map<string, string>();
     for (const row of savedJobsQuery.data ?? []) {
@@ -311,6 +330,24 @@ export default function JobsScreen() {
 
         <Text style={styles.heroGreetingLabel}>Good to see you</Text>
         <Text style={styles.heroGreeting}>{greeting}</Text>
+
+        {showCompletionBar ? (
+          <Pressable
+            onPress={() => router.push("/(tabs)/profile")}
+            style={styles.completionWrap}
+            accessibilityRole="button"
+            accessibilityLabel={`Profile ${profileCompletion}% complete — tap to finish`}
+          >
+            <View style={styles.completionTop}>
+              <Text style={styles.completionLabel}>Profile {profileCompletion}% complete</Text>
+              <Text style={styles.completionCta}>Finish →</Text>
+            </View>
+            <View style={styles.completionTrack}>
+              <View style={[styles.completionFill, { width: `${profileCompletion}%` as `${number}%` }]} />
+            </View>
+            <Text style={styles.completionHint}>Complete your profile to appear in employer searches</Text>
+          </Pressable>
+        ) : null}
 
         {dashQuery.isLoading && !dashQuery.data ? (
           <View style={styles.statsLoading}>
@@ -613,6 +650,47 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: fontFamily.medium,
     color: "rgba(255,255,255,0.5)",
+  },
+  completionWrap: {
+    backgroundColor: "rgba(14,205,209,0.1)",
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: "rgba(14,205,209,0.2)",
+  },
+  completionTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 7,
+  },
+  completionLabel: {
+    fontSize: 12,
+    fontFamily: fontFamily.semiBold,
+    color: "rgba(255,255,255,0.9)",
+  },
+  completionCta: {
+    fontSize: 12,
+    fontFamily: fontFamily.bold,
+    color: colors.teal,
+  },
+  completionTrack: {
+    height: 4,
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderRadius: 2,
+    overflow: "hidden",
+    marginBottom: 6,
+  },
+  completionFill: {
+    height: 4,
+    backgroundColor: colors.teal,
+    borderRadius: 2,
+  },
+  completionHint: {
+    fontSize: 11,
+    fontFamily: fontFamily.regular,
+    color: "rgba(255,255,255,0.45)",
   },
   statsLoading: {
     height: 58,
