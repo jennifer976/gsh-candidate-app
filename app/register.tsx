@@ -17,7 +17,7 @@ import Animated, { FadeIn, FadeInDown, FadeInUp } from "react-native-reanimated"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { LegalConsentRegisterNote } from "@/components/LegalConsentLinks";
-import { brandLogo, brandMark } from "@/lib/brand-assets";
+import { brandLogo } from "@/lib/brand-assets";
 import { registerCandidate } from "@/lib/api-client";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
@@ -72,8 +72,14 @@ export default function RegisterScreen() {
             showsVerticalScrollIndicator={false}
           >
             <Animated.View entering={FadeInDown.delay(100).duration(600).springify()} style={styles.brandBlock}>
-              <Image source={brandMark} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
-              <Image source={brandLogo} style={styles.logo} resizeMode="contain" accessibilityIgnoresInvertColors />
+              <Image
+                source={brandLogo}
+                style={styles.logo}
+                resizeMode="contain"
+                tintColor="rgba(255,255,255,0.95)"
+                accessibilityIgnoresInvertColors
+                accessibilityLabel="Global Sponsor Hub"
+              />
               <Text style={styles.brandTagline}>Free to join. No recruiter middlemen.</Text>
             </Animated.View>
 
@@ -170,8 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(97,10,144,0.18)",
   },
   brandBlock: { alignItems: "center", gap: 12, paddingBottom: 8 },
-  mark: { width: 60, height: 60, borderRadius: 16 },
-  logo: { width: 200, height: 48 },
+  logo: { width: 220, height: 56 },
   brandTagline: {
     fontFamily: fontFamily.regular,
     fontSize: 14,

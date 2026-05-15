@@ -17,7 +17,7 @@ import Animated, { FadeIn, FadeInDown, FadeInUp } from "react-native-reanimated"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
-import { brandLogo, brandMark } from "@/lib/brand-assets";
+import { brandLogo } from "@/lib/brand-assets";
 import { loginRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { colors, fontFamily, radii } from "@/lib/theme";
@@ -62,7 +62,6 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.root}>
-      {/* Deep navy gradient background */}
       <LinearGradient
         colors={["#040c24", "#080f2e", "#0f1a4a"]}
         style={StyleSheet.absoluteFill}
@@ -70,9 +69,7 @@ export default function LoginScreen() {
         end={{ x: 0.7, y: 1 }}
       />
 
-      {/* Teal glow top-right */}
       <View style={styles.glowTopRight} pointerEvents="none" />
-      {/* Purple glow bottom-left */}
       <View style={styles.glowBottomLeft} pointerEvents="none" />
 
       <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
@@ -85,27 +82,23 @@ export default function LoginScreen() {
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
-            {/* Brand */}
             <Animated.View entering={FadeInDown.delay(100).duration(600).springify()} style={styles.brandBlock}>
-              <Image
-                source={brandMark}
-                style={styles.mark}
-                resizeMode="contain"
-                accessibilityIgnoresInvertColors
-              />
               <Image
                 source={brandLogo}
                 style={styles.logo}
                 resizeMode="contain"
+                tintColor="rgba(255,255,255,0.95)"
                 accessibilityIgnoresInvertColors
+                accessibilityLabel="Global Sponsor Hub"
               />
               <Text style={styles.brandTagline}>Visa sponsorship & relocation — labelled before you apply.</Text>
             </Animated.View>
 
-            {/* Form card */}
             <Animated.View entering={FadeInUp.delay(300).duration(600).springify()} style={styles.card}>
               <Text style={styles.cardTitle}>Sign in</Text>
-              <Text style={styles.cardSubtitle}>Find roles that actually sponsor. Apply and track everything in one place.</Text>
+              <Text style={styles.cardSubtitle}>
+                Find roles that actually sponsor. Apply and track everything in one place.
+              </Text>
 
               <View style={styles.fieldWrap}>
                 <Text style={styles.fieldLabel}>Email</Text>
@@ -165,7 +158,6 @@ export default function LoginScreen() {
               />
             </Animated.View>
 
-            {/* Footer links */}
             <Animated.View entering={FadeIn.delay(600).duration(500)} style={styles.footerLinks}>
               <Pressable onPress={() => router.push("/register")} accessibilityRole="button">
                 <Text style={styles.footerLink}>
@@ -193,8 +185,6 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
     gap: 24,
   },
-
-  // Ambient glows
   glowTopRight: {
     position: "absolute",
     top: -80,
@@ -213,23 +203,18 @@ const styles = StyleSheet.create({
     borderRadius: 110,
     backgroundColor: "rgba(97,10,144,0.2)",
   },
-
-  // Brand block
   brandBlock: {
     alignItems: "center",
     gap: 12,
     paddingBottom: 8,
   },
-  mark: { width: 64, height: 64, borderRadius: 18 },
-  logo: { width: 200, height: 48 },
+  logo: { width: 220, height: 56 },
   brandTagline: {
     fontFamily: fontFamily.regular,
     fontSize: 14,
     color: colors.textOnDarkMuted,
     letterSpacing: 0.2,
   },
-
-  // Card
   card: {
     backgroundColor: "rgba(17,29,94,0.85)",
     borderRadius: radii.xxl,
@@ -252,8 +237,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 20,
   },
-
-  // Fields
   fieldWrap: { marginBottom: 14 },
   fieldLabel: {
     fontFamily: fontFamily.semiBold,
@@ -281,16 +264,12 @@ const styles = StyleSheet.create({
   inputWithBtn: { paddingRight: 4 },
   eyeBtn: { paddingHorizontal: 14, paddingVertical: 12 },
   eyeIcon: { fontSize: 16 },
-
-  // Forgot
   forgotWrap: { alignSelf: "flex-end", paddingVertical: 4, marginBottom: 4 },
   forgotText: {
     fontFamily: fontFamily.medium,
     fontSize: 13,
     color: colors.teal,
   },
-
-  // Footer
   footerLinks: { alignItems: "center", gap: 16 },
   footerLink: {
     fontFamily: fontFamily.regular,

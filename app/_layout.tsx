@@ -12,7 +12,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { InAppWebHost } from "@/components/InAppWebHost";
 import { PushBootstrap } from "@/components/PushBootstrap";
@@ -56,12 +55,8 @@ export default function RootLayout() {
   }, [hydrated, fontsLoaded]);
 
   if (!hydrated || !fontsLoaded) {
-    return (
-      <View
-        style={{ flex: 1, backgroundColor: colors.navyDeep }}
-        accessibilityLabel="Loading Global Sponsor Hub"
-      />
-    );
+    // Keep the native splash visible — avoids a flash of navy + mis-sized logo before intro/video.
+    return null;
   }
 
   if (!introDismissed) {

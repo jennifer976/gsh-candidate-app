@@ -1,5 +1,6 @@
 import { Video, ResizeMode } from "expo-av";
 import type { AVPlaybackStatus } from "expo-av";
+import { LinearGradient } from "expo-linear-gradient";
 import { useCallback, useEffect, useRef } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -11,7 +12,9 @@ type Props = {
   onDone: () => void;
 };
 
-/** Full-screen brand intro video only — no extra logos or graphics. */
+/**
+ * Full-screen intro video on navy gradient — no extra logo lockups (avoids dark-on-dark marks).
+ */
 export function SplashIntroVideo({ onDone }: Props) {
   const insets = useSafeAreaInsets();
   const doneRef = useRef(false);
@@ -23,7 +26,7 @@ export function SplashIntroVideo({ onDone }: Props) {
   }, [onDone]);
 
   useEffect(() => {
-    const t = setTimeout(finish, 12000);
+    const t = setTimeout(finish, 4500);
     return () => clearTimeout(t);
   }, [finish]);
 
@@ -37,10 +40,17 @@ export function SplashIntroVideo({ onDone }: Props) {
 
   return (
     <View style={styles.root} accessibilityViewIsModal accessibilityLabel="Loading Global Sponsor Hub">
+      <LinearGradient
+        colors={["#040c24", "#080f2e", "#0d1a4a"]}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 0.3, y: 0 }}
+        end={{ x: 0.7, y: 1 }}
+      />
+
       <Video
         style={StyleSheet.absoluteFill}
         source={introSource}
-        resizeMode={ResizeMode.CONTAIN}
+        resizeMode={ResizeMode.COVER}
         shouldPlay
         isLooping={false}
         isMuted
