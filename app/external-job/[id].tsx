@@ -16,7 +16,7 @@ import { GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { curatedListingPrimaryBadge, normalizeAgencyWebsite } from "@/lib/curated-listing-labels";
 import { fetchPublicExternalJobById, recordExternalApplyClick } from "@/lib/api-client";
-import { openExternalHttpsUrl } from "@/lib/openMarketingBrowser";
+import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { cardCuratedSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic } from "@/types/models";
 
@@ -38,7 +38,7 @@ export default function ExternalJobDetailScreen() {
       if (!url || !/^https?:\/\//i.test(url)) {
         throw new Error("No valid apply URL for this listing.");
       }
-      await openExternalHttpsUrl(url);
+      openExternalUrlInApp(url);
     },
     onError: (e: unknown) =>
       Alert.alert(
@@ -153,9 +153,15 @@ export default function ExternalJobDetailScreen() {
           {agencySiteUrl ? (
             <Pressable
               style={styles.agencyContactBtn}
-              onPress={() => void openExternalHttpsUrl(agencySiteUrl)}
+              onPress={() => {
+                try {
+                  openExternalUrlInApp(agencySiteUrl);
+                } catch {
+                  /* invalid agency URL */
+                }
+              }}
               accessibilityRole="link"
-              accessibilityLabel="Contact agency website"
+              accessibilityLabel="Open agency site in app"
             >
               <Ionicons name="business-outline" size={18} color={colors.brand} />
               <Text style={styles.agencyContactText}>Contact agency</Text>
@@ -164,7 +170,7 @@ export default function ExternalJobDetailScreen() {
           ) : null}
 
           <Text style={styles.disclaimer}>
-            You apply on the employer’s site (ATS). We open their official apply link in a secure browser window — Global
+            You apply on the employer’s site (ATS). We open their official apply link in a sheet inside this app — Global
             Sponsor Hub cannot submit your CV on your behalf for curated listings.
           </Text>
 

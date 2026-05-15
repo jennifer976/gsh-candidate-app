@@ -7,7 +7,6 @@ import { BlogArticleBody } from "@/components/BlogArticleBody";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchBlogArticleBySlug, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
-import { openWebsitePath } from "@/lib/openWebsite";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function BlogArticleScreen() {
@@ -25,10 +24,6 @@ export default function BlogArticleScreen() {
       return count < 2;
     },
   });
-
-  function openThisArticleOnWeb() {
-    void openWebsitePath(`/blog/${encodeURIComponent(decoded)}`);
-  }
 
   if (q.isLoading) {
     return (
@@ -48,12 +43,17 @@ export default function BlogArticleScreen() {
           <GshScreenIntro
             title={notConfigured ? "Article unavailable in-app" : "Could not load this article"}
             subtitle={
-              notConfigured ? "Open this piece on our website instead." : "Check your connection or try again on the website."
+              notConfigured
+                ? "This build is not linked to the content service. Use Guides or Tools from the menu, or contact support."
+                : "Check your connection and try again."
             }
             style={{ marginBottom: 8 }}
           />
-          <Pressable style={styles.primaryOutline} onPress={openThisArticleOnWeb} accessibilityRole="button">
-            <Text style={styles.linkStrong}>Open on website</Text>
+          <Pressable style={styles.primaryOutline} onPress={() => void q.refetch()} accessibilityRole="button">
+            <Text style={styles.linkStrong}>Try again</Text>
+          </Pressable>
+          <Pressable style={styles.primaryOutline} onPress={() => router.push("/blog")} accessibilityRole="button">
+            <Text style={styles.linkStrong}>All articles</Text>
           </Pressable>
           <Pressable onPress={() => router.back()} accessibilityRole="button">
             <Text style={styles.link}>Go back</Text>
@@ -68,8 +68,8 @@ export default function BlogArticleScreen() {
       <GshScreenBackground>
         <SafeAreaView style={styles.center} edges={["bottom"]}>
           <GshScreenIntro title="We could not find that article." style={{ marginBottom: 8 }} />
-          <Pressable style={styles.primaryOutline} onPress={openThisArticleOnWeb} accessibilityRole="button">
-            <Text style={styles.linkStrong}>Try on website</Text>
+          <Pressable style={styles.primaryOutline} onPress={() => router.push("/blog")} accessibilityRole="button">
+            <Text style={styles.linkStrong}>Back to blog list</Text>
           </Pressable>
           <Pressable onPress={() => router.back()} accessibilityRole="button">
             <Text style={styles.link}>Go back</Text>

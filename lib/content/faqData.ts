@@ -35,7 +35,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "General",
     question: "Do you have a mobile app?",
     answer:
-      "Yes — this app gives you jobs, messaging, guides, and tools in one place. Some long reads (for example full pillar guides) can open on our website when you choose that.",
+      "Yes — this app gives you jobs, messaging, guides, and tools in one place, including long-form guides inside the Guides hub.",
   },
   {
     category: "General",

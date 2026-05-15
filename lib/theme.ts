@@ -48,6 +48,9 @@ export const colors = {
   secondaryTintText: "#5b21b6",
 
   white: "#ffffff",
+
+  /** Job-style feed shell (Discover tab) — cool gray behind white cards */
+  discoverCanvas: "#eef2f7",
 } as const;
 
 /** Loaded via `useFonts` in root layout — matches web Inter. */
@@ -64,6 +67,8 @@ export const radii = {
   md: 14,
   lg: 16,
   xl: 20,
+  /** Job-board style cards (Discover feed) */
+  feed: 18,
   pill: 999,
 } as const;
 
@@ -114,6 +119,45 @@ export function cardSurfaceStyle(interactive?: boolean): ViewStyle {
     shadowOffset: { width: 0, height: interactive ? 5 : 2 },
     shadowOpacity: interactive ? 0.14 : 0.07,
     shadowRadius: interactive ? 16 : 12,
+  };
+}
+
+/** Floating white cards on the Discover canvas (Figma-style elevation, GSH surfaces). */
+export function discoverFeedCardStyle(): ViewStyle {
+  const base: ViewStyle = {
+    backgroundColor: colors.white,
+    borderRadius: radii.feed,
+    borderWidth: 0,
+  };
+  if (Platform.OS === "android") {
+    return { ...base, elevation: 4 };
+  }
+  return {
+    ...base,
+    shadowColor: "#64748b",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 14,
+  };
+}
+
+/** In-card search field — pill, light border, soft lift */
+export function discoverSearchFieldStyle(): ViewStyle {
+  const base: ViewStyle = {
+    backgroundColor: colors.white,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: "rgba(226, 232, 240, 0.95)",
+  };
+  if (Platform.OS === "android") {
+    return { ...base, elevation: 1 };
+  }
+  return {
+    ...base,
+    shadowColor: "#0f172a",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
   };
 }
 

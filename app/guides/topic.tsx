@@ -7,7 +7,6 @@ import { PillarGuideContent } from "@/components/PillarGuideContent";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
 import { getPillarPageByPath } from "@/lib/guides/seo/getPillarByPath";
 import { getGuideTopicStub } from "@/lib/guides/topicStubs";
-import { openWebsitePath } from "@/lib/openWebsite";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function GuideTopicScreen() {
@@ -38,16 +37,12 @@ export default function GuideTopicScreen() {
             </>
           ) : !stub ? (
             <View style={[styles.card, cardSurfaceStyle(true)]}>
-              <GshScreenIntro eyebrow="Guides" title="Topic unavailable" subtitle="Try another topic from the hub, or open this page on our website." style={{ marginBottom: 12 }} />
-              {hrefRaw.startsWith("/") ? (
-                <Pressable
-                  style={[styles.primaryOutline, styles.primaryOutlineWeb]}
-                  onPress={() => void openWebsitePath(hrefRaw)}
-                  accessibilityRole="button"
-                >
-                  <Text style={styles.primaryOutlineText}>Open on website</Text>
-                </Pressable>
-              ) : null}
+              <GshScreenIntro
+                eyebrow="Guides"
+                title="Topic unavailable"
+                subtitle="Pick another topic from the guides hub, or use Jobs and Partners from the app for listings and firms."
+                style={{ marginBottom: 12 }}
+              />
               <Pressable style={styles.primaryOutline} onPress={() => router.push("/guides")} accessibilityRole="button">
                 <Text style={styles.primaryOutlineText}>Back to guides hub</Text>
               </Pressable>
@@ -73,9 +68,7 @@ export default function GuideTopicScreen() {
               <Pressable style={styles.primaryOutline} onPress={() => navigateGuideLink(router, "/partners/directory")} accessibilityRole="button">
                 <Text style={styles.primaryOutlineText}>Open partner directory in app</Text>
               </Pressable>
-              <Text style={styles.footerHint}>
-                Short overview — directory listings are browsed inside this app from the Partners tab or button above.
-              </Text>
+              <Text style={styles.footerHint}>Short overview — open Partners from More or above for the full directory.</Text>
             </>
           )}
         </ScrollView>
@@ -109,7 +102,6 @@ const styles = StyleSheet.create({
   linkBtn: { paddingVertical: 10 },
   linkBtnText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.brand },
   primaryOutlineSpaced: { marginTop: 12 },
-  primaryOutlineWeb: { marginTop: 6 },
   primaryOutline: {
     marginTop: 16,
     borderWidth: 1,

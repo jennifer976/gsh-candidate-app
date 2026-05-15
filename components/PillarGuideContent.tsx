@@ -3,10 +3,12 @@ import type { Router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Markdown from "react-native-markdown-display";
 import { getMarketingSiteUrl } from "@/lib/config";
+import { resolveJobsCountryHubPath } from "@/lib/guides/countryHubInApp";
+import { navigateMarketingPath } from "@/lib/guides/marketingPathInApp";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
 import { getPillarPageByPath } from "@/lib/guides/seo/getPillarByPath";
+import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import type { SeoPillarAppendixTable, SeoPillarPageConfig } from "@/lib/guides/seo/seoPillarTypes";
-import { openWebsitePath } from "@/lib/openWebsite";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
 const mdStyles = StyleSheet.create({
@@ -37,15 +39,28 @@ function handleGuideLink(url: string, router: Router): boolean {
         const path = u.pathname + u.search;
         return handleGuideLink(path, router);
       }
-      void Linking.openURL(url);
+      openExternalUrlInApp(url);
       return false;
     }
   } catch {
-    void Linking.openURL(url);
+    if (/^https?:\/\//i.test(url)) {
+      openExternalUrlInApp(url);
+    } else {
+      void Linking.openURL(url);
+    }
     return false;
   }
 
   const path = url.split("#")[0] ?? url;
+  const hub = resolveJobsCountryHubPath(path);
+  if (hub) {
+    if (hub.kind === "appGuide") {
+      router.push(`/guides/country/${hub.slug}`);
+    } else {
+      router.push("/(tabs)");
+    }
+    return false;
+  }
   if (getPillarPageByPath(path)) {
     router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(path) } });
     return false;
@@ -54,7 +69,7 @@ function handleGuideLink(url: string, router: Router): boolean {
     navigateGuideLink(router, path);
     return false;
   }
-  void openWebsitePath(path);
+  navigateMarketingPath(router, path);
   return false;
 }
 
@@ -127,14 +142,7 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
 
       <Pressable
         style={styles.cta}
-        onPress={() => {
-          const h = config.browseHref;
-          if (h.startsWith("/jobs") || h.startsWith("/partners")) {
-            navigateGuideLink(router, h);
-          } else {
-            void openWebsitePath(h);
-          }
-        }}
+        onPress={() => navigateMarketingPath(router, config.browseHref)}
         accessibilityRole="button"
       >
         <Text style={styles.ctaText}>{config.browseLabel}</Text>
@@ -150,9 +158,18 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
               onPress={() => {
                 if (getPillarPageByPath(r.href)) {
                   router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(r.href) } });
-                } else {
-                  void openWebsitePath(r.href);
+                  return;
                 }
+                const rHub = resolveJobsCountryHubPath(r.href);
+                if (rHub) {
+                  if (rHub.kind === "appGuide") {
+                    router.push(`/guides/country/${rHub.slug}`);
+                  } else {
+                    router.push("/(tabs)");
+                  }
+                  return;
+                }
+                navigateMarketingPath(router, r.href);
               }}
               accessibilityRole="button"
             >
@@ -162,13 +179,8 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
         </View>
       ) : null}
 
-      <Pressable style={styles.webMirror} onPress={() => void openWebsitePath(config.path)} accessibilityRole="button">
-        <Text style={styles.webMirrorText}>Open this guide on the website</Text>
-      </Pressable>
-
       <Text style={styles.disclaimer}>
-        Educational overview only — not legal advice. Confirm eligibility and processes with official government sources or
-        regulated advisers.
+        Education only — not legal advice. Confirm rules with official sources.
       </Text>
     </View>
   );
@@ -237,8 +249,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   relatedText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.brand },
-  webMirror: { marginTop: 16, paddingVertical: 12, alignItems: "center" },
-  webMirrorText: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.textMuted },
   disclaimer: {
     marginTop: 20,
     fontSize: 13,

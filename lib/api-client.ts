@@ -475,6 +475,7 @@ export async function deleteCandidateAccount(password: string, reason: string) {
 
 // —— Partners directory ——
 
+/** Public mobility partner directory (no auth — not the authenticated `/partners` admin list). */
 export async function fetchPartners(params?: Record<string, string | number | undefined>) {
   const q = new URLSearchParams();
   Object.entries(params ?? {}).forEach(([k, v]) => {
@@ -482,7 +483,9 @@ export async function fetchPartners(params?: Record<string, string | number | un
   });
   const qs = q.toString();
   return apiFetchJson<import("@/types/models").PartnersListResponse>(
-    `/partners${qs ? `?${qs}` : ""}`
+    `/partners/directory${qs ? `?${qs}` : ""}`,
+    undefined,
+    { auth: false }
   );
 }
 

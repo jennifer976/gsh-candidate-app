@@ -13,7 +13,7 @@ module.exports = () => ({
     userInterfaceStyle: "light",
     newArchEnabled: true,
     splash: {
-      image: "./assets/splash-icon.png",
+      image: "./assets/brand-logo.png",
       resizeMode: "contain",
       backgroundColor: "#0d194e",
     },
@@ -40,6 +40,7 @@ module.exports = () => ({
     plugins: [
       "expo-router",
       "expo-secure-store",
+      "expo-av",
       [
         "expo-notifications",
         {

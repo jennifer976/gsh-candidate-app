@@ -1,11 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useQuery } from "@tanstack/react-query";
-import * as Linking from "expo-linking";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchImmigrationRssHeadlines } from "@/lib/content/rssImmigration";
+import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function ImmigrationNewsScreen() {
@@ -27,7 +27,7 @@ export default function ImmigrationNewsScreen() {
             <GshScreenIntro
               eyebrow="News"
               title="Immigration headlines"
-              subtitle="Headlines from third‑party publishers (government agencies, NGOs, and analysts). Tapping a row opens that publisher’s website."
+              subtitle="Headlines from third‑party publishers (government agencies, NGOs, and analysts). Tapping a row opens the article in a sheet inside this app."
               style={{ marginBottom: 12 }}
             />
             <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
@@ -35,7 +35,13 @@ export default function ImmigrationNewsScreen() {
               <Pressable
                 key={`${h.link}-${i}`}
                 style={[styles.row, cardSurfaceStyle(true)]}
-                onPress={() => void Linking.openURL(h.link)}
+                onPress={() => {
+                  try {
+                    openExternalUrlInApp(h.link);
+                  } catch {
+                    /* invalid link in feed */
+                  }
+                }}
                 accessibilityRole="button"
               >
                 <View style={{ flex: 1 }}>

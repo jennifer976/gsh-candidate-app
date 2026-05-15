@@ -11,8 +11,8 @@ function bc(last: { name: string; path: string }) {
 }
 
 const STANDARD_LAST_REVIEWED = "2026-04-30";
-const CORRIDOR_HUB_NAV =
-  "**Country hubs (extra context):** [Canada](/jobs/country/canada) · [Australia](/jobs/country/australia) · [United States](/jobs/country/usa) · [Germany](/jobs/country/germany) · [United Arab Emirates](/jobs/country/uae) · [Ireland](/jobs/country/ireland) · [Singapore](/jobs/country/singapore) · [New Zealand](/jobs/country/new-zealand) · [Netherlands](/jobs/country/netherlands) · [Switzerland](/jobs/country/switzerland).";
+const IN_APP_CORRIDOR_BLURB =
+  "**In this app:** [Ireland](/guides/country/ireland-employment-permits-job-search) · [Germany](/guides/country/germany-eu-blue-card-jobseekers) · [United Kingdom](/guides/country/uk-skilled-worker-and-sponsored-jobs). For other countries, use **Discover** with a location filter.";
 
 /** Candidate relocation & trust “spokes” under `/relocating/*` — linked from `/guides` and pillars. */
 export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {
@@ -32,7 +32,7 @@ export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {
     sections: [
       {
         h2: "Who needs this guide and why country context matters",
-        body: `Candidates paying deposits in foreign currencies, managing time zones, and relying on chat apps face higher fraud exposure.\n\n${CORRIDOR_HUB_NAV}\n\nScams often copy local wording. If visa terms look unfamiliar or inconsistent, verify directly on official government websites.`,
+        body: `Candidates paying deposits in foreign currencies, managing time zones, and relying on chat apps face higher fraud exposure.\n\n${IN_APP_CORRIDOR_BLURB}\n\nScams often copy local wording. If visa terms look unfamiliar or inconsistent, verify directly on official government websites.`,
       },
       {
         h2: "Fee red flags (candidate-paid visas & guarantees)",
@@ -89,7 +89,7 @@ export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {
     sections: [
       {
         h2: "Checklist roadmap (offer → resignation → arrival)",
-        body: `1) Verify entity + recruiter identity.\n2) Lock immigration route nomenclature and who pays each fee.\n3) Model relocation cash flow with employer caps.\n4) Validate dependant sequencing.\n5) Only resign once written contingencies satisfy you.\n\n${CORRIDOR_HUB_NAV}\n\nEach hub surfaces typical vocabulary so you recognise when an employer’s wording matches—or contradicts—that corridor.`,
+        body: `1) Verify entity + recruiter identity.\n2) Lock immigration route nomenclature and who pays each fee.\n3) Model relocation cash flow with employer caps.\n4) Validate dependant sequencing.\n5) Only resign once written contingencies satisfy you.\n\n${IN_APP_CORRIDOR_BLURB}\n\nEach hub surfaces typical vocabulary so you recognise when an employer’s wording matches—or contradicts—that corridor.`,
       },
       {
         h2: "Company & role reality checks",
@@ -140,7 +140,7 @@ export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {
     sections: [
       {
         h2: "Tailoring tone to geography",
-        body: `${CORRIDOR_HUB_NAV}\n\nCV etiquette shifts—photo norms, chronological vs competency layouts, referees volunteered upfront. Read postings in-market before mass-applying.`,
+        body: `${IN_APP_CORRIDOR_BLURB}\n\nCV etiquette shifts—photo norms, chronological vs competency layouts, referees volunteered upfront. Read postings in-market before mass-applying.`,
       },
       {
         h2: "Where to surface sponsorship needs (and where not to hide them)",
@@ -187,7 +187,7 @@ export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {
     sections: [
       {
         h2: "Why corridors change the visa answers you hear",
-        body: `${CORRIDOR_HUB_NAV}\n\nAsk employers which government portal nomenclature they file under—you’ll quickly spot improvisation vs repeatable programmes.`,
+        body: `${IN_APP_CORRIDOR_BLURB}\n\nAsk employers which government portal nomenclature they file under—you’ll quickly spot improvisation vs repeatable programmes.`,
       },
       {
         h2: "Visa / work authorisation sequencing",
@@ -238,7 +238,7 @@ export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {
     sections: [
       {
         h2: "Adapt this checklist locally",
-        body: `${CORRIDOR_HUB_NAV}\n\nSome countries register you at municipalities, others stamp residence cards at airports—use the hub narratives to reorder weeks below appropriately.`,
+        body: `${IN_APP_CORRIDOR_BLURB}\n\nSome countries register you at municipalities, others stamp residence cards at airports—use the hub narratives to reorder weeks below appropriately.`,
       },
       {
         h2: "Week 0–2: arrive, sleep, identify blockers",
@@ -285,7 +285,7 @@ export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {
     sections: [
       {
         h2: "Corridor differences that hit families hardest",
-        body: `${CORRIDOR_HUB_NAV}\n\nSchool term calendars, bilingual tracks, childcare subsidies, trailing partner work eligibility, housing deposit multiples—these swing wider than headline salary.`,
+        body: `${IN_APP_CORRIDOR_BLURB}\n\nSchool term calendars, bilingual tracks, childcare subsidies, trailing partner work eligibility, housing deposit multiples—these swing wider than headline salary.`,
       },
       {
         h2: "Dependant eligibility & sequencing",
@@ -336,7 +336,7 @@ export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {
     sections: [
       {
         h2: "Why you should localise budgets per hub",
-        body: `${CORRIDOR_HUB_NAV}\n\nRent deposits, commuter pass pricing, withholding conventions, schooling fees, VAT vs sales tax quirks—model using local sources after this framework.`,
+        body: `${IN_APP_CORRIDOR_BLURB}\n\nRent deposits, commuter pass pricing, withholding conventions, schooling fees, VAT vs sales tax quirks—model using local sources after this framework.`,
       },
       {
         h2: "One-off costs to model",
@@ -383,7 +383,7 @@ export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {
     sections: [
       {
         h2: "Start from the corridor regulator",
-        body: `${CORRIDOR_HUB_NAV}\n\nEach regulator publishes bridging programmes, exams, timelines, languages—gather those PDFs alongside immigration paperwork.`,
+        body: `${IN_APP_CORRIDOR_BLURB}\n\nEach regulator publishes bridging programmes, exams, timelines, languages—gather those PDFs alongside immigration paperwork.`,
       },
       {
         h2: "Why sponsorship ≠ automatic licence-to-practise",

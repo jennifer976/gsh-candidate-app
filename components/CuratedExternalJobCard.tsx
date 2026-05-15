@@ -16,7 +16,7 @@ function ChipWrap({ chips }: { chips: string[] }) {
         const pal = mobilityChipStyle(c);
         return (
           <View key={c} style={[styles.listChip, pal.wrap]}>
-            <Text style={[styles.listChipText, pal.text]} numberOfLines={2}>
+            <Text style={[styles.listChipText, pal.text]} numberOfLines={1}>
               {c}
             </Text>
           </View>
@@ -69,31 +69,31 @@ export function CuratedExternalJobCard({ job, onPress }: { job: ExternalJobListi
 
 const styles = StyleSheet.create({
   card: {
-    paddingVertical: 16,
-    paddingHorizontal: 18,
+    paddingVertical: 11,
+    paddingHorizontal: 14,
   },
   cardTop: { width: "100%" },
-  badgeRow: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  cardTitle: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.textPrimary, letterSpacing: -0.25 },
+  badgeRow: { marginTop: 6, flexDirection: "row", flexWrap: "wrap", gap: 6 },
+  cardTitle: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.navy, letterSpacing: -0.2 },
   kindBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: radii.pill,
     borderWidth: 1,
     alignSelf: "flex-start",
   },
   kindBadgeCurated: {
-    backgroundColor: colors.secondaryTintBg,
-    borderColor: colors.purpleBorder,
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.border,
   },
-  kindBadgeText: { fontSize: 10, fontFamily: fontFamily.bold, letterSpacing: 0.2 },
-  kindBadgeTextCurated: { color: colors.secondaryTintText },
+  kindBadgeText: { fontSize: 10, fontFamily: fontFamily.semiBold, letterSpacing: 0.05 },
+  kindBadgeTextCurated: { color: colors.textSecondary },
   kindBadgeAgency: {
-    backgroundColor: "#faf5ff",
-    borderColor: colors.purpleBorder,
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.border,
   },
-  kindBadgeTextAgency: { color: colors.purpleTextDark },
-  cardCompany: { marginTop: 10, fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
+  kindBadgeTextAgency: { color: colors.textSecondary },
+  cardCompany: { marginTop: 6, fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
   agencyVia: {
     marginTop: 4,
     fontSize: 12,
@@ -102,30 +102,30 @@ const styles = StyleSheet.create({
   },
   cardMeta: { marginTop: 3, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
   chipWrap: {
-    marginTop: 10,
+    marginTop: 6,
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 6,
+    gap: 5,
   },
   listChip: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
     borderRadius: radii.pill,
     borderWidth: 1,
     maxWidth: "100%",
   },
   listChipText: {
-    fontSize: 11,
+    fontSize: 10,
     fontFamily: fontFamily.medium,
-    letterSpacing: 0.1,
+    letterSpacing: 0.05,
   },
   cardFooter: {
-    marginTop: 12,
+    marginTop: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
     gap: 4,
-    paddingTop: 10,
+    paddingTop: 6,
   },
   cardCta: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary },
 });

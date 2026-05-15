@@ -2,6 +2,7 @@ import * as Linking from "expo-linking";
 import { Image, StyleSheet, Text, View } from "react-native";
 import Markdown from "react-native-markdown-display";
 import type { BlogSectionRow } from "@/lib/content/blogQueries";
+import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
 const mdStyles = StyleSheet.create({
@@ -109,7 +110,16 @@ export function BlogArticleBody({ sections }: { sections: BlogSectionRow[] }) {
               key={section.id}
               style={mdStyles}
               onLinkPress={(url: string) => {
-                void Linking.openURL(url);
+                const u = url.trim();
+                if (/^mailto:/i.test(u) || /^tel:/i.test(u)) {
+                  void Linking.openURL(u);
+                  return false;
+                }
+                if (/^https?:\/\//i.test(u)) {
+                  openExternalUrlInApp(u);
+                  return false;
+                }
+                void Linking.openURL(u);
                 return false;
               }}
             >

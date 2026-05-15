@@ -1,6 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import * as Linking from "expo-linking";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -16,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPartners } from "@/lib/api-client";
+import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { PartnerListItem } from "@/types/models";
 
@@ -44,8 +44,8 @@ export default function PartnersScreen() {
     <View style={styles.headWrap}>
       <GshScreenIntro
         eyebrow="Directory"
-        title="Partner firms"
-        subtitle="Partner firms you can contact for relocation and legal help. Your employer partner portal (job posts, applicants, billing) lives on the web — not in this candidate app."
+        title="Partner directory"
+        subtitle="Firms for visas, relocation, and legal help. Tap a card for details; Company site opens in a sheet inside this app."
         style={{ marginBottom: 14 }}
       />
       <View style={[cardSurfaceStyle(false), styles.searchInner]}>
@@ -90,7 +90,7 @@ export default function PartnersScreen() {
         ) : (
           <FlatList
             data={rows}
-            keyExtractor={(item: PartnerListItem) => item.userId}
+            keyExtractor={(item: PartnerListItem) => String(item._id ?? item.userId ?? item.businessName)}
             refreshControl={<RefreshControl refreshing={query.isFetching} onRefresh={() => query.refetch()} />}
             contentContainerStyle={[styles.listPad, rows.length === 0 && styles.listPadEmpty]}
             ListHeaderComponent={header}
@@ -105,12 +105,17 @@ export default function PartnersScreen() {
                 </Text>
                 {item.companyWebsite ? (
                   <Pressable
-                    onPress={() =>
-                      void Linking.openURL(item.companyWebsite.startsWith("http") ? item.companyWebsite : `https://${item.companyWebsite}`)
-                    }
+                    onPress={() => {
+                      const raw = item.companyWebsite.startsWith("http") ? item.companyWebsite : `https://${item.companyWebsite}`;
+                      try {
+                        openExternalUrlInApp(raw);
+                      } catch {
+                        /* invalid URL */
+                      }
+                    }}
                     accessibilityRole="link"
                   >
-                    <Text style={styles.link}>Website</Text>
+                    <Text style={styles.link}>Company site</Text>
                   </Pressable>
                 ) : null}
               </View>

@@ -18,6 +18,7 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { LegalConsentRegisterNote } from "@/components/LegalConsentLinks";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { brandMark } from "@/lib/brand-assets";
 import { registerCandidate } from "@/lib/api-client";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
@@ -64,7 +65,7 @@ export default function RegisterScreen() {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.brandRow}>
-              <Image source={require("../assets/brand-mark.webp")} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
+              <Image source={brandMark} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
             </View>
 
             <GshScreenIntro

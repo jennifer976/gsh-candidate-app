@@ -20,7 +20,7 @@ export default function ContactScreen() {
           <GshScreenIntro
             eyebrow="Support"
             title="Contact"
-            subtitle="Reach the team for account issues, billing on subscriptions you bought through our website, or partnerships — all from this screen."
+            subtitle="Reach the team for account issues, in-app purchases and subscriptions, or partnerships — all from this screen."
             style={{ marginBottom: 14 }}
           />
           <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />

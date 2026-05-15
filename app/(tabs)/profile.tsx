@@ -252,7 +252,7 @@ export default function ProfileScreen() {
             </View>
 
             <Text style={styles.label}>Skills</Text>
-            <Text style={styles.fieldHint}>At least one skill is required. Tap Add skills to pick from the same list as on the website.</Text>
+            <Text style={styles.fieldHint}>At least one skill is required. Tap Add skills to pick from the same curated list used across the platform.</Text>
             <View style={styles.skillActions}>
               <Pressable style={styles.outlineBtnSmall} onPress={() => { setSkillSearch(""); setSkillModalOpen(true); }}>
                 <Text style={styles.outlineBtnText}>Add skills</Text>

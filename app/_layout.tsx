@@ -12,13 +12,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
+import { Image, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
-SplashScreen.preventAutoHideAsync().catch(() => undefined);
+import { InAppWebHost } from "@/components/InAppWebHost";
 import { PushBootstrap } from "@/components/PushBootstrap";
 import { QueryFocusSync } from "@/components/QueryFocusSync";
+import { SplashIntroVideo } from "@/components/SplashIntroVideo";
+import { brandLogo } from "@/lib/brand-assets";
 import { useAuthStore } from "@/lib/auth-store";
 import { colors, navHeader } from "@/lib/theme";
+
+SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +43,7 @@ export default function RootLayout() {
     Inter_700Bold,
     Inter_800ExtraBold,
   });
+  const [introDismissed, setIntroDismissed] = useState(false);
 
   useEffect(() => {
     const unsub = useAuthStore.persist.onFinishHydration(() => setHydrated(true));
@@ -52,7 +57,28 @@ export default function RootLayout() {
   }, [hydrated, fontsLoaded]);
 
   if (!hydrated || !fontsLoaded) {
-    return null;
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.navy,
+          alignItems: "center",
+          justifyContent: "center",
+          paddingHorizontal: 32,
+        }}
+        accessibilityLabel="Loading Global Sponsor Hub"
+      >
+        <Image source={brandLogo} style={{ width: 220, height: 72 }} resizeMode="contain" accessibilityIgnoresInvertColors />
+      </View>
+    );
+  }
+
+  if (!introDismissed) {
+    return (
+      <SafeAreaProvider>
+        <SplashIntroVideo onDone={() => setIntroDismissed(true)} />
+      </SafeAreaProvider>
+    );
   }
 
   return (
@@ -60,6 +86,7 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <QueryFocusSync />
         <PushBootstrap />
+        <InAppWebHost />
         <Stack
           screenOptions={{
             ...navHeader,

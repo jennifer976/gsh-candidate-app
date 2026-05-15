@@ -1,6 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
@@ -22,6 +21,7 @@ import {
   SUPPORTED_COUNTRIES,
   type OrientationTier,
 } from "@/lib/visaWizard/rules";
+import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 const NATIONALITY_OPTIONS = ["United Kingdom", "India", "Nigeria", "Pakistan", "United States", "Philippines"];
@@ -286,7 +286,13 @@ export default function VisaWizardScreen() {
                     ) : null}
 
                     <Pressable
-                      onPress={() => void Linking.openURL(result.route.officialLink)}
+                      onPress={() => {
+                        try {
+                          openExternalUrlInApp(result.route.officialLink);
+                        } catch {
+                          /* invalid official link */
+                        }
+                      }}
                       style={styles.officialLink}
                       accessibilityRole="link"
                     >

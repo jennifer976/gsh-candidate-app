@@ -18,9 +18,9 @@ function related(...links: SeoPillarRelatedLink[]): SeoPillarRelatedLink[] {
 
 const STANDARD_LAST_REVIEWED = "2026-04-30";
 
-/** Inline country drill-down footer for universal guides (markdown links). */
-const CORRIDOR_HUB_NAV =
-  "**Corridor hubs:** [Canada](/jobs/country/canada) · [Australia](/jobs/country/australia) · [United States](/jobs/country/usa) · [Germany](/jobs/country/germany) · [United Arab Emirates](/jobs/country/uae) · [Ireland](/jobs/country/ireland) · [Singapore](/jobs/country/singapore) · [New Zealand](/jobs/country/new-zealand) · [Netherlands](/jobs/country/netherlands) · [Switzerland](/jobs/country/switzerland).";
+/** In-app country guides + Discover for other destinations (replaces long `/jobs/country/*` web link rows). */
+const IN_APP_CORRIDOR_BLURB =
+  "**In this app:** [Ireland](/guides/country/ireland-employment-permits-job-search) · [Germany](/guides/country/germany-eu-blue-card-jobseekers) · [United Kingdom](/guides/country/uk-skilled-worker-and-sponsored-jobs). For Canada, the US, Australia, and elsewhere, open **Discover** and filter by location.";
 
 /** Country comparison appendix for the international pillar */
 const INTERNATIONAL_COMPARISON: SeoPillarAppendixTable = {
@@ -104,7 +104,7 @@ export const VISA_SPONSORSHIP_JOBS: SeoPillarPageConfig = {
     },
     {
       h2: "Where country-specific explanations live here",
-      body: `${CORRIDOR_HUB_NAV}\n\nEach hub pre-scopes job search and layers editorial context; governments still adjudicate permits independently of anything posted on listings.`,
+      body: `${IN_APP_CORRIDOR_BLURB}\n\nEach hub pre-scopes job search and layers editorial context; governments still adjudicate permits independently of anything posted on listings.`,
     },
     {
       h2: "What you should expect from a sponsorship-labelled listing here",
@@ -171,7 +171,7 @@ export const GLOBAL_RELOCATION_DIRECTORY: SeoPillarPageConfig = {
   sections: [
     {
       h2: "Who this directory is for",
-      body: `Candidates who need practical support for cross-border moves, and families managing schools, housing, healthcare, or dependent paperwork.\n\nIf employer support is limited, external specialists can fill gaps.\n\n${CORRIDOR_HUB_NAV}`,
+      body: `Candidates who need practical support for cross-border moves, and families managing schools, housing, healthcare, or dependent paperwork.\n\nIf employer support is limited, external specialists can fill gaps.\n\n${IN_APP_CORRIDOR_BLURB}`,
     },
     {
       h2: "What jobs include vs what partners can help with",
@@ -235,7 +235,7 @@ export const COMPANIES_THAT_SPONSOR_VISAS: SeoPillarPageConfig = {
   sections: [
     {
       h2: "Why checks vary by country",
-      body: `${CORRIDOR_HUB_NAV}\n\nRegisters, licence names and transparency norms differ—adapt your evidence list when switching countries.`,
+      body: `${IN_APP_CORRIDOR_BLURB}\n\nRegisters, licence names and transparency norms differ—adapt your evidence list when switching countries.`,
     },
     {
       h2: "What “can sponsor” should mean in practice",
@@ -292,7 +292,7 @@ export const JOBS_WITH_RELOCATION_SUPPORT: SeoPillarPageConfig = {
   sections: [
     {
       h2: "Cost of living still matters",
-      body: `${CORRIDOR_HUB_NAV}\n\nRelocation allowances go further in some metros than others—pair perks with corridor research rather than trusting headline dollar amounts.`,
+      body: `${IN_APP_CORRIDOR_BLURB}\n\nRelocation allowances go further in some metros than others—pair perks with corridor research rather than trusting headline dollar amounts.`,
     },
     {
       h2: "Relocation vs visa sponsorship badges",
@@ -339,7 +339,7 @@ export const INTERNATIONAL_JOBS_VISA_SPONSORSHIP: SeoPillarPageConfig = {
   metaDescription:
     "Plain overview to help you shortlist countries for sponsored work: what to compare, where long-form country guides live, and official government links. Not immigration advice—always confirm rules with each country’s authorities.",
   h1: "Compare countries before you pick one",
-  intro: `Not sure **which country** to aim for when you need **employer-backed visas** or **work permission**? This page is a **simple orientation layer**—not personal immigration advice and not a substitute for government websites or a qualified adviser.\n\n**How to use it:** skim the **comparison table** below for a very high-level feel, then open the **country hubs** (same destinations you’ll see on our job search) for jobs filtered to that place plus short written context. For “how do I use the job board and filters?”, see our **visa sponsorship jobs** guide instead.\n\n**Rule of thumb:** treat every table row as a starting point only. Rules, salaries, and quotas **change**—double-check on the official immigration sites linked further down.`,
+  intro: `Not sure **which country** to aim for when you need **employer-backed visas**? This page is **orientation only** — not personal immigration advice.\n\nSkim the table below, open the **country guides** in this app, then use **Discover** with location filters. Always confirm rules on official government sites.`,
   lastReviewed: STANDARD_LAST_REVIEWED,
   officialLinks: [
     { label: "IRCC", href: "https://www.canada.ca/en/immigration-refugees-citizenship.html" },
@@ -350,7 +350,7 @@ export const INTERNATIONAL_JOBS_VISA_SPONSORSHIP: SeoPillarPageConfig = {
   sections: [
     {
       h2: "Where to open jobs and guides for each country",
-      body: `Each **country hub** on Global Sponsor Hub does two things in one place: a short read about that destination **and** a job list already narrowed to that location.\n\n${CORRIDOR_HUB_NAV}\n\nOpen **two or three** hubs you’re seriously considering and compare what matters to you—cost of living tone, language expectations, how employers describe sponsorship—**before** you fix your heart on a single flag.`,
+      body: `Each **country hub** on Global Sponsor Hub does two things in one place: a short read about that destination **and** a job list already narrowed to that location.\n\n${IN_APP_CORRIDOR_BLURB}\n\nOpen **two or three** hubs you’re seriously considering and compare what matters to you—cost of living tone, language expectations, how employers describe sponsorship—**before** you fix your heart on a single flag.`,
     },
     {
       h2: "Why it helps to keep more than one country in mind",
@@ -408,7 +408,7 @@ export const EMPLOYERS_CORPORATE_GLOBAL_MOBILITY: SeoPillarPageConfig = {
   sections: [
     {
       h2: "Help candidates understand your hiring countries",
-      body: `${CORRIDOR_HUB_NAV}\n\nWhen candidates have clear country context, screening conversations are faster and expectations are easier to align.`,
+      body: `${IN_APP_CORRIDOR_BLURB}\n\nWhen candidates have clear country context, screening conversations are faster and expectations are easier to align.`,
     },
     {
       h2: "What employer mobility programmes usually cover",

@@ -218,7 +218,7 @@ export default function SettingsScreen() {
             <Text style={styles.dangerTitle}>Delete account</Text>
             <Text style={styles.sectionHint}>
               Permanently delete your Global Sponsor Hub account and related data. This cannot be undone. Employer and
-              partner accounts can also use self-delete on the website (Settings).
+              partner accounts may have different deletion flows — contact support if you are not a candidate.
             </Text>
             <Text style={styles.label}>Reason for leaving (required, min 10 characters)</Text>
             <TextInput

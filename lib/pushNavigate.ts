@@ -1,6 +1,6 @@
-import * as Linking from "expo-linking";
 import type { Router } from "expo-router";
 import { getMarketingSiteUrl } from "@/lib/config";
+import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 
 function normalizeHostname(host: string): string {
   return host.toLowerCase().replace(/^www\./, "");
@@ -146,7 +146,7 @@ function navigateInternalPath(router: Router, pathname: string, search: string):
 }
 
 /**
- * Routes notification `link` payloads into in-app screens when possible; opens the system browser only for non–Global Sponsor Hub hosts.
+ * Routes notification `link` payloads into in-app screens when possible; other https links open in the in-app WebView sheet.
  */
 export function navigateFromPushLink(router: Router, link: string): boolean {
   const trimmed = link.trim();
@@ -156,13 +156,17 @@ export function navigateFromPushLink(router: Router, link: string): boolean {
     try {
       const u = new URL(trimmed);
       if (!isOurMarketingHost(u.hostname)) {
-        void Linking.openURL(trimmed);
+        openExternalUrlInApp(trimmed);
         return true;
       }
       const pathname = u.pathname.replace(/\/+$/, "") || "/";
       return navigateInternalPath(router, pathname, u.search);
     } catch {
-      void Linking.openURL(trimmed);
+      try {
+        openExternalUrlInApp(trimmed);
+      } catch {
+        /* ignore invalid notification URL */
+      }
       return true;
     }
   }

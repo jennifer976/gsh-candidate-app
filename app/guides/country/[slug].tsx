@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as Linking from "expo-linking";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,7 +6,7 @@ import { GshNavyHeroCard, GshScreenIntro, GshSectionTitle } from "@/components/g
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { getCountryVisaGuide } from "@/lib/guides/countryVisaGuides";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
-import { openExternalHttpsUrl } from "@/lib/openMarketingBrowser";
+import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function CountryGuideDetailScreen() {
@@ -62,9 +61,13 @@ export default function CountryGuideDetailScreen() {
                   style={[styles.linkRow, cardSurfaceStyle(true)]}
                   onPress={() => {
                     const h = pl.href.trim();
-                    if (/^https:\/\//i.test(h)) void openExternalHttpsUrl(h);
-                    else if (/^http:\/\//i.test(h)) void Linking.openURL(h);
-                    else navigateGuideLink(router, pl.href);
+                    if (/^https?:\/\//i.test(h)) {
+                      try {
+                        openExternalUrlInApp(h);
+                      } catch {
+                        /* invalid URL */
+                      }
+                    } else navigateGuideLink(router, pl.href);
                   }}
                   accessibilityRole="button"
                 >

@@ -252,7 +252,8 @@ export interface NotificationListResponse {
 }
 
 export interface PartnerListItem {
-  userId: string;
+  _id?: string;
+  userId?: string;
   businessName: string;
   companyLogo?: string;
   companyWebsite: string;

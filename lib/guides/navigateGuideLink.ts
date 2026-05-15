@@ -1,4 +1,5 @@
 import type { Router } from "expo-router";
+import { resolveJobsCountryHubPath } from "@/lib/guides/countryHubInApp";
 
 /**
  * Maps partner/job paths into in-app routes. Never opens the marketing website.
@@ -6,6 +7,16 @@ import type { Router } from "expo-router";
 export function navigateGuideLink(router: Router, href: string): void {
   const path = href.trim().split("#")[0];
   const base = path.split("?")[0] || path;
+
+  const hub = resolveJobsCountryHubPath(base);
+  if (hub) {
+    if (hub.kind === "appGuide") {
+      router.push(`/guides/country/${hub.slug}`);
+      return;
+    }
+    router.push("/(tabs)");
+    return;
+  }
 
   if (base === "/partners" || base === "/partners/" || base.startsWith("/partners/")) {
     router.push("/partners");

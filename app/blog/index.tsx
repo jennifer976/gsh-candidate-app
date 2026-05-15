@@ -6,7 +6,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPublishedBlogList, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
-import { openWebsitePath } from "@/lib/openWebsite";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function BlogIndexScreen() {
@@ -21,10 +20,6 @@ export default function BlogIndexScreen() {
     },
   });
 
-  function openWebBlog() {
-    void openWebsitePath("/blog");
-  }
-
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
@@ -38,34 +33,32 @@ export default function BlogIndexScreen() {
               title={q.error instanceof SupabaseNotConfiguredError ? "Blog not linked yet" : "Could not load articles"}
               subtitle={
                 q.error instanceof SupabaseNotConfiguredError
-                  ? "Articles come from the same place as our website. This install has not been linked to that service yet — you can read every post on globalsponsorhub.com."
-                  : "Check your connection, then try again or open the blog on our website."
+                  ? "Articles are loaded from our content service. This build is missing those settings — ask your administrator, or use Guides and Tools from the app menu."
+                  : "Check your connection and try again, or go back to Tools & resources."
               }
               style={{ marginBottom: 16 }}
             />
-            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={openWebBlog} accessibilityRole="button">
-              <Text style={styles.primaryOutlineText}>Open blog on website</Text>
+            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={() => void q.refetch()} accessibilityRole="button">
+              <Text style={styles.primaryOutlineText}>Try again</Text>
+            </Pressable>
+            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={() => router.push("/tools-resources")} accessibilityRole="button">
+              <Text style={styles.primaryOutlineText}>Tools & resources</Text>
             </Pressable>
           </ScrollView>
         ) : q.data?.length === 0 ? (
           <ScrollView contentContainerStyle={styles.pad}>
             <GshScreenIntro
               title="No articles to show"
-              subtitle="Nothing is published here at the moment. You may find posts on the website."
+              subtitle="Nothing is published in the catalogue right now. Check back later or explore Guides in the app."
               style={{ marginBottom: 16 }}
             />
-            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={openWebBlog} accessibilityRole="button">
-              <Text style={styles.primaryOutlineText}>Open blog on website</Text>
+            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={() => router.push("/guides")} accessibilityRole="button">
+              <Text style={styles.primaryOutlineText}>Open guides</Text>
             </Pressable>
           </ScrollView>
         ) : (
           <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-            <GshScreenIntro
-              eyebrow="Blog"
-              title="Latest articles"
-              subtitle="Same catalogue as globalsponsorhub.com."
-              style={{ marginBottom: 10 }}
-            />
+            <GshScreenIntro eyebrow="Blog" title="Latest articles" subtitle="In-app reading — no browser required." style={{ marginBottom: 10 }} />
             <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
             {q.data?.map((b) => (
               <Pressable

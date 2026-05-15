@@ -288,7 +288,7 @@ export default function DashboardScreen() {
                 </Text>
                 <View style={styles.jobCardFooter}>
                   <Text style={styles.jobCardCta}>View role</Text>
-                  <Ionicons name="chevron-forward" size={18} color={colors.brand} />
+                  <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
                 </View>
               </View>
             </Pressable>
@@ -330,7 +330,7 @@ export default function DashboardScreen() {
                     </Text>
                     <View style={styles.jobCardFooter}>
                       <Text style={styles.jobCardCtaExternal}>Open listing</Text>
-                      <Ionicons name="open-outline" size={18} color={colors.teal} />
+                      <Ionicons name="open-outline" size={18} color={colors.textMuted} />
                     </View>
                   </View>
                 </Pressable>
@@ -517,37 +517,37 @@ const styles = StyleSheet.create({
   },
   jobAccentTeal: { width: 5, backgroundColor: colors.teal },
   jobAccentPurple: { width: 5, backgroundColor: colors.purple },
-  jobCardBody: { flex: 1, paddingVertical: 16, paddingHorizontal: 16, paddingLeft: 14 },
+  jobCardBody: { flex: 1, paddingVertical: 12, paddingHorizontal: 14, paddingLeft: 12 },
   jobCardTop: { flexDirection: "row", alignItems: "flex-start", gap: 8 },
   kindPillHub: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
     borderRadius: radii.pill,
-    backgroundColor: "rgba(14, 205, 209, 0.15)",
+    backgroundColor: colors.surfaceMuted,
     borderWidth: 1,
-    borderColor: "rgba(14, 205, 209, 0.35)",
+    borderColor: colors.border,
   },
-  kindPillHubText: { fontSize: 10, fontFamily: fontFamily.bold, color: "#0f766e" },
+  kindPillHubText: { fontSize: 10, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
   kindPillCurated: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
     borderRadius: radii.pill,
-    backgroundColor: colors.purpleMuted,
+    backgroundColor: colors.surfaceMuted,
     borderWidth: 1,
-    borderColor: colors.purpleBorder,
+    borderColor: colors.border,
   },
-  kindPillCuratedText: { fontSize: 10, fontFamily: fontFamily.bold, color: colors.purpleTextDark },
-  listTitle: { flex: 1, fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.2 },
+  kindPillCuratedText: { fontSize: 10, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
+  listTitle: { flex: 1, fontSize: 15, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.2 },
   listSub: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, marginTop: 6, lineHeight: 20 },
   jobCardFooter: {
-    marginTop: 12,
+    marginTop: 10,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
     gap: 4,
   },
-  jobCardCta: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
-  jobCardCtaExternal: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.teal },
+  jobCardCta: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
+  jobCardCtaExternal: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
   timelineRow: {
     flexDirection: "row",
     marginBottom: 10,

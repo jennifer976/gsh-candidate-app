@@ -18,6 +18,7 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { brandMark } from "@/lib/brand-assets";
 import { loginRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -42,7 +43,7 @@ export default function LoginScreen() {
       if (ut && ut !== "candidate") {
         Alert.alert(
           "Employer or partner account",
-          "This app is for candidates. Please use the Global Sponsor Hub website for employer or partner tools."
+          "This app is for candidates only. Employer and partner access uses a separate product — contact support if you need the right sign-in."
         );
         return;
       }
@@ -66,7 +67,7 @@ export default function LoginScreen() {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.brandRow}>
-              <Image source={require("../assets/brand-mark.webp")} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
+              <Image source={brandMark} style={styles.mark} resizeMode="contain" accessibilityIgnoresInvertColors />
               <View style={styles.brandText}>
                 <GshScreenIntro eyebrow="Global Sponsor Hub" title="Sign in" subtitle="Candidate access to saved jobs, applications, and messages." />
               </View>

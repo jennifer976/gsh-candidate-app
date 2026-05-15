@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshLinkRow, GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
@@ -12,28 +13,29 @@ import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 export default function GuidesHubScreen() {
   const router = useRouter();
   const countries = listCountryVisaGuideSummaries();
+  const [countryPickerOpen, setCountryPickerOpen] = useState(false);
 
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <GshScreenIntro
-            eyebrow="Learn in the app"
-            title="Resources & guides"
-            subtitle="Topic guides mirror globalsponsorhub.com. Country corridors match the website. Partners and jobs open inside the app."
+            eyebrow="Guides"
+            title="Resources hub"
+            subtitle="Visa wizard, topics, and country write-ups — all in the app."
             style={{ marginBottom: 8 }}
           />
 
           <GshSectionTitle title="Visa orientation" topSpacing="none" />
           <GshLinkRow
             title="Visa wizard"
-            subtitle="Interactive checklist — same logic as the website, runs entirely here."
+            subtitle="Checklist for sponsorship routes"
             icon="sparkles-outline"
             accent="teal"
             onPress={() => router.push("/visa-wizard")}
           />
 
-          <GshSectionTitle title="Jobs & hiring context" hint="Full-length guides — same copy as the website." />
+          <GshSectionTitle title="Topics" hint="Long reads" />
           {SEO_PILLAR_NAV_LINKS.map((g) => (
             <Pressable
               key={g.href}
@@ -44,33 +46,30 @@ export default function GuidesHubScreen() {
               <View style={styles.pillarAccent} />
               <View style={styles.pillarBody}>
                 <Text style={styles.pillarTitle}>{g.label}</Text>
-                <Text style={styles.pillarCta}>Open guide</Text>
+                <Text style={styles.pillarCta}>Open</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.brand} />
             </Pressable>
           ))}
 
-          <GshSectionTitle title="Country corridors" />
-          {countries.map((g) => (
-            <Pressable
-              key={g.slug}
-              style={[styles.countryRow, cardSurfaceStyle(true)]}
-              onPress={() => router.push(`/guides/country/${g.slug}`)}
-              accessibilityRole="button"
-            >
-              <View style={styles.countryIcon}>
-                <Ionicons name="earth-outline" size={22} color={colors.teal} />
-              </View>
-              <View style={styles.countryText}>
-                <Text style={styles.countryEyebrow}>{g.countryLabel}</Text>
-                <Text style={styles.countryTitle}>{g.title}</Text>
-                <Text style={styles.countryExcerpt} numberOfLines={3}>
-                  {g.excerpt}
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={colors.navy} />
-            </Pressable>
-          ))}
+          <GshSectionTitle title="Country guides" hint="Pick a destination" />
+          <Pressable
+            style={[styles.countryPicker, cardSurfaceStyle(true)]}
+            onPress={() => setCountryPickerOpen(true)}
+            accessibilityRole="button"
+            accessibilityLabel="Choose country guide"
+          >
+            <View style={styles.countryPickerIcon}>
+              <Ionicons name="earth-outline" size={22} color={colors.teal} />
+            </View>
+            <View style={styles.countryPickerText}>
+              <Text style={styles.countryPickerTitle}>Choose country</Text>
+              <Text style={styles.countryPickerSub} numberOfLines={2}>
+                {countries.map((c) => c.countryLabel).join(" · ")}
+              </Text>
+            </View>
+            <Ionicons name="chevron-down" size={22} color={colors.navy} />
+          </Pressable>
 
           <GshSectionTitle title="Move safely" />
           {RELOCATION_RESOURCES_NAV_LINKS.map((g) => (
@@ -83,32 +82,65 @@ export default function GuidesHubScreen() {
               <View style={[styles.pillarAccent, styles.pillarAccentPurple]} />
               <View style={styles.pillarBody}>
                 <Text style={styles.pillarTitle}>{g.label}</Text>
-                <Text style={styles.pillarCta}>Open checklist</Text>
+                <Text style={styles.pillarCta}>Open</Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.brand} />
             </Pressable>
           ))}
 
-          <GshSectionTitle title="More learning" />
+          <GshSectionTitle title="More" />
           <GshLinkRow
-            title="Tools & resources hub"
-            subtitle="Blog, RSS headlines, FAQs, legal — all in-app from one place."
+            title="Tools & resources"
+            subtitle="Blog, FAQs, legal"
             icon="library-outline"
             accent="purple"
             onPress={() => router.push("/tools-resources")}
           />
-
-          <Pressable style={styles.inlineBtn} onPress={() => navigateGuideLink(router, "/jobs")} accessibilityRole="button">
-            <Text style={styles.inlineBtnText}>Go to Discover tab</Text>
-          </Pressable>
-          <Pressable
-            style={styles.inlineBtn}
+          <GshLinkRow
+            title="Partner directory"
+            subtitle="Mobility & legal firms"
+            icon="people-outline"
+            accent="teal"
             onPress={() => navigateGuideLink(router, "/partners/directory")}
-            accessibilityRole="button"
-          >
-            <Text style={styles.inlineBtnText}>Partner directory</Text>
+          />
+          <Pressable style={styles.inlineBtn} onPress={() => navigateGuideLink(router, "/jobs")} accessibilityRole="button">
+            <Text style={styles.inlineBtnText}>Discover jobs</Text>
           </Pressable>
         </ScrollView>
+
+        <Modal visible={countryPickerOpen} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setCountryPickerOpen(false)}>
+          <SafeAreaView style={styles.modalSafe} edges={["top", "bottom"]}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Country guides</Text>
+              <Pressable onPress={() => setCountryPickerOpen(false)} hitSlop={12} accessibilityRole="button" accessibilityLabel="Close">
+                <Text style={styles.modalDone}>Done</Text>
+              </Pressable>
+            </View>
+            <FlatList
+              data={countries}
+              keyExtractor={(item) => item.slug}
+              contentContainerStyle={styles.modalList}
+              renderItem={({ item }) => (
+                <Pressable
+                  style={[styles.modalRow, cardSurfaceStyle(false)]}
+                  onPress={() => {
+                    setCountryPickerOpen(false);
+                    router.push(`/guides/country/${item.slug}`);
+                  }}
+                  accessibilityRole="button"
+                >
+                  <View style={{ flex: 1, minWidth: 0 }}>
+                    <Text style={styles.modalRowEyebrow}>{item.countryLabel}</Text>
+                    <Text style={styles.modalRowTitle} numberOfLines={2}>
+                      {item.title}
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+                </Pressable>
+              )}
+            />
+          </SafeAreaView>
+        </Modal>
       </SafeAreaView>
     </GshScreenBackground>
   );
@@ -127,10 +159,10 @@ const styles = StyleSheet.create({
   },
   pillarAccent: { width: 4, alignSelf: "stretch", backgroundColor: colors.teal },
   pillarAccentPurple: { backgroundColor: colors.purple },
-  pillarBody: { flex: 1, paddingVertical: 16, paddingHorizontal: 14 },
+  pillarBody: { flex: 1, paddingVertical: 14, paddingHorizontal: 14 },
   pillarTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.2 },
-  pillarCta: { marginTop: 6, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
-  countryRow: {
+  pillarCta: { marginTop: 4, fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.brand },
+  countryPicker: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
@@ -138,7 +170,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: radii.lg,
   },
-  countryIcon: {
+  countryPickerIcon: {
     width: 48,
     height: 48,
     borderRadius: radii.md,
@@ -148,16 +180,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(14, 205, 209, 0.35)",
   },
-  countryText: { flex: 1, minWidth: 0 },
-  countryEyebrow: {
-    fontSize: 12,
-    fontFamily: fontFamily.semiBold,
-    color: colors.teal,
-    letterSpacing: 0.2,
-    marginBottom: 4,
-  },
-  countryTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy },
-  countryExcerpt: { marginTop: 4, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 19 },
+  countryPickerText: { flex: 1, minWidth: 0 },
+  countryPickerTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy },
+  countryPickerSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 18 },
   inlineBtn: {
     alignSelf: "flex-start",
     marginTop: 4,
@@ -165,4 +190,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   inlineBtnText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.brand },
+  modalSafe: { flex: 1, backgroundColor: colors.background },
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
+  },
+  modalTitle: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy },
+  modalDone: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.brand },
+  modalList: { padding: 16, paddingBottom: 32, gap: 10 },
+  modalRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    borderRadius: radii.lg,
+  },
+  modalRowEyebrow: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.teal, marginBottom: 4 },
+  modalRowTitle: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.navy, letterSpacing: -0.15 },
 });

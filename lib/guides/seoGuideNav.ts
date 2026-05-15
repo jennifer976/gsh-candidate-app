@@ -29,7 +29,7 @@ export const RELOCATION_RESOURCES_NAV_LINKS: { href: string; label: string }[] =
 export const HOME_FEATURED_GUIDE_LINKS: { href: string; label: string }[] = [
   { href: "/visa-sponsorship-jobs", label: "Visa sponsorship jobs" },
   { href: "/relocating/verify-employer-visa-job-offers", label: "Verify job offers & sponsors" },
-  { href: "/international-jobs-visa-sponsorship", label: "Compare countries & corridors" },
+  { href: "/international-jobs-visa-sponsorship", label: "Compare countries" },
 ];
 
 /** @deprecated Prefer `SEO_PILLAR_NAV_LINKS` for new code. */
