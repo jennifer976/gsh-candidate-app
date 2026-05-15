@@ -13,9 +13,9 @@ module.exports = () => ({
     userInterfaceStyle: "light",
     newArchEnabled: true,
     splash: {
-      image: "./assets/brand-logo.png",
+      image: "./assets/brand-logo-white.png",
       resizeMode: "contain",
-      backgroundColor: "#0d194e",
+      backgroundColor: "#080f2e",
     },
     ios: {
       supportsTablet: true,

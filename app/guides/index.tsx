@@ -191,8 +191,7 @@ export default function GuidesHubScreen() {
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.countryScroll}>
                 {countries.slice(0, 8).map((c) => {
-                  const emoji = COUNTRY_EMOJIS[c.countryLabel] || "🌍";
-                  const guidesInCountry = countries.filter((x) => x.countryLabel === c.countryLabel).length;
+                  const emoji = c.flagEmoji || COUNTRY_EMOJIS[c.countryLabel] || "🌍";
                   return (
                     <Pressable
                       key={c.slug}
@@ -202,7 +201,7 @@ export default function GuidesHubScreen() {
                     >
                       <Text style={styles.countryFlag}>{emoji}</Text>
                       <Text style={styles.countryName} numberOfLines={1}>{c.countryLabel}</Text>
-                      <Text style={styles.countryCount}>{guidesInCountry} guides</Text>
+                      <Text style={styles.countryCount}>Open guide</Text>
                     </Pressable>
                   );
                 })}
@@ -331,7 +330,7 @@ export default function GuidesHubScreen() {
             keyExtractor={(c) => c.slug}
             contentContainerStyle={{ paddingBottom: 32 }}
             renderItem={({ item: c }) => {
-              const emoji = COUNTRY_EMOJIS[c.countryLabel] || "🌍";
+              const emoji = c.flagEmoji || COUNTRY_EMOJIS[c.countryLabel] || "🌍";
               return (
                 <Pressable
                   style={styles.countryRow}

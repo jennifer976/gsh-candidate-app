@@ -12,13 +12,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import { Image, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { InAppWebHost } from "@/components/InAppWebHost";
 import { PushBootstrap } from "@/components/PushBootstrap";
 import { QueryFocusSync } from "@/components/QueryFocusSync";
 import { SplashIntroVideo } from "@/components/SplashIntroVideo";
-import { brandLogo } from "@/lib/brand-assets";
 import { useAuthStore } from "@/lib/auth-store";
 import { colors, navHeader } from "@/lib/theme";
 
@@ -59,17 +58,9 @@ export default function RootLayout() {
   if (!hydrated || !fontsLoaded) {
     return (
       <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.navy,
-          alignItems: "center",
-          justifyContent: "center",
-          paddingHorizontal: 32,
-        }}
+        style={{ flex: 1, backgroundColor: colors.navyDeep }}
         accessibilityLabel="Loading Global Sponsor Hub"
-      >
-        <Image source={brandLogo} style={{ width: 220, height: 72 }} resizeMode="contain" accessibilityIgnoresInvertColors />
-      </View>
+      />
     );
   }
 

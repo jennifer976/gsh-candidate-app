@@ -24,7 +24,7 @@ import {
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobCardSkeleton } from "@/components/SkeletonLoader";
-import { brandMark } from "@/lib/brand-assets";
+import { brandLogoWhite } from "@/lib/brand-assets";
 import {
   fetchCandidateDashboard,
   fetchOwnProfile,
@@ -142,6 +142,7 @@ export default function JobsScreen() {
   const [pullRefreshing, setPullRefreshing] = useState(false);
   const [topicsModalOpen, setTopicsModalOpen] = useState(false);
   const [listingInfoOpen, setListingInfoOpen] = useState(false);
+  const [locationFilter, setLocationFilter] = useState("");
 
   const qc = useQueryClient();
 
@@ -176,14 +177,24 @@ export default function JobsScreen() {
   });
 
   const hubJobsQuery = useQuery({
-    queryKey: ["public-jobs", debouncedQ],
-    queryFn: () => fetchPublicJobs({ q: debouncedQ || undefined, page: 1, perPage: 25 }),
+    queryKey: ["public-jobs", debouncedQ, locationFilter],
+    queryFn: () =>
+      fetchPublicJobs({
+        q: debouncedQ || undefined,
+        location: locationFilter.trim() || undefined,
+        page: 1,
+        perPage: 25,
+      }),
     staleTime: 60_000,
   });
 
   const curatedJobsQuery = useQuery({
-    queryKey: ["external-job-listings", "home-tab", debouncedQ],
-    queryFn: () => fetchPublicExternalJobListings({ q: debouncedQ || undefined, page: 1, perPage: 35 }),
+    queryKey: ["external-job-listings", "home-tab", debouncedQ, locationFilter],
+    queryFn: () => {
+      const loc = locationFilter.trim();
+      const combinedQ = [debouncedQ, loc].filter(Boolean).join(" ").trim();
+      return fetchPublicExternalJobListings({ q: combinedQ || undefined, page: 1, perPage: 35 });
+    },
     staleTime: 60_000,
   });
 
@@ -271,10 +282,13 @@ export default function JobsScreen() {
         style={[styles.hero, { paddingTop: Math.max(insets.top, 16) }]}
       >
         <View style={styles.heroTopRow}>
-          <View style={styles.heroBrand}>
-            <Image source={brandMark} style={styles.heroMark} resizeMode="contain" accessibilityIgnoresInvertColors />
-            <Text style={styles.heroWordmark}>Global Sponsor Hub</Text>
-          </View>
+          <Image
+            source={brandLogoWhite}
+            style={styles.heroLogo}
+            resizeMode="contain"
+            accessibilityIgnoresInvertColors
+            accessibilityLabel="Global Sponsor Hub"
+          />
           <View style={styles.heroActions}>
             <Pressable
               onPress={() => router.push("/notification-feed")}
@@ -521,7 +535,9 @@ export default function JobsScreen() {
         visible={topicsModalOpen}
         onClose={() => setTopicsModalOpen(false)}
         query={q}
+        location={locationFilter}
         onPickExplore={setQ}
+        onPickCountry={setLocationFilter}
         onPickMobility={(term) => {
           setFeedTab("employer");
           setQ(term);
@@ -548,14 +564,7 @@ const styles = StyleSheet.create({
     marginBottom: 22,
     paddingTop: 4,
   },
-  heroBrand: { flexDirection: "row", alignItems: "center", gap: 10 },
-  heroMark: { width: 32, height: 32, borderRadius: 9 },
-  heroWordmark: {
-    fontSize: 16,
-    fontFamily: fontFamily.bold,
-    color: "rgba(255,255,255,0.95)",
-    letterSpacing: -0.3,
-  },
+  heroLogo: { width: 200, height: 44, maxWidth: "72%" },
   heroActions: { flexDirection: "row", gap: 4 },
   heroIconBtn: {
     width: 38,
@@ -650,23 +659,23 @@ const styles = StyleSheet.create({
     color: "rgba(255,255,255,0.8)",
   },
 
-  // Feed controls
+  // Feed controls — white band below navy hero
   feedControls: {
-    backgroundColor: colors.bgCard,
+    backgroundColor: colors.white,
     paddingTop: 14,
     paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.borderOnDark,
+    borderBottomColor: colors.border,
     gap: 12,
   },
   segmentHost: {
     flexDirection: "row",
     marginHorizontal: 16,
-    backgroundColor: "rgba(255,255,255,0.06)",
+    backgroundColor: colors.surfaceMuted,
     borderRadius: radii.pill,
     padding: 3,
     borderWidth: 1,
-    borderColor: colors.borderOnDark,
+    borderColor: colors.border,
   },
   segmentCell: {
     flex: 1,
@@ -676,18 +685,28 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
   },
   segmentCellOn: {
-    backgroundColor: "rgba(14,205,209,0.18)",
+    backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: "rgba(14, 205, 209, 0.45)",
+    borderColor: colors.teal,
+    shadowColor: colors.teal,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 2,
   },
   segmentCellOnCurated: {
-    backgroundColor: "rgba(97,10,144,0.2)",
+    backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.purpleBorder,
+    shadowColor: colors.purple,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  segmentText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: "rgba(255,255,255,0.45)" },
-  segmentTextOn: { color: colors.teal },
-  segmentTextOnCurated: { color: "#c084fc" },
+  segmentText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textMuted },
+  segmentTextOn: { color: colors.navy },
+  segmentTextOnCurated: { color: colors.brand },
 
   quickNavScroll: { paddingHorizontal: 16, gap: 8 },
   quickNavPill: {
@@ -697,11 +716,11 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     paddingHorizontal: 12,
     borderRadius: radii.pill,
-    backgroundColor: "rgba(255,255,255,0.07)",
+    backgroundColor: colors.surfaceMuted,
     borderWidth: 1,
-    borderColor: colors.borderOnDark,
+    borderColor: colors.border,
   },
-  quickNavPillText: { fontSize: 12, fontFamily: fontFamily.semiBold, color: "rgba(255,255,255,0.75)" },
+  quickNavPillText: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
 
   // Recent
   recentOuter: { paddingTop: 12, paddingHorizontal: 16 },

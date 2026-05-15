@@ -43,9 +43,9 @@ export default function TabsLayout() {
 
   if (!token) return <Redirect href="/login" />;
 
-  const bottomInset = Math.max(insets.bottom, Platform.OS === "android" ? 8 : 4);
-  const tabBarPaddingTop = 10;
-  const tabContentApprox = 44;
+  const bottomInset = Math.max(insets.bottom, Platform.OS === "android" ? 20 : 8);
+  const tabBarPaddingTop = 8;
+  const tabIconRowHeight = 48;
 
   const darkHeader = {
     headerStyle: { backgroundColor: colors.navyDeep },
@@ -70,7 +70,7 @@ export default function TabsLayout() {
           borderTopWidth: 1,
           paddingTop: tabBarPaddingTop,
           paddingBottom: bottomInset,
-          height: tabContentApprox + tabBarPaddingTop + bottomInset,
+          height: tabIconRowHeight + tabBarPaddingTop + bottomInset,
         },
         tabBarLabelStyle: {
           fontFamily: fontFamily.medium,

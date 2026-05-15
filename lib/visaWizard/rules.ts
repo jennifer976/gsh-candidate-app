@@ -56,8 +56,12 @@ export const SUPPORTED_COUNTRIES = [
   "Canada",
   "Australia",
   "Germany",
+  "Ireland",
   "Netherlands",
+  "Singapore",
+  "New Zealand",
   "United Arab Emirates",
+  "United States",
 ] as const;
 
 /** Salary thresholds in `VISA_ROUTES` are expressed in the destination labour-market currency below. */
@@ -66,8 +70,12 @@ export const DESTINATION_SALARY_CURRENCY: Record<string, { code: string }> = {
   Canada: { code: "CAD" },
   Australia: { code: "AUD" },
   Germany: { code: "EUR" },
+  Ireland: { code: "EUR" },
   Netherlands: { code: "EUR" },
+  Singapore: { code: "SGD" },
+  "New Zealand": { code: "NZD" },
   "United Arab Emirates": { code: "AED" },
+  "United States": { code: "USD" },
 };
 
 export function getSalaryCurrencyCode(destinationCountry: string): string {
@@ -198,6 +206,43 @@ export const VISA_ROUTES: VisaRoute[] = [
     minSalary: 38000,
     officialLink: "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
     notes: "Employer usually must be a recognized sponsor.",
+  },
+  {
+    id: "ie-critical-skills",
+    country: "Ireland",
+    name: "Critical Skills Employment Permit",
+    requiresSponsor: true,
+    minSalary: 38000,
+    officialLink: "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+    notes: "No labour market test required. Employer must apply on your behalf.",
+  },
+  {
+    id: "sg-employment-pass",
+    country: "Singapore",
+    name: "Employment Pass",
+    requiresSponsor: true,
+    minSalary: 5600,
+    minExperienceYears: 1,
+    officialLink: "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+    notes: "COMPASS assessment applies. Salary threshold scales with age.",
+  },
+  {
+    id: "nz-aewv",
+    country: "New Zealand",
+    name: "Accredited Employer Work Visa",
+    requiresSponsor: true,
+    minExperienceYears: 1,
+    officialLink: "https://www.immigration.govt.nz/new-zealand-visas/visas/visa/accredited-employer-work-visa",
+    notes: "Employer must be accredited with Immigration New Zealand.",
+  },
+  {
+    id: "us-h1b",
+    country: "United States",
+    name: "H-1B Specialty Occupation",
+    requiresSponsor: true,
+    minEducationLevel: "bachelor",
+    officialLink: "https://www.uscis.gov/working-in-the-united-states/h-1b-specialty-occupations",
+    notes: "Annual lottery. Cap is 65,000 plus 20,000 advanced degree exemption.",
   },
   {
     id: "uae-work-permit",

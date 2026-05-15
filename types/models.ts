@@ -30,6 +30,7 @@ export interface EmployerProfile {
   _id?: string;
   companyName?: string;
   businessName?: string;
+  contactCompany?: string;
   companyLogo?: string;
   companyWebsite?: string;
 }

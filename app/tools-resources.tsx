@@ -29,6 +29,13 @@ export default function ToolsAndResourcesScreen() {
       accent: "teal",
     },
     {
+      title: "Partner directory",
+      subtitle: "Relocation, legal, and mobility specialists",
+      path: "partners",
+      icon: "people-outline",
+      accent: "purple",
+    },
+    {
       title: "FAQs",
       subtitle: "Candidate help topics",
       path: "faq",

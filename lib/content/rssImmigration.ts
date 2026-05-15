@@ -210,23 +210,31 @@ export async function fetchImmigrationRssHeadlines(): Promise<RssHeadline[]> {
   const urls = DEFAULT_RSS_FEEDS;
   const all: RssHeadline[] = [];
 
-  for (const url of urls) {
-    try {
-      const { title: parsedFeedTitle, items } = await fetchAndParseFeed(url);
-      const source =
-        parsedFeedTitle?.replace(/\s*(\(RSS\)|RSS|Feed).*$/i, "").trim() || hostnameLabel(url);
-      for (const item of items.slice(0, 10)) {
-        const link = item.link?.trim();
-        const title = item.title?.trim();
-        if (!link || !title) continue;
-        if (!shouldIncludeHeadline(title)) continue;
-        const isoDate = item.isoDate;
-        if (!isWithinFreshnessWindow(isoDate)) continue;
-        all.push({ title, link, isoDate, source });
+  const batches = await Promise.all(
+    urls.map(async (url) => {
+      try {
+        const { title: parsedFeedTitle, items } = await fetchAndParseFeed(url);
+        const source =
+          parsedFeedTitle?.replace(/\s*(\(RSS\)|RSS|Feed).*$/i, "").trim() || hostnameLabel(url);
+        const headlines: RssHeadline[] = [];
+        for (const item of items.slice(0, 10)) {
+          const link = item.link?.trim();
+          const title = item.title?.trim();
+          if (!link || !title) continue;
+          if (!shouldIncludeHeadline(title)) continue;
+          const isoDate = item.isoDate;
+          if (!isWithinFreshnessWindow(isoDate)) continue;
+          headlines.push({ title, link, isoDate, source });
+        }
+        return headlines;
+      } catch {
+        return [] as RssHeadline[];
       }
-    } catch {
-      /* skip bad feeds */
-    }
+    })
+  );
+
+  for (const batch of batches) {
+    all.push(...batch);
   }
 
   all.sort((a, b) => {

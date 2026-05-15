@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { JOB_DESTINATION_FILTERS } from "@/lib/jobDiscoverCountries";
 import { colors, discoverFeedCardStyle, discoverSearchFieldStyle, fontFamily, radii } from "@/lib/theme";
 import type { DashboardJobListing } from "@/types/models";
 
@@ -63,14 +64,18 @@ export function DiscoverTopicsFilterModal({
   visible,
   onClose,
   query,
+  location,
   onPickExplore,
   onPickMobility,
+  onPickCountry,
 }: {
   visible: boolean;
   onClose: () => void;
   query: string;
+  location: string;
   onPickExplore: (next: string) => void;
   onPickMobility: (next: string) => void;
+  onPickCountry: (next: string) => void;
 }) {
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
@@ -104,6 +109,43 @@ export function DiscoverTopicsFilterModal({
                 >
                   <Text style={[styles.exploreChipText, active && styles.exploreChipTextActive]} numberOfLines={1}>
                     {chip.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+
+          <Text style={[styles.modalSectionLabel, { marginTop: 22 }]}>Destination country</Text>
+          <Text style={styles.modalSectionHint}>
+            Same countries as the website jobs board — filters employer listings by location.
+          </Text>
+          <View style={styles.exploreWrap}>
+            <Pressable
+              onPress={() => {
+                onPickCountry("");
+                onClose();
+              }}
+              style={[styles.exploreChip, !location.trim() && styles.exploreChipActive]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: !location.trim() }}
+            >
+              <Text style={[styles.exploreChipText, !location.trim() && styles.exploreChipTextActive]}>All countries</Text>
+            </Pressable>
+            {JOB_DESTINATION_FILTERS.map((c) => {
+              const active = location.trim().toLowerCase() === c.value.toLowerCase();
+              return (
+                <Pressable
+                  key={c.value}
+                  onPress={() => {
+                    onPickCountry(c.value);
+                    onClose();
+                  }}
+                  style={[styles.exploreChip, active && styles.exploreChipActive]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}
+                >
+                  <Text style={[styles.exploreChipText, active && styles.exploreChipTextActive]} numberOfLines={1}>
+                    {c.label}
                   </Text>
                 </Pressable>
               );

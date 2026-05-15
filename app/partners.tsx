@@ -12,9 +12,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPartners } from "@/lib/api-client";
+import { resolveUploadAssetUrl } from "@/lib/media-url";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { PartnerListItem } from "@/types/models";
@@ -96,10 +98,20 @@ export default function PartnersScreen() {
             ListHeaderComponent={header}
             renderItem={({ item }) => (
               <View style={[cardSurfaceStyle(false), styles.card]}>
-                <Text style={styles.title} numberOfLines={2}>
-                  {item.businessName}
-                </Text>
-                <Text style={styles.cat}>{item.category}</Text>
+                <View style={styles.cardTop}>
+                  <CompanyLogo
+                    logoUrl={resolveUploadAssetUrl(item.companyLogo)}
+                    companyName={item.businessName}
+                    size={48}
+                    radius={12}
+                  />
+                  <View style={styles.cardTopText}>
+                    <Text style={styles.title} numberOfLines={2}>
+                      {item.businessName}
+                    </Text>
+                    <Text style={styles.cat}>{item.category}</Text>
+                  </View>
+                </View>
                 <Text style={styles.desc} numberOfLines={4}>
                   {item.companyDescription}
                 </Text>
@@ -187,8 +199,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     borderRadius: radii.lg,
   },
+  cardTop: { flexDirection: "row", alignItems: "flex-start", gap: 12, marginBottom: 4 },
+  cardTopText: { flex: 1, minWidth: 0 },
   title: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy },
-  cat: { marginTop: 6, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.accent },
+  cat: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.accent },
   desc: { marginTop: 8, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 20 },
   link: { marginTop: 12, fontSize: 15, fontFamily: fontFamily.bold, color: colors.brand },
   emptyCard: {

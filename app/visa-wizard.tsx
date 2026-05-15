@@ -24,7 +24,15 @@ import {
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
-const NATIONALITY_OPTIONS = ["United Kingdom", "India", "Nigeria", "Pakistan", "United States", "Philippines"];
+const NATIONALITY_OPTIONS = [
+  "India", "Nigeria", "Pakistan", "Philippines", "Bangladesh", "Nepal",
+  "China", "Brazil", "South Africa", "Mexico", "Kenya", "Egypt",
+  "United States", "United Kingdom", "Canada", "Australia", "Germany",
+  "France", "Ireland", "Netherlands", "Singapore", "New Zealand",
+  "United Arab Emirates", "Saudi Arabia", "Ghana", "Zimbabwe",
+  "Jamaica", "Sri Lanka", "Malaysia", "Indonesia", "Japan", "South Korea",
+  "Other",
+];
 
 const VW = {
   sectionProfile: "Your profile",

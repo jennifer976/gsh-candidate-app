@@ -3,10 +3,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchSavedJobs, unsaveJob } from "@/lib/api-client";
 import { hapticLight, hapticSuccess } from "@/lib/haptics";
+import { getJobEmployerLabel, getJobLogoUrl } from "@/lib/job-display";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { Job, SavedJobPopulated } from "@/types/models";
 
@@ -66,17 +68,24 @@ export default function SavedJobsScreen() {
             renderItem={({ item }) => {
               const job = item.jobId as Job | undefined;
               if (!job?._id) return null;
+              const employer = getJobEmployerLabel(job);
+              const logoUrl = getJobLogoUrl(job);
               return (
                 <View style={[styles.card, cardSurfaceStyle(true)]}>
                   <View style={styles.accent} />
                   <View style={styles.cardBody}>
                     <Pressable onPress={() => router.push(`/job/${job._id}`)} style={styles.cardMain}>
-                      <Text style={styles.cardTitle} numberOfLines={2}>
-                        {job.title}
-                      </Text>
-                      <Text style={styles.cardCompany} numberOfLines={1}>
-                        {job.companyName || "Employer"}
-                      </Text>
+                      <View style={styles.cardTitleRow}>
+                        <CompanyLogo logoUrl={logoUrl} companyName={employer} size={44} radius={12} />
+                        <View style={styles.cardTitleCol}>
+                          <Text style={styles.cardTitle} numberOfLines={2}>
+                            {job.title}
+                          </Text>
+                          <Text style={styles.cardCompany} numberOfLines={1}>
+                            {employer}
+                          </Text>
+                        </View>
+                      </View>
                       <View style={styles.cardHint}>
                         <Text style={styles.viewRole}>Open role</Text>
                         <Ionicons name="chevron-forward" size={18} color={colors.brand} />
@@ -119,8 +128,10 @@ const styles = StyleSheet.create({
   accent: { width: 5, backgroundColor: colors.teal },
   cardBody: { flex: 1 },
   cardMain: { padding: 16 },
+  cardTitleRow: { flexDirection: "row", alignItems: "flex-start", gap: 12 },
+  cardTitleCol: { flex: 1, minWidth: 0 },
   cardTitle: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.2 },
-  cardCompany: { marginTop: 8, fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textMarketing },
+  cardCompany: { marginTop: 4, fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textMarketing },
   cardHint: { flexDirection: "row", alignItems: "center", marginTop: 12, gap: 4 },
   viewRole: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.brand },
   removeBtn: {

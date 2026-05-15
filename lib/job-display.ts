@@ -1,3 +1,4 @@
+import { resolveUploadAssetUrl } from "@/lib/media-url";
 import type { EmployerProfile, ExternalJobListingPublic, Job } from "@/types/models";
 
 /**
@@ -14,6 +15,8 @@ export function getJobEmployerLabel(job: Job): string {
     if (fromCompany) return fromCompany;
     const fromBiz = typeof pb.businessName === "string" ? pb.businessName.trim() : "";
     if (fromBiz) return fromBiz;
+    const fromContact = typeof pb.contactCompany === "string" ? pb.contactCompany.trim() : "";
+    if (fromContact) return fromContact;
   }
 
   return "Employer";
@@ -24,16 +27,16 @@ export function getJobEmployerLabel(job: Job): string {
  * The API may return it at the job level (companyLogo) or inside postedBy.
  */
 export function getJobLogoUrl(job: Job): string {
+  let raw = "";
   if (typeof job.companyLogo === "string" && job.companyLogo.trim()) {
-    return job.companyLogo.trim();
-  }
-  const pb = job.postedBy as EmployerProfile | null | undefined;
-  if (pb && typeof pb === "object") {
-    if (typeof pb.companyLogo === "string" && pb.companyLogo.trim()) {
-      return pb.companyLogo.trim();
+    raw = job.companyLogo.trim();
+  } else {
+    const pb = job.postedBy as EmployerProfile | null | undefined;
+    if (pb && typeof pb === "object" && typeof pb.companyLogo === "string" && pb.companyLogo.trim()) {
+      raw = pb.companyLogo.trim();
     }
   }
-  return "";
+  return resolveUploadAssetUrl(raw);
 }
 
 /** Mobility + distinct benefit labels for hub job cards (capped for layout). */
