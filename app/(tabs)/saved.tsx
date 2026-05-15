@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchSavedJobs, unsaveJob } from "@/lib/api-client";
+import { hapticLight, hapticSuccess } from "@/lib/haptics";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { Job, SavedJobPopulated } from "@/types/models";
 
@@ -20,7 +21,7 @@ export default function SavedJobsScreen() {
 
   const unsave = useMutation({
     mutationFn: (row: SavedJobPopulated) => unsaveJob(row._id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["saved-jobs"] }),
+    onSuccess: () => { void hapticSuccess(); void qc.invalidateQueries({ queryKey: ["saved-jobs"] }); },
     onError: (e: unknown) =>
       Alert.alert(
         "Could not remove",
@@ -33,9 +34,9 @@ export default function SavedJobsScreen() {
   const listHeader = (
     <GshScreenIntro
       eyebrow="Shortlist"
-      title="Saved jobs"
-      subtitle="Roles you bookmarked on the Hub — open a card to view details or remove it from your list."
-      style={{ paddingHorizontal: 16, marginBottom: 4 }}
+      title="Saved roles"
+      subtitle="Roles you bookmarked — tap to view full details or remove ones you're no longer interested in."
+      style={{ paddingHorizontal: 16, paddingTop: 20, marginBottom: 4 }}
     />
   );
 
@@ -100,8 +101,8 @@ export default function SavedJobsScreen() {
                 <View style={styles.emptyIcon}>
                   <Ionicons name="bookmark-outline" size={40} color={colors.brand} />
                 </View>
-                <Text style={styles.empty}>No saved jobs yet.</Text>
-                <Text style={styles.emptySub}>Browse Discover and tap the bookmark on roles you want to revisit.</Text>
+                <Text style={styles.empty}>Nothing saved yet</Text>
+                <Text style={styles.emptySub}>When you find a role worth coming back to, tap the bookmark. It'll be here waiting.</Text>
               </View>
             }
           />

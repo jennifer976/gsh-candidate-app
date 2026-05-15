@@ -1,59 +1,80 @@
 /**
- * Brand tokens aligned with global_sponsor_hub-fe/src/app/globals.css
- * (--gsh-shadow-card, gsh-marketing-card-surface, Inter / slate body copy).
+ * GSH Premium Theme
+ * Dark-first design system — navy shells, glowing cards, teal/purple accents.
+ * Matches the App Store showcase imagery and Jobie-style premium job app aesthetic.
  */
 import { Platform, TextStyle, ViewStyle } from "react-native";
 
 export const colors = {
+  // Core brand
   navy: "#0d194e",
-  navyDeep: "#0a1340",
+  navyDeep: "#080f2e",
+  navyMid: "#111d5e",
   teal: "#0ecdd1",
+  tealDim: "rgba(14,205,209,0.18)",
   purple: "#610a90",
-  purpleMuted: "#f5f3ff",
-  purpleBorder: "#e9d5ff",
-  purpleText: "#6b21a8",
-  purpleTextDark: "#581c87",
+  purpleBright: "#7c3aed",
 
-  treeapp: "#75be00",
+  // Surface system — dark shells, light cards
+  /** Page/screen background — deep navy */
+  bgDark: "#080f2e",
+  /** Card surface on dark bg */
+  bgCard: "#111d5e",
+  /** Elevated card — slightly lighter */
+  bgCardElevated: "#162268",
+  /** Frosted overlay */
+  bgOverlay: "rgba(8,15,46,0.85)",
 
+  // Light surface (forms, modals, input fields)
   background: "#ffffff",
-  foreground: "#171717",
   surfaceMuted: "#f8fafc",
+  surfaceLight: "#f1f5f9",
 
-  border: "#e2e8f0",
-  borderStrong: "#cbd5e1",
+  // Text — dark backgrounds
+  textOnDark: "#ffffff",
+  textOnDarkMuted: "rgba(255,255,255,0.6)",
+  textOnDarkDim: "rgba(255,255,255,0.38)",
 
+  // Text — light backgrounds
   textPrimary: "#0f172a",
   textSecondary: "#475569",
-  /** Web `.text-marketing-body` slate-700 */
   textMarketing: "#334155",
   textMuted: "#64748b",
   placeholder: "#94a3b8",
 
+  // Borders
+  border: "#e2e8f0",
+  borderStrong: "#cbd5e1",
+  borderOnDark: "rgba(255,255,255,0.12)",
+  borderOnDarkStrong: "rgba(255,255,255,0.22)",
+
+  // Semantic
   brand: "#610a90",
   accent: "#0ecdd1",
-
   error: "#b91c1c",
+  white: "#ffffff",
+
+  // Chip palettes (unchanged — used in job chips)
+  purpleMuted: "#f5f3ff",
+  purpleBorder: "#e9d5ff",
+  purpleText: "#6b21a8",
+  purpleTextDark: "#581c87",
+  secondaryTintBg: "#ede9fe",
+  secondaryTintText: "#5b21b6",
+  treeapp: "#75be00",
+  chipOnBg: "#610a90",
+  chipOnBorder: "#610a90",
+  unreadBorder: "rgba(14, 205, 209, 0.45)",
+  unreadBg: "rgba(14, 205, 209, 0.07)",
   warningBg: "#fffbeb",
   warningBorder: "#fde68a",
   warningText: "#92400e",
 
-  chipOnBg: "#610a90",
-  chipOnBorder: "#610a90",
-
-  unreadBorder: "rgba(14, 205, 209, 0.45)",
-  unreadBg: "rgba(14, 205, 209, 0.07)",
-
-  secondaryTintBg: "#ede9fe",
-  secondaryTintText: "#5b21b6",
-
-  white: "#ffffff",
-
-  /** Job-style feed shell (Discover tab) — cool gray behind white cards */
-  discoverCanvas: "#eef2f7",
+  /** Canvas behind floating cards on light screens */
+  discoverCanvas: "#080f2e",
+  foreground: "#171717",
 } as const;
 
-/** Loaded via `useFonts` in root layout — matches web Inter. */
 export const fontFamily = {
   regular: "Inter_400Regular",
   medium: "Inter_500Medium",
@@ -67,46 +88,43 @@ export const radii = {
   md: 14,
   lg: 16,
   xl: 20,
-  /** Job-board style cards (Discover feed) */
+  xxl: 24,
   feed: 18,
   pill: 999,
 } as const;
 
-/** Marketing shell gradient — mirrors `.header-hero-gradient` / `.gsh-marketing-shell-bg`. */
-export const shellGradient = {
-  colors: ["#ffffff", colors.surfaceMuted] as const,
-  start: { x: 0.5, y: 0 },
-  end: { x: 0.5, y: 1 },
-};
+/** Glowing card on dark background — the signature GSH premium look */
+export function darkCardStyle(glow?: "teal" | "purple" | "none"): ViewStyle {
+  const glowColor =
+    glow === "teal"
+      ? "rgba(14,205,209,0.25)"
+      : glow === "purple"
+      ? "rgba(97,10,144,0.3)"
+      : "rgba(255,255,255,0.06)";
 
-/**
- * Card elevation approximating `--gsh-shadow-card` + optional purple lift
- * (`.gsh-marketing-card-surface--interactive`).
- */
-/** Curated / agency external listings — distinct purple shell vs employer Hub cards. */
-export function cardCuratedSurfaceStyle(interactive?: boolean): ViewStyle {
   const base: ViewStyle = {
-    backgroundColor: colors.purpleMuted,
-    borderRadius: radii.md,
+    backgroundColor: colors.bgCard,
+    borderRadius: radii.xl,
     borderWidth: 1,
-    borderColor: colors.purpleBorder,
+    borderColor: colors.borderOnDark,
   };
   if (Platform.OS === "android") {
-    return { ...base, elevation: interactive ? 4 : 2 };
+    return { ...base, elevation: 8 };
   }
   return {
     ...base,
-    shadowColor: colors.purple,
-    shadowOffset: { width: 0, height: interactive ? 4 : 2 },
-    shadowOpacity: interactive ? 0.12 : 0.06,
-    shadowRadius: interactive ? 14 : 10,
+    shadowColor: glowColor,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 24,
   };
 }
 
+/** White card on light background */
 export function cardSurfaceStyle(interactive?: boolean): ViewStyle {
   const base: ViewStyle = {
     backgroundColor: colors.background,
-    borderRadius: radii.md,
+    borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: "rgba(226, 232, 240, 0.92)",
   };
@@ -122,10 +140,10 @@ export function cardSurfaceStyle(interactive?: boolean): ViewStyle {
   };
 }
 
-/** Floating white cards on the Discover canvas (Figma-style elevation, GSH surfaces). */
-export function discoverFeedCardStyle(): ViewStyle {
+/** Feed card — white on the dark canvas */
+export function feedCardStyle(): ViewStyle {
   const base: ViewStyle = {
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
     borderRadius: radii.feed,
     borderWidth: 0,
   };
@@ -134,34 +152,32 @@ export function discoverFeedCardStyle(): ViewStyle {
   }
   return {
     ...base,
-    shadowColor: "#64748b",
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 14,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
   };
 }
 
-/** In-card search field — pill, light border, soft lift */
+// Legacy aliases — keep existing callers working
+export const discoverFeedCardStyle = feedCardStyle;
 export function discoverSearchFieldStyle(): ViewStyle {
-  const base: ViewStyle = {
+  return {
     backgroundColor: colors.white,
     borderRadius: radii.md,
     borderWidth: 1,
     borderColor: "rgba(226, 232, 240, 0.95)",
   };
-  if (Platform.OS === "android") {
-    return { ...base, elevation: 1 };
-  }
+}
+export function cardCuratedSurfaceStyle(interactive?: boolean): ViewStyle {
   return {
-    ...base,
-    shadowColor: "#0f172a",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
+    backgroundColor: colors.purpleMuted,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.purpleBorder,
   };
 }
 
-/** Shared body copy — pair with `fontFamily.*` on Text. */
 export const typography = {
   marketingBody: {
     fontFamily: fontFamily.regular,
@@ -188,12 +204,23 @@ export const typography = {
   } satisfies TextStyle,
 } as const;
 
-export const gradient = {
-  authCTA: ["#0ECDD1", "#610A90"] as const,
+/** Hero gradient — deep navy to navyMid */
+export const heroGradient = {
+  colors: [colors.navyDeep, colors.navyMid] as const,
+  start: { x: 0.2, y: 0 },
+  end: { x: 0.8, y: 1 },
 };
 
+/** Teal→Purple CTA gradient */
+export const gradient = {
+  authCTA: ["#0ECDD1", "#610A90"] as const,
+  heroBg: [colors.navyDeep, "#1a0a3e"] as const,
+  cardAccent: ["rgba(14,205,209,0.15)", "rgba(97,10,144,0.15)"] as const,
+};
+
+/** Dark nav header for inner screens */
 export const navHeader = {
-  headerStyle: { backgroundColor: colors.navy },
+  headerStyle: { backgroundColor: colors.navyDeep },
   headerTintColor: colors.white,
   headerTitleStyle: {
     color: colors.white,

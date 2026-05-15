@@ -1,15 +1,40 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import { Redirect, Tabs } from "expo-router";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuthStore } from "@/lib/auth-store";
-import { colors, fontFamily, navHeader } from "@/lib/theme";
+import { colors, fontFamily } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
-function TabGlyph({ focused, color, filled, outline }: { focused: boolean; color: string; filled: IonName; outline: IonName }) {
-  return <Ionicons name={focused ? filled : outline} size={24} color={color} />;
+function TabGlyph({
+  focused,
+  color,
+  filled,
+  outline,
+}: {
+  focused: boolean;
+  color: string;
+  filled: IonName;
+  outline: IonName;
+}) {
+  return (
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
+      {focused && (
+        <View
+          style={{
+            position: "absolute",
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: "rgba(14,205,209,0.12)",
+          }}
+        />
+      )}
+      <Ionicons name={focused ? filled : outline} size={23} color={color} />
+    </View>
+  );
 }
 
 export default function TabsLayout() {
@@ -18,19 +43,30 @@ export default function TabsLayout() {
 
   if (!token) return <Redirect href="/login" />;
 
-  const bottomInset = Math.max(insets.bottom, Platform.OS === "android" ? 8 : 6);
-  const tabBarPaddingTop = 6;
-  const tabContentApprox = 52;
+  const bottomInset = Math.max(insets.bottom, Platform.OS === "android" ? 8 : 4);
+  const tabBarPaddingTop = 10;
+  const tabContentApprox = 44;
+
+  const darkHeader = {
+    headerStyle: { backgroundColor: colors.navyDeep },
+    headerTintColor: colors.white,
+    headerTitleStyle: {
+      fontFamily: fontFamily.bold,
+      fontSize: 17,
+      color: colors.white,
+    },
+    headerShadowVisible: false,
+  };
 
   return (
     <Tabs
       screenOptions={{
-        ...navHeader,
-        tabBarActiveTintColor: colors.brand,
-        tabBarInactiveTintColor: colors.textMuted,
+        headerShown: false,
+        tabBarActiveTintColor: colors.teal,
+        tabBarInactiveTintColor: "rgba(255,255,255,0.4)",
         tabBarStyle: {
-          backgroundColor: colors.background,
-          borderTopColor: colors.border,
+          backgroundColor: colors.navyDeep,
+          borderTopColor: "rgba(255,255,255,0.08)",
           borderTopWidth: 1,
           paddingTop: tabBarPaddingTop,
           paddingBottom: bottomInset,
@@ -48,10 +84,9 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Discover",
-          headerShown: false,
           tabBarLabel: "Discover",
           tabBarIcon: ({ color, focused }) => (
-            <TabGlyph focused={focused} color={color} filled="grid" outline="grid-outline" />
+            <TabGlyph focused={focused} color={color} filled="compass" outline="compass-outline" />
           ),
         }}
       />
@@ -59,6 +94,8 @@ export default function TabsLayout() {
         name="saved"
         options={{
           title: "Saved",
+          headerShown: true,
+          ...darkHeader,
           tabBarLabel: "Saved",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="bookmark" outline="bookmark-outline" />
@@ -69,9 +106,11 @@ export default function TabsLayout() {
         name="applications"
         options={{
           title: "Applications",
+          headerShown: true,
+          ...darkHeader,
           tabBarLabel: "Applied",
           tabBarIcon: ({ color, focused }) => (
-            <TabGlyph focused={focused} color={color} filled="clipboard" outline="clipboard-outline" />
+            <TabGlyph focused={focused} color={color} filled="send" outline="send-outline" />
           ),
         }}
       />
@@ -79,6 +118,8 @@ export default function TabsLayout() {
         name="messages"
         options={{
           title: "Messages",
+          headerShown: true,
+          ...darkHeader,
           tabBarLabel: "Chats",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="chatbubbles" outline="chatbubbles-outline" />
@@ -89,9 +130,11 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: "Profile",
+          headerShown: true,
+          ...darkHeader,
           tabBarLabel: "Profile",
           tabBarIcon: ({ color, focused }) => (
-            <TabGlyph focused={focused} color={color} filled="person" outline="person-outline" />
+            <TabGlyph focused={focused} color={color} filled="person-circle" outline="person-circle-outline" />
           ),
         }}
       />
@@ -99,6 +142,8 @@ export default function TabsLayout() {
         name="more"
         options={{
           title: "Menu",
+          headerShown: true,
+          ...darkHeader,
           tabBarLabel: "Menu",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="menu" outline="menu-outline" />

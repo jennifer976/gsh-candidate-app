@@ -1,28 +1,39 @@
-import type { ExternalJobListingPublic, Job } from "@/types/models";
-
-/** Employer profile shape when `GET /jobs/public` replaces `postedBy` with a Profile document. */
-export type PostedByEmployerProfile = {
-  companyName?: string;
-  businessName?: string;
-};
+import type { EmployerProfile, ExternalJobListingPublic, Job } from "@/types/models";
 
 /**
- * Prefer job.companyName; fall back to populated employer profile fields from the API.
+ * Extracts the employer label from a job, preferring companyName,
+ * then falling back to the populated postedBy profile.
  */
 export function getJobEmployerLabel(job: Job): string {
   const direct = typeof job.companyName === "string" ? job.companyName.trim() : "";
   if (direct) return direct;
 
-  const pb = job.postedBy;
+  const pb = job.postedBy as EmployerProfile | null | undefined;
   if (pb && typeof pb === "object") {
-    const p = pb as PostedByEmployerProfile & Record<string, unknown>;
-    const fromCompany = typeof p.companyName === "string" ? p.companyName.trim() : "";
+    const fromCompany = typeof pb.companyName === "string" ? pb.companyName.trim() : "";
     if (fromCompany) return fromCompany;
-    const fromBiz = typeof p.businessName === "string" ? p.businessName.trim() : "";
+    const fromBiz = typeof pb.businessName === "string" ? pb.businessName.trim() : "";
     if (fromBiz) return fromBiz;
   }
 
   return "Employer";
+}
+
+/**
+ * Extracts the company logo URL from a job.
+ * The API may return it at the job level (companyLogo) or inside postedBy.
+ */
+export function getJobLogoUrl(job: Job): string {
+  if (typeof job.companyLogo === "string" && job.companyLogo.trim()) {
+    return job.companyLogo.trim();
+  }
+  const pb = job.postedBy as EmployerProfile | null | undefined;
+  if (pb && typeof pb === "object") {
+    if (typeof pb.companyLogo === "string" && pb.companyLogo.trim()) {
+      return pb.companyLogo.trim();
+    }
+  }
+  return "";
 }
 
 /** Mobility + distinct benefit labels for hub job cards (capped for layout). */
@@ -61,17 +72,11 @@ export function externalListingChips(job: ExternalJobListingPublic, max = 6): st
   }
   if (job.sponsorshipAvailable && out.length < max) {
     const k = "Visa sponsorship";
-    if (!seen.has(k)) {
-      seen.add(k);
-      out.push(k);
-    }
+    if (!seen.has(k)) { seen.add(k); out.push(k); }
   }
   if (job.relocationAvailable && out.length < max) {
     const k = "Relocation support";
-    if (!seen.has(k)) {
-      seen.add(k);
-      out.push(k);
-    }
+    if (!seen.has(k)) { seen.add(k); out.push(k); }
   }
   return out.slice(0, max);
 }

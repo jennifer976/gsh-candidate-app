@@ -33,10 +33,10 @@ export default function MessagesScreen() {
       <GshScreenIntro
         eyebrow="Inbox"
         title="Messages"
-        subtitle="Updates about roles you have applied for — employer-led threads stay in one place."
-        style={{ paddingHorizontal: 16, marginBottom: 0 }}
+        subtitle="Employer conversations about roles you've applied for — all in one place."
+        style={{ paddingHorizontal: 16, paddingTop: 20, marginBottom: 0 }}
       />
-      <GshMessengerTip>Replies unlock after the employer sends the first message.</GshMessengerTip>
+      <GshMessengerTip>You can reply once the employer sends the first message — this keeps conversations relevant.</GshMessengerTip>
     </View>
   );
 
@@ -95,8 +95,8 @@ export default function MessagesScreen() {
                 <View style={styles.emptyIcon}>
                   <Ionicons name="chatbubbles-outline" size={40} color={colors.brand} />
                 </View>
-                <Text style={styles.empty}>No conversations yet</Text>
-                <Text style={styles.emptySub}>When an employer messages you, it will show up here.</Text>
+                <Text style={styles.empty}>No messages yet</Text>
+                <Text style={styles.emptySub}>Employers can message you about roles you've applied for. Conversations appear here when they start.</Text>
               </View>
             }
           />

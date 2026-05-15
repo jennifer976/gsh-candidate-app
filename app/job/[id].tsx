@@ -1,10 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Pressable,
   ScrollView,
@@ -13,24 +12,71 @@ import {
   TextInput,
   View,
 } from "react-native";
+import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
-import { GshSectionTitle } from "@/components/gsh-ui-kit";
-import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { SkeletonBox } from "@/components/SkeletonLoader";
 import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-client";
-import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
+import { hapticLight, hapticSuccess, hapticWarning } from "@/lib/haptics";
+import { getJobEmployerLabel, getJobLogoUrl, hubListingChips } from "@/lib/job-display";
+import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
+import { colors, fontFamily, radii } from "@/lib/theme";
 
 function errMsg(e: unknown): string {
   if (e && typeof e === "object" && "message" in e) return String((e as { message: string }).message);
   return "Something went wrong.";
 }
 
-async function safeSuccessHaptic() {
-  try {
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-  } catch {
-    /* Web / simulator — ignore */
-  }
+function formatSalary(minSalary?: number, maxSalary?: number, currency = "GBP"): string {
+  const sym = currency === "GBP" ? "£" : currency === "EUR" ? "€" : currency === "USD" ? "$" : `${currency} `;
+  if (minSalary != null && maxSalary != null) return `${sym}${minSalary.toLocaleString()}–${maxSalary.toLocaleString()}`;
+  if (minSalary != null) return `From ${sym}${minSalary.toLocaleString()}`;
+  return "";
+}
+
+function InfoRow({ icon, label }: { icon: string; label: string }) {
+  if (!label) return null;
+  return (
+    <View style={styles.infoRow}>
+      <Ionicons name={icon as any} size={16} color={colors.textMuted} />
+      <Text style={styles.infoLabel}>{label}</Text>
+    </View>
+  );
+}
+
+function SectionHeading({ title }: { title: string }) {
+  return (
+    <View style={styles.sectionHead}>
+      <View style={styles.sectionRule} />
+      <Text style={styles.sectionTitle}>{title}</Text>
+    </View>
+  );
+}
+
+function JobDetailSkeleton() {
+  return (
+    <View style={styles.skeletonPad}>
+      <View style={styles.skeletonHero}>
+        <SkeletonBox width={72} height={72} radius={18} />
+        <View style={{ flex: 1, gap: 10 }}>
+          <SkeletonBox width="80%" height={22} radius={7} />
+          <SkeletonBox width="55%" height={16} radius={6} />
+          <SkeletonBox width="65%" height={13} radius={5} />
+        </View>
+      </View>
+      <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
+        <SkeletonBox width={110} height={26} radius={99} />
+        <SkeletonBox width={90} height={26} radius={99} />
+      </View>
+      <SkeletonBox width="100%" height={1} radius={0} style={{ marginTop: 20, backgroundColor: colors.border }} />
+      <SkeletonBox width="40%" height={14} radius={5} style={{ marginTop: 20 }} />
+      <SkeletonBox width="100%" height={12} radius={5} style={{ marginTop: 12 }} />
+      <SkeletonBox width="95%" height={12} radius={5} style={{ marginTop: 8 }} />
+      <SkeletonBox width="85%" height={12} radius={5} style={{ marginTop: 8 }} />
+      <SkeletonBox width="90%" height={12} radius={5} style={{ marginTop: 8 }} />
+    </View>
+  );
 }
 
 export default function JobDetailScreen() {
@@ -38,8 +84,8 @@ export default function JobDetailScreen() {
   const router = useRouter();
   const qc = useQueryClient();
   const jobId = String(id || "");
-
   const [coverLetter, setCoverLetter] = useState("");
+  const [saved, setSaved] = useState(false);
 
   const jobQuery = useQuery({
     queryKey: ["job", jobId],
@@ -53,39 +99,45 @@ export default function JobDetailScreen() {
   });
 
   const resumeUrl =
-    profileQuery.data &&
-    typeof (profileQuery.data as { resume?: unknown }).resume === "string"
+    profileQuery.data && typeof (profileQuery.data as { resume?: unknown }).resume === "string"
       ? String((profileQuery.data as { resume: string }).resume).trim()
       : "";
-
-  const profileReady = profileQuery.isSuccess;
 
   const saveMut = useMutation({
     mutationFn: () => saveJob(jobId),
     onSuccess: () => {
-      void safeSuccessHaptic();
+      setSaved(true);
+      void hapticSuccess();
       void qc.invalidateQueries({ queryKey: ["saved-jobs"] });
       void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
-      Alert.alert("Saved", "Job saved to your list.");
     },
     onError: (e: unknown) => {
+      void hapticWarning();
       const msg = errMsg(e);
-      if (msg.includes("already saved")) Alert.alert("Already saved", "This job is in your saved list.");
-      else Alert.alert("Could not save", msg);
+      if (msg.includes("already saved")) {
+        setSaved(true);
+      } else {
+        Alert.alert("Could not save", msg);
+      }
     },
   });
 
   const applyMut = useMutation({
     mutationFn: () => applyToJob(jobId, coverLetter.trim() || undefined, resumeUrl || undefined),
     onSuccess: () => {
-      void safeSuccessHaptic();
+      void hapticSuccess();
       void qc.invalidateQueries({ queryKey: ["applications"] });
       void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
-      Alert.alert("Application sent", "The employer will see your profile and CV for this role.", [
-        { text: "OK", onPress: () => router.back() },
-      ]);
+      Alert.alert(
+        "Application sent ✓",
+        "The employer can see your profile and CV. You'll hear back via Messages.",
+        [{ text: "OK", onPress: () => router.back() }]
+      );
     },
-    onError: (e: unknown) => Alert.alert("Could not apply", errMsg(e)),
+    onError: (e: unknown) => {
+      void hapticWarning();
+      Alert.alert("Could not apply", errMsg(e));
+    },
   });
 
   function onApplyPress() {
@@ -93,18 +145,10 @@ export default function JobDetailScreen() {
       Alert.alert("Please wait", "Loading your profile…");
       return;
     }
-    if (profileQuery.isError) {
-      Alert.alert(
-        "Profile unavailable",
-        "We couldn't load your profile. Check your connection, then open Profile to confirm your CV is uploaded.",
-        [{ text: "OK" }]
-      );
-      return;
-    }
     if (!resumeUrl) {
       Alert.alert(
         "CV required",
-        "Upload your CV on your profile before applying. Employers need your résumé to review your application.",
+        "Upload your CV on your Profile tab before applying — employers need it to review you.",
         [
           { text: "Cancel", style: "cancel" },
           { text: "Go to Profile", onPress: () => router.push("/(tabs)/profile") },
@@ -115,184 +159,366 @@ export default function JobDetailScreen() {
     applyMut.mutate();
   }
 
+  function onSavePress() {
+    void hapticLight();
+    saveMut.mutate();
+  }
+
+  // — Error / empty states —
   if (!jobId.trim()) {
     return (
-      <GshScreenBackground>
-        <SafeAreaView style={styles.safe} edges={["bottom"]}>
-          <View style={styles.center}>
-            <Ionicons name="link-outline" size={44} color={colors.borderStrong} />
-            <Text style={styles.errTitle}>This job link is not valid.</Text>
-            <Pressable style={styles.secondaryBtn} onPress={() => router.back()} accessibilityRole="button">
-              <Text style={styles.secondaryBtnText}>Go back</Text>
-            </Pressable>
-          </View>
-        </SafeAreaView>
-      </GshScreenBackground>
+      <View style={styles.center}>
+        <Ionicons name="link-outline" size={44} color={colors.borderStrong} />
+        <Text style={styles.errTitle}>Invalid job link</Text>
+        <Pressable style={styles.ghostBtn} onPress={() => router.back()}>
+          <Text style={styles.ghostBtnText}>Go back</Text>
+        </Pressable>
+      </View>
     );
   }
 
+  if (jobQuery.isError) {
+    return (
+      <View style={styles.center}>
+        <Ionicons name="cloud-offline-outline" size={44} color={colors.borderStrong} />
+        <Text style={styles.errTitle}>Couldn't load this role</Text>
+        <Text style={styles.errSub}>Check your connection and try again.</Text>
+        <Pressable style={styles.ghostBtn} onPress={() => void jobQuery.refetch()}>
+          <Text style={styles.ghostBtnText}>Retry</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  // — Skeleton while loading —
   if (jobQuery.isLoading) {
     return (
-      <GshScreenBackground>
-        <SafeAreaView style={styles.safe} edges={["bottom"]}>
-          <View style={styles.center}>
-            <ActivityIndicator size="large" color={colors.brand} />
-            <Text style={styles.loadingText}>Loading role…</Text>
-          </View>
-        </SafeAreaView>
-      </GshScreenBackground>
+      <View style={styles.root}>
+        <View style={styles.skeletonNavBar} />
+        <ScrollView>
+          <JobDetailSkeleton />
+        </ScrollView>
+      </View>
     );
   }
 
-  if (jobQuery.isError || jobQuery.data == null) {
-    return (
-      <GshScreenBackground>
-        <SafeAreaView style={styles.safe} edges={["bottom"]}>
-          <View style={styles.center}>
-            <Ionicons name="document-text-outline" size={44} color={colors.borderStrong} />
-            <Text style={styles.errTitle}>This job could not be loaded.</Text>
-            <Text style={styles.errSub}>Check your connection and try again.</Text>
-            <Pressable style={styles.secondaryBtn} onPress={() => void jobQuery.refetch()} accessibilityRole="button">
-              <Text style={styles.secondaryBtnText}>Retry</Text>
-            </Pressable>
-            <Pressable style={styles.secondaryBtnMuted} onPress={() => router.back()} accessibilityRole="button">
-              <Text style={styles.secondaryBtnMutedText}>Go back</Text>
-            </Pressable>
-          </View>
-        </SafeAreaView>
-      </GshScreenBackground>
-    );
-  }
-
-  const job = jobQuery.data;
-
+  const job = jobQuery.data!;
+  const employer = getJobEmployerLabel(job);
+  const logoUrl = getJobLogoUrl(job);
   const location = [job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || "";
+  const salary = formatSalary(job.minSalary, job.maxSalary, job.salaryCurrency);
+  const chips = hubListingChips(job, 6);
 
   return (
-    <GshScreenBackground>
-      <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <View style={[styles.heroShell, cardSurfaceStyle(true)]}>
-            <View style={styles.heroAccent} />
-            <View style={styles.heroInner}>
-              <Text style={styles.title}>{job.title}</Text>
-              <Text style={styles.company}>{job.companyName || "Employer"}</Text>
-              <View style={styles.metaRow}>
-                <Ionicons name="location-outline" size={16} color={colors.textMuted} />
-                <Text style={styles.meta}>
-                  {location}
-                  {job.jobType ? ` · ${job.jobType}` : ""}
-                </Text>
+    <View style={styles.root}>
+      <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPad}>
+
+          {/* ── Hero ── */}
+          <Animated.View entering={FadeIn.duration(400)}>
+            <LinearGradient
+              colors={[colors.navy, colors.navyDeep]}
+              style={styles.hero}
+              start={{ x: 0.2, y: 0 }}
+              end={{ x: 0.8, y: 1 }}
+            >
+              <View style={styles.heroTop}>
+                <CompanyLogo logoUrl={logoUrl} companyName={employer} size={72} radius={18} />
+                <View style={styles.heroText}>
+                  <Text style={styles.heroTitle} numberOfLines={3}>{job.title}</Text>
+                  <Text style={styles.heroCompany} numberOfLines={1}>{employer}</Text>
+                </View>
               </View>
-            </View>
-          </View>
 
-          {job.summary ? (
-            <>
-              <GshSectionTitle title="Overview" topSpacing="sm" />
-              <Text style={styles.sectionBody}>{job.summary}</Text>
-            </>
-          ) : null}
+              <View style={styles.heroMeta}>
+                {location ? (
+                  <View style={styles.heroMetaRow}>
+                    <Ionicons name="location-outline" size={14} color="rgba(255,255,255,0.55)" />
+                    <Text style={styles.heroMetaText}>{location}</Text>
+                  </View>
+                ) : null}
+                {job.jobType ? (
+                  <View style={styles.heroMetaRow}>
+                    <Ionicons name="briefcase-outline" size={14} color="rgba(255,255,255,0.55)" />
+                    <Text style={styles.heroMetaText}>{job.jobType}</Text>
+                  </View>
+                ) : null}
+                {salary ? (
+                  <View style={styles.heroMetaRow}>
+                    <Ionicons name="cash-outline" size={14} color="rgba(255,255,255,0.55)" />
+                    <Text style={[styles.heroMetaText, styles.heroSalary]}>{salary}</Text>
+                  </View>
+                ) : null}
+              </View>
 
-          {job.description ? (
-            <>
-              <GshSectionTitle title="Description" />
-              <Text style={styles.sectionBody}>{job.description}</Text>
-            </>
-          ) : null}
+              {/* Chips */}
+              {chips.length > 0 ? (
+                <View style={styles.chipRow}>
+                  {chips.map((c) => {
+                    const pal = mobilityChipStyle(c);
+                    return (
+                      <View key={c} style={[styles.chip, { backgroundColor: "rgba(255,255,255,0.14)", borderColor: "rgba(255,255,255,0.22)" }]}>
+                        <Text style={[styles.chipText, { color: "rgba(255,255,255,0.9)" }]} numberOfLines={1}>{c}</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              ) : null}
 
-          {job.mobility && job.mobility.length > 0 ? (
-            <>
-              <GshSectionTitle title="Mobility & sponsorship" />
-              <Text style={styles.sectionBody}>{job.mobility.join(" · ")}</Text>
-            </>
-          ) : null}
+              {/* Save button in hero */}
+              <Pressable
+                style={[styles.saveHeroBtn, saved && styles.saveHeroBtnSaved]}
+                onPress={onSavePress}
+                disabled={saveMut.isPending || saved}
+                accessibilityRole="button"
+                accessibilityLabel={saved ? "Job saved" : "Save this job"}
+              >
+                <Ionicons
+                  name={saved ? "bookmark" : "bookmark-outline"}
+                  size={18}
+                  color={saved ? colors.teal : "rgba(255,255,255,0.8)"}
+                />
+                <Text style={[styles.saveHeroBtnText, saved && { color: colors.teal }]}>
+                  {saved ? "Saved" : "Save role"}
+                </Text>
+              </Pressable>
+            </LinearGradient>
+          </Animated.View>
 
-          <GshSectionTitle title="Cover letter (optional)" />
-          <TextInput
-            style={styles.cover}
-            multiline
-            placeholder="A short note to the hiring team…"
-            placeholderTextColor={colors.placeholder}
-            value={coverLetter}
-            onChangeText={setCoverLetter}
-          />
+          {/* ── Body content ── */}
+          <Animated.View entering={FadeInUp.delay(150).duration(400)} style={styles.body}>
 
-          {profileReady && !resumeUrl ? (
-            <View style={styles.cvBanner}>
-              <Ionicons name="document-text-outline" size={22} color={colors.warningText} />
-              <Text style={styles.cvBannerText}>
-                Upload your CV on the Profile tab to apply. Employers only receive applications that include a résumé.
+            {job.summary ? (
+              <>
+                <SectionHeading title="Overview" />
+                <Text style={styles.bodyText}>{job.summary}</Text>
+              </>
+            ) : null}
+
+            {job.description ? (
+              <>
+                <SectionHeading title="About the role" />
+                <Text style={styles.bodyText}>{job.description}</Text>
+              </>
+            ) : null}
+
+            {job.mobility && job.mobility.length > 0 ? (
+              <>
+                <SectionHeading title="Sponsorship & mobility" />
+                <View style={styles.mobilityList}>
+                  {job.mobility.map((m) => (
+                    <View key={m} style={styles.mobilityRow}>
+                      <Ionicons name="checkmark-circle" size={18} color={colors.teal} />
+                      <Text style={styles.mobilityText}>{m}</Text>
+                    </View>
+                  ))}
+                </View>
+              </>
+            ) : null}
+
+            {/* Cover letter */}
+            <SectionHeading title="Cover note (optional)" />
+            <Text style={styles.coverHint}>
+              A short, direct note works best — why this role, why now.
+            </Text>
+            <TextInput
+              style={styles.cover}
+              multiline
+              placeholder="Two or three sentences is enough…"
+              placeholderTextColor={colors.placeholder}
+              value={coverLetter}
+              onChangeText={setCoverLetter}
+              textAlignVertical="top"
+            />
+
+            {/* CV warning */}
+            {profileQuery.isSuccess && !resumeUrl ? (
+              <Pressable
+                style={styles.cvBanner}
+                onPress={() => router.push("/(tabs)/profile")}
+                accessibilityRole="button"
+              >
+                <Ionicons name="warning-outline" size={20} color="#92400e" />
+                <Text style={styles.cvBannerText}>
+                  Your CV isn't uploaded yet — employers need it to consider you.{" "}
+                  <Text style={styles.cvBannerLink}>Add it to your profile →</Text>
+                </Text>
+              </Pressable>
+            ) : null}
+
+            {/* Apply CTA */}
+            <View style={styles.actions}>
+              <GshGradientPrimaryButton
+                title={applyMut.isPending ? "Sending application…" : "Apply now"}
+                onPress={onApplyPress}
+                disabled={applyMut.isPending || profileQuery.isLoading}
+              />
+              <Text style={styles.applyNote}>
+                Your profile and CV are sent to the employer. You can track the status in Applications.
               </Text>
             </View>
-          ) : null}
-
-          <View style={styles.actions}>
-            <GshGradientPrimaryButton
-              title={saveMut.isPending ? "Saving…" : "Save job"}
-              onPress={() => saveMut.mutate()}
-              disabled={saveMut.isPending}
-            />
-            <GshGradientPrimaryButton
-              title={applyMut.isPending ? "Applying…" : "Apply now"}
-              onPress={onApplyPress}
-              disabled={applyMut.isPending || profileQuery.isLoading}
-            />
-          </View>
+          </Animated.View>
         </ScrollView>
       </SafeAreaView>
-    </GshScreenBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
-  pad: { padding: 20, paddingBottom: 40 },
-  center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
-  loadingText: { fontFamily: fontFamily.medium, fontSize: 15, color: colors.textMuted },
-  errTitle: {
-    color: colors.navy,
-    textAlign: "center",
-    fontSize: 17,
-    fontFamily: fontFamily.bold,
-    marginBottom: 8,
+  root: { flex: 1, backgroundColor: colors.surfaceLight },
+  scrollPad: { paddingBottom: 48 },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 32,
+    gap: 14,
+    backgroundColor: colors.surfaceLight,
   },
-  errSub: {
+
+  // Skeleton
+  skeletonNavBar: { height: 56, backgroundColor: colors.navyDeep },
+  skeletonPad: { padding: 20, gap: 0 },
+  skeletonHero: { flexDirection: "row", gap: 14, alignItems: "flex-start" },
+
+  // Hero
+  hero: {
+    paddingTop: 24,
+    paddingBottom: 24,
+    paddingHorizontal: 20,
+    gap: 16,
+  },
+  heroTop: { flexDirection: "row", gap: 16, alignItems: "flex-start" },
+  heroText: { flex: 1, minWidth: 0 },
+  heroTitle: {
+    fontSize: 22,
+    fontFamily: fontFamily.extraBold,
+    color: colors.white,
+    letterSpacing: -0.4,
+    lineHeight: 28,
+  },
+  heroCompany: {
+    marginTop: 6,
+    fontSize: 15,
+    fontFamily: fontFamily.semiBold,
+    color: "rgba(255,255,255,0.75)",
+  },
+  heroMeta: { gap: 8 },
+  heroMetaRow: { flexDirection: "row", alignItems: "center", gap: 7 },
+  heroMetaText: {
+    fontSize: 13,
     fontFamily: fontFamily.regular,
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: "center",
-    lineHeight: 20,
-    marginBottom: 8,
-    paddingHorizontal: 16,
+    color: "rgba(255,255,255,0.6)",
   },
-  heroShell: { flexDirection: "row", marginBottom: 8, borderRadius: radii.lg, overflow: "hidden" },
-  heroAccent: { width: 5, backgroundColor: colors.teal },
-  heroInner: { flex: 1, padding: 18 },
-  title: { fontSize: 24, fontFamily: fontFamily.extraBold, color: colors.navy, letterSpacing: -0.45 },
-  company: { marginTop: 10, fontSize: 17, fontFamily: fontFamily.semiBold, color: colors.textMarketing },
-  metaRow: { flexDirection: "row", alignItems: "center", gap: 6, marginTop: 10 },
-  meta: { flex: 1, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted },
-  sectionBody: {
-    marginTop: 8,
+  heroSalary: {
+    fontFamily: fontFamily.bold,
+    color: colors.teal,
+    fontSize: 14,
+  },
+  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
+  chip: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+  },
+  chipText: { fontSize: 11, fontFamily: fontFamily.semiBold },
+
+  // Save btn in hero
+  saveHeroBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    gap: 8,
+    paddingVertical: 9,
+    paddingHorizontal: 16,
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+  },
+  saveHeroBtnSaved: {
+    backgroundColor: "rgba(14,205,209,0.12)",
+    borderColor: "rgba(14,205,209,0.35)",
+  },
+  saveHeroBtnText: {
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: "rgba(255,255,255,0.8)",
+  },
+
+  // Body
+  body: {
+    paddingHorizontal: 20,
+    paddingTop: 24,
+    gap: 0,
+  },
+  sectionHead: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 12,
+    marginTop: 24,
+  },
+  sectionRule: {
+    width: 4,
+    height: 18,
+    borderRadius: 2,
+    backgroundColor: colors.teal,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+    letterSpacing: -0.2,
+  },
+  bodyText: {
     fontSize: 15,
     fontFamily: fontFamily.regular,
     color: colors.textMarketing,
-    lineHeight: 23,
+    lineHeight: 24,
+  },
+  mobilityList: { gap: 10 },
+  mobilityRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: radii.md,
+    backgroundColor: "rgba(14,205,209,0.07)",
+    borderWidth: 1,
+    borderColor: "rgba(14,205,209,0.2)",
+  },
+  mobilityText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+  },
+
+  // Cover letter
+  coverHint: {
+    fontSize: 13,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+    marginBottom: 10,
+    lineHeight: 19,
   },
   cover: {
-    marginTop: 10,
     minHeight: 100,
     borderWidth: 1,
-    borderColor: "rgba(226, 232, 240, 0.92)",
+    borderColor: colors.border,
     borderRadius: radii.lg,
     padding: 14,
     fontSize: 15,
-    backgroundColor: colors.background,
+    backgroundColor: colors.white,
     color: colors.textPrimary,
     fontFamily: fontFamily.regular,
     textAlignVertical: "top",
   },
+
+  // CV banner
   cvBanner: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -300,37 +526,60 @@ const styles = StyleSheet.create({
     marginTop: 16,
     padding: 14,
     borderRadius: radii.md,
-    backgroundColor: colors.warningBg,
+    backgroundColor: "#fffbeb",
     borderWidth: 1,
-    borderColor: colors.warningBorder,
+    borderColor: "#fde68a",
   },
   cvBannerText: {
     flex: 1,
     fontSize: 14,
     fontFamily: fontFamily.medium,
-    color: colors.warningText,
+    color: "#92400e",
     lineHeight: 20,
   },
-  actions: { marginTop: 20, gap: 12 },
-  secondaryBtn: {
-    marginTop: 8,
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: radii.sm,
-    borderWidth: 1,
-    borderColor: colors.brand,
-    backgroundColor: colors.background,
+  cvBannerLink: {
+    fontFamily: fontFamily.bold,
+    textDecorationLine: "underline",
   },
-  secondaryBtnText: { color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 16, textAlign: "center" },
-  secondaryBtnMuted: {
-    marginTop: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-  secondaryBtnMutedText: {
+
+  // Actions
+  actions: { marginTop: 28, gap: 12 },
+  applyNote: {
+    fontSize: 12,
+    fontFamily: fontFamily.regular,
     color: colors.textMuted,
-    fontFamily: fontFamily.semiBold,
-    fontSize: 15,
+    textAlign: "center",
+    lineHeight: 18,
+  },
+
+  // Error / ghost
+  errTitle: {
+    fontSize: 18,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
     textAlign: "center",
   },
+  errSub: {
+    fontSize: 14,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+    textAlign: "center",
+    lineHeight: 20,
+  },
+  ghostBtn: {
+    marginTop: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.brand,
+  },
+  ghostBtnText: {
+    fontSize: 15,
+    fontFamily: fontFamily.semiBold,
+    color: colors.brand,
+    textAlign: "center",
+  },
+  infoRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  infoLabel: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
 });

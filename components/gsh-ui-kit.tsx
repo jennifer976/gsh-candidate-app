@@ -16,7 +16,7 @@ const ACCENT: Record<GshLinkAccent, { wrap: string; icon: string }> = {
 };
 
 export function GshScreenIntro({
-  eyebrow = "Global Sponsor Hub",
+  eyebrow,
   title,
   subtitle,
   style,
@@ -28,7 +28,7 @@ export function GshScreenIntro({
 }) {
   return (
     <View style={[introStyles.wrap, style]}>
-      <Text style={introStyles.eyebrow}>{eyebrow}</Text>
+      {eyebrow ? <Text style={introStyles.eyebrow}>{eyebrow}</Text> : null}
       <Text style={introStyles.title}>{title}</Text>
       {subtitle ? <Text style={introStyles.subtitle}>{subtitle}</Text> : null}
     </View>
@@ -38,25 +38,25 @@ export function GshScreenIntro({
 const introStyles = StyleSheet.create({
   wrap: { marginBottom: 16 },
   eyebrow: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: fontFamily.semiBold,
     color: colors.teal,
-    letterSpacing: 0.75,
+    letterSpacing: 0.8,
     textTransform: "uppercase",
-    marginBottom: 6,
-  },
-  title: {
-    fontSize: 28,
-    fontFamily: fontFamily.extraBold,
-    color: colors.navy,
-    letterSpacing: -0.55,
     marginBottom: 8,
   },
+  title: {
+    fontSize: 26,
+    fontFamily: fontFamily.extraBold,
+    color: colors.navy,
+    letterSpacing: -0.5,
+    marginBottom: 6,
+  },
   subtitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: fontFamily.regular,
     color: colors.textSecondary,
-    lineHeight: 24,
+    lineHeight: 22,
   },
 });
 

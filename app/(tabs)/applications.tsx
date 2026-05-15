@@ -46,9 +46,9 @@ export default function ApplicationsScreen() {
   const listHeader = (
     <GshScreenIntro
       eyebrow="Pipeline"
-      title="Applications"
-      subtitle="Track every role you have applied for on the Hub — tap a card for the job, or withdraw if your plans change."
-      style={{ paddingHorizontal: 16, marginBottom: 4 }}
+      title="Your applications"
+      subtitle="Every role you've applied for on GSH — track status, open the listing, or withdraw if your plans change."
+      style={{ paddingHorizontal: 16, paddingTop: 20, marginBottom: 4 }}
     />
   );
 
@@ -111,10 +111,10 @@ export default function ApplicationsScreen() {
             ListEmptyComponent={
               <View style={styles.emptyWrap}>
                 <View style={styles.emptyIcon}>
-                  <Ionicons name="document-text-outline" size={40} color={colors.teal} />
+                  <Ionicons name="send-outline" size={38} color={colors.teal} />
                 </View>
                 <Text style={styles.empty}>No applications yet</Text>
-                <Text style={styles.emptySub}>Discover roles on the Home tab and tap Apply when you are ready.</Text>
+                <Text style={styles.emptySub}>When you apply for a role on GSH, it appears here with status updates from the employer.</Text>
               </View>
             }
           />

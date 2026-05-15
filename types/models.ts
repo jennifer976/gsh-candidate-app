@@ -26,10 +26,19 @@ export interface AuthResponse {
   message?: string;
 }
 
+export interface EmployerProfile {
+  _id?: string;
+  companyName?: string;
+  businessName?: string;
+  companyLogo?: string;
+  companyWebsite?: string;
+}
+
 export interface Job {
   _id: string;
   title: string;
   companyName?: string;
+  companyLogo?: string;
   locationCountry?: string;
   locationCity?: string;
   location?: string;
@@ -42,10 +51,9 @@ export interface Job {
   maxSalary?: number;
   featured?: boolean;
   applicantsCount?: number;
-  postedBy?: unknown;
+  postedBy?: EmployerProfile | null;
   createdAt?: string;
   mobility?: string[];
-  /** Generic perks; mobility may also appear here on legacy documents. */
   benefits?: string[];
 }
 
