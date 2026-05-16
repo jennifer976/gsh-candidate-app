@@ -38,7 +38,8 @@ export default function SavedJobsScreen() {
       eyebrow="Shortlist"
       title="Saved roles"
       subtitle="Roles you bookmarked — tap to view full details or remove ones you're no longer interested in."
-      style={{ paddingHorizontal: 16, paddingTop: 20, marginBottom: 4 }}
+      underStackHeader
+      style={{ paddingHorizontal: 16, marginBottom: 4 }}
     />
   );
 
@@ -123,7 +124,7 @@ export default function SavedJobsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 12, paddingTop: 4 },
+  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 12 },
   card: { flexDirection: "row", borderRadius: radii.lg, overflow: "hidden" },
   accent: { width: 5, backgroundColor: colors.teal },
   cardBody: { flex: 1 },

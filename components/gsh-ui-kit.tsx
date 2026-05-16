@@ -3,6 +3,7 @@ import type { ComponentProps } from "react";
 import type { ReactNode } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, Text, View, type ViewStyle } from "react-native";
+import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
@@ -20,14 +21,17 @@ export function GshScreenIntro({
   title,
   subtitle,
   style,
+  underStackHeader,
 }: {
   eyebrow?: string;
   title: string;
   subtitle?: string;
   style?: ViewStyle;
+  /** Extra top inset when this intro sits directly under a native header (FlatList header, etc.) */
+  underStackHeader?: boolean;
 }) {
   return (
-    <View style={[introStyles.wrap, style]}>
+    <View style={[introStyles.wrap, underStackHeader && introStyles.underStack, style]}>
       {eyebrow ? <Text style={introStyles.eyebrow}>{eyebrow}</Text> : null}
       <Text style={introStyles.title}>{title}</Text>
       {subtitle ? <Text style={introStyles.subtitle}>{subtitle}</Text> : null}
@@ -37,6 +41,7 @@ export function GshScreenIntro({
 
 const introStyles = StyleSheet.create({
   wrap: { marginBottom: 16 },
+  underStack: { paddingTop: STACK_HEADER_BODY_GAP },
   eyebrow: {
     fontSize: 11,
     fontFamily: fontFamily.semiBold,

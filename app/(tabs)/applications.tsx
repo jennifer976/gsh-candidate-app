@@ -5,6 +5,7 @@ import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, StyleShe
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { fetchApplications, withdrawApplication } from "@/lib/api-client";
+import { stackListLeadStyle } from "@/lib/screen-layout";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { Application, ApplicationJobRef } from "@/types/models";
 
@@ -129,7 +130,7 @@ export default function ApplicationsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  listHeader: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 8 },
+  listHeader: stackListLeadStyle,
   listEyebrow: {
     fontSize: 11,
     fontFamily: fontFamily.semiBold,
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   listSubLead: { fontSize: 14, fontFamily: fontFamily.regular, color: "rgba(255,255,255,0.55)", lineHeight: 20 },
-  listPad: { paddingHorizontal: 16, paddingBottom: 32, gap: 12, paddingTop: 4 },
+  listPad: { paddingHorizontal: 16, paddingBottom: 32, gap: 12 },
   card: { flexDirection: "row", borderRadius: radii.lg, overflow: "hidden" },
   accent: { width: 5, backgroundColor: colors.brand },
   cardBody: { flex: 1 },

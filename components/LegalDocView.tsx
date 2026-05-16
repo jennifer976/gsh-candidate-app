@@ -2,6 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import type { LegalDocDef } from "@/lib/legal/appLegalDocs";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export function LegalDocView({ doc }: { doc: LegalDocDef }) {
@@ -33,7 +34,7 @@ export function LegalDocView({ doc }: { doc: LegalDocDef }) {
 }
 
 const styles = StyleSheet.create({
-  pad: { padding: 16, paddingBottom: 48, gap: 14 },
+  pad: { ...stackScrollContentStyle, gap: 14 },
   hero: { padding: 18, borderRadius: radii.lg, overflow: "hidden" },
   accentBar: { height: 4, borderRadius: 2, marginTop: 14 },
   card: { padding: 16, borderRadius: radii.lg },

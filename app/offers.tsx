@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchCandidateOffers, trackReferralCodeCopy } from "@/lib/api-client";
+import { stackFlatListHeadWrapStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { CandidateOfferItem } from "@/types/models";
 
@@ -88,7 +89,7 @@ export default function OffersScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  headWrap: { paddingHorizontal: 16, paddingBottom: 12 },
+  headWrap: stackFlatListHeadWrapStyle,
   listPad: { paddingHorizontal: 16, paddingBottom: 32 },
   listPadEmpty: { flexGrow: 1 },
   card: {

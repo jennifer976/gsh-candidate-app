@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshLinkRow, GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchCandidateDashboard } from "@/lib/api-client";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, gradient, radii } from "@/lib/theme";
 
 const TIPS = [
@@ -102,7 +103,7 @@ export default function ToolsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 40 },
+  pad: { ...stackScrollContentStyle, paddingBottom: 40 },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
   scoreCard: {
     borderRadius: radii.lg,

@@ -8,6 +8,7 @@ import { GshScreenShell } from "@/components/GshScreenShell";
 import { fetchSavedJobs, unsaveJob } from "@/lib/api-client";
 import { hapticLight, hapticSuccess } from "@/lib/haptics";
 import { getJobEmployerLabel, getJobLogoUrl } from "@/lib/job-display";
+import { stackListLeadStyle } from "@/lib/screen-layout";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { Job, SavedJobPopulated } from "@/types/models";
 
@@ -121,7 +122,7 @@ export default function SavedJobsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  listHeader: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
+  listHeader: stackListLeadStyle,
   listEyebrow: {
     fontSize: 11,
     fontFamily: fontFamily.semiBold,
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
   },
   listTitle: { fontSize: 24, fontFamily: fontFamily.extraBold, color: colors.white, letterSpacing: -0.4 },
   listSub: { marginTop: 6, fontSize: 14, fontFamily: fontFamily.regular, color: "rgba(255,255,255,0.55)", lineHeight: 20 },
-  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 12, paddingTop: 4 },
+  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 12 },
   card: { flexDirection: "row", borderRadius: radii.lg, overflow: "hidden" },
   accent: { width: 5, backgroundColor: colors.teal },
   cardBody: { flex: 1 },

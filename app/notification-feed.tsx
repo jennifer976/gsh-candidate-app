@@ -21,6 +21,7 @@ import {
   markAppNotificationRead,
 } from "@/lib/api-client";
 import { navigateFromPushLink } from "@/lib/pushNavigate";
+import { stackFlatListHeadWrapStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { AppNotificationDto } from "@/types/models";
 
@@ -244,7 +245,7 @@ export default function NotificationFeedScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  headWrap: { paddingHorizontal: 16, paddingBottom: 12 },
+  headWrap: stackFlatListHeadWrapStyle,
   filters: { flexDirection: "row", alignItems: "center", gap: 8 },
   chip: {
     paddingHorizontal: 14,

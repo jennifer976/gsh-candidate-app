@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { LEGAL_LAST_UPDATED } from "@/lib/legal/appLegalDocs";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 const ROWS: { slug: string; title: string; sub: string }[] = [
@@ -54,7 +55,7 @@ export default function LegalHubScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 40, gap: 12 },
+  pad: { ...stackScrollContentStyle, paddingBottom: 40, gap: 12 },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 4 },
   row: {
     flexDirection: "row",

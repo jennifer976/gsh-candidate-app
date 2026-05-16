@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  InteractionManager,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -25,6 +26,12 @@ import { fetchCandidateDashboard, fetchConversations, fetchOwnProfile } from "@/
 import { presentApiError } from "@/lib/api-error";
 import { hapticLight } from "@/lib/haptics";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
+
+const FEATURE_TOOLS = [
+  { label: "Directory", icon: "people-outline" as const, href: "/partners" },
+  { label: "ATS check", icon: "document-text-outline" as const, href: "/ats-assistant" },
+  { label: "Visa wizard", icon: "sparkles-outline" as const, href: "/visa-wizard" },
+] as const;
 import type { DashboardChartPoint, ExternalJobListingPublic } from "@/types/models";
 
 function shortMonth(label: string): string {
@@ -100,6 +107,17 @@ export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [activityOpen, setActivityOpen] = useState(false);
+  const [activityReady, setActivityReady] = useState(false);
+
+  useEffect(() => {
+    if (!activityOpen) {
+      setActivityReady(false);
+      return;
+    }
+    const task = InteractionManager.runAfterInteractions(() => setActivityReady(true));
+    return () => task.cancel();
+  }, [activityOpen]);
+
   const q = useQuery({ queryKey: ["analytics", "candidate-dashboard"], queryFn: fetchCandidateDashboard });
   const profileQuery = useQuery({ queryKey: ["profile", "me"], queryFn: fetchOwnProfile, staleTime: 45_000 });
   const conversationsQuery = useQuery({
@@ -183,8 +201,9 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollPad}
         refreshControl={<RefreshControl refreshing={q.isFetching} onRefresh={onRefresh} tintColor={colors.white} />}
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
       >
-        <GshTabHeroHeader paddingTop={Math.max(insets.top, 16)} tagline="Sponsored roles with visa support">
+        <GshTabHeroHeader paddingTop={Math.max(insets.top, 20) + 8} tagline="Sponsored roles with visa support">
           <Text style={styles.heroTitle}>{greeting}</Text>
         </GshTabHeroHeader>
 
@@ -216,6 +235,23 @@ export default function HomeScreen() {
               count={chatCount}
               onPress={() => router.push("/(tabs)/messages")}
             />
+          </View>
+          <Text style={styles.featuresLabel}>Key tools</Text>
+          <View style={styles.featureRow}>
+            {FEATURE_TOOLS.map((tool) => (
+              <Pressable
+                key={tool.label}
+                style={styles.featureChip}
+                onPress={() => {
+                  void hapticLight();
+                  router.push(tool.href);
+                }}
+                accessibilityRole="button"
+              >
+                <Ionicons name={tool.icon} size={17} color={colors.brandDeep} />
+                <Text style={styles.featureChipText}>{tool.label}</Text>
+              </Pressable>
+            ))}
           </View>
         </View>
 
@@ -263,7 +299,13 @@ export default function HomeScreen() {
             <Ionicons name={activityOpen ? "chevron-up" : "chevron-down"} size={22} color={colors.textMuted} />
           </Pressable>
 
-          {activityOpen && hasActivity ? (
+          {activityOpen && hasActivity && !activityReady ? (
+            <View style={styles.activityLoading}>
+              <ActivityIndicator color={colors.brand} accessibilityLabel="Loading activity" />
+            </View>
+          ) : null}
+
+          {activityOpen && hasActivity && activityReady ? (
             <View style={styles.activityPanel}>
               {chartHasData ? (
                 <>
@@ -279,7 +321,7 @@ export default function HomeScreen() {
                     actionLabel="See all"
                     onAction={() => router.push("/saved")}
                   />
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.savedScroll}>
+                  <View style={styles.savedGrid}>
                     {savedJobRows.slice(0, 6).map((job) => (
                       <Pressable
                         key={job._id}
@@ -291,7 +333,7 @@ export default function HomeScreen() {
                         <Text style={styles.savedSub} numberOfLines={1}>{job.companyName}</Text>
                       </Pressable>
                     ))}
-                  </ScrollView>
+                  </View>
                 </>
               ) : null}
 
@@ -385,6 +427,29 @@ const styles = StyleSheet.create({
   },
   primaryCta: { marginBottom: 0 },
   chipRow: { flexDirection: "row", gap: 8 },
+  featuresLabel: {
+    fontSize: 11,
+    fontFamily: fontFamily.semiBold,
+    color: colors.textMuted,
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+    marginTop: 4,
+  },
+  featureRow: { flexDirection: "row", gap: 8 },
+  featureChip: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 6,
+    borderRadius: radii.md,
+    backgroundColor: colors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  featureChipText: { fontSize: 11, fontFamily: fontFamily.semiBold, color: colors.navy },
   profileNudge: {
     flexDirection: "row",
     alignItems: "center",
@@ -416,9 +481,10 @@ const styles = StyleSheet.create({
   activityToggleText: { flex: 1, minWidth: 0 },
   activityToggleTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy },
   activityToggleSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
+  activityLoading: { paddingVertical: 24, alignItems: "center" },
   activityPanel: { marginBottom: 8 },
-  savedScroll: { gap: 10, paddingBottom: 8 },
-  savedCard: { width: 200, padding: 14, marginRight: 0 },
+  savedGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10, paddingBottom: 8 },
+  savedCard: { width: "48%", minWidth: 140, flexGrow: 1, padding: 14 },
   savedTitle: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.navy },
   savedSub: { marginTop: 4, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },

@@ -21,6 +21,7 @@ import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-cl
 import { hapticLight, hapticSuccess, hapticWarning } from "@/lib/haptics";
 import { getJobEmployerLabel, getJobLogoUrl, hubListingChips } from "@/lib/job-display";
 import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
+import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
 function errMsg(e: unknown): string {
@@ -383,7 +384,7 @@ const styles = StyleSheet.create({
 
   // Hero
   hero: {
-    paddingTop: 24,
+    paddingTop: STACK_HEADER_BODY_GAP,
     paddingBottom: 24,
     paddingHorizontal: 20,
     gap: 16,

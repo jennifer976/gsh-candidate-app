@@ -18,6 +18,7 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { submitFeedback } from "@/lib/api-client";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
 const TYPES = ["feature", "issue", "update", "request"] as const;
@@ -136,7 +137,7 @@ export default function FeedbackScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 40 },
+  pad: { ...stackScrollContentStyle, paddingBottom: 40 },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 16 },
   label: {
     fontSize: 13,

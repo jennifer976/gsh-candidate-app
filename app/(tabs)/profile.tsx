@@ -65,9 +65,10 @@ function FieldLabel({ label, hint }: { label: string; hint?: string }) {
 }
 
 const MORE_TOOLS_LINKS = [
-  { title: "Tools & resources", subtitle: "ATS, blog, FAQs", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },
+  { title: "Guides hub", subtitle: "Country guides", icon: "map-outline" as const, accent: "purple" as const, href: "/guides" },
+  { title: "Job alerts", subtitle: "Match preferences", icon: "flash-outline" as const, accent: "ocean" as const, href: "/alerts" },
+  { title: "Tools & resources", subtitle: "Blog, FAQs, contact", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },
   { title: "Saved roles", subtitle: "Bookmarked jobs", icon: "bookmark-outline" as const, accent: "teal" as const, href: "/saved" },
-  { title: "Partner directory", subtitle: "Relocation & legal", icon: "people-outline" as const, accent: "teal" as const, href: "/partners" },
   { title: "Offers & perks", subtitle: "Partner deals", icon: "gift-outline" as const, accent: "purple" as const, href: "/offers" },
   { title: "Notifications", subtitle: "Account updates", icon: "notifications-outline" as const, accent: "teal" as const, href: "/notification-feed" },
   { title: "Feedback", subtitle: "Report an issue", icon: "chatbox-ellipses-outline" as const, accent: "ocean" as const, href: "/feedback" },
@@ -206,11 +207,11 @@ export default function ProfileScreen() {
           <View style={styles.tileGrid}>
             <View style={styles.tileRow}>
               <GshToolTile label="Browse jobs" icon="compass-outline" accent="teal" onPress={() => router.push("/(tabs)/jobs")} />
-              <GshToolTile label="Guides" icon="map-outline" accent="purple" onPress={() => router.push("/guides")} />
+              <GshToolTile label="Directory" icon="people-outline" accent="purple" onPress={() => router.push("/partners")} />
             </View>
             <View style={styles.tileRow}>
               <GshToolTile label="Visa wizard" icon="sparkles-outline" accent="teal" onPress={() => router.push("/visa-wizard")} />
-              <GshToolTile label="Job alerts" icon="flash-outline" accent="ocean" onPress={() => router.push("/alerts")} />
+              <GshToolTile label="ATS check" icon="document-text-outline" accent="ocean" onPress={() => router.push("/ats-assistant")} />
             </View>
             <View style={styles.tileRow}>
               <GshToolTile label="Settings" icon="settings-outline" accent="ocean" onPress={() => router.push("/settings")} />

@@ -6,10 +6,22 @@ import { getApiOrigin } from "@/lib/config";
  */
 export function resolveUploadAssetUrl(url?: string | null): string {
   if (!url?.trim()) return "";
-  const u = url.trim();
-  if (/^https?:\/\//i.test(u)) return u;
+  let raw = url.trim();
+  if (raw.startsWith("//")) raw = `https:${raw}`;
+
+  if (/^https?:\/\//i.test(raw)) {
+    try {
+      const parsed = new URL(raw);
+      if (parsed.pathname.startsWith("/uploads/")) {
+        return `${getApiOrigin()}${parsed.pathname}${parsed.search}`;
+      }
+    } catch {
+      return raw;
+    }
+    return raw;
+  }
+
   const origin = getApiOrigin();
-  const path = u.startsWith("/") ? u : `/${u}`;
-  // Static files are served at `{origin}/uploads` (see API `app.use("/uploads", ...)`).
+  const path = raw.startsWith("/") ? raw : `/${raw}`;
   return `${origin}${path}`;
 }

@@ -21,6 +21,7 @@ import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { changePassword, deleteCandidateAccount } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { LEGAL_IN_APP } from "@/lib/legal/inAppRoutes";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
 export default function SettingsScreen() {
@@ -274,7 +275,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 40 },
+  pad: { ...stackScrollContentStyle, paddingBottom: 40 },
   sectionHint: {
     fontFamily: fontFamily.regular,
     fontSize: 14,

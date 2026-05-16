@@ -7,6 +7,7 @@ import { BlogArticleBody } from "@/components/BlogArticleBody";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchBlogArticleBySlug, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function BlogArticleScreen() {
@@ -103,7 +104,7 @@ export default function BlogArticleScreen() {
 
 const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
-  pad: { padding: 16, paddingBottom: 48 },
+  pad: stackScrollContentStyle,
   hero: { padding: 16, borderRadius: radii.lg, marginBottom: 16 },
   heroImg: { width: "100%", height: 200, borderRadius: radii.sm, marginBottom: 14, resizeMode: "cover" },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 12 },

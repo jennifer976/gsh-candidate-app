@@ -30,6 +30,7 @@ import {
   patchCandidateNotificationPrefs,
   patchJobSearchAlert,
 } from "@/lib/api-client";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { Job, JobMatchNotificationRow, JobSearchAlertDto } from "@/types/models";
 
@@ -374,7 +375,7 @@ function formatFilters(f: Record<string, unknown>): string {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 40 },
+  pad: { ...stackScrollContentStyle, paddingBottom: 40 },
   sub: {
     fontFamily: fontFamily.regular,
     fontSize: 14,

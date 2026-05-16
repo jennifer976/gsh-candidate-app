@@ -7,6 +7,7 @@ import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { getCountryVisaGuide } from "@/lib/guides/countryVisaGuides";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function CountryGuideDetailScreen() {
@@ -124,7 +125,7 @@ export default function CountryGuideDetailScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 48, gap: 14 },
+  pad: { ...stackScrollContentStyle, gap: 14 },
   heroUpdated: { fontSize: 12, fontFamily: fontFamily.medium, color: "rgba(255,255,255,0.85)" },
   heroHook: {
     fontSize: 15,

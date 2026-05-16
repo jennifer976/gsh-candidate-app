@@ -13,11 +13,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
-import { GshScreenIntro } from "@/components/gsh-ui-kit";
-import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { GshDarkFeedHeading } from "@/components/GshDarkFeedHeading";
+import { GshScreenShell } from "@/components/GshScreenShell";
 import { fetchPartners } from "@/lib/api-client";
-import { resolveUploadAssetUrl } from "@/lib/media-url";
+import { resolvePartnerListLogo } from "@/lib/brand-logo";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
+import { stackFlatListHeadWrapStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { PartnerListItem } from "@/types/models";
 
@@ -44,13 +45,13 @@ export default function PartnersScreen() {
 
   const header = (
     <View style={styles.headWrap}>
-      <GshScreenIntro
-        eyebrow="Directory"
+      <GshDarkFeedHeading
+        pageLead
         title="Partner directory"
-        subtitle="Firms for visas, relocation, and legal help. Tap a card for details; Company site opens in a sheet inside this app."
-        style={{ marginBottom: 14 }}
+        subtitle="Visa, relocation, and legal specialists"
       />
       <View style={[cardSurfaceStyle(false), styles.searchInner]}>
+        <Ionicons name="search" size={18} color={colors.placeholder} style={styles.searchIcon} />
         <TextInput
           style={styles.search}
           placeholder="Search partners, categories…"
@@ -63,7 +64,7 @@ export default function PartnersScreen() {
   );
 
   return (
-    <GshScreenBackground>
+    <GshScreenShell>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         {query.isLoading ? (
           <>
@@ -100,7 +101,7 @@ export default function PartnersScreen() {
               <View style={[cardSurfaceStyle(false), styles.card]}>
                 <View style={styles.cardTop}>
                   <CompanyLogo
-                    logoUrl={resolveUploadAssetUrl(item.companyLogo)}
+                    logoUrl={resolvePartnerListLogo(item)}
                     companyName={item.businessName}
                     size={48}
                     radius={12}
@@ -140,23 +141,26 @@ export default function PartnersScreen() {
           />
         )}
       </SafeAreaView>
-    </GshScreenBackground>
+    </GshScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  headWrap: { paddingHorizontal: 16, paddingBottom: 12 },
+  headWrap: stackFlatListHeadWrapStyle,
   searchInner: {
-    paddingHorizontal: 2,
-    paddingVertical: 2,
-    backgroundColor: colors.background,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    backgroundColor: colors.white,
     borderRadius: radii.lg,
   },
+  searchIcon: { marginRight: 8 },
   search: {
+    flex: 1,
     borderRadius: radii.md,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    paddingVertical: 10,
     fontSize: 16,
     fontFamily: fontFamily.regular,
     color: colors.textPrimary,
@@ -173,13 +177,13 @@ const styles = StyleSheet.create({
   errTitle: {
     fontFamily: fontFamily.semiBold,
     fontSize: 17,
-    color: colors.navy,
+    color: colors.white,
     textAlign: "center",
   },
   errSub: {
     fontFamily: fontFamily.regular,
     fontSize: 14,
-    color: colors.textMuted,
+    color: "rgba(255,255,255,0.55)",
     textAlign: "center",
     lineHeight: 20,
   },
@@ -215,7 +219,7 @@ const styles = StyleSheet.create({
   empty: {
     textAlign: "center",
     fontFamily: fontFamily.regular,
-    color: colors.textMuted,
+    color: colors.textSecondary,
     fontSize: 15,
     lineHeight: 22,
   },

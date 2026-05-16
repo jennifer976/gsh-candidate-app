@@ -17,6 +17,7 @@ import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { curatedListingPrimaryBadge, normalizeAgencyWebsite } from "@/lib/curated-listing-labels";
 import { fetchPublicExternalJobById, recordExternalApplyClick } from "@/lib/api-client";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
+import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { cardCuratedSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic } from "@/types/models";
 
@@ -192,7 +193,11 @@ export default function ExternalJobDetailScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 20, paddingBottom: 40 },
+  pad: {
+    paddingHorizontal: 20,
+    paddingTop: STACK_HEADER_BODY_GAP,
+    paddingBottom: 40,
+  },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
   loadingHint: { fontFamily: fontFamily.medium, fontSize: 15, color: colors.textMuted },
   errTitle: {

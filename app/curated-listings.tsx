@@ -18,6 +18,7 @@ import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPublicExternalJobListings } from "@/lib/api-client";
+import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { cardCuratedSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function CuratedListingsScreen() {
@@ -172,7 +173,7 @@ export default function CuratedListingsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  listHeadTop: { paddingHorizontal: 16, marginBottom: 4 },
+  listHeadTop: { paddingHorizontal: 16, paddingTop: STACK_HEADER_BODY_GAP, marginBottom: 4 },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 8 },
   intro: {
     marginHorizontal: 16,

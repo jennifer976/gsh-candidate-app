@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { CompanyLogo } from "@/components/CompanyLogo";
+import { resolveDashboardJobLogo } from "@/lib/brand-logo";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { DashboardJobListing } from "@/types/models";
 
@@ -13,14 +15,13 @@ export function DashboardHubJobPreview({
 }) {
   const metaLine = [job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || "";
   const meta = [metaLine, job.type].filter((x) => typeof x === "string" && x.length > 0).join(" · ");
+  const logoUrl = resolveDashboardJobLogo(job);
 
   return (
     <View style={[styles.card, feedCardStyle()]}>
       <View style={styles.accentStrip} />
       <Pressable onPress={onPress} style={styles.hit} accessibilityRole="button">
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{job.companyName.charAt(0).toUpperCase()}</Text>
-        </View>
+        <CompanyLogo logoUrl={logoUrl} companyName={job.companyName} size={48} radius={14} />
         <View style={styles.mid}>
           <Text style={styles.title} numberOfLines={2}>
             {job.title}
@@ -65,16 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.teal,
   },
   hit: { flexDirection: "row", alignItems: "flex-start", gap: 12, minWidth: 0 },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    backgroundColor: colors.brandSoft,
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-  },
-  avatarText: { fontSize: 18, fontFamily: fontFamily.bold, color: colors.brandDeep },
   mid: { flex: 1, minWidth: 0 },
   title: {
     fontSize: 15,

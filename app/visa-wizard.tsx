@@ -24,6 +24,7 @@ import {
   type OrientationTier,
 } from "@/lib/visaWizard/rules";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 const NATIONALITY_OPTIONS = [
@@ -363,7 +364,7 @@ export default function VisaWizardScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 48, gap: 14 },
+  pad: { ...stackScrollContentStyle, gap: 14 },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 4 },
   banner: {
     padding: 14,

@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 14,
-    paddingTop: 4,
+    paddingTop: 12,
   },
   logo: { width: 200, height: 44, maxWidth: "72%" },
   actions: { flexDirection: "row", gap: 4 },

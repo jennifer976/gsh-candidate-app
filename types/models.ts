@@ -203,6 +203,7 @@ export interface DashboardJobListing {
   _id: string;
   title: string;
   companyName: string;
+  companyLogo?: string | null;
   location: string;
   locationCity?: string;
   locationCountry?: string;
@@ -265,6 +266,8 @@ export interface PartnerListItem {
   userId?: string;
   businessName: string;
   companyLogo?: string;
+  profile_picture?: string;
+  listingGallery?: string[];
   companyWebsite: string;
   companyDescription: string;
   category: string;

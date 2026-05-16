@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { FAQ_ITEMS } from "@/lib/content/faqData";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -63,7 +64,7 @@ export default function FaqScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 48, gap: 16 },
+  pad: { ...stackScrollContentStyle, gap: 16 },
   section: { gap: 10 },
   card: { padding: 14, borderRadius: radii.lg },
   q: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy, paddingRight: 56 },

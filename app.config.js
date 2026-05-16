@@ -12,14 +12,10 @@ module.exports = () => ({
     icon: "./assets/brand-icon.png",
     userInterfaceStyle: "light",
     newArchEnabled: true,
-    /**
-     * Plain white native layer (no artwork). Expo requires `image`; transparent PNG stays invisible.
-     * Brand shows in-app after load — avoids a navy flash before JS loads.
-     */
     splash: {
-      image: "./assets/splash-transparent.png",
+      image: "./assets/brand-lockup-light.png",
       resizeMode: "contain",
-      backgroundColor: "#ffffff",
+      backgroundColor: "#080f2e",
     },
     ios: {
       supportsTablet: true,
@@ -33,7 +29,7 @@ module.exports = () => ({
       package: "com.globalsponsorhub.candidate",
       adaptiveIcon: {
         foregroundImage: "./assets/brand-icon.png",
-        backgroundColor: "#ffffff",
+        backgroundColor: "#080f2e",
       },
       edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,

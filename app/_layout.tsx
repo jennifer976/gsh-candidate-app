@@ -14,6 +14,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ApiSessionHandler } from "@/components/ApiSessionHandler";
+import { BrandedLaunchSplash } from "@/components/BrandedLaunchSplash";
 import { InAppWebHost } from "@/components/InAppWebHost";
 import { PushBootstrap } from "@/components/PushBootstrap";
 import { QueryFocusSync } from "@/components/QueryFocusSync";
@@ -61,8 +62,7 @@ export default function RootLayout() {
   }, [hydrated, fontsLoaded, hideNativeSplash]);
 
   if (!hydrated || !fontsLoaded) {
-    // Native splash only — plain backdrop from app.config.js until fonts + persisted auth hydrate.
-    return null;
+    return <BrandedLaunchSplash />;
   }
 
   return (
@@ -75,7 +75,7 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             ...navHeader,
-            contentStyle: { backgroundColor: colors.surfaceMuted },
+            contentStyle: { backgroundColor: colors.navyDeep },
           }}
         >
           <Stack.Screen name="index" options={{ headerShown: false }} />

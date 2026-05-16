@@ -15,6 +15,7 @@ import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchImmigrationRssHeadlines } from "@/lib/content/rssImmigration";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function ImmigrationNewsScreen() {
@@ -103,7 +104,7 @@ export default function ImmigrationNewsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 40, gap: 12, flexGrow: 1 },
+  pad: { ...stackScrollContentStyle, paddingBottom: 40, gap: 12, flexGrow: 1 },
   center: { alignItems: "center", paddingVertical: 32, gap: 10 },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 8 },
   loadingHint: {

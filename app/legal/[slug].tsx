@@ -28,7 +28,12 @@ export default function LegalDocumentScreen() {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.center} edges={["bottom"]}>
-          <GshScreenIntro title="Document not found" subtitle="That legal document is not in this app build." style={{ marginBottom: 12 }} />
+          <GshScreenIntro
+            underStackHeader
+            title="Document not found"
+            subtitle="That legal document is not in this app build."
+            style={{ marginBottom: 12, paddingHorizontal: 8 }}
+          />
           <Pressable onPress={() => router.back()} accessibilityRole="button">
             <Text style={styles.link}>Go back</Text>
           </Pressable>

@@ -7,6 +7,7 @@ import { PillarGuideContent } from "@/components/PillarGuideContent";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
 import { getPillarPageByPath } from "@/lib/guides/seo/getPillarByPath";
 import { getGuideTopicStub } from "@/lib/guides/topicStubs";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function GuideTopicScreen() {
@@ -79,7 +80,7 @@ export default function GuideTopicScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 40, gap: 14 },
+  pad: { ...stackScrollContentStyle, paddingBottom: 40, gap: 14 },
   card: { padding: 18, borderRadius: radii.lg },
   title: {
     fontSize: 22,

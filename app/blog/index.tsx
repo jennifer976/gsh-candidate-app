@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPublishedBlogList, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function BlogIndexScreen() {
@@ -89,7 +90,7 @@ export default function BlogIndexScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  pad: { padding: 16, paddingBottom: 40, gap: 14 },
+  pad: { ...stackScrollContentStyle, paddingBottom: 40, gap: 14 },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 12 },
   card: { padding: 16, borderRadius: radii.lg },
   thumb: { width: "100%", height: 160, borderRadius: radii.sm, marginBottom: 12, resizeMode: "cover" },

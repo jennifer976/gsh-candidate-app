@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshMessengerTip } from "@/components/gsh-ui-kit";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { fetchConversations } from "@/lib/api-client";
+import { stackListLeadStyle } from "@/lib/screen-layout";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { ConversationSummary } from "@/types/models";
 
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   headerBlock: { marginBottom: 8, paddingHorizontal: 16, paddingTop: 8 },
   listSubLead: { fontSize: 14, fontFamily: fontFamily.regular, color: "rgba(255,255,255,0.55)", lineHeight: 20, marginBottom: 10 },
-  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 10, paddingTop: 4 },
+  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 10 },
   card: { flexDirection: "row", borderRadius: radii.lg, overflow: "hidden" },
   cardAccent: { width: 4, backgroundColor: colors.purple },
   cardInner: { flex: 1, padding: 16 },

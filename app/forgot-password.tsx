@@ -19,6 +19,7 @@ import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { requestForgotPassword } from "@/lib/api-client";
+import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function ForgotPasswordScreen() {
@@ -85,7 +86,12 @@ export default function ForgotPasswordScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 24, flexGrow: 1, paddingBottom: 40 },
+  pad: {
+    paddingHorizontal: 24,
+    paddingTop: STACK_HEADER_BODY_GAP,
+    flexGrow: 1,
+    paddingBottom: 40,
+  },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
   formCard: {
     padding: 20,

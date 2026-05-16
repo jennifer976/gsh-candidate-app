@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 const SUPPORT_EMAIL = "support@globalsponsorhub.com";
@@ -50,7 +51,7 @@ export default function ContactScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  pad: { padding: 16, paddingBottom: 40 },
+  pad: { ...stackScrollContentStyle, paddingBottom: 40 },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
   card: { padding: 18, borderRadius: radii.lg, marginBottom: 16 },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 6 },
