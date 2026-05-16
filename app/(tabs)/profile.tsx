@@ -1,9 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as DocumentPicker from "expo-document-picker";
 import { useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -17,15 +16,18 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
-import { GshCompletionStrip, GshLinkRow, GshSectionTitle } from "@/components/gsh-ui-kit";
+import { GshLinkRow } from "@/components/gsh-ui-kit";
+import { GshScreenShell } from "@/components/GshScreenShell";
+import { GshTabHeroHeader } from "@/components/GshTabHeroHeader";
+import { GshToolTile } from "@/components/GshToolTile";
 import { fetchOwnProfile, updateProfile, uploadFileFromUri } from "@/lib/api-client";
 import { presentApiError } from "@/lib/api-error";
 import { useAuthStore } from "@/lib/auth-store";
 import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
 import { getAllSkillsSorted } from "@/lib/skills-data";
-import { colors, fontFamily, radii } from "@/lib/theme";
+import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
 const ALL_SKILLS = getAllSkillsSorted();
 const MAX_SKILLS = 30;
@@ -46,7 +48,7 @@ function mergeCandidateExtras(profile: Record<string, unknown> | undefined, user
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <View style={styles.sectionCard}>
+    <View style={[styles.sectionCard, feedCardStyle()]}>
       <Text style={styles.sectionCardTitle}>{title}</Text>
       {children}
     </View>
@@ -62,14 +64,27 @@ function FieldLabel({ label, hint }: { label: string; hint?: string }) {
   );
 }
 
+const MORE_TOOLS_LINKS = [
+  { title: "Tools & resources", subtitle: "ATS, blog, FAQs", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },
+  { title: "Saved roles", subtitle: "Bookmarked jobs", icon: "bookmark-outline" as const, accent: "teal" as const, href: "/saved" },
+  { title: "Partner directory", subtitle: "Relocation & legal", icon: "people-outline" as const, accent: "teal" as const, href: "/partners" },
+  { title: "Offers & perks", subtitle: "Partner deals", icon: "gift-outline" as const, accent: "purple" as const, href: "/offers" },
+  { title: "Notifications", subtitle: "Account updates", icon: "notifications-outline" as const, accent: "teal" as const, href: "/notification-feed" },
+  { title: "Feedback", subtitle: "Report an issue", icon: "chatbox-ellipses-outline" as const, accent: "ocean" as const, href: "/feedback" },
+] as const;
+
 export default function ProfileScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const qc = useQueryClient();
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const user = useAuthStore((s) => s.user);
+  const scrollRef = useRef<ScrollView>(null);
+  const formSectionY = useRef(0);
 
   const profileQuery = useQuery({ queryKey: ["profile", "me"], queryFn: fetchOwnProfile });
 
+  const [moreToolsOpen, setMoreToolsOpen] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -144,43 +159,90 @@ export default function ProfileScreen() {
 
   if (profileQuery.isLoading) {
     return (
-      <View style={styles.loadingWrap}>
-        <ActivityIndicator color={colors.brand} size="large" />
-      </View>
+      <GshScreenShell>
+        <View style={styles.loadingWrap}>
+          <ActivityIndicator color={colors.brand} size="large" />
+        </View>
+      </GshScreenShell>
     );
   }
 
-  return (
-    <View style={styles.shell}>
-      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+  const completionPct = completion ?? 0;
+  const profileReady = completionPct >= 100;
 
-        {/* Hero header */}
-        <LinearGradient colors={[colors.navy, "#1a237e"]} style={styles.profileHero}>
-          <SafeAreaView edges={["top"]} style={styles.profileHeroInner}>
-            <View style={styles.profileAvatarCircle}>
-              <Text style={styles.profileAvatarText}>{initials}</Text>
+  return (
+    <GshScreenShell>
+      <ScrollView
+        ref={scrollRef}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <GshTabHeroHeader paddingTop={Math.max(insets.top, 12)} tagline="Your account">
+          <View style={styles.heroIdentity}>
+            <View style={[styles.avatarRing, !profileReady && styles.avatarRingIncomplete]}>
+              <View style={styles.avatarInner}>
+                <Text style={styles.profileAvatarText}>{initials}</Text>
+              </View>
             </View>
             <Text style={styles.profileName}>{displayName}</Text>
             <Text style={styles.profileEmail}>{user?.email ?? ""}</Text>
-            {completion != null && (
-              <View style={styles.completionRow}>
-                <View style={styles.completionTrack}>
-                  <LinearGradient
-                    colors={[colors.teal, "#0ecdd1cc"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={[styles.completionFill, { width: `${Math.min(100, completion)}%` as any }]}
-                  />
-                </View>
-                <Text style={styles.completionLabel}>
-                  {completion >= 100 ? "Profile ready — employers can see everything" : `${completion}% complete · employers see more with a full profile`}
-                </Text>
-              </View>
-            )}
-          </SafeAreaView>
-        </LinearGradient>
+            {completion != null ? (
+              <Text style={styles.completionShort}>
+                {profileReady ? "Profile complete" : `${completionPct}% complete`}
+              </Text>
+            ) : null}
+            {!profileReady ? (
+              <GshGradientPrimaryButton
+                title="Complete profile"
+                onPress={() => scrollRef.current?.scrollTo({ y: formSectionY.current, animated: true })}
+                containerStyle={styles.completeCta}
+              />
+            ) : null}
+          </View>
+        </GshTabHeroHeader>
 
         <View style={styles.content}>
+          <View style={styles.tileGrid}>
+            <View style={styles.tileRow}>
+              <GshToolTile label="Browse jobs" icon="compass-outline" accent="teal" onPress={() => router.push("/(tabs)/jobs")} />
+              <GshToolTile label="Guides" icon="map-outline" accent="purple" onPress={() => router.push("/guides")} />
+            </View>
+            <View style={styles.tileRow}>
+              <GshToolTile label="Visa wizard" icon="sparkles-outline" accent="teal" onPress={() => router.push("/visa-wizard")} />
+              <GshToolTile label="Job alerts" icon="flash-outline" accent="ocean" onPress={() => router.push("/alerts")} />
+            </View>
+            <View style={styles.tileRow}>
+              <GshToolTile label="Settings" icon="settings-outline" accent="ocean" onPress={() => router.push("/settings")} />
+              <Pressable
+                style={[styles.moreTile, feedCardStyle()]}
+                onPress={() => setMoreToolsOpen((v) => !v)}
+                accessibilityRole="button"
+                accessibilityState={{ expanded: moreToolsOpen }}
+              >
+                <View style={[styles.moreTileIcon, { backgroundColor: colors.surfaceMuted }]}>
+                  <Ionicons name={moreToolsOpen ? "chevron-up" : "grid-outline"} size={24} color={colors.navy} />
+                </View>
+                <Text style={styles.moreTileLabel}>{moreToolsOpen ? "Hide extras" : "More tools"}</Text>
+              </Pressable>
+            </View>
+          </View>
+
+          {moreToolsOpen ? (
+            <View style={styles.moreToolsList}>
+              {MORE_TOOLS_LINKS.map((row) => (
+                <GshLinkRow
+                  key={row.href}
+                  title={row.title}
+                  subtitle={row.subtitle}
+                  icon={row.icon}
+                  accent={row.accent}
+                  onPress={() => router.push(row.href)}
+                />
+              ))}
+            </View>
+          ) : null}
+
           {profileErrCopy ? (
             <View style={styles.errorBanner}>
               <Ionicons name="warning-outline" size={18} color="#b45309" />
@@ -190,7 +252,12 @@ export default function ProfileScreen() {
             </View>
           ) : null}
 
-          {/* Basic info */}
+          <View
+            style={styles.formBlock}
+            onLayout={(e) => {
+              formSectionY.current = e.nativeEvent.layout.y;
+            }}
+          >
           <SectionCard title="Basic info">
             <FieldLabel label="First name" />
             <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder="First name" placeholderTextColor={colors.placeholder} />
@@ -218,7 +285,7 @@ export default function ProfileScreen() {
 
           {/* Work preferences */}
           <SectionCard title="Work preferences">
-            <FieldLabel label="How you want to work" hint="Select all that apply" />
+            <FieldLabel label="How you want to work" />
             <View style={styles.chipGrid}>
               {JOB_PREFERENCE_OPTIONS.map((pref) => {
                 const on = jobPreferences.includes(pref);
@@ -263,7 +330,7 @@ export default function ProfileScreen() {
               </View>
               <View style={styles.cvTextCol}>
                 <Text style={styles.cvStatus}>{resumeUrl ? "CV on file" : "No CV uploaded yet"}</Text>
-                <Text style={styles.cvHint}>{resumeUrl ? "CV on file — replace anytime with an updated PDF or Word doc." : "Upload your CV so employers can review your background before they reach out."}</Text>
+                <Text style={styles.cvHint}>{resumeUrl ? "Tap below to replace" : "Upload PDF or Word"}</Text>
               </View>
             </View>
             <Pressable
@@ -282,18 +349,6 @@ export default function ProfileScreen() {
             </Pressable>
           </SectionCard>
 
-          <GshSectionTitle title="Guides & tools" topSpacing="lg" />
-          <GshLinkRow title="Guides hub" subtitle="Country guides and pillars" icon="compass-outline" accent="ocean" onPress={() => router.push("/guides")} />
-          <GshLinkRow title="Visa wizard" subtitle="Sponsorship & mobility questionnaire" icon="sparkles-outline" accent="teal" onPress={() => router.push("/visa-wizard")} />
-          <GshLinkRow title="Tools & resources" subtitle="ATS, career toolkit, blog, FAQs" icon="layers-outline" accent="purple" onPress={() => router.push("/tools-resources")} />
-          <GshLinkRow title="Saved roles" subtitle="Your bookmarked jobs" icon="bookmark-outline" accent="teal" onPress={() => router.push("/saved")} />
-          <GshLinkRow title="Job alerts" subtitle="Matches and email preferences" icon="flash-outline" accent="ocean" onPress={() => router.push("/alerts")} />
-          <GshLinkRow title="Partner directory" subtitle="Relocation, legal & services" icon="people-outline" accent="teal" onPress={() => router.push("/partners")} />
-          <GshLinkRow title="Offers & perks" subtitle="Partner deals and codes" icon="gift-outline" accent="purple" onPress={() => router.push("/offers")} />
-          <GshLinkRow title="Notification inbox" subtitle="Account and application updates" icon="notifications-outline" accent="teal" onPress={() => router.push("/notification-feed")} />
-          <GshLinkRow title="Feedback & support" subtitle="Report issues or ideas" icon="chatbox-ellipses-outline" accent="teal" onPress={() => router.push("/feedback")} />
-          <GshLinkRow title="Settings" subtitle="Password, preferences, delete account" icon="settings-outline" accent="ocean" onPress={() => router.push("/settings")} />
-
           {/* Save button */}
           <GshGradientPrimaryButton title="Save profile" onPress={() => saveMut.mutate()} loading={saveMut.isPending} containerStyle={{ marginBottom: 12, marginTop: 8 }} />
 
@@ -302,6 +357,7 @@ export default function ProfileScreen() {
             <Ionicons name="log-out-outline" size={18} color={colors.error} />
             <Text style={styles.signOutText}>Sign out</Text>
           </Pressable>
+          </View>
         </View>
       </ScrollView>
 
@@ -343,38 +399,66 @@ export default function ProfileScreen() {
           />
         </SafeAreaView>
       </Modal>
-    </View>
+    </GshScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  shell: { flex: 1, backgroundColor: "#f1f5f9" },
-  loadingWrap: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#f1f5f9" },
+  loadingWrap: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
   scrollContent: { paddingBottom: 40 },
-
-  // Hero
-  profileHero: { paddingBottom: 28 },
-  profileHeroInner: { alignItems: "center", paddingHorizontal: 20, paddingTop: 8 },
-  profileAvatarCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: "rgba(255,255,255,0.15)",
-    borderWidth: 2,
-    borderColor: "rgba(255,255,255,0.3)",
+  heroIdentity: { alignItems: "center", paddingBottom: 4 },
+  avatarRing: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 3,
+    borderColor: colors.teal,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 12,
   },
-  profileAvatarText: { fontSize: 28, fontFamily: fontFamily.extraBold, color: colors.white },
+  avatarRingIncomplete: { borderColor: "rgba(255,255,255,0.35)" },
+  avatarInner: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    backgroundColor: "rgba(255,255,255,0.15)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  profileAvatarText: { fontSize: 26, fontFamily: fontFamily.extraBold, color: colors.white },
   profileName: { fontSize: 22, fontFamily: fontFamily.extraBold, color: colors.white, letterSpacing: -0.4 },
   profileEmail: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: "rgba(255,255,255,0.65)" },
-  completionRow: { marginTop: 16, width: "100%", gap: 6 },
-  completionTrack: { height: 5, borderRadius: 3, backgroundColor: "rgba(255,255,255,0.2)", overflow: "hidden" },
-  completionFill: { height: "100%", borderRadius: 3 },
-  completionLabel: { fontSize: 12, fontFamily: fontFamily.medium, color: "rgba(255,255,255,0.7)", textAlign: "center" },
-
-  content: { padding: 16, gap: 14 },
+  completionShort: {
+    marginTop: 8,
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: "rgba(255,255,255,0.75)",
+  },
+  completeCta: { marginTop: 14, alignSelf: "stretch", width: "100%", maxWidth: 280 },
+  content: { paddingHorizontal: 16, paddingTop: 16, gap: 14 },
+  tileGrid: { gap: 10, marginBottom: 4 },
+  tileRow: { flexDirection: "row", gap: 10 },
+  moreTile: {
+    flex: 1,
+    minWidth: "46%",
+    maxWidth: "50%",
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    alignItems: "center",
+    borderRadius: radii.lg,
+    gap: 10,
+  },
+  moreTileIcon: {
+    width: 52,
+    height: 52,
+    borderRadius: radii.md,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  moreTileLabel: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.navy, textAlign: "center" },
+  moreToolsList: { gap: 0, marginBottom: 8 },
+  formBlock: { gap: 14 },
 
   errorBanner: {
     flexDirection: "row",
@@ -388,18 +472,10 @@ const styles = StyleSheet.create({
   },
   errorText: { flex: 1, fontSize: 14, fontFamily: fontFamily.medium, color: "#92400e", lineHeight: 20 },
 
-  // Section cards
   sectionCard: {
-    backgroundColor: colors.white,
-    borderRadius: 16,
     padding: 16,
-    borderWidth: 1,
-    borderColor: "rgba(226,232,240,0.8)",
-    shadowColor: "#0f172a",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    borderRadius: radii.lg,
+    marginBottom: 0,
   },
   sectionCardTitle: {
     fontSize: 13,

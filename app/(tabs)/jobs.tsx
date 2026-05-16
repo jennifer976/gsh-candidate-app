@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -7,7 +6,6 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Image,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -24,7 +22,7 @@ import {
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobCardSkeleton } from "@/components/SkeletonLoader";
-import { brandLockupLight, brandMarkLight } from "@/lib/brand-assets";
+import { GshTabHeroHeader } from "@/components/GshTabHeroHeader";
 import {
   fetchPublicExternalJobListings,
   fetchPublicJobs,
@@ -250,58 +248,7 @@ export default function JobsTabScreen() {
 
   const listHeader = (
     <>
-      {/* ── Navy hero ── */}
-      <LinearGradient
-        colors={[colors.navy, colors.navyDeep]}
-        style={[styles.hero, { paddingTop: Math.max(insets.top, 16) }]}
-      >
-        {/* Network mark watermark — drop in top-right, low opacity */}
-        <Image
-          source={brandMarkLight}
-          style={styles.heroWatermark}
-          resizeMode="contain"
-          accessibilityIgnoresInvertColors
-          accessibilityElementsHidden
-          importantForAccessibility="no"
-        />
-        {/* Soft cyan glow at the bottom edge — breaks the flat navy */}
-        <LinearGradient
-          colors={["rgba(14,205,209,0)", "rgba(14,205,209,0.18)"]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={styles.heroGlow}
-          pointerEvents="none"
-        />
-        <View style={styles.heroTopRow}>
-          <Image
-            source={brandLockupLight}
-            style={styles.heroLogo}
-            resizeMode="contain"
-            accessibilityIgnoresInvertColors
-            accessibilityLabel="Global Sponsor Hub"
-          />
-          <View style={styles.heroActions}>
-            <Pressable
-              onPress={() => router.push("/notification-feed")}
-              style={styles.heroIconBtn}
-              accessibilityRole="button"
-              accessibilityLabel="Notifications"
-            >
-              <Ionicons name="notifications-outline" size={22} color="rgba(255,255,255,0.9)" />
-            </Pressable>
-            <Pressable
-              onPress={() => router.push("/(tabs)/messages")}
-              style={styles.heroIconBtn}
-              accessibilityRole="button"
-              accessibilityLabel="Messages"
-            >
-              <Ionicons name="chatbubble-outline" size={22} color="rgba(255,255,255,0.9)" />
-            </Pressable>
-          </View>
-        </View>
-
-        <Text style={styles.heroTagline}>Sponsored roles with visa and relocation support</Text>
-
+      <GshTabHeroHeader paddingTop={Math.max(insets.top, 16)} tagline="Sponsored roles with visa and relocation support">
         <View style={styles.heroSearch}>
           <Ionicons name="search" size={19} color="rgba(255,255,255,0.5)" style={styles.heroSearchIcon} />
           <TextInput
@@ -332,7 +279,7 @@ export default function JobsTabScreen() {
             </Pressable>
           )}
         </View>
-      </LinearGradient>
+      </GshTabHeroHeader>
 
       {/* ── Feed controls ── */}
       <View style={styles.feedControls}>

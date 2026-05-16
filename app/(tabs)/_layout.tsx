@@ -1,8 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import { Redirect, Tabs } from "expo-router";
+import { useEffect, useState } from "react";
 import { Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CandidateOnboardingModal } from "@/components/CandidateOnboardingModal";
+import {
+  isCandidateOnboardingComplete,
+  markCandidateOnboardingComplete,
+} from "@/lib/candidate-onboarding";
 import { useAuthStore } from "@/lib/auth-store";
 import { colors, fontFamily } from "@/lib/theme";
 
@@ -40,6 +46,30 @@ function TabGlyph({
 export default function TabsLayout() {
   const token = useAuthStore((s) => s.token);
   const insets = useSafeAreaInsets();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingReady, setOnboardingReady] = useState(false);
+
+  useEffect(() => {
+    if (!token) {
+      setOnboardingReady(false);
+      setShowOnboarding(false);
+      return;
+    }
+    let cancelled = false;
+    void isCandidateOnboardingComplete().then((done) => {
+      if (cancelled) return;
+      setShowOnboarding(!done);
+      setOnboardingReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
+
+  const finishOnboarding = () => {
+    void markCandidateOnboardingComplete();
+    setShowOnboarding(false);
+  };
 
   if (!token) return <Redirect href="/login" />;
 
@@ -59,6 +89,7 @@ export default function TabsLayout() {
   };
 
   return (
+    <>
     <Tabs
       initialRouteName="home"
       screenOptions={{
@@ -143,5 +174,9 @@ export default function TabsLayout() {
       <Tabs.Screen name="saved" options={{ href: null }} />
       <Tabs.Screen name="more" options={{ href: null }} />
     </Tabs>
+    {onboardingReady ? (
+      <CandidateOnboardingModal visible={showOnboarding} onComplete={finishOnboarding} />
+    ) : null}
+    </>
   );
 }

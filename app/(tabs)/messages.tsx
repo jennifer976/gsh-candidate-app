@@ -30,8 +30,8 @@ export default function MessagesScreen() {
 
   const listHeader = (
     <View style={styles.headerBlock}>
-      <Text style={styles.listSubLead}>Employer conversations about roles you've applied for.</Text>
-      <GshMessengerTip>You can reply once the employer sends the first message — this keeps conversations relevant.</GshMessengerTip>
+      <Text style={styles.listSubLead}>Chats with employers about your applications</Text>
+      <GshMessengerTip>Reply once the employer messages you first.</GshMessengerTip>
     </View>
   );
 

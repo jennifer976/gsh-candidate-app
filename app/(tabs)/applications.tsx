@@ -44,8 +44,8 @@ export default function ApplicationsScreen() {
 
   const listHeader = (
     <View style={styles.listHeader}>
-      <Text style={styles.listEyebrow}>Pipeline</Text>
-      <Text style={styles.listSubLead}>Track status, open listings, or withdraw if your plans change.</Text>
+      <Text style={styles.listEyebrow}>Applications</Text>
+      <Text style={styles.listSubLead}>Status updates from employers</Text>
     </View>
   );
 
@@ -111,7 +111,13 @@ export default function ApplicationsScreen() {
                   <Ionicons name="send-outline" size={38} color={colors.teal} />
                 </View>
                 <Text style={styles.empty}>No applications yet</Text>
-                <Text style={styles.emptySub}>When you apply for a role on GSH, it appears here with status updates from the employer.</Text>
+                <Pressable
+                  style={styles.emptyCta}
+                  onPress={() => router.push("/(tabs)/jobs")}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.emptyCtaText}>Browse jobs</Text>
+                </Pressable>
               </View>
             }
           />
@@ -163,12 +169,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(14, 205, 209, 0.35)",
   },
-  empty: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.navy },
-  emptySub: {
-    textAlign: "center",
-    color: colors.textMuted,
-    fontFamily: fontFamily.regular,
-    fontSize: 15,
-    lineHeight: 22,
+  empty: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.white },
+  emptyCta: {
+    marginTop: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 22,
+    borderRadius: radii.pill,
+    backgroundColor: colors.brand,
   },
+  emptyCtaText: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.navyDeep },
 });
