@@ -57,7 +57,7 @@ function handleGuideLink(url: string, router: Router): boolean {
     if (hub.kind === "appGuide") {
       router.push(`/guides/country/${hub.slug}`);
     } else {
-      router.push("/(tabs)");
+      router.push("/(tabs)/jobs");
     }
     return false;
   }
@@ -165,7 +165,7 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
                   if (rHub.kind === "appGuide") {
                     router.push(`/guides/country/${rHub.slug}`);
                   } else {
-                    router.push("/(tabs)");
+                    router.push("/(tabs)/jobs");
                   }
                   return;
                 }

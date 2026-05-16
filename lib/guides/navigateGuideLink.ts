@@ -14,7 +14,7 @@ export function navigateGuideLink(router: Router, href: string): void {
       router.push(`/guides/country/${hub.slug}`);
       return;
     }
-    router.push("/(tabs)");
+    router.push("/(tabs)/jobs");
     return;
   }
 
@@ -23,9 +23,9 @@ export function navigateGuideLink(router: Router, href: string): void {
     return;
   }
   if (base === "/jobs" || base === "/jobs/" || base.startsWith("/jobs")) {
-    router.push("/(tabs)");
+    router.push("/(tabs)/jobs");
     return;
   }
 
-  router.push("/(tabs)");
+  router.push("/(tabs)/home");
 }

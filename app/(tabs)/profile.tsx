@@ -19,7 +19,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
-import { GshCompletionStrip } from "@/components/gsh-ui-kit";
+import { GshCompletionStrip, GshLinkRow, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { fetchOwnProfile, updateProfile, uploadFileFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
@@ -278,8 +278,20 @@ export default function ProfileScreen() {
             </Pressable>
           </SectionCard>
 
+          <GshSectionTitle title="Guides & tools" topSpacing="lg" />
+          <GshLinkRow title="Guides hub" subtitle="Country guides and pillars" icon="compass-outline" accent="ocean" onPress={() => router.push("/guides")} />
+          <GshLinkRow title="Visa wizard" subtitle="Sponsorship & mobility questionnaire" icon="sparkles-outline" accent="teal" onPress={() => router.push("/visa-wizard")} />
+          <GshLinkRow title="Tools & resources" subtitle="ATS, career toolkit, blog, FAQs" icon="layers-outline" accent="purple" onPress={() => router.push("/tools-resources")} />
+          <GshLinkRow title="Saved roles" subtitle="Your bookmarked jobs" icon="bookmark-outline" accent="teal" onPress={() => router.push("/saved")} />
+          <GshLinkRow title="Job alerts" subtitle="Matches and email preferences" icon="flash-outline" accent="ocean" onPress={() => router.push("/alerts")} />
+          <GshLinkRow title="Partner directory" subtitle="Relocation, legal & services" icon="people-outline" accent="teal" onPress={() => router.push("/partners")} />
+          <GshLinkRow title="Offers & perks" subtitle="Partner deals and codes" icon="gift-outline" accent="purple" onPress={() => router.push("/offers")} />
+          <GshLinkRow title="Notification inbox" subtitle="Account and application updates" icon="notifications-outline" accent="teal" onPress={() => router.push("/notification-feed")} />
+          <GshLinkRow title="Feedback & support" subtitle="Report issues or ideas" icon="chatbox-ellipses-outline" accent="teal" onPress={() => router.push("/feedback")} />
+          <GshLinkRow title="Settings" subtitle="Password, preferences, delete account" icon="settings-outline" accent="ocean" onPress={() => router.push("/settings")} />
+
           {/* Save button */}
-          <GshGradientPrimaryButton title="Save profile" onPress={() => saveMut.mutate()} loading={saveMut.isPending} containerStyle={{ marginBottom: 12 }} />
+          <GshGradientPrimaryButton title="Save profile" onPress={() => saveMut.mutate()} loading={saveMut.isPending} containerStyle={{ marginBottom: 12, marginTop: 8 }} />
 
           {/* Sign out */}
           <Pressable style={styles.signOutBtn} onPress={logout}>

@@ -96,6 +96,7 @@ export default function RootLayout() {
           <Stack.Screen name="alerts" options={{ title: "Job alerts" }} />
           <Stack.Screen name="conversation/[id]" options={{ title: "Conversation" }} />
           <Stack.Screen name="dashboard" options={{ title: "Dashboard" }} />
+          <Stack.Screen name="saved" options={{ title: "Saved roles" }} />
           <Stack.Screen name="notification-feed" options={{ title: "Notifications" }} />
           <Stack.Screen name="feedback" options={{ title: "Feedback" }} />
           <Stack.Screen name="settings" options={{ title: "Settings" }} />

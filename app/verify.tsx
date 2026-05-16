@@ -34,7 +34,7 @@ export default function VerifyScreen() {
     try {
       const data = await verifyOtpRequest(uid, c);
       setAuth(data.token, data.user);
-      router.replace("/(tabs)");
+      router.replace("/(tabs)/home");
     } catch (err: unknown) {
       const msg =
         err && typeof err === "object" && "message" in err ? String((err as { message: string }).message) : "Verification failed";

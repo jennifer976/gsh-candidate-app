@@ -352,7 +352,7 @@ export default function VisaWizardScreen() {
             )}
           </View>
 
-          <Pressable style={styles.bottomNav} onPress={() => router.push("/(tabs)")} accessibilityRole="button">
+          <Pressable style={styles.bottomNav} onPress={() => router.push("/(tabs)/home")} accessibilityRole="button">
             <Text style={styles.bottomNavText}>Back to Discover</Text>
           </Pressable>
         </ScrollView>

@@ -15,7 +15,7 @@ export function navigateMarketingPath(router: Router, rawPath: string): void {
     if (hub.kind === "appGuide") {
       router.push(`/guides/country/${hub.slug}`);
     } else {
-      router.push("/(tabs)");
+      router.push("/(tabs)/jobs");
     }
     return;
   }

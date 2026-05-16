@@ -39,6 +39,16 @@ export function getJobLogoUrl(job: Job): string {
   return resolveUploadAssetUrl(raw);
 }
 
+const MOBILITY_PRIORITY = /visa|sponsor|relocat|mobility|work permit/i;
+
+/** Mobility-first chip order for job cards (visa / sponsorship surfaced first). */
+export function hubListingChipsPrioritized(job: Job, max = 2): string[] {
+  const all = hubListingChips(job, 6);
+  const priority = all.filter((c) => MOBILITY_PRIORITY.test(c));
+  const rest = all.filter((c) => !MOBILITY_PRIORITY.test(c));
+  return [...priority, ...rest].slice(0, max);
+}
+
 /** Mobility + distinct benefit labels for hub job cards (capped for layout). */
 export function hubListingChips(job: Job, max = 6): string[] {
   const mobility = (job.mobility ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);

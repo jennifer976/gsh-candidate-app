@@ -11,7 +11,7 @@ export type GshLinkAccent = "teal" | "purple" | "ocean";
 
 const ACCENT: Record<GshLinkAccent, { wrap: string; icon: string }> = {
   teal: { wrap: "rgba(14, 205, 209, 0.18)", icon: "#0f766e" },
-  purple: { wrap: "rgba(97, 10, 144, 0.12)", icon: colors.brand },
+  purple: { wrap: "rgba(97, 10, 144, 0.12)", icon: colors.purple },
   ocean: { wrap: "rgba(59, 130, 246, 0.14)", icon: "#1d4ed8" },
 };
 
@@ -66,6 +66,7 @@ export function GshSectionTitle({
   actionLabel,
   onAction,
   topSpacing = "md",
+  onDark = false,
   style,
 }: {
   title: string;
@@ -73,6 +74,8 @@ export function GshSectionTitle({
   actionLabel?: string;
   onAction?: () => void;
   topSpacing?: "none" | "sm" | "md" | "lg";
+  /** Light text for navy canvas sections (Home, Jobs list). */
+  onDark?: boolean;
   style?: ViewStyle;
 }) {
   const mt = topSpacing === "none" ? 0 : topSpacing === "sm" ? 8 : topSpacing === "lg" ? 28 : 18;
@@ -80,14 +83,14 @@ export function GshSectionTitle({
     <View style={[{ marginTop: mt, marginBottom: hint || actionLabel ? 8 : 10 }, style]}>
       <View style={secStyles.titleRow}>
         <View style={secStyles.rule} />
-        <Text style={secStyles.title}>{title}</Text>
+        <Text style={[secStyles.title, onDark && secStyles.titleOnDark]}>{title}</Text>
         {actionLabel && onAction ? (
           <Pressable onPress={onAction} hitSlop={10} accessibilityRole="button">
-            <Text style={secStyles.action}>{actionLabel}</Text>
+            <Text style={[secStyles.action, onDark && secStyles.actionOnDark]}>{actionLabel}</Text>
           </Pressable>
         ) : null}
       </View>
-      {hint ? <Text style={secStyles.hint}>{hint}</Text> : null}
+      {hint ? <Text style={[secStyles.hint, onDark && secStyles.hintOnDark]}>{hint}</Text> : null}
     </View>
   );
 }
@@ -102,7 +105,9 @@ const secStyles = StyleSheet.create({
     color: colors.navy,
     letterSpacing: -0.3,
   },
+  titleOnDark: { color: colors.white },
   action: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.brand },
+  actionOnDark: { color: colors.teal },
   hint: {
     marginTop: 6,
     marginLeft: 14,
@@ -111,6 +116,7 @@ const secStyles = StyleSheet.create({
     color: colors.textMuted,
     lineHeight: 20,
   },
+  hintOnDark: { color: "rgba(255,255,255,0.55)" },
 });
 
 export function GshLinkRow({

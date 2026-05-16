@@ -65,7 +65,7 @@ function navigateInternalPath(router: Router, pathname: string, search: string):
   }
 
   if (pathname.includes("/candidate/saved") || pathname.endsWith("/saved-jobs")) {
-    router.push("/(tabs)/saved");
+    router.push("/saved");
     return true;
   }
 

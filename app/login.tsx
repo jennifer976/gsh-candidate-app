@@ -48,7 +48,7 @@ export default function LoginScreen() {
         return;
       }
       setAuth(data.token, data.user);
-      router.replace("/(tabs)");
+      router.replace("/(tabs)/home");
     } catch (err: unknown) {
       const msg =
         err && typeof err === "object" && "message" in err

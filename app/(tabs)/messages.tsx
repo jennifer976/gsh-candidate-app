@@ -3,10 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { GshMessengerTip, GshScreenIntro } from "@/components/gsh-ui-kit";
-import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { GshMessengerTip } from "@/components/gsh-ui-kit";
+import { GshScreenShell } from "@/components/GshScreenShell";
 import { fetchConversations } from "@/lib/api-client";
-import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
+import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { ConversationSummary } from "@/types/models";
 
 function formatWhen(iso: string) {
@@ -30,18 +30,13 @@ export default function MessagesScreen() {
 
   const listHeader = (
     <View style={styles.headerBlock}>
-      <GshScreenIntro
-        eyebrow="Inbox"
-        title="Messages"
-        subtitle="Employer conversations about roles you've applied for — all in one place."
-        style={{ paddingHorizontal: 16, paddingTop: 20, marginBottom: 0 }}
-      />
+      <Text style={styles.listSubLead}>Employer conversations about roles you've applied for.</Text>
       <GshMessengerTip>You can reply once the employer sends the first message — this keeps conversations relevant.</GshMessengerTip>
     </View>
   );
 
   return (
-    <GshScreenBackground>
+    <GshScreenShell>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         {query.isLoading ? (
           <View style={styles.center}>
@@ -65,7 +60,7 @@ export default function MessagesScreen() {
             contentContainerStyle={styles.listPad}
             renderItem={({ item }) => (
               <Pressable
-                style={[styles.card, cardSurfaceStyle(true)]}
+                style={[styles.card, feedCardStyle()]}
                 onPress={() => router.push(`/conversation/${item._id}`)}
                 accessibilityRole="button"
               >
@@ -102,13 +97,14 @@ export default function MessagesScreen() {
           />
         )}
       </SafeAreaView>
-    </GshScreenBackground>
+    </GshScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  headerBlock: { marginBottom: 8 },
+  headerBlock: { marginBottom: 8, paddingHorizontal: 16, paddingTop: 8 },
+  listSubLead: { fontSize: 14, fontFamily: fontFamily.regular, color: "rgba(255,255,255,0.55)", lineHeight: 20, marginBottom: 10 },
   listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 10, paddingTop: 4 },
   card: { flexDirection: "row", borderRadius: radii.lg, overflow: "hidden" },
   cardAccent: { width: 4, backgroundColor: colors.purple },

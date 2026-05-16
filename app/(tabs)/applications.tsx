@@ -3,10 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { GshScreenIntro } from "@/components/gsh-ui-kit";
-import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { GshScreenShell } from "@/components/GshScreenShell";
 import { fetchApplications, withdrawApplication } from "@/lib/api-client";
-import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
+import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { Application, ApplicationJobRef } from "@/types/models";
 
 function statusStyle(status: string) {
@@ -44,16 +43,14 @@ export default function ApplicationsScreen() {
   const rows = query.data ?? [];
 
   const listHeader = (
-    <GshScreenIntro
-      eyebrow="Pipeline"
-      title="Your applications"
-      subtitle="Every role you've applied for on GSH — track status, open the listing, or withdraw if your plans change."
-      style={{ paddingHorizontal: 16, paddingTop: 20, marginBottom: 4 }}
-    />
+    <View style={styles.listHeader}>
+      <Text style={styles.listEyebrow}>Pipeline</Text>
+      <Text style={styles.listSubLead}>Track status, open listings, or withdraw if your plans change.</Text>
+    </View>
   );
 
   return (
-    <GshScreenBackground>
+    <GshScreenShell>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         {query.isLoading ? (
           <View style={styles.center}>
@@ -79,7 +76,7 @@ export default function ApplicationsScreen() {
               const job = item.jobId as ApplicationJobRef | undefined;
               const jid = job?._id;
               return (
-                <View style={[styles.card, cardSurfaceStyle(true)]}>
+                <View style={[styles.card, feedCardStyle()]}>
                   <View style={styles.accent} />
                   <View style={styles.cardBody}>
                     <Pressable onPress={() => jid && router.push(`/job/${jid}`)} disabled={!jid} style={styles.cardMain}>
@@ -120,12 +117,22 @@ export default function ApplicationsScreen() {
           />
         )}
       </SafeAreaView>
-    </GshScreenBackground>
+    </GshScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
+  listHeader: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 8 },
+  listEyebrow: {
+    fontSize: 11,
+    fontFamily: fontFamily.semiBold,
+    color: colors.teal,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+    marginBottom: 6,
+  },
+  listSubLead: { fontSize: 14, fontFamily: fontFamily.regular, color: "rgba(255,255,255,0.55)", lineHeight: 20 },
   listPad: { paddingHorizontal: 16, paddingBottom: 32, gap: 12, paddingTop: 4 },
   card: { flexDirection: "row", borderRadius: radii.lg, overflow: "hidden" },
   accent: { width: 5, backgroundColor: colors.brand },

@@ -60,6 +60,7 @@ export default function TabsLayout() {
 
   return (
     <Tabs
+      initialRouteName="home"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.teal,
@@ -82,23 +83,25 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
+        options={{ href: null }}
+      />
+      <Tabs.Screen
+        name="home"
         options={{
-          title: "Discover",
-          tabBarLabel: "Discover",
+          title: "Home",
+          tabBarLabel: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <TabGlyph focused={focused} color={color} filled="compass" outline="compass-outline" />
+            <TabGlyph focused={focused} color={color} filled="home" outline="home-outline" />
           ),
         }}
       />
       <Tabs.Screen
-        name="saved"
+        name="jobs"
         options={{
-          title: "Saved",
-          headerShown: true,
-          ...darkHeader,
-          tabBarLabel: "Saved",
+          title: "Jobs",
+          tabBarLabel: "Jobs",
           tabBarIcon: ({ color, focused }) => (
-            <TabGlyph focused={focused} color={color} filled="bookmark" outline="bookmark-outline" />
+            <TabGlyph focused={focused} color={color} filled="compass" outline="compass-outline" />
           ),
         }}
       />
@@ -130,26 +133,15 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: "Profile",
-          headerShown: true,
-          ...darkHeader,
+          headerShown: false,
           tabBarLabel: "Profile",
           tabBarIcon: ({ color, focused }) => (
             <TabGlyph focused={focused} color={color} filled="person-circle" outline="person-circle-outline" />
           ),
         }}
       />
-      <Tabs.Screen
-        name="more"
-        options={{
-          title: "Menu",
-          headerShown: true,
-          ...darkHeader,
-          tabBarLabel: "Menu",
-          tabBarIcon: ({ color, focused }) => (
-            <TabGlyph focused={focused} color={color} filled="menu" outline="menu-outline" />
-          ),
-        }}
-      />
+      <Tabs.Screen name="saved" options={{ href: null }} />
+      <Tabs.Screen name="more" options={{ href: null }} />
     </Tabs>
   );
 }

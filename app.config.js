@@ -49,7 +49,7 @@ module.exports = () => ({
         "expo-notifications",
         {
           icon: "./assets/brand-icon.png",
-          color: "#610a90",
+          color: "#0ecdd1",
           defaultChannel: "default",
         },
       ],
