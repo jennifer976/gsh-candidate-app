@@ -13,10 +13,10 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ApiSessionHandler } from "@/components/ApiSessionHandler";
 import { InAppWebHost } from "@/components/InAppWebHost";
 import { PushBootstrap } from "@/components/PushBootstrap";
 import { QueryFocusSync } from "@/components/QueryFocusSync";
-import { SplashIntroVideo } from "@/components/SplashIntroVideo";
 import { useAuthStore } from "@/lib/auth-store";
 import { colors, navHeader } from "@/lib/theme";
 
@@ -41,7 +41,6 @@ export default function RootLayout() {
     Inter_700Bold,
     Inter_800ExtraBold,
   });
-  const [introDismissed, setIntroDismissed] = useState(false);
   const nativeSplashHiddenRef = useRef(false);
 
   const hideNativeSplash = useCallback(() => {
@@ -55,29 +54,21 @@ export default function RootLayout() {
     return unsub;
   }, []);
 
-  /** After intro, ensure splash is gone before stacking routes (e.g. fast tap-through edge cases). */
   useEffect(() => {
-    if (hydrated && fontsLoaded && introDismissed) {
+    if (hydrated && fontsLoaded) {
       hideNativeSplash();
     }
-  }, [hydrated, fontsLoaded, introDismissed, hideNativeSplash]);
+  }, [hydrated, fontsLoaded, hideNativeSplash]);
 
   if (!hydrated || !fontsLoaded) {
     // Native splash only — plain backdrop from app.config.js until fonts + persisted auth hydrate.
     return null;
   }
 
-  if (!introDismissed) {
-    return (
-      <SafeAreaProvider>
-        <SplashIntroVideo onCoverReady={hideNativeSplash} onDone={() => setIntroDismissed(true)} />
-      </SafeAreaProvider>
-    );
-  }
-
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
+        <ApiSessionHandler />
         <QueryFocusSync />
         <PushBootstrap />
         <InAppWebHost />

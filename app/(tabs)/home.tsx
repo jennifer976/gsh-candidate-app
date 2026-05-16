@@ -21,6 +21,7 @@ import { GshScreenIntro, GshLinkRow, GshSectionTitle } from "@/components/gsh-ui
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { brandLockupLight } from "@/lib/brand-assets";
 import { fetchCandidateDashboard, fetchOwnProfile } from "@/lib/api-client";
+import { presentApiError } from "@/lib/api-error";
 import { cardCuratedSurfaceStyle, cardSurfaceStyle, colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { DashboardChartPoint } from "@/types/models";
 
@@ -151,17 +152,18 @@ export default function HomeScreen() {
   }
 
   if (q.isError || !q.data) {
+    const errCopy = presentApiError(q.error);
     return (
       <GshScreenShell>
         <ScrollView contentContainerStyle={styles.centerPad} refreshControl={<RefreshControl refreshing={q.isFetching} onRefresh={onRefresh} tintColor={colors.white} />}>
             <View
               accessible
               accessibilityRole="alert"
-              accessibilityLabel="Dashboard unavailable. Pull down to retry when you are back online."
+              accessibilityLabel={`${errCopy.title}. ${errCopy.subtitle}`}
               style={styles.errorAnnounce}
             >
               <Ionicons name="stats-chart-outline" size={48} color={colors.borderStrong} importantForAccessibility="no" />
-              <GshScreenIntro title="Dashboard unavailable" subtitle="Pull down to retry when you are back online." style={{ marginBottom: 0 }} />
+              <GshScreenIntro title={errCopy.title} subtitle={errCopy.subtitle} style={{ marginBottom: 0 }} />
             </View>
             <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.errorAccent} />
             <Pressable
@@ -180,9 +182,12 @@ export default function HomeScreen() {
 
   const d = q.data;
   const pct = d.profile.completionPercentage;
-  const savedCount = d.savedJobs?.length ?? 0;
-  const chartSlice = d.chartData.slice(-6);
-  const recentSlice = d.recentApplications.slice(0, 8);
+  const chartSlice = (d.chartData ?? []).slice(-6);
+  const recentSlice = (d.recentApplications ?? []).slice(0, 8);
+  const savedJobRows = (d.savedJobs ?? []).filter(
+    (job): job is NonNullable<typeof job> => Boolean(job && typeof job === "object" && job._id)
+  );
+  const savedCount = savedJobRows.length;
 
   const greeting = firstName ? `Hello, ${firstName}` : "Hello";
 
@@ -317,7 +322,7 @@ export default function HomeScreen() {
                 topSpacing="lg"
               />
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.savedScroll}>
-                {(d.savedJobs ?? []).slice(0, 10).map((job) => (
+                {savedJobRows.slice(0, 10).map((job) => (
                   <Pressable
                     key={job._id}
                     style={[styles.savedCard, feedCardStyle()]}
@@ -338,7 +343,7 @@ export default function HomeScreen() {
             actionLabel="Browse jobs"
             onAction={() => router.push("/(tabs)/jobs")}
           />
-          {d.latestJobs.slice(0, 8).map((job) => (
+          {(d.latestJobs ?? []).slice(0, 8).map((job) => (
             <Pressable
               key={job._id}
               style={[styles.jobCard, feedCardStyle()]}

@@ -21,6 +21,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshCompletionStrip, GshLinkRow, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { fetchOwnProfile, updateProfile, uploadFileFromUri } from "@/lib/api-client";
+import { presentApiError } from "@/lib/api-error";
 import { useAuthStore } from "@/lib/auth-store";
 import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
 import { getAllSkillsSorted } from "@/lib/skills-data";
@@ -128,6 +129,7 @@ export default function ProfileScreen() {
   });
 
   const p = profileQuery.data;
+  const profileErrCopy = profileQuery.isError ? presentApiError(profileQuery.error) : null;
   const completion = typeof p?.profileCompletion === "number" ? p.profileCompletion : null;
   const resumeUrl = typeof p?.resume === "string" ? p.resume : "";
   const displayName = [firstName, lastName].filter(Boolean).join(" ") || user?.email || "Your profile";
@@ -179,12 +181,14 @@ export default function ProfileScreen() {
         </LinearGradient>
 
         <View style={styles.content}>
-          {profileQuery.isError && (
+          {profileErrCopy ? (
             <View style={styles.errorBanner}>
               <Ionicons name="warning-outline" size={18} color="#b45309" />
-              <Text style={styles.errorText}>Profile could not be loaded. Check your connection.</Text>
+              <Text style={styles.errorText}>
+                {profileErrCopy.title}. {profileErrCopy.subtitle}
+              </Text>
             </View>
-          )}
+          ) : null}
 
           {/* Basic info */}
           <SectionCard title="Basic info">

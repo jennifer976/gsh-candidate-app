@@ -68,7 +68,11 @@ export async function apiFetchJson<T>(
       };
       throw err;
     }
-    throw e;
+    const err: ApiError = {
+      message: e instanceof Error ? e.message : "Network request failed",
+      status: 0,
+    };
+    throw err;
   }
 
   clearTimeout(timeoutId);

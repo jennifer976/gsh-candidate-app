@@ -14,7 +14,7 @@ module.exports = () => ({
     newArchEnabled: true,
     /**
      * Plain white native layer (no artwork). Expo requires `image`; transparent PNG stays invisible.
-     * Intro video / in-app chrome carry brand — avoids a navy flash before JS loads.
+     * Brand shows in-app after load — avoids a navy flash before JS loads.
      */
     splash: {
       image: "./assets/splash-transparent.png",
@@ -44,7 +44,6 @@ module.exports = () => ({
     plugins: [
       "expo-router",
       "expo-secure-store",
-      "expo-av",
       [
         "expo-notifications",
         {
