@@ -24,7 +24,7 @@ import {
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobCardSkeleton } from "@/components/SkeletonLoader";
-import { brandLockupLight } from "@/lib/brand-assets";
+import { brandLockupLight, brandMarkLight } from "@/lib/brand-assets";
 import {
   fetchCandidateDashboard,
   fetchOwnProfile,
@@ -34,12 +34,12 @@ import {
   saveJob,
   unsaveJob,
 } from "@/lib/api-client";
-import { hapticLight, hapticSuccess } from "@/lib/haptics";
+import { hapticLight } from "@/lib/haptics";
 import { getJobEmployerLabel, getJobLogoUrl, hubListingChips } from "@/lib/job-display";
 import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
 import { addRecentJobSearch, loadRecentJobSearches } from "@/lib/recent-job-searches";
 import { colors, fontFamily, radii } from "@/lib/theme";
-import type { CandidateProfile, ExternalJobListingPublic, Job } from "@/types/models";
+import type { ExternalJobListingPublic, Job } from "@/types/models";
 
 function formatSalary(job: Job): string {
   const cur = job.salaryCurrency || "GBP";
@@ -75,11 +75,18 @@ function HubJobCard({
 
   return (
     <View style={styles.card}>
+      <View style={styles.cardAccentStrip} />
       <Pressable onPress={onPress} style={styles.cardMainHit} accessibilityRole="button">
         <CompanyLogo logoUrl={logoUrl} companyName={employer} size={48} radius={13} />
         <View style={styles.cardMid}>
           <Text style={styles.cardTitle} numberOfLines={2}>{job.title}</Text>
-          <Text style={styles.cardCompanyLine} numberOfLines={1}>{employer}</Text>
+          <View style={styles.cardCompanyRow}>
+            <Text style={styles.cardCompanyLine} numberOfLines={1}>{employer}</Text>
+            <View style={styles.sponsorPill}>
+              <Ionicons name="shield-checkmark" size={10} color={colors.brandDeep} />
+              <Text style={styles.sponsorPillText}>Sponsor</Text>
+            </View>
+          </View>
           {meta ? (
             <Text style={styles.cardMetaLine} numberOfLines={1}>{meta}</Text>
           ) : null}
@@ -300,6 +307,23 @@ export default function JobsScreen() {
         colors={[colors.navy, colors.navyDeep]}
         style={[styles.hero, { paddingTop: Math.max(insets.top, 16) }]}
       >
+        {/* Network mark watermark — drop in top-right, low opacity */}
+        <Image
+          source={brandMarkLight}
+          style={styles.heroWatermark}
+          resizeMode="contain"
+          accessibilityIgnoresInvertColors
+          accessibilityElementsHidden
+          importantForAccessibility="no"
+        />
+        {/* Soft cyan glow at the bottom edge — breaks the flat navy */}
+        <LinearGradient
+          colors={["rgba(14,205,209,0)", "rgba(14,205,209,0.18)"]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={styles.heroGlow}
+          pointerEvents="none"
+        />
         <View style={styles.heroTopRow}>
           <Image
             source={brandLockupLight}
@@ -328,7 +352,10 @@ export default function JobsScreen() {
           </View>
         </View>
 
-        <Text style={styles.heroGreetingLabel}>Good to see you</Text>
+        <View style={styles.heroGreetingBlock}>
+          <View style={styles.heroAccentBar} />
+          <Text style={styles.heroGreetingLabel}>Good to see you</Text>
+        </View>
         <Text style={styles.heroGreeting}>{greeting}</Text>
 
         {showCompletionBar ? (
@@ -593,7 +620,22 @@ const styles = StyleSheet.create({
   shell: { flex: 1, backgroundColor: colors.navyDeep },
 
   // Hero
-  hero: { paddingHorizontal: 20, paddingBottom: 24 },
+  hero: { paddingHorizontal: 20, paddingBottom: 24, overflow: "hidden", position: "relative" },
+  heroWatermark: {
+    position: "absolute",
+    top: -40,
+    right: -80,
+    width: 320,
+    height: 320,
+    opacity: 0.08,
+  },
+  heroGlow: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 110,
+  },
   heroTopRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -611,11 +653,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  heroGreetingBlock: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 4,
+  },
+  heroAccentBar: {
+    width: 18,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: colors.teal,
+  },
   heroGreetingLabel: {
     fontSize: 13,
     fontFamily: fontFamily.medium,
     color: "rgba(255,255,255,0.55)",
-    marginBottom: 4,
   },
   heroGreeting: {
     fontSize: 26,
@@ -626,17 +679,17 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: "row",
-    backgroundColor: "rgba(255,255,255,0.09)",
+    backgroundColor: "rgba(255,255,255,0.06)",
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.12)",
+    borderColor: "rgba(14,205,209,0.18)",
     marginBottom: 18,
     overflow: "hidden",
   },
-  statCell: { flex: 1, alignItems: "center", paddingVertical: 12 },
+  statCell: { flex: 1, alignItems: "center", paddingVertical: 12, paddingHorizontal: 4 },
   statDivider: {
     width: 1,
-    backgroundColor: "rgba(255,255,255,0.12)",
+    backgroundColor: "rgba(255,255,255,0.10)",
     marginVertical: 12,
   },
   statNum: {
@@ -649,7 +702,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: 11,
     fontFamily: fontFamily.medium,
-    color: "rgba(255,255,255,0.5)",
+    color: "rgba(255,255,255,0.55)",
+    letterSpacing: 0.3,
+    textTransform: "uppercase",
   },
   completionWrap: {
     backgroundColor: "rgba(14,205,209,0.1)",
@@ -847,14 +902,26 @@ const styles = StyleSheet.create({
   listHeadingRight: { flexDirection: "row", alignItems: "center", gap: 10 },
   listHeadingLink: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.teal },
 
-  // Cards — white cards on dark canvas = high contrast, premium feel
+  // Cards — white cards on dark canvas with cyan left strip = "verified sponsor lane"
   listPad: { paddingBottom: 32, gap: 12, paddingHorizontal: 16 },
   listPadGrow: { flexGrow: 1 },
   card: {
     backgroundColor: colors.white,
     borderRadius: 18,
-    padding: 16,
+    paddingVertical: 16,
+    paddingRight: 16,
+    paddingLeft: 20,
     borderWidth: 0,
+    position: "relative",
+    overflow: "hidden",
+  },
+  cardAccentStrip: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 4,
+    backgroundColor: colors.teal,
   },
   cardMainHit: {
     flexDirection: "row",
@@ -880,7 +947,28 @@ const styles = StyleSheet.create({
     letterSpacing: -0.2,
     marginBottom: 3,
   },
-  cardCompanyLine: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary },
+  cardCompanyRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    flexWrap: "wrap",
+  },
+  cardCompanyLine: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary, flexShrink: 1 },
+  sponsorPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: radii.pill,
+    backgroundColor: colors.brandSoft,
+  },
+  sponsorPillText: {
+    fontSize: 10,
+    fontFamily: fontFamily.semiBold,
+    color: colors.brandDeep,
+    letterSpacing: 0.3,
+  },
   cardMetaLine: { marginTop: 2, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
   chipWrap: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", gap: 5 },
   listChip: { paddingVertical: 3, paddingHorizontal: 8, borderRadius: radii.pill },

@@ -48,8 +48,13 @@ export const colors = {
   borderOnDark: "rgba(255,255,255,0.12)",
   borderOnDarkStrong: "rgba(255,255,255,0.22)",
 
-  // Semantic
-  brand: "#610a90",
+  // Semantic — brand is cyan (matches the network mark); purple is secondary (curated lane)
+  brand: "#0ecdd1",
+  brandDeep: "#0891a8",
+  brandSoft: "rgba(14,205,209,0.14)",
+  brandGlow: "rgba(14,205,209,0.35)",
+  /** Secondary accent — curated picks only */
+  secondary: "#610a90",
   accent: "#0ecdd1",
   error: "#b91c1c",
   white: "#ffffff",
@@ -216,6 +221,44 @@ export const gradient = {
   authCTA: ["#0ECDD1", "#610A90"] as const,
   heroBg: [colors.navyDeep, "#1a0a3e"] as const,
   cardAccent: ["rgba(14,205,209,0.15)", "rgba(97,10,144,0.15)"] as const,
+  /** Subtle cyan glow for hero edges / featured cards */
+  cyanGlow: ["rgba(14,205,209,0)", "rgba(14,205,209,0.22)"] as const,
+  /** Cyan wash behind employer card headers (very soft) */
+  employerHeader: ["rgba(14,205,209,0.10)", "rgba(14,205,209,0)"] as const,
+  /** Purple wash for curated card headers (very soft) */
+  curatedHeader: ["rgba(97,10,144,0.10)", "rgba(97,10,144,0)"] as const,
+};
+
+/** Vertical accent strip on the left edge of a card — signals lane (employer vs curated) */
+export const accentStrip = {
+  width: 4,
+  borderTopLeftRadius: radii.feed,
+  borderBottomLeftRadius: radii.feed,
+} as const;
+
+export const accentStripEmployer: ViewStyle = {
+  ...accentStrip,
+  position: "absolute",
+  top: 0,
+  bottom: 0,
+  left: 0,
+  backgroundColor: colors.teal,
+};
+
+export const accentStripCurated: ViewStyle = {
+  ...accentStrip,
+  position: "absolute",
+  top: 0,
+  bottom: 0,
+  left: 0,
+  backgroundColor: colors.purple,
+};
+
+/** Faint network watermark — drop the brand mark behind hero / empty states at low opacity */
+export const networkWatermark: ViewStyle = {
+  position: "absolute",
+  opacity: 0.07,
+  pointerEvents: "none" as const,
 };
 
 /** Dark nav header for inner screens */
