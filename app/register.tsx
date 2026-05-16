@@ -17,7 +17,7 @@ import Animated, { FadeIn, FadeInDown, FadeInUp } from "react-native-reanimated"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { LegalConsentRegisterNote } from "@/components/LegalConsentLinks";
-import { brandLogo } from "@/lib/brand-assets";
+import { brandLockupLight } from "@/lib/brand-assets";
 import { registerCandidate } from "@/lib/api-client";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
@@ -73,10 +73,9 @@ export default function RegisterScreen() {
           >
             <Animated.View entering={FadeInDown.delay(100).duration(600).springify()} style={styles.brandBlock}>
               <Image
-                source={brandLogo}
+                source={brandLockupLight}
                 style={styles.logo}
                 resizeMode="contain"
-                tintColor="rgba(255,255,255,0.95)"
                 accessibilityIgnoresInvertColors
                 accessibilityLabel="Global Sponsor Hub"
               />
@@ -176,7 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(97,10,144,0.18)",
   },
   brandBlock: { alignItems: "center", gap: 12, paddingBottom: 8 },
-  logo: { width: 220, height: 56 },
+  logo: { width: 280, height: 64, alignSelf: "center" },
   brandTagline: {
     fontFamily: fontFamily.regular,
     fontSize: 14,

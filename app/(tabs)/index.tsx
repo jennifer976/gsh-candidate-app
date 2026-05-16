@@ -24,7 +24,7 @@ import {
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobCardSkeleton } from "@/components/SkeletonLoader";
-import { brandLogoWhite } from "@/lib/brand-assets";
+import { brandLockupLight } from "@/lib/brand-assets";
 import {
   fetchCandidateDashboard,
   fetchOwnProfile,
@@ -302,7 +302,7 @@ export default function JobsScreen() {
       >
         <View style={styles.heroTopRow}>
           <Image
-            source={brandLogoWhite}
+            source={brandLockupLight}
             style={styles.heroLogo}
             resizeMode="contain"
             accessibilityIgnoresInvertColors

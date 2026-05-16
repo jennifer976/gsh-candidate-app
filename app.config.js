@@ -12,10 +12,14 @@ module.exports = () => ({
     icon: "./assets/brand-icon.png",
     userInterfaceStyle: "light",
     newArchEnabled: true,
+    /**
+     * Plain white native layer (no artwork). Expo requires `image`; transparent PNG stays invisible.
+     * Intro video / in-app chrome carry brand — avoids a navy flash before JS loads.
+     */
     splash: {
-      image: "./assets/brand-logo-white.png",
+      image: "./assets/splash-transparent.png",
       resizeMode: "contain",
-      backgroundColor: "#040c24",
+      backgroundColor: "#ffffff",
     },
     ios: {
       supportsTablet: true,

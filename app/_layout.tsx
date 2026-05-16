@@ -11,7 +11,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { InAppWebHost } from "@/components/InAppWebHost";
 import { PushBootstrap } from "@/components/PushBootstrap";
@@ -42,27 +42,35 @@ export default function RootLayout() {
     Inter_800ExtraBold,
   });
   const [introDismissed, setIntroDismissed] = useState(false);
+  const nativeSplashHiddenRef = useRef(false);
+
+  const hideNativeSplash = useCallback(() => {
+    if (nativeSplashHiddenRef.current) return;
+    nativeSplashHiddenRef.current = true;
+    void SplashScreen.hideAsync();
+  }, []);
 
   useEffect(() => {
     const unsub = useAuthStore.persist.onFinishHydration(() => setHydrated(true));
     return unsub;
   }, []);
 
+  /** After intro, ensure splash is gone before stacking routes (e.g. fast tap-through edge cases). */
   useEffect(() => {
-    if (hydrated && fontsLoaded) {
-      void SplashScreen.hideAsync();
+    if (hydrated && fontsLoaded && introDismissed) {
+      hideNativeSplash();
     }
-  }, [hydrated, fontsLoaded]);
+  }, [hydrated, fontsLoaded, introDismissed, hideNativeSplash]);
 
   if (!hydrated || !fontsLoaded) {
-    // Keep the native splash visible — avoids a flash of navy + mis-sized logo before intro/video.
+    // Native splash only — plain backdrop from app.config.js until fonts + persisted auth hydrate.
     return null;
   }
 
   if (!introDismissed) {
     return (
       <SafeAreaProvider>
-        <SplashIntroVideo onDone={() => setIntroDismissed(true)} />
+        <SplashIntroVideo onCoverReady={hideNativeSplash} onDone={() => setIntroDismissed(true)} />
       </SafeAreaProvider>
     );
   }

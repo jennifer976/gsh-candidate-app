@@ -3,6 +3,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
+  FlatList,
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -73,38 +75,75 @@ function tierColors(tier: OrientationTier): { bg: string; border: string; text: 
   return { bg: "rgba(148, 163, 184, 0.15)", border: "rgba(148, 163, 184, 0.45)", text: "#334155" };
 }
 
-function ChipRow({
+type SelectOption<T extends string = string> = { value: T; label: string };
+
+function SelectField<T extends string>({
   label,
-  options,
   value,
+  optionList,
   onChange,
 }: {
   label: string;
-  options: readonly string[] | string[];
-  value: string;
-  onChange: (v: string) => void;
+  value: T;
+  optionList: SelectOption<T>[];
+  onChange: (v: T) => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const currentLabel = optionList.find((o) => o.value === value)?.label ?? String(value);
+
   return (
     <View style={styles.fieldBlock}>
       <Text style={styles.label}>{label}</Text>
-      <View style={styles.chipWrap}>
-        {options.map((opt) => {
-          const on = value === opt;
-          return (
-            <Pressable
-              key={opt}
-              onPress={() => onChange(opt)}
-              style={[styles.chip, on && styles.chipOn]}
-              accessibilityRole="button"
-              accessibilityState={{ selected: on }}
-            >
-              <Text style={[styles.chipText, on && styles.chipTextOn]} numberOfLines={2}>
-                {opt}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
+      <Pressable
+        onPress={() => setOpen(true)}
+        style={styles.selectTrigger}
+        accessibilityRole="button"
+        accessibilityHint="Opens a list to choose one option"
+      >
+        <Text style={styles.selectTriggerText} numberOfLines={2}>
+          {currentLabel}
+        </Text>
+        <Ionicons name="chevron-down" size={22} color={colors.textMuted} />
+      </Pressable>
+
+      <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
+        <View style={styles.modalRoot}>
+          <Pressable style={styles.modalBackdropTap} onPress={() => setOpen(false)} accessibilityRole="button" accessibilityLabel="Close list" />
+          <View style={styles.modalSheet}>
+            <View style={styles.modalGrab}>
+              <View style={styles.modalGrabBar} />
+            </View>
+            <Text style={styles.modalSheetTitle}>{label}</Text>
+            <FlatList
+              data={optionList}
+              keyExtractor={(item) => item.value}
+              keyboardShouldPersistTaps="handled"
+              renderItem={({ item }) => {
+                const selected = item.value === value;
+                return (
+                  <Pressable
+                    style={[styles.modalRow, selected && styles.modalRowSelected]}
+                    onPress={() => {
+                      onChange(item.value);
+                      setOpen(false);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected }}
+                  >
+                    <Text style={[styles.modalRowText, selected && styles.modalRowTextSelected]} numberOfLines={3}>
+                      {item.label}
+                    </Text>
+                    {selected ? <Ionicons name="checkmark-circle" size={22} color={colors.brand} /> : null}
+                  </Pressable>
+                );
+              }}
+              ItemSeparatorComponent={() => <View style={styles.modalSep} />}
+              style={styles.modalList}
+              contentContainerStyle={styles.modalListContent}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -133,6 +172,15 @@ export default function VisaWizardScreen() {
     { value: "doctorate", label: VW.eduDoctorate },
   ];
 
+  const destinationOptions = useMemo(
+    () => SUPPORTED_COUNTRIES.map((c) => ({ value: c as string, label: c })),
+    []
+  );
+  const nationalityOptionList = useMemo(
+    () => NATIONALITY_OPTIONS.map((c) => ({ value: c, label: c })),
+    []
+  );
+
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
@@ -153,16 +201,16 @@ export default function VisaWizardScreen() {
           <View style={[styles.card, cardSurfaceStyle(true)]}>
             <GshSectionTitle title={VW.sectionProfile} topSpacing="none" style={{ marginBottom: 12 }} />
 
-            <ChipRow
+            <SelectField
               label={VW.targetCountry}
-              options={SUPPORTED_COUNTRIES}
+              optionList={destinationOptions}
               value={input.destinationCountry}
               onChange={(destinationCountry) => setInput((p) => ({ ...p, destinationCountry }))}
             />
 
-            <ChipRow
+            <SelectField
               label={VW.nationality}
-              options={NATIONALITY_OPTIONS}
+              optionList={nationalityOptionList}
               value={input.nationality}
               onChange={(nationality) => setInput((p) => ({ ...p, nationality }))}
             />
@@ -203,21 +251,12 @@ export default function VisaWizardScreen() {
               onChangeText={(t) => setInput((p) => ({ ...p, yearsExperience: Number(t.replace(/[^0-9]/g, "")) || 0 }))}
             />
 
-            <Text style={styles.label}>{VW.education}</Text>
-            <View style={styles.chipWrap}>
-              {educationOptions.map((o) => {
-                const on = input.educationLevel === o.value;
-                return (
-                  <Pressable
-                    key={o.value}
-                    onPress={() => setInput((p) => ({ ...p, educationLevel: o.value }))}
-                    style={[styles.chip, on && styles.chipOn]}
-                  >
-                    <Text style={[styles.chipText, on && styles.chipTextOn]}>{o.label}</Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+            <SelectField
+              label={VW.education}
+              optionList={educationOptions}
+              value={input.educationLevel}
+              onChange={(educationLevel) => setInput((p) => ({ ...p, educationLevel }))}
+            />
 
             <View style={styles.switchRow}>
               <Text style={styles.switchLabel}>{VW.sponsorCheckbox}</Text>
@@ -348,22 +387,68 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     color: colors.textPrimary,
   },
-  chipWrap: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  chip: {
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: radii.sm,
+  selectTrigger: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
     borderWidth: 1,
     borderColor: colors.border,
+    borderRadius: radii.sm,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
     backgroundColor: colors.background,
-    maxWidth: "100%",
+    minHeight: 48,
   },
-  chipOn: {
-    borderColor: colors.brand,
-    backgroundColor: "rgba(97, 10, 144, 0.08)",
+  selectTriggerText: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: fontFamily.regular,
+    color: colors.textPrimary,
   },
-  chipText: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary },
-  chipTextOn: { color: colors.brand, fontFamily: fontFamily.semiBold },
+  modalRoot: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(15, 23, 42, 0.45)",
+  },
+  modalBackdropTap: { ...StyleSheet.absoluteFillObject },
+  modalSheet: {
+    maxHeight: "72%",
+    backgroundColor: colors.background,
+    borderTopLeftRadius: radii.lg,
+    borderTopRightRadius: radii.lg,
+    paddingBottom: 24,
+    borderTopWidth: 1,
+    borderColor: colors.border,
+  },
+  modalGrab: { alignItems: "center", paddingTop: 10, paddingBottom: 6 },
+  modalGrabBar: { width: 40, height: 4, borderRadius: 2, backgroundColor: colors.borderStrong },
+  modalSheetTitle: {
+    fontFamily: fontFamily.bold,
+    fontSize: 16,
+    color: colors.navy,
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+  },
+  modalList: { flexGrow: 0 },
+  modalListContent: { paddingHorizontal: 8, paddingBottom: 12 },
+  modalRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: radii.sm,
+  },
+  modalRowSelected: { backgroundColor: "rgba(97, 10, 144, 0.06)" },
+  modalRowText: {
+    flex: 1,
+    fontSize: 15,
+    fontFamily: fontFamily.regular,
+    color: colors.textMarketing,
+    lineHeight: 21,
+  },
+  modalRowTextSelected: { fontFamily: fontFamily.semiBold, color: colors.navy },
+  modalSep: { height: StyleSheet.hairlineWidth, backgroundColor: colors.border, marginLeft: 12 },
   switchRow: {
     flexDirection: "row",
     alignItems: "center",

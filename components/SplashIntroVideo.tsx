@@ -2,7 +2,7 @@ import { Video, ResizeMode } from "expo-av";
 import type { AVPlaybackStatus } from "expo-av";
 import { LinearGradient } from "expo-linear-gradient";
 import { useCallback, useEffect, useRef } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View, type LayoutChangeEvent } from "react-native";
 import Animated, {
   Easing,
   FadeIn,
@@ -15,22 +15,33 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { brandLogo, brandMark } from "@/lib/brand-assets";
+import { brandLockupLight } from "@/lib/brand-assets";
 import { colors, fontFamily } from "@/lib/theme";
 
 const introSource = require("../assets/splash-intro.mp4");
 
 type Props = {
   onDone: () => void;
+  /** Called once after the intro root lays out — hide the native Expo splash here so only this screen shows (no branded native splash handoff flash). */
+  onCoverReady?: () => void;
 };
 
 /**
- * Premium animated splash: gradient + intro video + animated mark/wordmark.
- * Wordmark uses white tint so the lockup reads on navy (not dark-on-dark).
+ * Premium animated splash: gradient + intro video + transparent light lockup (cyan-accent white artwork — do not tint).
  */
-export function SplashIntroVideo({ onDone }: Props) {
+export function SplashIntroVideo({ onDone, onCoverReady }: Props) {
   const insets = useSafeAreaInsets();
   const doneRef = useRef(false);
+  const coverReadyRef = useRef(false);
+
+  const handleRootLayout = useCallback(
+    (_e: LayoutChangeEvent) => {
+      if (coverReadyRef.current) return;
+      coverReadyRef.current = true;
+      onCoverReady?.();
+    },
+    [onCoverReady]
+  );
 
   const finish = useCallback(() => {
     if (doneRef.current) return;
@@ -113,7 +124,12 @@ export function SplashIntroVideo({ onDone }: Props) {
   }));
 
   return (
-    <View style={styles.root} accessibilityViewIsModal accessibilityLabel="Loading Global Sponsor Hub">
+    <View
+      style={styles.root}
+      onLayout={handleRootLayout}
+      accessibilityViewIsModal
+      accessibilityLabel="Loading Global Sponsor Hub"
+    >
       <LinearGradient
         colors={["#040c24", "#080f2e", "#0d1a4a"]}
         style={StyleSheet.absoluteFill}
@@ -138,21 +154,11 @@ export function SplashIntroVideo({ onDone }: Props) {
           <Animated.View style={[styles.ring, styles.ring2, ring2Style]} />
         </View>
 
-        <Animated.View entering={FadeIn.delay(200).duration(600)} style={styles.markWrap}>
+        <Animated.View entering={FadeInUp.delay(280).duration(700).springify()} style={styles.lockupWrap}>
           <Image
-            source={brandMark}
-            style={styles.mark}
+            source={brandLockupLight}
+            style={styles.lockup}
             resizeMode="contain"
-            accessibilityIgnoresInvertColors
-          />
-        </Animated.View>
-
-        <Animated.View entering={FadeInUp.delay(500).duration(700).springify()}>
-          <Image
-            source={brandLogo}
-            style={styles.wordmark}
-            resizeMode="contain"
-            tintColor="rgba(255,255,255,0.95)"
             accessibilityIgnoresInvertColors
             accessibilityLabel="Global Sponsor Hub"
           />
@@ -206,19 +212,20 @@ const styles = StyleSheet.create({
   ring1: { borderColor: colors.teal },
   ring2: { borderColor: "rgba(14,205,209,0.5)" },
 
-  markWrap: {
-    width: 80,
-    height: 80,
-    borderRadius: 22,
-    overflow: "hidden",
-    marginBottom: 4,
+  lockupWrap: {
+    width: "100%",
+    maxWidth: 340,
+    paddingHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 2,
   },
-  mark: { width: 80, height: 80 },
+  lockup: {
+    width: "100%",
+    height: 72,
+    maxWidth: 320,
+  },
 
-  wordmark: {
-    width: 220,
-    height: 56,
-  },
   tagline: {
     fontFamily: fontFamily.regular,
     fontSize: 15,

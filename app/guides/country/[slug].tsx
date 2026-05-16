@@ -33,19 +33,55 @@ export default function CountryGuideDetailScreen() {
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
-          <GshNavyHeroCard badge={guide.countryLabel} title={guide.title} footer={<Text style={styles.heroUpdated}>Updated {guide.updatedISO}</Text>}>
-            {guide.excerpt}
+          <GshNavyHeroCard
+            badge={`${guide.flagEmoji ? `${guide.flagEmoji} ` : ""}${guide.countryLabel}`}
+            title={guide.title}
+            footer={<Text style={styles.heroUpdated}>Updated {guide.updatedISO}</Text>}
+          >
+            {guide.openingHook ? (
+              <Text style={styles.heroHook}>{guide.openingHook}</Text>
+            ) : (
+              <Text style={styles.heroLead}>{guide.excerpt}</Text>
+            )}
           </GshNavyHeroCard>
+
+          {guide.quickFacts.length > 0 ? (
+            <View style={[styles.quickFactsCard, cardSurfaceStyle(false)]}>
+              <Text style={styles.quickFactsEyebrow}>Quick facts</Text>
+              <View style={styles.quickFactsGrid}>
+                {guide.quickFacts.map((f) => (
+                  <View key={f.label} style={styles.quickFactCell}>
+                    <Text style={styles.quickFactLabel}>{f.label}</Text>
+                    <Text style={styles.quickFactValue}>{f.value}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          ) : null}
 
           <Text style={styles.disclaimer}>
             Educational overview — not immigration or legal advice. Confirm requirements with official government sources.
           </Text>
 
-          {guide.sections.map((sec) => (
-            <View key={sec.heading} style={[styles.sectionCard, cardSurfaceStyle(true)]}>
+          {guide.sections.map((sec, si) => (
+            <View key={`${si}-${sec.heading}`} style={[styles.sectionCard, cardSurfaceStyle(true)]}>
               <Text style={styles.sectionHeading}>{sec.heading}</Text>
-              {sec.paragraphs.map((p, i) => (
-                <Text key={`${sec.heading}-${i}`} style={styles.p}>
+              {sec.bullets && sec.bullets.length > 0 ? (
+                <View style={styles.bulletList}>
+                  {sec.bullets.map((b, bi) => (
+                    <View key={`${si}-b-${bi}`} style={styles.bulletRow}>
+                      <View style={styles.bulletDot} />
+                      <Text style={styles.bulletText}>
+                        <Text style={styles.bulletLead}>{b.label}</Text>
+                        {": "}
+                        {b.text}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              ) : null}
+              {(sec.paragraphs ?? []).map((p, i) => (
+                <Text key={`${si}-p-${i}`} style={styles.p}>
                   {p}
                 </Text>
               ))}
@@ -90,6 +126,56 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { padding: 16, paddingBottom: 48, gap: 14 },
   heroUpdated: { fontSize: 12, fontFamily: fontFamily.medium, color: "rgba(255,255,255,0.85)" },
+  heroHook: {
+    fontSize: 15,
+    fontFamily: fontFamily.medium,
+    color: "rgba(255,255,255,0.92)",
+    lineHeight: 23,
+  },
+  heroLead: {
+    fontSize: 15,
+    fontFamily: fontFamily.regular,
+    color: "rgba(255,255,255,0.82)",
+    lineHeight: 23,
+  },
+  quickFactsCard: {
+    paddingHorizontal: 16,
+    paddingTop: 14,
+    paddingBottom: 10,
+    borderRadius: radii.xl,
+    gap: 10,
+  },
+  quickFactsEyebrow: {
+    fontSize: 11,
+    fontFamily: fontFamily.bold,
+    letterSpacing: 1.2,
+    color: colors.textMuted,
+    textTransform: "uppercase",
+  },
+  quickFactsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginHorizontal: -8,
+    marginTop: 4,
+  },
+  quickFactCell: {
+    width: "50%",
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+  },
+  quickFactLabel: {
+    fontSize: 11,
+    fontFamily: fontFamily.medium,
+    color: colors.textMuted,
+  },
+  quickFactValue: {
+    marginTop: 4,
+    fontSize: 14,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+  },
   disclaimer: {
     fontSize: 13,
     fontFamily: fontFamily.regular,
@@ -103,6 +189,26 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.bold,
     color: colors.navy,
     marginBottom: 10,
+  },
+  bulletList: { gap: 12, marginBottom: 4 },
+  bulletRow: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
+  bulletDot: {
+    marginTop: 8,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(14, 205, 209, 0.75)",
+  },
+  bulletText: {
+    flex: 1,
+    fontSize: 15,
+    fontFamily: fontFamily.regular,
+    color: colors.textMarketing,
+    lineHeight: 23,
+  },
+  bulletLead: {
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
   },
   p: {
     fontSize: 15,

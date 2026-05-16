@@ -1,9 +1,6 @@
 /**
- * Country visa guides — synced with the web frontend data.
- * Updated to include quickFacts, flagEmoji, and openingHook fields.
- * Expanded from 3 to 10 countries for SEO and user coverage.
+ * Synced from `global_sponsor_hub-fe/src/data/countryVisaGuides.ts` — copy updates when web guides change.
  */
-
 export type CountryVisaGuidePartnerLink = {
   label: string;
   href: string;
@@ -12,8 +9,17 @@ export type CountryVisaGuidePartnerLink = {
 
 export type CountryVisaGuideSection = {
   heading: string;
-  paragraphs: string[];
+  /** Standard prose blocks */
+  paragraphs?: string[];
+  /** Labelled bullets — bold lead + supporting text */
+  bullets?: { label: string; text: string }[];
 };
+
+export function countryGuideSectionPlainText(sec: CountryVisaGuideSection): string {
+  const ps = sec.paragraphs ?? [];
+  const bs = sec.bullets?.map((b) => `${b.label}: ${b.text}`) ?? [];
+  return [...ps, ...bs].join(" ");
+}
 
 export type QuickFact = {
   label: string;
@@ -26,6 +32,8 @@ export type CountryVisaGuide = {
   excerpt: string;
   metaDescription: string;
   countryLabel: string;
+  /** ISO 3166-1 alpha-2 for flagcdn */
+  iso2: string;
   flagEmoji: string;
   updatedISO: string;
   openingHook: string;
@@ -39,6 +47,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "uk-skilled-worker-and-sponsored-jobs",
     title: "Working in the UK: how visa sponsorship actually works",
     countryLabel: "United Kingdom",
+    iso2: "gb",
     flagEmoji: "🇬🇧",
     excerpt: "What the Skilled Worker route means in practice, what salary you need, and how to find employers who will actually sponsor you.",
     metaDescription: "UK Skilled Worker visa explained: salary thresholds, how sponsorship works, what to check before you apply, and where to find real sponsor-backed roles.",
@@ -79,11 +88,23 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
       },
       {
         heading: "Things that catch people out",
-        paragraphs: [
-          "Switching roles: if you change jobs, your new employer needs to issue a new CoS. Moving employers means restarting the process.",
-          "Probation: your visa is valid during probation. But check for clawback clauses on visa costs if you leave within 12–24 months.",
-          "Family: your partner and children under 18 can apply as dependants and work freely in the UK. The Immigration Health Surcharge (£1,035/year) applies to each family member.",
-          "Settlement: after 5 years on a Skilled Worker visa, you can apply for Indefinite Leave to Remain — permanent residency.",
+        bullets: [
+          {
+            label: "Switching roles",
+            text: "if you change jobs, your new employer needs to issue a new CoS. Moving employers means restarting the process.",
+          },
+          {
+            label: "Probation",
+            text: "your visa is valid during probation. But check for clawback clauses on visa costs if you leave within 12–24 months.",
+          },
+          {
+            label: "Family",
+            text: "your partner and children under 18 can apply as dependants and work freely in the UK. The Immigration Health Surcharge (£1,035/year) applies to each family member.",
+          },
+          {
+            label: "Settlement",
+            text: "after 5 years on a Skilled Worker visa, you can apply for Indefinite Leave to Remain — permanent residency.",
+          },
         ],
       },
     ],
@@ -96,6 +117,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "ireland-employment-permits-job-search",
     title: "Working in Ireland: employment permits explained",
     countryLabel: "Ireland",
+    iso2: "ie",
     flagEmoji: "🇮🇪",
     excerpt: "Ireland's Critical Skills and General Employment Permits, what employers expect, and what arriving actually involves.",
     metaDescription: "Ireland work permit guide for international candidates: Critical Skills vs General permit, salary requirements, and how to find sponsor-backed roles.",
@@ -128,10 +150,19 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
       },
       {
         heading: "Arriving in Ireland: the first few weeks",
-        paragraphs: [
-          "When you arrive, register with the Garda National Immigration Bureau (GNIB) within 90 days. You'll get a stamp in your passport that is your formal permission to be in Ireland.",
-          "You'll also need a PPS number (Ireland's equivalent of a National Insurance number) for tax, healthcare, banking, and most official services. Apply at your local Intreo office.",
-          "Dublin housing is competitive. Many employers who hire internationally include relocation allowances or temporary accommodation — ask about this before accepting.",
+        bullets: [
+          {
+            label: "GNIB registration",
+            text: "when you arrive, register with the Garda National Immigration Bureau (GNIB) within 90 days. You'll get a stamp in your passport that is your formal permission to be in Ireland.",
+          },
+          {
+            label: "PPS number",
+            text: "you'll need a PPS number (Ireland's equivalent of a National Insurance number) for tax, healthcare, banking, and most official services. Apply at your local Intreo office.",
+          },
+          {
+            label: "Housing",
+            text: "Dublin housing is competitive. Many employers who hire internationally include relocation allowances or temporary accommodation — ask about this before accepting.",
+          },
         ],
       },
     ],
@@ -144,6 +175,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "germany-eu-blue-card-jobseekers",
     title: "Working in Germany: EU Blue Card and getting hired",
     countryLabel: "Germany",
+    iso2: "de",
     flagEmoji: "🇩🇪",
     excerpt: "EU Blue Card salary thresholds, how credential recognition works, and what to expect from German employers hiring internationally.",
     metaDescription: "Germany EU Blue Card guide: salary thresholds for 2024, credential recognition for engineers, what German employers expect, and how to find sponsored roles.",
@@ -176,10 +208,19 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
       },
       {
         heading: "Practical things nobody tells you",
-        paragraphs: [
-          "Anmeldung (registering your address) is required within two weeks of arrival and needed for almost everything else: bank accounts, tax numbers, health insurance. Do it first.",
-          "German health insurance is mandatory and deducted at source. You'll be automatically enrolled in the public system unless your income is high enough to opt for private.",
-          "Language: the Blue Card doesn't require German. But outside the largest companies and tech hubs, daily working life is often in German. Many employers offer language classes — ask.",
+        bullets: [
+          {
+            label: "Anmeldung",
+            text: "registering your address is required within two weeks of arrival and needed for almost everything else: bank accounts, tax numbers, health insurance. Do it first.",
+          },
+          {
+            label: "Health insurance",
+            text: "German health insurance is mandatory and deducted at source. You'll be automatically enrolled in the public system unless your income is high enough to opt for private.",
+          },
+          {
+            label: "Language",
+            text: "the Blue Card doesn't require German. But outside the largest companies and tech hubs, daily working life is often in German. Many employers offer language classes — ask.",
+          },
         ],
       },
     ],
@@ -192,6 +233,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "canada-work-permit-jobs",
     title: "Working in Canada: work permits and getting hired",
     countryLabel: "Canada",
+    iso2: "ca",
     flagEmoji: "🇨🇦",
     excerpt: "Canada's main work permit routes, what employers need to do, and how to find roles that lead to permanent residency.",
     metaDescription: "Canada work permit guide: LMIA process, Express Entry, what employers sponsor, and how to find international roles in Canada.",
@@ -239,6 +281,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "australia-skilled-visa-jobs",
     title: "Working in Australia: skilled visas and employer sponsorship",
     countryLabel: "Australia",
+    iso2: "au",
     flagEmoji: "🇦🇺",
     excerpt: "Australia's employer-sponsored visa routes, skills assessments, and how to find roles that lead to permanent residency.",
     metaDescription: "Australia work visa guide: Temporary Skill Shortage (subclass 482), skills assessment, employer sponsorship, and pathways to permanent residency.",
@@ -285,6 +328,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "usa-work-visa-jobs",
     title: "Working in the USA: H-1B and employer-sponsored visas",
     countryLabel: "United States",
+    iso2: "us",
     flagEmoji: "🇺🇸",
     excerpt: "H-1B lottery, O-1 alternatives, what US employers actually do for international hires, and realistic timelines.",
     metaDescription: "USA work visa guide for international candidates: H-1B lottery, O-1 visa, what US employers sponsor, and how to find roles that lead to green card pathways.",
@@ -309,10 +353,19 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
       },
       {
         heading: "Alternative visa routes worth knowing",
-        paragraphs: [
-          "O-1 visa: for individuals with extraordinary ability in their field. Harder to qualify for but no lottery. Processing is faster and the criteria, while subjective, can be met by people with strong publication records, awards, or high compensation.",
-          "L-1 visa: for intra-company transferees. If your employer has US operations, this can be faster and more predictable than H-1B.",
-          "TN visa: for Canadian and Mexican citizens under CUSMA/USMCA. Covers a specific list of professions and is relatively straightforward at the border.",
+        bullets: [
+          {
+            label: "O-1 visa",
+            text: "for individuals with extraordinary ability in their field. Harder to qualify for but no lottery. Processing is faster and the criteria, while subjective, can be met by people with strong publication records, awards, or high compensation.",
+          },
+          {
+            label: "L-1 visa",
+            text: "for intra-company transferees. If your employer has US operations, this can be faster and more predictable than H-1B.",
+          },
+          {
+            label: "TN visa",
+            text: "for Canadian and Mexican citizens under CUSMA/USMCA. Covers a specific list of professions and is relatively straightforward at the border.",
+          },
         ],
       },
       {
@@ -332,6 +385,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "uae-work-visa-jobs",
     title: "Working in the UAE: work visas and getting hired in Dubai",
     countryLabel: "UAE",
+    iso2: "ae",
     flagEmoji: "🇦🇪",
     excerpt: "UAE work permits, how employer sponsorship works, and what international candidates need to know about living and working in Dubai or Abu Dhabi.",
     metaDescription: "UAE work visa guide: how employer sponsorship works in Dubai and Abu Dhabi, Golden Visa eligibility, salary expectations, and finding international roles.",
@@ -379,6 +433,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "singapore-employment-pass-jobs",
     title: "Working in Singapore: Employment Pass and getting hired",
     countryLabel: "Singapore",
+    iso2: "sg",
     flagEmoji: "🇸🇬",
     excerpt: "Singapore's Employment Pass salary thresholds, fair hiring requirements, and what tech and finance candidates need to know.",
     metaDescription: "Singapore Employment Pass guide: salary thresholds, COMPASS framework, fair hiring requirements, and how to find sponsored roles in Singapore's tech and finance sectors.",
@@ -418,6 +473,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "netherlands-highly-skilled-migrant-jobs",
     title: "Working in the Netherlands: Highly Skilled Migrant permit",
     countryLabel: "Netherlands",
+    iso2: "nl",
     flagEmoji: "🇳🇱",
     excerpt: "The Netherlands Highly Skilled Migrant route, salary thresholds, and why Amsterdam and Eindhoven attract international tech talent.",
     metaDescription: "Netherlands Highly Skilled Migrant permit guide: salary thresholds for 2024, which employers can sponsor, the 30% ruling tax benefit, and how to find sponsored roles.",
@@ -458,6 +514,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     slug: "new-zealand-accredited-employer-jobs",
     title: "Working in New Zealand: Accredited Employer Work Visa",
     countryLabel: "New Zealand",
+    iso2: "nz",
     flagEmoji: "🇳🇿",
     excerpt: "New Zealand's Accredited Employer Work Visa, which employers can sponsor, and the pathway to residence for skilled workers.",
     metaDescription: "New Zealand Accredited Employer Work Visa guide: how AEWV works, which employers are accredited, median wage requirements, and pathways to residence.",
@@ -501,13 +558,14 @@ export function getCountryVisaGuide(slug: string): CountryVisaGuide | undefined 
 
 export function listCountryVisaGuideSummaries(): Pick<
   CountryVisaGuide,
-  "slug" | "title" | "excerpt" | "countryLabel" | "flagEmoji"
+  "slug" | "title" | "excerpt" | "countryLabel" | "iso2" | "flagEmoji"
 >[] {
-  return COUNTRY_VISA_GUIDES.map(({ slug, title, excerpt, countryLabel, flagEmoji }) => ({
+  return COUNTRY_VISA_GUIDES.map(({ slug, title, excerpt, countryLabel, iso2, flagEmoji }) => ({
     slug,
     title,
     excerpt,
     countryLabel,
+    iso2,
     flagEmoji,
   }));
 }
