@@ -30,7 +30,7 @@ export function GshEmptyState({
 }
 
 const styles = StyleSheet.create({
-  wrap: { alignItems: "center", paddingVertical: 28, paddingHorizontal: 20, marginBottom: 12 },
+  wrap: { alignItems: "center", paddingVertical: 28, paddingHorizontal: 20 },
   iconCircle: {
     width: 64,
     height: 64,

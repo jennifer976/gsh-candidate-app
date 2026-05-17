@@ -8,12 +8,21 @@ type Props = {
   onAction?: () => void;
   /** First heading below native header — use with stackFlatListHeadWrap / stackScrollContentStyle */
   pageLead?: boolean;
+  /** Inside a parent with gap (e.g. Home activity panel) — no extra top inset */
+  inFeedGroup?: boolean;
 };
 
 /** Section heading on navy feed canvas — matches Jobs tab list headings. */
-export function GshDarkFeedHeading({ title, subtitle, actionLabel, onAction, pageLead }: Props) {
+export function GshDarkFeedHeading({
+  title,
+  subtitle,
+  actionLabel,
+  onAction,
+  pageLead,
+  inFeedGroup,
+}: Props) {
   return (
-    <View style={[styles.row, pageLead && styles.rowPageLead]}>
+    <View style={[styles.row, pageLead && styles.rowPageLead, inFeedGroup && styles.rowInFeedGroup]}>
       <View style={styles.col}>
         <Text style={styles.title}>{title}</Text>
         {subtitle ? <Text style={styles.sub}>{subtitle}</Text> : null}
@@ -39,6 +48,10 @@ const styles = StyleSheet.create({
   rowPageLead: {
     paddingTop: 0,
     paddingBottom: 12,
+  },
+  rowInFeedGroup: {
+    paddingTop: 0,
+    paddingBottom: 6,
   },
   col: { flex: 1, minWidth: 0 },
   title: {

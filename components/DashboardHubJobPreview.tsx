@@ -49,7 +49,6 @@ export function DashboardHubJobPreview({
 
 const styles = StyleSheet.create({
   card: {
-    marginBottom: 10,
     borderRadius: 18,
     paddingVertical: 16,
     paddingRight: 14,

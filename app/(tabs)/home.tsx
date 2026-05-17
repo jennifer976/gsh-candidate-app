@@ -25,6 +25,7 @@ import { GshScreenShell } from "@/components/GshScreenShell";
 import { fetchCandidateDashboard, fetchConversations, fetchOwnProfile } from "@/lib/api-client";
 import { presentApiError } from "@/lib/api-error";
 import { hapticLight } from "@/lib/haptics";
+import { FEED_ITEM_GAP, FEED_SECTION_GAP } from "@/lib/screen-layout";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
 const FEATURE_TOOLS = [
@@ -308,15 +309,16 @@ export default function HomeScreen() {
           {activityOpen && hasActivity && activityReady ? (
             <View style={styles.activityPanel}>
               {chartHasData ? (
-                <>
-                  <GshDarkFeedHeading title="Applications trend" />
+                <View style={styles.activitySection}>
+                  <GshDarkFeedHeading inFeedGroup title="Applications trend" />
                   <ApplicationsTrendChart rows={chartSlice} />
-                </>
+                </View>
               ) : null}
 
               {savedCount > 0 ? (
-                <>
+                <View style={styles.activitySection}>
                   <GshDarkFeedHeading
+                    inFeedGroup
                     title="Saved roles"
                     actionLabel="See all"
                     onAction={() => router.push("/saved")}
@@ -334,46 +336,54 @@ export default function HomeScreen() {
                       </Pressable>
                     ))}
                   </View>
-                </>
+                </View>
               ) : null}
 
               {latestJobCount > 0 ? (
-                <>
+                <View style={styles.activitySection}>
                   <GshDarkFeedHeading
+                    inFeedGroup
                     title="New listings"
                     actionLabel="Browse all"
                     onAction={() => router.push("/(tabs)/jobs")}
                   />
-                  {(d.latestJobs ?? []).slice(0, 4).map((job) => (
-                    <DashboardHubJobPreview key={job._id} job={job} onPress={() => router.push(`/job/${job._id}`)} />
-                  ))}
-                </>
+                  <View style={styles.feedCardStack}>
+                    {(d.latestJobs ?? []).slice(0, 4).map((job) => (
+                      <DashboardHubJobPreview key={job._id} job={job} onPress={() => router.push(`/job/${job._id}`)} />
+                    ))}
+                  </View>
+                </View>
               ) : null}
 
               {curatedCount > 0 ? (
-                <>
+                <View style={styles.activitySection}>
                   <GshDarkFeedHeading
+                    inFeedGroup
                     title="Curated picks"
                     actionLabel="See all"
                     onAction={() => router.push("/curated-listings")}
                   />
-                  {d.latestCuratedExternal!.slice(0, 3).map((job) => (
-                    <CuratedExternalJobCard
-                      key={job._id}
-                      job={job as ExternalJobListingPublic}
-                      onPress={() => router.push(`/external-job/${job._id}`)}
-                    />
-                  ))}
-                </>
+                  <View style={styles.feedCardStack}>
+                    {d.latestCuratedExternal!.slice(0, 3).map((job) => (
+                      <CuratedExternalJobCard
+                        key={job._id}
+                        job={job as ExternalJobListingPublic}
+                        onPress={() => router.push(`/external-job/${job._id}`)}
+                      />
+                    ))}
+                  </View>
+                </View>
               ) : null}
 
               {recentSlice.length > 0 ? (
-                <>
+                <View style={styles.activitySection}>
                   <GshDarkFeedHeading
+                    inFeedGroup
                     title="Recent applications"
                     actionLabel="Open"
                     onAction={() => router.push("/(tabs)/applications")}
                   />
+                  <View style={styles.feedCardStack}>
                   {recentSlice.slice(0, 5).map((a, i) => (
                     <View key={`${a.jobTitle}-${i}`} style={[styles.timelineRow, feedCardStyle()]}>
                       <View style={styles.timelineRail}>
@@ -388,7 +398,8 @@ export default function HomeScreen() {
                       </View>
                     </View>
                   ))}
-                </>
+                  </View>
+                </View>
               ) : null}
             </View>
           ) : null}
@@ -408,7 +419,12 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   scrollPad: { paddingBottom: 48 },
-  bodyPad: { paddingHorizontal: 16, paddingTop: 4 },
+  bodyPad: {
+    paddingHorizontal: 16,
+    paddingTop: FEED_SECTION_GAP,
+    paddingBottom: 4,
+    gap: FEED_SECTION_GAP,
+  },
   heroTitle: {
     fontSize: 26,
     fontFamily: fontFamily.extraBold,
@@ -419,11 +435,11 @@ const styles = StyleSheet.create({
   actionBand: {
     backgroundColor: colors.white,
     paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 14,
+    paddingTop: 18,
+    paddingBottom: 18,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
-    gap: 12,
+    gap: 14,
   },
   primaryCta: { marginBottom: 0 },
   chipRow: { flexDirection: "row", gap: 8 },
@@ -433,7 +449,7 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     letterSpacing: 0.5,
     textTransform: "uppercase",
-    marginTop: 4,
+    marginTop: 2,
   },
   featureRow: { flexDirection: "row", gap: 8 },
   featureChip: {
@@ -454,7 +470,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
-    marginBottom: 12,
     gap: 12,
   },
   profileNudgeLeft: { flex: 1, minWidth: 0 },
@@ -475,15 +490,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
-    marginBottom: 12,
     gap: 12,
   },
   activityToggleText: { flex: 1, minWidth: 0 },
   activityToggleTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy },
   activityToggleSub: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
   activityLoading: { paddingVertical: 24, alignItems: "center" },
-  activityPanel: { marginBottom: 8 },
-  savedGrid: { flexDirection: "row", flexWrap: "wrap", gap: 10, paddingBottom: 8 },
+  activityPanel: { gap: FEED_SECTION_GAP },
+  activitySection: { gap: FEED_ITEM_GAP },
+  feedCardStack: { gap: FEED_ITEM_GAP },
+  savedGrid: { flexDirection: "row", flexWrap: "wrap", gap: FEED_ITEM_GAP },
   savedCard: { width: "48%", minWidth: 140, flexGrow: 1, padding: 14 },
   savedTitle: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.navy },
   savedSub: { marginTop: 4, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
@@ -523,7 +539,6 @@ const styles = StyleSheet.create({
   trendCard: {
     padding: 16,
     borderRadius: radii.lg,
-    marginBottom: 8,
   },
   trendHead: { marginBottom: 12 },
   trendTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.navy },
@@ -549,7 +564,6 @@ const styles = StyleSheet.create({
   listSub: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, marginTop: 6, lineHeight: 20 },
   timelineRow: {
     flexDirection: "row",
-    marginBottom: 10,
     borderRadius: radii.lg,
     paddingVertical: 14,
     paddingHorizontal: 14,

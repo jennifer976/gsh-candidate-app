@@ -23,3 +23,7 @@ export const stackFlatListHeadWrapStyle: ViewStyle = {
   paddingTop: STACK_HEADER_BODY_GAP,
   paddingBottom: 12,
 };
+
+/** Home / Jobs navy feed — vertical rhythm between blocks */
+export const FEED_SECTION_GAP = 16;
+export const FEED_ITEM_GAP = 10;
