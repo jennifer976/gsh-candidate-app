@@ -73,7 +73,7 @@ function HubJobCard({
     <View style={styles.card}>
       <View style={styles.cardAccentStrip} />
       <Pressable onPress={onPress} style={styles.cardMainHit} accessibilityRole="button">
-        <CompanyLogo logoUrl={logoUrl} companyName={employer} size={48} radius={13} />
+        <CompanyLogo logoUrl={logoUrl} companyName={employer} size={40} radius={11} />
         <View style={styles.cardMid}>
           <Text style={styles.cardTitle} numberOfLines={2}>{job.title}</Text>
           <View style={styles.cardCompanyRow}>
@@ -120,14 +120,10 @@ function HubJobCard({
       </Pressable>
       <Pressable onPress={onPress} accessibilityRole="button">
         <View style={styles.cardFooter}>
-          {sal ? (
-            <Text style={styles.cardSalary} numberOfLines={1}>{sal}</Text>
-          ) : (
-            <View style={styles.cardSalarySpacer} />
-          )}
+          {sal ? <Text style={styles.cardSalary} numberOfLines={1}>{sal}</Text> : <View style={styles.cardSalarySpacer} />}
           <View style={styles.cardFooterEnd}>
-            <Text style={styles.cardCta}>View role</Text>
-            <Ionicons name="arrow-forward" size={15} color={colors.brand} />
+            <Text style={styles.cardCta}>View</Text>
+            <Ionicons name="chevron-forward" size={16} color={colors.brand} />
           </View>
         </View>
       </Pressable>
@@ -666,14 +662,14 @@ const styles = StyleSheet.create({
   listHeadingLink: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.teal },
 
   // Cards — white cards on dark canvas with cyan left strip = "verified sponsor lane"
-  listPad: { paddingBottom: 32, gap: 12, paddingHorizontal: 16 },
+  listPad: { paddingBottom: 32, gap: 10, paddingHorizontal: 16 },
   listPadGrow: { flexGrow: 1 },
   card: {
     backgroundColor: colors.white,
-    borderRadius: 18,
-    paddingVertical: 16,
-    paddingRight: 16,
-    paddingLeft: 20,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingRight: 12,
+    paddingLeft: 16,
     borderWidth: 0,
     position: "relative",
     overflow: "hidden",
@@ -689,7 +685,7 @@ const styles = StyleSheet.create({
   cardMainHit: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: 12,
+    gap: 10,
     minWidth: 0,
   },
   cardAvatar: {
@@ -704,11 +700,12 @@ const styles = StyleSheet.create({
   cardMid: { flex: 1, minWidth: 0 },
   cardBookmarkHit: { paddingTop: 2, paddingLeft: 4 },
   cardTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: fontFamily.bold,
     color: colors.navy,
     letterSpacing: -0.2,
-    marginBottom: 3,
+    marginBottom: 2,
+    lineHeight: 19,
   },
   cardCompanyRow: {
     flexDirection: "row",
@@ -732,21 +729,21 @@ const styles = StyleSheet.create({
     color: colors.brandDeep,
     letterSpacing: 0.3,
   },
-  cardMetaLine: { marginTop: 2, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
-  chipWrap: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", gap: 5 },
+  cardMetaLine: { marginTop: 2, fontSize: 11, fontFamily: fontFamily.regular, color: colors.textMuted },
+  chipWrap: { marginTop: 6, flexDirection: "row", flexWrap: "wrap", gap: 4 },
   listChip: { paddingVertical: 3, paddingHorizontal: 8, borderRadius: radii.pill },
   listChipText: { fontSize: 10, fontFamily: fontFamily.medium },
   cardFooter: {
-    marginTop: 12,
+    marginTop: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: 10,
+    paddingTop: 8,
     borderTopWidth: 1,
     borderTopColor: "#f1f5f9",
   },
   cardFooterEnd: { flexDirection: "row", alignItems: "center", gap: 4 },
-  cardSalary: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.brand },
+  cardSalary: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.brand },
   cardSalarySpacer: { flex: 1 },
   cardCta: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
 

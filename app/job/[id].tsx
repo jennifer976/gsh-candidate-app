@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
@@ -21,8 +21,7 @@ import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-cl
 import { hapticLight, hapticSuccess, hapticWarning } from "@/lib/haptics";
 import { getJobEmployerLabel, getJobLogoUrl, hubListingChips } from "@/lib/job-display";
 import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
-import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
-import { colors, fontFamily, radii } from "@/lib/theme";
+import { colors, fontFamily, navHeader, radii } from "@/lib/theme";
 
 function errMsg(e: unknown): string {
   if (e && typeof e === "object" && "message" in e) return String((e as { message: string }).message);
@@ -59,7 +58,7 @@ function JobDetailSkeleton() {
   return (
     <View style={styles.skeletonPad}>
       <View style={styles.skeletonHero}>
-        <SkeletonBox width={72} height={72} radius={18} />
+        <SkeletonBox width={56} height={56} radius={14} />
         <View style={{ flex: 1, gap: 10 }}>
           <SkeletonBox width="80%" height={22} radius={7} />
           <SkeletonBox width="55%" height={16} radius={6} />
@@ -195,10 +194,14 @@ export default function JobDetailScreen() {
   if (jobQuery.isLoading) {
     return (
       <View style={styles.root}>
-        <View style={styles.skeletonNavBar} />
-        <ScrollView>
-          <JobDetailSkeleton />
-        </ScrollView>
+        <Stack.Screen options={{ title: "Job details", ...navHeader }} />
+        <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPad}>
+            <View style={styles.skeletonHeroBand}>
+              <JobDetailSkeleton />
+            </View>
+          </ScrollView>
+        </SafeAreaView>
       </View>
     );
   }
@@ -212,6 +215,7 @@ export default function JobDetailScreen() {
 
   return (
     <View style={styles.root}>
+      <Stack.Screen options={{ title: "Job details", ...navHeader }} />
       <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPad}>
 
@@ -224,7 +228,7 @@ export default function JobDetailScreen() {
               end={{ x: 0.8, y: 1 }}
             >
               <View style={styles.heroTop}>
-                <CompanyLogo logoUrl={logoUrl} companyName={employer} size={72} radius={18} />
+                <CompanyLogo logoUrl={logoUrl} companyName={employer} size={56} radius={14} />
                 <View style={styles.heroText}>
                   <Text style={styles.heroTitle} numberOfLines={3}>{job.title}</Text>
                   <Text style={styles.heroCompany} numberOfLines={1}>{employer}</Text>
@@ -366,8 +370,13 @@ export default function JobDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.surfaceLight },
+  root: { flex: 1, backgroundColor: colors.navyDeep },
   scrollPad: { paddingBottom: 48 },
+  skeletonHeroBand: {
+    backgroundColor: colors.navyDeep,
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
   center: {
     flex: 1,
     justifyContent: "center",
@@ -378,25 +387,24 @@ const styles = StyleSheet.create({
   },
 
   // Skeleton
-  skeletonNavBar: { height: 56, backgroundColor: colors.navyDeep },
-  skeletonPad: { padding: 20, gap: 0 },
+  skeletonPad: { paddingHorizontal: 20, paddingTop: 4, gap: 0 },
   skeletonHero: { flexDirection: "row", gap: 14, alignItems: "flex-start" },
 
   // Hero
   hero: {
-    paddingTop: STACK_HEADER_BODY_GAP,
-    paddingBottom: 24,
+    paddingTop: 12,
+    paddingBottom: 20,
     paddingHorizontal: 20,
-    gap: 16,
+    gap: 14,
   },
   heroTop: { flexDirection: "row", gap: 16, alignItems: "flex-start" },
   heroText: { flex: 1, minWidth: 0 },
   heroTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: fontFamily.extraBold,
     color: colors.white,
     letterSpacing: -0.4,
-    lineHeight: 28,
+    lineHeight: 26,
   },
   heroCompany: {
     marginTop: 6,
@@ -451,8 +459,12 @@ const styles = StyleSheet.create({
   // Body
   body: {
     paddingHorizontal: 20,
-    paddingTop: 24,
+    paddingTop: 20,
     gap: 0,
+    backgroundColor: colors.surfaceLight,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: -4,
   },
   sectionHead: {
     flexDirection: "row",

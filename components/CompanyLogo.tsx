@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { fontFamily } from "@/lib/theme";
 
@@ -32,6 +32,10 @@ type Props = {
 export function CompanyLogo({ logoUrl, companyName = "", size = 48, radius = 13 }: Props) {
   const [imgError, setImgError] = useState(false);
 
+  useEffect(() => {
+    setImgError(false);
+  }, [logoUrl]);
+
   const showLogo = !!logoUrl && !imgError;
   const initial = (companyName.trim().charAt(0) || "G").toUpperCase();
   const pal = avatarPalette(initial);
@@ -53,7 +57,7 @@ export function CompanyLogo({ logoUrl, companyName = "", size = 48, radius = 13 
       <View style={containerStyle}>
         <Image
           source={{ uri: logoUrl }}
-          style={{ width: size, height: size }}
+          style={{ width: size - 4, height: size - 4 }}
           resizeMode="contain"
           onError={() => setImgError(true)}
           accessibilityLabel={`${companyName} logo`}

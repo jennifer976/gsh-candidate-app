@@ -1,4 +1,4 @@
-import { resolveBrandImageUrl } from "@/lib/brand-logo";
+import { resolveJobBrandLogo } from "@/lib/brand-logo";
 import type { EmployerProfile, ExternalJobListingPublic, Job } from "@/types/models";
 
 /**
@@ -27,12 +27,7 @@ export function getJobEmployerLabel(job: Job): string {
  * The API may return it at the job level (companyLogo) or inside postedBy.
  */
 export function getJobLogoUrl(job: Job): string {
-  const pb = job.postedBy as (EmployerProfile & { profile_picture?: string }) | null | undefined;
-  return resolveBrandImageUrl(
-    typeof job.companyLogo === "string" ? job.companyLogo : undefined,
-    pb?.companyLogo,
-    pb?.profile_picture
-  );
+  return resolveJobBrandLogo(job);
 }
 
 const MOBILITY_PRIORITY = /visa|sponsor|relocat|mobility|work permit/i;

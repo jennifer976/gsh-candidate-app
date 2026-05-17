@@ -73,11 +73,12 @@ export function CuratedExternalJobCard({ job, onPress }: { job: ExternalJobListi
 
 const styles = StyleSheet.create({
   card: {
-    paddingVertical: 16,
-    paddingRight: 16,
-    paddingLeft: 20,
+    paddingVertical: 12,
+    paddingRight: 12,
+    paddingLeft: 16,
     position: "relative",
     overflow: "hidden",
+    borderRadius: 14,
   },
   cardAccentStrip: {
     position: "absolute",
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   cardBody: { minWidth: 0 },
   cardTop: { width: "100%" },
   badgeRow: { marginTop: 6, flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  cardTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.2 },
+  cardTitle: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.2, lineHeight: 19 },
   kindBadge: {
     paddingHorizontal: 7,
     paddingVertical: 2,
@@ -121,12 +122,12 @@ const styles = StyleSheet.create({
   listChip: { paddingVertical: 3, paddingHorizontal: 8, borderRadius: radii.pill },
   listChipText: { fontSize: 10, fontFamily: fontFamily.medium },
   cardFooter: {
-    marginTop: 12,
+    marginTop: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
     gap: 4,
-    paddingTop: 10,
+    paddingTop: 8,
     borderTopWidth: 1,
     borderTopColor: "#f1f5f9",
   },

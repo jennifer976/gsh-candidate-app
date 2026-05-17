@@ -83,7 +83,10 @@ export default function RootLayout() {
           <Stack.Screen name="register" options={{ title: "Create account" }} />
           <Stack.Screen name="verify" options={{ title: "Verify email" }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="job/[id]" options={{ title: "Job details" }} />
+          <Stack.Screen
+            name="job/[id]"
+            options={{ title: "Job details", contentStyle: { backgroundColor: colors.navyDeep } }}
+          />
           <Stack.Screen name="alerts" options={{ title: "Job alerts" }} />
           <Stack.Screen name="conversation/[id]" options={{ title: "Conversation" }} />
           <Stack.Screen name="dashboard" options={{ title: "Dashboard" }} />

@@ -11,13 +11,18 @@ export function resolveBrandImageUrl(...candidates: (string | null | undefined)[
 }
 
 export function resolveJobBrandLogo(job: Job): string {
-  const pb = job.postedBy as EmployerProfile | null | undefined;
+  const pb = job.postedBy as
+    | (EmployerProfile & { profile_picture?: string; listingGallery?: string[] })
+    | null
+    | undefined;
+  const galleryFirst = Array.isArray(pb?.listingGallery)
+    ? pb.listingGallery.find((x) => typeof x === "string" && x.trim())
+    : undefined;
   return resolveBrandImageUrl(
     job.companyLogo,
     pb?.companyLogo,
-    pb && typeof pb === "object" && "profile_picture" in pb
-      ? (pb as { profile_picture?: string }).profile_picture
-      : undefined
+    pb?.profile_picture,
+    galleryFirst
   );
 }
 
@@ -25,14 +30,14 @@ export function resolveDashboardJobLogo(job: {
   companyLogo?: string | null;
   postedBy?: unknown;
 }): string {
-  const pb = job.postedBy as EmployerProfile | null | undefined;
-  return resolveBrandImageUrl(
-    job.companyLogo,
-    pb?.companyLogo,
-    pb && typeof pb === "object" && "profile_picture" in pb
-      ? (pb as { profile_picture?: string }).profile_picture
-      : undefined
-  );
+  const pb = job.postedBy as
+    | (EmployerProfile & { profile_picture?: string; listingGallery?: string[] })
+    | null
+    | undefined;
+  const galleryFirst = Array.isArray(pb?.listingGallery)
+    ? pb.listingGallery.find((x) => typeof x === "string" && x.trim())
+    : undefined;
+  return resolveBrandImageUrl(job.companyLogo, pb?.companyLogo, pb?.profile_picture, galleryFirst);
 }
 
 export function resolvePartnerListLogo(

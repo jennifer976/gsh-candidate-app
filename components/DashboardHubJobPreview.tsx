@@ -21,7 +21,7 @@ export function DashboardHubJobPreview({
     <View style={[styles.card, feedCardStyle()]}>
       <View style={styles.accentStrip} />
       <Pressable onPress={onPress} style={styles.hit} accessibilityRole="button">
-        <CompanyLogo logoUrl={logoUrl} companyName={job.companyName} size={48} radius={14} />
+        <CompanyLogo logoUrl={logoUrl} companyName={job.companyName} size={40} radius={11} />
         <View style={styles.mid}>
           <Text style={styles.title} numberOfLines={2}>
             {job.title}
@@ -49,10 +49,10 @@ export function DashboardHubJobPreview({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 18,
-    paddingVertical: 16,
-    paddingRight: 14,
-    paddingLeft: 20,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingRight: 12,
+    paddingLeft: 16,
     overflow: "hidden",
     position: "relative",
   },
@@ -67,11 +67,12 @@ const styles = StyleSheet.create({
   hit: { flexDirection: "row", alignItems: "flex-start", gap: 12, minWidth: 0 },
   mid: { flex: 1, minWidth: 0 },
   title: {
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: fontFamily.bold,
     color: colors.navy,
     letterSpacing: -0.2,
-    marginBottom: 3,
+    marginBottom: 2,
+    lineHeight: 19,
   },
   companyRow: { flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" },
   company: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary, flexShrink: 1 },
