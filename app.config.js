@@ -26,7 +26,7 @@ module.exports = () => ({
       },
     },
     android: {
-      package: "com.globalsponsorhub.candidate",
+      package: "global.sponsor.hub",
       adaptiveIcon: {
         foregroundImage: "./assets/brand-icon.png",
         backgroundColor: "#080f2e",
