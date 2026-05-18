@@ -302,6 +302,27 @@ export interface ReferralCodesListResponse {
   perPage: number;
 }
 
+export interface RelocationPerkItem {
+  _id: string;
+  title: string;
+  description: string;
+  logoUrl?: string;
+  affiliateUrl?: string;
+  promoCode?: string;
+  category?: string;
+  audience?: string;
+  sortOrder?: number;
+  status?: string;
+}
+
+export interface RelocationPerksDashboardResponse {
+  audience: "candidate" | "employer";
+  comingSoon: boolean;
+  title: string;
+  subtitle: string;
+  perks: RelocationPerkItem[];
+}
+
 /** Curated / external listings (`GET /external-job-listings/public`). */
 export interface ExternalJobListingPublic {
   _id: string;

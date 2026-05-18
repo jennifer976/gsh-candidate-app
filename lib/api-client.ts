@@ -513,6 +513,14 @@ export async function trackReferralCodeCopy(id: string) {
   });
 }
 
+// —— Relocation perks (dashboard affiliate offers) ——
+
+export async function fetchRelocationPerks(audience: "candidate" | "employer" = "candidate") {
+  return apiFetchJson<import("@/types/models").RelocationPerksDashboardResponse>(
+    `/relocation-perks?audience=${audience}`
+  );
+}
+
 // —— ATS assistant ——
 
 export async function atsParseProfile(cvText: string) {

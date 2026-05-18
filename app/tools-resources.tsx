@@ -65,6 +65,13 @@ export default function ToolsAndResourcesScreen() {
             onPress={() => router.push("/partners")}
           />
           <GshLinkRow
+            title="Relocation perks"
+            subtitle="Affiliate offers for your move — coming soon"
+            icon="airplane-outline"
+            accent="teal"
+            onPress={() => router.push("/relocation-perks")}
+          />
+          <GshLinkRow
             title="Visa wizard"
             subtitle="Sponsorship routes and next steps"
             icon="sparkles-outline"

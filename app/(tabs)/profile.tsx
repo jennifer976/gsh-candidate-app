@@ -69,7 +69,8 @@ const MORE_TOOLS_LINKS = [
   { title: "Job alerts", subtitle: "Match preferences", icon: "flash-outline" as const, accent: "ocean" as const, href: "/alerts" },
   { title: "Tools & resources", subtitle: "Blog, FAQs, contact", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },
   { title: "Saved roles", subtitle: "Bookmarked jobs", icon: "bookmark-outline" as const, accent: "teal" as const, href: "/saved" },
-  { title: "Offers & perks", subtitle: "Partner deals", icon: "gift-outline" as const, accent: "purple" as const, href: "/offers" },
+  { title: "Relocation perks", subtitle: "Moving & settlement offers", icon: "airplane-outline" as const, accent: "teal" as const, href: "/relocation-perks" },
+  { title: "Offers & codes", subtitle: "Partner discount codes", icon: "gift-outline" as const, accent: "purple" as const, href: "/offers" },
   { title: "Notifications", subtitle: "Account updates", icon: "notifications-outline" as const, accent: "teal" as const, href: "/notification-feed" },
   { title: "Feedback", subtitle: "Report an issue", icon: "chatbox-ellipses-outline" as const, accent: "ocean" as const, href: "/feedback" },
 ] as const;
