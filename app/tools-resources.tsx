@@ -7,6 +7,7 @@ import { GshLinkRow, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshDarkFeedHeading } from "@/components/GshDarkFeedHeading";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
+import { useRelocationPerksNav } from "@/lib/use-relocation-perks-nav";
 import { fontFamily } from "@/lib/theme";
 
 type RowDef = { title: string; subtitle: string; path?: string; icon: ComponentProps<typeof Ionicons>["name"]; accent: "teal" | "purple" | "ocean" };
@@ -14,6 +15,7 @@ type RowDef = { title: string; subtitle: string; path?: string; icon: ComponentP
 /** Primary hub: career tools, guides, blog, legal — one screen for discoverability. */
 export default function ToolsAndResourcesScreen() {
   const router = useRouter();
+  const relocationPerksNav = useRelocationPerksNav();
 
   const resourceRows: RowDef[] = [
     {
@@ -65,8 +67,8 @@ export default function ToolsAndResourcesScreen() {
             onPress={() => router.push("/partners")}
           />
           <GshLinkRow
-            title="Relocation perks"
-            subtitle="Affiliate offers for your move — coming soon"
+            title={relocationPerksNav.title}
+            subtitle={relocationPerksNav.subtitle}
             icon="airplane-outline"
             accent="teal"
             onPress={() => router.push("/relocation-perks")}

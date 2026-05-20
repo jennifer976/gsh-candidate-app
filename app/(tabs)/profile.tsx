@@ -27,6 +27,7 @@ import { presentApiError } from "@/lib/api-error";
 import { useAuthStore } from "@/lib/auth-store";
 import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
 import { getAllSkillsSorted } from "@/lib/skills-data";
+import { useRelocationPerksNav } from "@/lib/use-relocation-perks-nav";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
 const ALL_SKILLS = getAllSkillsSorted();
@@ -64,12 +65,11 @@ function FieldLabel({ label, hint }: { label: string; hint?: string }) {
   );
 }
 
-const MORE_TOOLS_LINKS = [
+const STATIC_MORE_TOOLS_LINKS = [
   { title: "Guides hub", subtitle: "Country guides", icon: "map-outline" as const, accent: "purple" as const, href: "/guides" },
   { title: "Job alerts", subtitle: "Match preferences", icon: "flash-outline" as const, accent: "ocean" as const, href: "/alerts" },
   { title: "Tools & resources", subtitle: "Blog, FAQs, contact", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },
   { title: "Saved roles", subtitle: "Bookmarked jobs", icon: "bookmark-outline" as const, accent: "teal" as const, href: "/saved" },
-  { title: "Relocation perks", subtitle: "Moving & settlement offers", icon: "airplane-outline" as const, accent: "teal" as const, href: "/relocation-perks" },
   { title: "Offers & codes", subtitle: "Partner discount codes", icon: "gift-outline" as const, accent: "purple" as const, href: "/offers" },
   { title: "Notifications", subtitle: "Account updates", icon: "notifications-outline" as const, accent: "teal" as const, href: "/notification-feed" },
   { title: "Feedback", subtitle: "Report an issue", icon: "chatbox-ellipses-outline" as const, accent: "ocean" as const, href: "/feedback" },
@@ -79,12 +79,33 @@ export default function ProfileScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
+  const relocationPerksNav = useRelocationPerksNav();
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const user = useAuthStore((s) => s.user);
   const scrollRef = useRef<ScrollView>(null);
   const formSectionY = useRef(0);
 
   const profileQuery = useQuery({ queryKey: ["profile", "me"], queryFn: fetchOwnProfile });
+
+  const moreToolsLinks = useMemo(
+    () => [
+      STATIC_MORE_TOOLS_LINKS[0],
+      STATIC_MORE_TOOLS_LINKS[1],
+      STATIC_MORE_TOOLS_LINKS[2],
+      STATIC_MORE_TOOLS_LINKS[3],
+      {
+        title: relocationPerksNav.title,
+        subtitle: relocationPerksNav.subtitle,
+        icon: "airplane-outline" as const,
+        accent: "teal" as const,
+        href: "/relocation-perks" as const,
+      },
+      STATIC_MORE_TOOLS_LINKS[4],
+      STATIC_MORE_TOOLS_LINKS[5],
+      STATIC_MORE_TOOLS_LINKS[6],
+    ],
+    [relocationPerksNav.title, relocationPerksNav.subtitle]
+  );
 
   const [moreToolsOpen, setMoreToolsOpen] = useState(false);
   const [firstName, setFirstName] = useState("");
@@ -232,7 +253,7 @@ export default function ProfileScreen() {
 
           {moreToolsOpen ? (
             <View style={styles.moreToolsList}>
-              {MORE_TOOLS_LINKS.map((row) => (
+              {moreToolsLinks.map((row) => (
                 <GshLinkRow
                   key={row.href}
                   title={row.title}

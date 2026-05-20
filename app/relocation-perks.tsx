@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
+import { useLayoutEffect } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -15,6 +17,11 @@ import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchRelocationPerks } from "@/lib/api-client";
+import {
+  RELOCATION_PERKS_FALLBACK_SUBTITLE,
+  RELOCATION_PERKS_FALLBACK_TITLE,
+  RELOCATION_PERKS_QUERY_KEY,
+} from "@/lib/use-relocation-perks-nav";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { resolveUploadAssetUrl } from "@/lib/media-url";
 import { stackFlatListHeadWrapStyle } from "@/lib/screen-layout";
@@ -70,24 +77,29 @@ function PerkCard({ item }: { item: RelocationPerkItem }) {
 }
 
 export default function RelocationPerksScreen() {
+  const navigation = useNavigation();
   const query = useQuery({
-    queryKey: ["relocation-perks", "candidate"],
+    queryKey: [...RELOCATION_PERKS_QUERY_KEY],
     queryFn: () => fetchRelocationPerks("candidate"),
   });
 
   const data = query.data;
   const perks = data?.perks ?? [];
   const comingSoon = data?.comingSoon ?? true;
+  const screenTitle = data?.title?.trim() || RELOCATION_PERKS_FALLBACK_TITLE;
+  const screenSubtitle =
+    data?.subtitle?.trim() || RELOCATION_PERKS_FALLBACK_SUBTITLE;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: screenTitle });
+  }, [navigation, screenTitle]);
 
   const header = (
     <View style={styles.headWrap}>
       <GshScreenIntro
         eyebrow="Relocation"
-        title={data?.title || "Relocation perks"}
-        subtitle={
-          data?.subtitle ||
-          "Discounts and trusted services to help you move for work."
-        }
+        title={screenTitle}
+        subtitle={screenSubtitle}
       />
       {comingSoon ? (
         <View style={[cardSurfaceStyle(false), styles.soonCard]}>
