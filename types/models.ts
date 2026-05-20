@@ -111,7 +111,7 @@ export interface Application {
   };
 }
 
-export type ConversationSource = "application" | "talent_pool";
+export type ConversationSource = "application" | "talent_pool" | "candidate_search";
 
 export interface ConversationSummary {
   _id: string;
