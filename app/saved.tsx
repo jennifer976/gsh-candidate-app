@@ -50,7 +50,7 @@ export default function SavedJobsScreen() {
   );
 
   return (
-    <GshScreenShell>
+    <GshScreenShell constrainTabletWidth>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         {query.isLoading ? (
           <View style={styles.center}>

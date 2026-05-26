@@ -2,13 +2,14 @@ import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import { Redirect, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
-import { Platform, View } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CandidateOnboardingModal } from "@/components/CandidateOnboardingModal";
 import {
   isCandidateOnboardingComplete,
   markCandidateOnboardingComplete,
 } from "@/lib/candidate-onboarding";
+import { tabBarBottomPadding } from "@/lib/android-insets";
 import { useAuthStore } from "@/lib/auth-store";
 import { colors, fontFamily } from "@/lib/theme";
 
@@ -73,7 +74,7 @@ export default function TabsLayout() {
 
   if (!token) return <Redirect href="/login" />;
 
-  const bottomInset = Math.max(insets.bottom, Platform.OS === "android" ? 10 : 8);
+  const bottomInset = tabBarBottomPadding(insets.bottom);
   const tabBarPaddingTop = 8;
   const tabIconRowHeight = 48;
 

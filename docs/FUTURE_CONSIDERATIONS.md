@@ -67,7 +67,9 @@ Items discussed or partially shipped; confirm in production after **EAS build** 
 | Jobs tab visual alignment with Home (dark shell, segments, cards) | Shipped in app — verify in build |
 | Saved jobs list vs Home badge mismatch | BE: return all saves + `listingActive`; app refetch on `/saved` — **deploy API** |
 | Messages empty state contrast on dark shell | Shipped — verify |
-| Tab bar bottom inset (Android) | Tuned — verify on devices |
+| Tab bar bottom inset (Android) | **1.0.1:** `tabBarBottomPadding` + edge-to-edge bootstrap — verify on devices |
+| Play SDK 35 edge-to-edge / nav bar APIs | **1.0.1:** see `docs/PLAY_RELEASE_1.0.1.md` |
+| Tablet / large-screen layout | **1.0.1:** `GshScreenShell constrainTabletWidth` on tab feeds |
 | Sponsor badge = UK licence status (not generic “Sponsor”) | Shipped on job cards when `postedBy.sponsorLicense` present |
 | Curated/external cards: summary, chips, featured, age | Shipped — dashboard curated fields need **API deploy** |
 | Expert Insights entry on Home “Key tools” | Shipped — content still Supabase-driven |
@@ -134,6 +136,7 @@ Items discussed or partially shipped; confirm in production after **EAS build** 
 
 ## 8. Mobile release rhythm
 
+- **Next store binary:** **1.0.1** — `docs/PLAY_RELEASE_1.0.1.md` (edge-to-edge, Play Console items).
 - [ ] **EAS:** production profile env (`EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_SITE_URL`, Supabase public keys, `EXPO_PUBLIC_GSH_MOBILE_REGISTRATION_KEY`).
 - [ ] Store listings (screenshots reflecting Jobs/Home parity).
 - [ ] **OTA vs native:** document which changes need new binary vs Expo Updates.
@@ -172,3 +175,4 @@ Items discussed or partially shipped; confirm in production after **EAS build** 
 | Date | Note |
 |------|------|
 | 2026-05-26 | Initial doc: search phases, logos, app parity backlog, Expert Insights, scale/ops checklist. |
+| 2026-05-26 | Play 1.0.1 prep: edge-to-edge, tablet shell, `PLAY_RELEASE_1.0.1.md`. |

@@ -140,7 +140,7 @@ export default function HomeScreen() {
 
   if (q.isLoading && !q.data) {
     return (
-      <GshScreenShell>
+      <GshScreenShell constrainTabletWidth>
         <View style={styles.center}>
           <ActivityIndicator size="large" color={colors.brand} accessibilityLabel="Loading home" />
           <Text style={styles.loadingHint}>Loading your hub…</Text>
@@ -152,7 +152,7 @@ export default function HomeScreen() {
   if (q.isError || !q.data) {
     const errCopy = presentApiError(q.error);
     return (
-      <GshScreenShell>
+      <GshScreenShell constrainTabletWidth>
         <ScrollView contentContainerStyle={styles.centerPad} refreshControl={<RefreshControl refreshing={q.isFetching} onRefresh={onRefresh} tintColor={colors.white} />}>
             <View
               accessible
@@ -198,7 +198,7 @@ export default function HomeScreen() {
   const isNewUser = d.stats.totalApplied === 0 && savedCount === 0 && !hasActivity;
 
   return (
-    <GshScreenShell>
+    <GshScreenShell constrainTabletWidth>
       <ScrollView
         contentContainerStyle={styles.scrollPad}
         refreshControl={<RefreshControl refreshing={q.isFetching} onRefresh={onRefresh} tintColor={colors.white} />}

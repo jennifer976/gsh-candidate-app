@@ -404,7 +404,7 @@ export default function JobsTabScreen() {
   ) : null;
 
   return (
-    <GshScreenShell>
+    <GshScreenShell constrainTabletWidth>
       <FlatList
         data={activeError ? [] : listRows}
         keyExtractor={(item) => item._id}

@@ -13,6 +13,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AndroidSystemUiBootstrap } from "@/components/AndroidSystemUiBootstrap";
 import { ApiSessionHandler } from "@/components/ApiSessionHandler";
 import { BrandedLaunchSplash } from "@/components/BrandedLaunchSplash";
 import { InAppWebHost } from "@/components/InAppWebHost";
@@ -67,6 +68,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
+      <AndroidSystemUiBootstrap />
       <QueryClientProvider client={queryClient}>
         <ApiSessionHandler />
         <QueryFocusSync />

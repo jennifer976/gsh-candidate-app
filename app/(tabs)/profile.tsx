@@ -182,7 +182,7 @@ export default function ProfileScreen() {
 
   if (profileQuery.isLoading) {
     return (
-      <GshScreenShell>
+      <GshScreenShell constrainTabletWidth>
         <View style={styles.loadingWrap}>
           <ActivityIndicator color={colors.brand} size="large" />
         </View>
@@ -194,7 +194,7 @@ export default function ProfileScreen() {
   const profileReady = completionPct >= 100;
 
   return (
-    <GshScreenShell>
+    <GshScreenShell constrainTabletWidth>
       <ScrollView
         ref={scrollRef}
         contentContainerStyle={styles.scrollContent}

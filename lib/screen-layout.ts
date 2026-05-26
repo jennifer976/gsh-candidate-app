@@ -27,3 +27,7 @@ export const stackFlatListHeadWrapStyle: ViewStyle = {
 /** Home / Jobs navy feed — vertical rhythm between blocks */
 export const FEED_SECTION_GAP = 16;
 export const FEED_ITEM_GAP = 10;
+
+/** Center main column on tablets / foldables (Android 16 may ignore portrait lock). */
+export const TABLET_BREAKPOINT_WIDTH = 600;
+export const TABLET_MAX_CONTENT_WIDTH = 720;

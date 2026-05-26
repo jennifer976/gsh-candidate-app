@@ -7,7 +7,7 @@ module.exports = () => ({
     name: "Global Sponsor Hub",
     slug: "gsh-candidate-app",
     scheme: "gsh-candidate",
-    version: "1.0.0",
+    version: "1.0.1",
     orientation: "portrait",
     icon: "./assets/brand-icon.png",
     userInterfaceStyle: "light",
@@ -31,8 +31,18 @@ module.exports = () => ({
         foregroundImage: "./assets/brand-icon.png",
         backgroundColor: "#080f2e",
       },
-      edgeToEdgeEnabled: true,
       predictiveBackGestureEnabled: false,
+      softwareKeyboardLayoutMode: "resize",
+    },
+    androidStatusBar: {
+      backgroundColor: "#080f2e",
+      barStyle: "light-content",
+      translucent: true,
+    },
+    androidNavigationBar: {
+      backgroundColor: "#080f2e",
+      barStyle: "light-content",
+      enforceContrast: false,
     },
     web: {
       favicon: "./assets/brand-icon.png",
