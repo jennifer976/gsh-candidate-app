@@ -40,7 +40,11 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 function openAffiliate(url: string) {
   const href = url.startsWith("http") ? url : `https://${url}`;
-  void openExternalUrlInApp(href).catch(() => Linking.openURL(href));
+  try {
+    openExternalUrlInApp(href);
+  } catch {
+    void Linking.openURL(href);
+  }
 }
 
 function PerkCard({ item }: { item: RelocationPerkItem }) {

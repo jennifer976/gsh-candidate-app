@@ -16,7 +16,7 @@ import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
-import { GshScreenBackground } from "@/components/GshScreenShell";
+import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { SkeletonBox } from "@/components/SkeletonLoader";
 import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-client";
 import { hapticLight, hapticSuccess, hapticWarning } from "@/lib/haptics";
