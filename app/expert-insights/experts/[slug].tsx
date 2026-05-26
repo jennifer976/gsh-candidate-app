@@ -2,8 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ContentComingSoonCard } from "@/components/ContentComingSoonCard";
 import { GshContentAccentBar, GshOutlineButton, GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { isSupabaseNotConfigured } from "@/lib/content/contentAvailability";
 import {
   fetchExpertContributorBySlug,
   fetchExpertInsightsForContributor,
@@ -57,6 +59,25 @@ export default function ExpertContributorScreen() {
       <GshScreenBackground>
         <SafeAreaView style={styles.center} edges={["bottom"]}>
           <ActivityIndicator size="large" color={colors.brand} />
+        </SafeAreaView>
+      </GshScreenBackground>
+    );
+  }
+
+  if (error && isSupabaseNotConfigured(error)) {
+    return (
+      <GshScreenBackground>
+        <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+          <ScrollView contentContainerStyle={styles.pad}>
+            <GshScreenIntro
+              eyebrow="Contributor channel"
+              title="Expert profile"
+              subtitle="Contributor pages appear here when Expert Insights goes live."
+              style={{ marginBottom: 10 }}
+            />
+            <ContentComingSoonCard feature="expert-insights" />
+            <GshOutlineButton title="Back to Expert Insights" onPress={() => router.push("/expert-insights")} style={{ marginTop: 14 }} />
+          </ScrollView>
         </SafeAreaView>
       </GshScreenBackground>
     );

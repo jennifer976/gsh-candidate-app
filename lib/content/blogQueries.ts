@@ -1,6 +1,6 @@
 import { getPublicSupabase } from "@/lib/supabasePublic";
 
-/** Thrown when blog env vars are missing — UI should explain in-app alternatives (retry, guides, tools). */
+/** Thrown when Supabase env vars are missing — UI shows Coming soon (not admin/build errors). */
 export class SupabaseNotConfiguredError extends Error {
   constructor() {
     super("SUPABASE_NOT_CONFIGURED");

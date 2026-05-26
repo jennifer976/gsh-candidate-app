@@ -3,9 +3,11 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BlogArticleBody } from "@/components/BlogArticleBody";
+import { ContentComingSoonCard } from "@/components/ContentComingSoonCard";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshContentAccentBar, GshOutlineButton, GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { isSupabaseNotConfigured } from "@/lib/content/contentAvailability";
 import { loadExpertInsightArticle, SupabaseNotConfiguredError } from "@/lib/content/expertInsightsQueries";
 import { expertInsightCategoryName } from "@/lib/expertInsights/categories";
 import { expertInsightFormatLabel } from "@/lib/expertInsights/formatLabels";
@@ -44,17 +46,30 @@ export default function ExpertInsightArticleScreen() {
   }
 
   if (q.isError) {
-    const notConfigured = q.error instanceof SupabaseNotConfiguredError;
+    if (isSupabaseNotConfigured(q.error)) {
+      return (
+        <GshScreenBackground>
+          <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+            <ScrollView contentContainerStyle={styles.pad}>
+              <GshScreenIntro
+                eyebrow="Contributor channel"
+                title="Expert Insights"
+                subtitle="In-app reading when contributor pieces are live."
+                style={{ marginBottom: 10 }}
+              />
+              <ContentComingSoonCard feature="expert-insights" />
+              <GshOutlineButton title="All insights" onPress={() => router.push("/expert-insights")} style={{ marginTop: 14 }} />
+            </ScrollView>
+          </SafeAreaView>
+        </GshScreenBackground>
+      );
+    }
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.center} edges={["bottom"]}>
           <GshScreenIntro
-            title={notConfigured ? "Insight unavailable in-app" : "Could not load this piece"}
-            subtitle={
-              notConfigured
-                ? "This build is not linked to the content service. Try Guides or Tools & resources."
-                : "Check your connection and try again."
-            }
+            title="Could not load this piece"
+            subtitle="Check your connection and try again."
             style={{ marginBottom: 8 }}
           />
           <GshOutlineButton title="Try again" onPress={() => void q.refetch()} />

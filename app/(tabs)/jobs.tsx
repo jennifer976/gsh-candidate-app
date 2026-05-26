@@ -265,7 +265,7 @@ export default function JobsTabScreen() {
 
   const listHeader = (
     <>
-      <GshTabHeroHeader paddingTop={Math.max(insets.top, 16)} tagline="Sponsored roles with visa and relocation support">
+      <GshTabHeroHeader paddingTop={Math.max(insets.top, 20) + 8} tagline="Sponsored roles with visa and relocation support">
         <View style={styles.heroSearch}>
           <Ionicons name="search" size={19} color="rgba(255,255,255,0.5)" style={styles.heroSearchIcon} />
           <TextInput
@@ -418,31 +418,33 @@ export default function JobsTabScreen() {
           listRows.length === 0 && !listBootloading && styles.listPadGrow,
         ]}
         keyboardShouldPersistTaps="handled"
-        renderItem={({ item }) =>
-          feedTab === "employer" ? (
-            <HubJobCard
-              job={item as Job}
-              onPress={() => router.push(`/job/${(item as Job)._id}`)}
-              savedRowId={savedJobIdByListingId.get((item as Job)._id)}
-              bookmarkLoading={
-                (saveJobMut.isPending && saveJobMut.variables === (item as Job)._id) ||
-                (unsaveJobMut.isPending &&
-                  unsaveJobMut.variables === savedJobIdByListingId.get((item as Job)._id))
-              }
-              onToggleBookmark={() => {
-                const j = item as Job;
-                const sid = savedJobIdByListingId.get(j._id);
-                if (sid) unsaveJobMut.mutate(sid);
-                else saveJobMut.mutate(j._id);
-              }}
-            />
-          ) : (
-            <CuratedExternalJobCard
-              job={item as ExternalJobListingPublic}
-              onPress={() => router.push(`/external-job/${(item as ExternalJobListingPublic)._id}`)}
-            />
-          )
-        }
+        renderItem={({ item }) => (
+          <View style={styles.listRow}>
+            {feedTab === "employer" ? (
+              <HubJobCard
+                job={item as Job}
+                onPress={() => router.push(`/job/${(item as Job)._id}`)}
+                savedRowId={savedJobIdByListingId.get((item as Job)._id)}
+                bookmarkLoading={
+                  (saveJobMut.isPending && saveJobMut.variables === (item as Job)._id) ||
+                  (unsaveJobMut.isPending &&
+                    unsaveJobMut.variables === savedJobIdByListingId.get((item as Job)._id))
+                }
+                onToggleBookmark={() => {
+                  const j = item as Job;
+                  const sid = savedJobIdByListingId.get(j._id);
+                  if (sid) unsaveJobMut.mutate(sid);
+                  else saveJobMut.mutate(j._id);
+                }}
+              />
+            ) : (
+              <CuratedExternalJobCard
+                job={item as ExternalJobListingPublic}
+                onPress={() => router.push(`/external-job/${(item as ExternalJobListingPublic)._id}`)}
+              />
+            )}
+          </View>
+        )}
       />
 
       <DiscoverTopicsFilterModal
@@ -467,47 +469,6 @@ export default function JobsTabScreen() {
 }
 
 const styles = StyleSheet.create({
-  // Hero
-  hero: { paddingHorizontal: 20, paddingBottom: 24, overflow: "hidden", position: "relative" },
-  heroWatermark: {
-    position: "absolute",
-    top: -40,
-    right: -80,
-    width: 320,
-    height: 320,
-    opacity: 0.08,
-  },
-  heroGlow: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 110,
-  },
-  heroTopRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 22,
-    paddingTop: 4,
-  },
-  heroLogo: { width: 200, height: 44, maxWidth: "72%" },
-  heroActions: { flexDirection: "row", gap: 4 },
-  heroIconBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: "rgba(255,255,255,0.1)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  heroTagline: {
-    fontSize: 14,
-    fontFamily: fontFamily.medium,
-    color: "rgba(255,255,255,0.65)",
-    marginBottom: 14,
-    lineHeight: 20,
-  },
   heroSearch: {
     flexDirection: "row",
     alignItems: "center",
@@ -622,7 +583,9 @@ const styles = StyleSheet.create({
   },
   listInfoBtn: { marginTop: 20, padding: 4 },
 
-  listPad: { paddingBottom: 32, gap: 10, paddingHorizontal: 16 },
+  /** No horizontal pad here — hero is full-bleed like Home; rows use listRow. */
+  listPad: { paddingBottom: 32, gap: 10 },
+  listRow: { paddingHorizontal: 16 },
   listPadGrow: { flexGrow: 1 },
   card: {
     paddingVertical: 14,

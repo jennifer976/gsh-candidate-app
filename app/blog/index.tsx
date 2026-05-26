@@ -2,8 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { GshContentAccentBar, GshScreenIntro } from "@/components/gsh-ui-kit";
+import { ContentComingSoonCard } from "@/components/ContentComingSoonCard";
+import { GshContentAccentBar, GshOutlineButton, GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { isSupabaseNotConfigured } from "@/lib/content/contentAvailability";
 import { fetchPublishedBlogList, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -20,6 +22,9 @@ export default function BlogIndexScreen() {
     },
   });
 
+  const comingSoon =
+    (q.isError && isSupabaseNotConfigured(q.error)) || (!q.isLoading && !q.isError && (q.data?.length ?? 0) === 0);
+
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
@@ -27,34 +32,28 @@ export default function BlogIndexScreen() {
           <View style={styles.center}>
             <ActivityIndicator size="large" color={colors.brand} />
           </View>
-        ) : q.isError ? (
+        ) : q.isError && !isSupabaseNotConfigured(q.error) ? (
           <ScrollView contentContainerStyle={styles.pad}>
             <GshScreenIntro
-              title={q.error instanceof SupabaseNotConfiguredError ? "Blog not linked yet" : "Could not load articles"}
-              subtitle={
-                q.error instanceof SupabaseNotConfiguredError
-                  ? "Articles are loaded from our content service. This build is missing those settings — ask your administrator, or use Guides and Tools from the app menu."
-                  : "Check your connection and try again, or go back to Tools & resources."
-              }
+              title="Could not load articles"
+              subtitle="Check your connection and try again, or go back to Tools & resources."
               style={{ marginBottom: 16 }}
             />
-            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={() => void q.refetch()} accessibilityRole="button">
-              <Text style={styles.primaryOutlineText}>Try again</Text>
-            </Pressable>
-            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={() => router.push("/tools-resources")} accessibilityRole="button">
-              <Text style={styles.primaryOutlineText}>Tools & resources</Text>
-            </Pressable>
+            <GshOutlineButton title="Try again" onPress={() => void q.refetch()} />
+            <GshOutlineButton title="Tools & resources" onPress={() => router.push("/tools-resources")} style={{ marginTop: 10 }} />
           </ScrollView>
-        ) : q.data?.length === 0 ? (
-          <ScrollView contentContainerStyle={styles.pad}>
+        ) : comingSoon ? (
+          <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
             <GshScreenIntro
-              title="No articles to show"
-              subtitle="Nothing is published in the catalogue right now. Check back later or explore Guides in the app."
-              style={{ marginBottom: 16 }}
+              eyebrow="Blog"
+              title="Latest articles"
+              subtitle="In-app reading on mobility and careers — no browser required."
+              style={{ marginBottom: 10 }}
             />
-            <Pressable style={[styles.primaryOutline, cardSurfaceStyle(false)]} onPress={() => router.push("/guides")} accessibilityRole="button">
-              <Text style={styles.primaryOutlineText}>Open guides</Text>
-            </Pressable>
+            <GshContentAccentBar />
+            <ContentComingSoonCard feature="blog" />
+            <GshOutlineButton title="Open guides" onPress={() => router.push("/guides")} style={{ marginTop: 14 }} />
+            <GshOutlineButton title="Tools & resources" onPress={() => router.push("/tools-resources")} style={{ marginTop: 10 }} />
           </ScrollView>
         ) : (
           <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>

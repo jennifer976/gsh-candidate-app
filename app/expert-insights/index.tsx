@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ContentComingSoonCard } from "@/components/ContentComingSoonCard";
 import {
   GshContentAccentBar,
   GshFilterChip,
@@ -20,6 +21,7 @@ import {
   GshTopicChip,
 } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { isSupabaseNotConfigured } from "@/lib/content/contentAvailability";
 import {
   fetchPublishedExpertContributors,
   fetchPublishedExpertInsights,
@@ -78,7 +80,10 @@ export default function ExpertInsightsIndexScreen() {
 
   const loading = insightsQ.isLoading || contributorsQ.isLoading;
   const error = insightsQ.isError ? insightsQ.error : contributorsQ.isError ? contributorsQ.error : null;
-  const hasPublished = (insightsQ.data?.length ?? 0) > 0;
+  const contentUnavailable =
+    isSupabaseNotConfigured(error) ||
+    (!loading && !insightsQ.isError && !contributorsQ.isError && (insightsQ.data?.length ?? 0) === 0);
+  const hasPublished = !contentUnavailable && (insightsQ.data?.length ?? 0) > 0;
 
   return (
     <GshScreenBackground>
@@ -87,15 +92,11 @@ export default function ExpertInsightsIndexScreen() {
           <View style={styles.center}>
             <ActivityIndicator size="large" color={colors.brand} />
           </View>
-        ) : error ? (
+        ) : error && !isSupabaseNotConfigured(error) ? (
           <ScrollView contentContainerStyle={styles.pad}>
             <GshScreenIntro
-              title={error instanceof SupabaseNotConfiguredError ? "Expert Insights not linked yet" : "Could not load"}
-              subtitle={
-                error instanceof SupabaseNotConfiguredError
-                  ? "Articles are loaded from our content service. This build is missing those settings — use Guides and Tools, or contact support."
-                  : "Check your connection and try again."
-              }
+              title="Could not load"
+              subtitle="Check your connection and try again."
               style={{ marginBottom: 16 }}
             />
             <GshOutlineButton
@@ -116,6 +117,14 @@ export default function ExpertInsightsIndexScreen() {
               style={{ marginBottom: 10 }}
             />
             <GshContentAccentBar />
+
+            {contentUnavailable ? (
+              <>
+                <ContentComingSoonCard feature="expert-insights" />
+                <GshOutlineButton title="Read the blog" onPress={() => router.push("/blog")} style={{ marginTop: 14 }} />
+                <GshOutlineButton title="Open guides" onPress={() => router.push("/guides")} style={{ marginTop: 10 }} />
+              </>
+            ) : null}
 
             {hasPublished ? (
               <>
@@ -166,17 +175,7 @@ export default function ExpertInsightsIndexScreen() {
               </>
             ) : null}
 
-            {!hasPublished ? (
-              <View style={[styles.card, cardSurfaceStyle(true)]}>
-                <Text style={styles.emptyEyebrow}>Publishing soon</Text>
-                <Text style={styles.emptyTitle}>No contributor pieces live yet</Text>
-                <Text style={styles.emptyBody}>
-                  We are onboarding mobility experts now. When the first briefings and deep dives publish, they will appear here.
-                </Text>
-                <GshOutlineButton title="Read the blog" onPress={() => router.push("/blog")} style={{ marginTop: 14 }} />
-                <GshOutlineButton title="Open guides" onPress={() => router.push("/guides")} style={{ marginTop: 10 }} />
-              </View>
-            ) : filtered.length === 0 ? (
+            {hasPublished && filtered.length === 0 ? (
               <View style={[styles.card, cardSurfaceStyle(true)]}>
                 <Text style={styles.emptyTitle}>No pieces match these filters</Text>
                 <Text style={styles.emptyBody}>Try clearing search or choosing a different type.</Text>
@@ -277,14 +276,6 @@ const styles = StyleSheet.create({
   byline: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.brand },
   metaDot: { fontSize: 12, color: colors.textMuted },
   metaMuted: { fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
-  emptyEyebrow: {
-    fontSize: 11,
-    fontFamily: fontFamily.semiBold,
-    color: colors.teal,
-    letterSpacing: 0.6,
-    textTransform: "uppercase",
-    marginBottom: 6,
-  },
   emptyTitle: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.navy, marginBottom: 6 },
   emptyBody: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.textMuted },
   disclaimer: { padding: 14, borderRadius: radii.lg, marginTop: 4 },

@@ -3,8 +3,10 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BlogArticleBody } from "@/components/BlogArticleBody";
-import { GshContentAccentBar, GshScreenIntro } from "@/components/gsh-ui-kit";
+import { ContentComingSoonCard } from "@/components/ContentComingSoonCard";
+import { GshContentAccentBar, GshOutlineButton, GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
+import { isSupabaseNotConfigured } from "@/lib/content/contentAvailability";
 import { fetchBlogArticleBySlug, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -36,17 +38,25 @@ export default function BlogArticleScreen() {
   }
 
   if (q.isError) {
-    const notConfigured = q.error instanceof SupabaseNotConfiguredError;
+    if (isSupabaseNotConfigured(q.error)) {
+      return (
+        <GshScreenBackground>
+          <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+            <ScrollView contentContainerStyle={styles.pad}>
+              <GshScreenIntro eyebrow="Blog" title="Article" subtitle="In-app reading when articles are live." style={{ marginBottom: 10 }} />
+              <ContentComingSoonCard feature="blog" />
+              <GshOutlineButton title="Back to blog" onPress={() => router.push("/blog")} style={{ marginTop: 14 }} />
+            </ScrollView>
+          </SafeAreaView>
+        </GshScreenBackground>
+      );
+    }
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.center} edges={["bottom"]}>
           <GshScreenIntro
-            title={notConfigured ? "Article unavailable in-app" : "Could not load this article"}
-            subtitle={
-              notConfigured
-                ? "This build is not linked to the content service. Use Guides or Tools from the menu, or contact support."
-                : "Check your connection and try again."
-            }
+            title="Could not load this article"
+            subtitle="Check your connection and try again."
             style={{ marginBottom: 8 }}
           />
           <Pressable style={styles.primaryOutline} onPress={() => void q.refetch()} accessibilityRole="button">
