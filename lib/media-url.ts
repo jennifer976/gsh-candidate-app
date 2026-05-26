@@ -1,4 +1,4 @@
-import { getApiOrigin } from "@/lib/config";
+import { getApiOrigin, getMarketingSiteUrl } from "@/lib/config";
 
 function uploadsPathname(pathname: string): string | null {
   const idx = pathname.indexOf("/uploads/");
@@ -37,6 +37,11 @@ export function resolveUploadAssetUrl(url?: string | null): string {
   const bare = raw.replace(/^\/+/, "");
   if (bare.startsWith("uploads/")) {
     return toApiUploadUrl(`/${bare}`);
+  }
+
+  if (raw.startsWith("/employer-logos/") || bare.startsWith("employer-logos/")) {
+    const path = raw.startsWith("/") ? raw : `/${bare}`;
+    return `${getMarketingSiteUrl()}${path}`;
   }
 
   const origin = getApiOrigin();

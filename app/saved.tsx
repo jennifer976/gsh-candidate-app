@@ -1,13 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import { useCallback } from "react";
 import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { fetchSavedJobs, unsaveJob } from "@/lib/api-client";
 import { hapticLight, hapticSuccess } from "@/lib/haptics";
-import { getJobEmployerLabel, getJobLogoUrl } from "@/lib/job-display";
+import { getJobEmployerLabel, getJobLogoUrl, jobFromSavedRow } from "@/lib/job-display";
 import { stackListLeadStyle } from "@/lib/screen-layout";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { Job, SavedJobPopulated } from "@/types/models";
@@ -20,6 +22,12 @@ export default function SavedJobsScreen() {
     queryKey: ["saved-jobs"],
     queryFn: fetchSavedJobs,
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      void query.refetch();
+    }, [query.refetch])
+  );
 
   const unsave = useMutation({
     mutationFn: (row: SavedJobPopulated) => unsaveJob(row._id),
@@ -65,15 +73,23 @@ export default function SavedJobsScreen() {
             refreshControl={<RefreshControl refreshing={query.isFetching} onRefresh={() => query.refetch()} />}
             contentContainerStyle={styles.listPad}
             renderItem={({ item }) => {
-              const job = item.jobId as Job | undefined;
-              if (!job?._id) return null;
+              const job = jobFromSavedRow(item);
+              if (!job) return null;
               const employer = getJobEmployerLabel(job);
               const logoUrl = getJobLogoUrl(job);
+              const inactive = item.listingActive === false;
               return (
-                <View style={[styles.card, feedCardStyle()]}>
+                <View style={[styles.card, feedCardStyle(), inactive && styles.cardInactive]}>
                   <View style={styles.accent} />
                   <View style={styles.cardBody}>
-                    <Pressable onPress={() => router.push(`/job/${job._id}`)} style={styles.cardMain}>
+                    {inactive ? (
+                      <Text style={styles.inactiveBanner}>This listing is no longer active</Text>
+                    ) : null}
+                    <Pressable
+                      onPress={() => router.push(`/job/${job._id}`)}
+                      style={styles.cardMain}
+                      disabled={inactive}
+                    >
                       <View style={styles.cardTitleRow}>
                         <CompanyLogo logoUrl={logoUrl} companyName={employer} size={44} radius={12} />
                         <View style={styles.cardTitleCol}>
@@ -170,10 +186,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.purpleBorder,
   },
-  empty: { textAlign: "center", color: colors.navy, fontFamily: fontFamily.bold, fontSize: 18 },
+  cardInactive: { opacity: 0.88 },
+  inactiveBanner: {
+    marginHorizontal: 16,
+    marginTop: 12,
+    fontSize: 12,
+    fontFamily: fontFamily.semiBold,
+    color: colors.textMuted,
+  },
+  empty: { textAlign: "center", color: colors.white, fontFamily: fontFamily.bold, fontSize: 18 },
   emptySub: {
     textAlign: "center",
-    color: colors.textMuted,
+    color: "rgba(255,255,255,0.55)",
     fontFamily: fontFamily.regular,
     fontSize: 15,
     lineHeight: 22,

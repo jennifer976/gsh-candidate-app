@@ -30,6 +30,31 @@ export function getJobLogoUrl(job: Job): string {
   return resolveJobBrandLogo(job);
 }
 
+/** UK sponsor licence badge — matches website JobMarketingCard (Active sponsor / Sponsor · status). */
+export function getEmployerSponsorBadge(job: Job): { label: string; positive: boolean } | null {
+  const pb = job.postedBy as EmployerProfile | null | undefined;
+  const status =
+    typeof pb === "object" && pb?.sponsorLicense?.status
+      ? String(pb.sponsorLicense.status).trim()
+      : "";
+  if (!status) return null;
+  const lower = status.toLowerCase();
+  const positive = lower === "active" || lower === "approved";
+  return {
+    label: positive ? "Active sponsor" : `Sponsor · ${status}`,
+    positive,
+  };
+}
+
+/** Normalise populated jobId from GET /saved-jobs (handles lean ObjectId shapes). */
+export function jobFromSavedRow(item: { jobId?: unknown }): Job | null {
+  const raw = item.jobId;
+  if (!raw || typeof raw !== "object") return null;
+  const id = String((raw as Job)._id ?? "").trim();
+  if (!id) return null;
+  return { ...(raw as Job), _id: id };
+}
+
 const MOBILITY_PRIORITY = /visa|sponsor|relocat|mobility|work permit/i;
 
 /** Mobility-first chip order for job cards (visa / sponsorship surfaced first). */
@@ -118,24 +143,64 @@ export function getExternalListingLocationLabel(job: ExternalJobListingPublic): 
   return "";
 }
 
+/** Plain-text preview for curated/external cards (strips HTML from ingested summaries). */
+export function getExternalListingSummaryPreview(job: ExternalJobListingPublic, maxLen = 160): string {
+  const s = typeof job.summary === "string" ? job.summary.trim() : "";
+  if (!s) return "";
+  const plain = stripHtmlToPlainText(s);
+  if (plain.length <= maxLen) return plain;
+  return `${plain.slice(0, maxLen).trim()}…`;
+}
+
+export function formatExternalListingAge(iso?: string): string | null {
+  if (!iso) return null;
+  try {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return null;
+    const diffMs = Date.now() - d.getTime();
+    const days = Math.floor(diffMs / 86_400_000);
+    if (days < 1) return "Today";
+    if (days === 1) return "Yesterday";
+    if (days < 7) return `${days}d ago`;
+    if (days < 30) return `${Math.floor(days / 7)}w ago`;
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  } catch {
+    return null;
+  }
+}
+
+/** Headline mobility flags when tags are sparse (matches public API booleans). */
+export function externalListingHighlightFlags(job: ExternalJobListingPublic): string[] {
+  const out: string[] = [];
+  const tags = (job.mobilityTags ?? []).map((t) => t.toLowerCase());
+  const hasVisa =
+    job.sponsorshipAvailable ||
+    tags.some((t) => /visa|sponsor/.test(t));
+  const hasReloc =
+    job.relocationAvailable ||
+    tags.some((t) => /relocat/.test(t));
+  if (hasVisa && !tags.some((t) => /visa|sponsor/.test(t))) out.push("Visa sponsorship");
+  if (hasReloc && !tags.some((t) => /relocat/.test(t))) out.push("Relocation support");
+  return out;
+}
+
 export function externalListingChips(job: ExternalJobListingPublic, max = 6): string[] {
   const tags = (job.mobilityTags ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
   const seen = new Set<string>();
   const out: string[] = [];
+  for (const flag of externalListingHighlightFlags(job)) {
+    if (out.length >= max) break;
+    const k = flag.trim();
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push(k);
+  }
   for (const t of tags) {
     if (out.length >= max) break;
     const k = t.trim();
     if (seen.has(k)) continue;
     seen.add(k);
     out.push(k);
-  }
-  if (job.sponsorshipAvailable && out.length < max) {
-    const k = "Visa sponsorship";
-    if (!seen.has(k)) { seen.add(k); out.push(k); }
-  }
-  if (job.relocationAvailable && out.length < max) {
-    const k = "Relocation support";
-    if (!seen.has(k)) { seen.add(k); out.push(k); }
   }
   return out.slice(0, max);
 }

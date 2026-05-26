@@ -30,10 +30,6 @@ export function DashboardHubJobPreview({
             <Text style={styles.company} numberOfLines={1}>
               {job.companyName}
             </Text>
-            <View style={styles.sponsorPill}>
-              <Ionicons name="shield-checkmark" size={10} color={colors.brandDeep} />
-              <Text style={styles.sponsorPillText}>Sponsor</Text>
-            </View>
           </View>
           {meta ? (
             <Text style={styles.meta} numberOfLines={1}>
@@ -76,15 +72,5 @@ const styles = StyleSheet.create({
   },
   companyRow: { flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" },
   company: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary, flexShrink: 1 },
-  sponsorPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: radii.pill,
-    backgroundColor: colors.brandSoft,
-  },
-  sponsorPillText: { fontSize: 10, fontFamily: fontFamily.semiBold, color: colors.brandDeep },
   meta: { marginTop: 4, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
 });

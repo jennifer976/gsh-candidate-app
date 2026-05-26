@@ -8,7 +8,7 @@ import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchSavedJobs, unsaveJob } from "@/lib/api-client";
 import { hapticLight, hapticSuccess } from "@/lib/haptics";
-import { getJobEmployerLabel, getJobLogoUrl } from "@/lib/job-display";
+import { getJobEmployerLabel, getJobLogoUrl, jobFromSavedRow } from "@/lib/job-display";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { Job, SavedJobPopulated } from "@/types/models";
 
@@ -67,8 +67,8 @@ export default function SavedJobsScreen() {
             refreshControl={<RefreshControl refreshing={query.isFetching} onRefresh={() => query.refetch()} />}
             contentContainerStyle={styles.listPad}
             renderItem={({ item }) => {
-              const job = item.jobId as Job | undefined;
-              if (!job?._id) return null;
+              const job = jobFromSavedRow(item);
+              if (!job) return null;
               const employer = getJobEmployerLabel(job);
               const logoUrl = getJobLogoUrl(job);
               return (

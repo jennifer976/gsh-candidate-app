@@ -22,6 +22,8 @@ import {
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobCardSkeleton } from "@/components/SkeletonLoader";
+import { GshDarkFeedHeading } from "@/components/GshDarkFeedHeading";
+import { GshScreenShell } from "@/components/GshScreenShell";
 import { GshTabHeroHeader } from "@/components/GshTabHeroHeader";
 import {
   fetchPublicExternalJobListings,
@@ -31,10 +33,15 @@ import {
   unsaveJob,
 } from "@/lib/api-client";
 import { hapticLight } from "@/lib/haptics";
-import { getJobEmployerLabel, getJobLogoUrl, hubListingChipsPrioritized } from "@/lib/job-display";
+import {
+  getEmployerSponsorBadge,
+  getJobEmployerLabel,
+  getJobLogoUrl,
+  hubListingChipsPrioritized,
+} from "@/lib/job-display";
 import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
 import { addRecentJobSearch, loadRecentJobSearches } from "@/lib/recent-job-searches";
-import { colors, fontFamily, radii } from "@/lib/theme";
+import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic, Job } from "@/types/models";
 
 function formatSalary(job: Job): string {
@@ -65,12 +72,13 @@ function HubJobCard({
   const employer = getJobEmployerLabel(job);
   const logoUrl = getJobLogoUrl(job);
   const chips = hubListingChipsPrioritized(job, CHIP_CAP);
+  const sponsorBadge = getEmployerSponsorBadge(job);
   const metaLine = [job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || "";
   const meta = [metaLine, job.jobType].filter((x) => typeof x === "string" && x.length > 0).join(" · ") || "";
   const sal = formatSalary(job);
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, feedCardStyle()]}>
       <View style={styles.cardAccentStrip} />
       <Pressable onPress={onPress} style={styles.cardMainHit} accessibilityRole="button">
         <CompanyLogo logoUrl={logoUrl} companyName={employer} size={40} radius={11} />
@@ -78,10 +86,14 @@ function HubJobCard({
           <Text style={styles.cardTitle} numberOfLines={2}>{job.title}</Text>
           <View style={styles.cardCompanyRow}>
             <Text style={styles.cardCompanyLine} numberOfLines={1}>{employer}</Text>
-            <View style={styles.sponsorPill}>
-              <Ionicons name="shield-checkmark" size={10} color={colors.brandDeep} />
-              <Text style={styles.sponsorPillText}>Sponsor</Text>
-            </View>
+            {sponsorBadge ? (
+              <View style={[styles.sponsorPill, sponsorBadge.positive && styles.sponsorPillActive]}>
+                <Ionicons name="shield-checkmark" size={10} color={colors.brandDeep} />
+                <Text style={styles.sponsorPillText} numberOfLines={1}>
+                  {sponsorBadge.label}
+                </Text>
+              </View>
+            ) : null}
           </View>
           {meta ? (
             <View style={styles.cardMetaRow}>
@@ -311,19 +323,6 @@ export default function JobsTabScreen() {
           </Pressable>
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickNavScroll}>
-          {([
-            { icon: "home-outline", label: "Home", onPress: () => router.push("/(tabs)/home") },
-            { icon: "notifications-outline", label: "Alerts", onPress: () => router.push("/alerts") },
-            { icon: "construct-outline", label: "Tools", onPress: () => router.push("/tools-resources") },
-            { icon: "document-text-outline", label: "ATS check", onPress: () => router.push("/ats-assistant") },
-          ] as const).map((it) => (
-            <Pressable key={it.label} style={styles.quickNavPill} onPress={it.onPress} accessibilityRole="button">
-              <Ionicons name={it.icon} size={15} color={colors.navy} />
-              <Text style={styles.quickNavPillText}>{it.label}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
       </View>
 
       {/* ── Recent searches ── */}
@@ -341,33 +340,26 @@ export default function JobsTabScreen() {
         </View>
       ) : null}
 
-      {/* ── Section heading ── */}
-      <View style={styles.listHeadingRow}>
-        <View style={styles.listHeadingCol}>
-          <Text style={styles.listHeading}>
-            {feedTab === "employer" ? "Roles for you" : "Curated picks"}
-          </Text>
-          {feedTab === "employer" ? (
-            <Text style={styles.listHeadingSub}>Employer-verified sponsor listings on Global Sponsor Hub</Text>
-          ) : (
-            <Text style={styles.listHeadingSub}>External roles we curate — apply on the source site</Text>
-          )}
-        </View>
-        <View style={styles.listHeadingRight}>
-          {feedTab === "curated" ? (
-            <Pressable onPress={() => router.push("/curated-listings")} accessibilityRole="link">
-              <Text style={styles.listHeadingLink}>See all</Text>
-            </Pressable>
-          ) : null}
-          <Pressable
-            onPress={() => setListingInfoOpen(true)}
-            hitSlop={10}
-            accessibilityRole="button"
-            accessibilityLabel="How this feed works"
-          >
-            <Ionicons name="information-circle-outline" size={20} color={colors.teal} />
-          </Pressable>
-        </View>
+      <View style={styles.listHeadingWrap}>
+        <GshDarkFeedHeading
+          title={feedTab === "employer" ? "Roles for you" : "Curated picks"}
+          subtitle={
+            feedTab === "employer"
+              ? "Employer-verified sponsor listings on Global Sponsor Hub"
+              : "External roles we curate — apply on the source site"
+          }
+          actionLabel={feedTab === "curated" ? "See all" : undefined}
+          onAction={feedTab === "curated" ? () => router.push("/curated-listings") : undefined}
+        />
+        <Pressable
+          onPress={() => setListingInfoOpen(true)}
+          hitSlop={10}
+          style={styles.listInfoBtn}
+          accessibilityRole="button"
+          accessibilityLabel="How this feed works"
+        >
+          <Ionicons name="information-circle-outline" size={20} color={colors.teal} />
+        </Pressable>
       </View>
     </>
   );
@@ -412,7 +404,7 @@ export default function JobsTabScreen() {
   ) : null;
 
   return (
-    <View style={styles.shell}>
+    <GshScreenShell>
       <FlatList
         data={activeError ? [] : listRows}
         keyExtractor={(item) => item._id}
@@ -470,13 +462,11 @@ export default function JobsTabScreen() {
         onClose={() => setListingInfoOpen(false)}
         feedTab={feedTab}
       />
-    </View>
+    </GshScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  shell: { flex: 1, backgroundColor: colors.navyDeep },
-
   // Hero
   hero: { paddingHorizontal: 20, paddingBottom: 24, overflow: "hidden", position: "relative" },
   heroWatermark: {
@@ -551,23 +541,18 @@ const styles = StyleSheet.create({
     color: "rgba(255,255,255,0.8)",
   },
 
-  // Feed controls — white band below navy hero
   feedControls: {
-    backgroundColor: colors.white,
-    paddingTop: 14,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    gap: 12,
+    paddingTop: 12,
+    paddingBottom: 4,
+    paddingHorizontal: 16,
   },
   segmentHost: {
     flexDirection: "row",
-    marginHorizontal: 16,
-    backgroundColor: colors.surfaceMuted,
+    backgroundColor: "rgba(255,255,255,0.08)",
     borderRadius: radii.pill,
     padding: 3,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: "rgba(255,255,255,0.14)",
   },
   segmentCell: {
     flex: 1,
@@ -596,23 +581,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  segmentText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textMuted },
+  segmentText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: "rgba(255,255,255,0.55)" },
   segmentTextOn: { color: colors.navy },
   segmentTextOnCurated: { color: colors.secondary },
-
-  quickNavScroll: { paddingHorizontal: 16, gap: 8 },
-  quickNavPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    borderRadius: radii.pill,
-    backgroundColor: colors.surfaceMuted,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  quickNavPillText: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
 
   // Recent
   recentOuter: { paddingTop: 12, paddingHorizontal: 16 },
@@ -643,43 +614,20 @@ const styles = StyleSheet.create({
     maxWidth: 160,
   },
 
-  // Heading
-  listHeadingRow: {
+  listHeadingWrap: {
     flexDirection: "row",
     alignItems: "flex-start",
-    justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingTop: 18,
-    paddingBottom: 10,
-    gap: 8,
+    gap: 4,
   },
-  listHeadingCol: { flex: 1, minWidth: 0 },
-  listHeadingSub: {
-    marginTop: 4,
-    fontSize: 12,
-    fontFamily: fontFamily.regular,
-    color: "rgba(255,255,255,0.5)",
-    lineHeight: 17,
-  },
-  listHeading: {
-    fontSize: 19,
-    fontFamily: fontFamily.extraBold,
-    color: colors.white,
-    letterSpacing: -0.4,
-  },
-  listHeadingRight: { flexDirection: "row", alignItems: "center", gap: 10 },
-  listHeadingLink: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.teal },
+  listInfoBtn: { marginTop: 20, padding: 4 },
 
-  // Cards — white cards on dark canvas with cyan left strip = "verified sponsor lane"
   listPad: { paddingBottom: 32, gap: 10, paddingHorizontal: 16 },
   listPadGrow: { flexGrow: 1 },
   card: {
-    backgroundColor: colors.white,
-    borderRadius: 14,
     paddingVertical: 14,
     paddingRight: 14,
     paddingLeft: 16,
-    borderWidth: 0,
     position: "relative",
     overflow: "hidden",
     minHeight: 128,
@@ -732,12 +680,15 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: radii.pill,
     backgroundColor: colors.brandSoft,
+    maxWidth: "55%",
   },
+  sponsorPillActive: { backgroundColor: "rgba(16,185,129,0.12)" },
   sponsorPillText: {
     fontSize: 10,
     fontFamily: fontFamily.semiBold,
     color: colors.brandDeep,
     letterSpacing: 0.3,
+    flexShrink: 1,
   },
   cardMetaRow: { marginTop: 4, flexDirection: "row", alignItems: "flex-start", gap: 4, paddingRight: 4 },
   cardMetaLine: { flex: 1, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 17 },

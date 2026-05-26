@@ -33,6 +33,7 @@ export interface EmployerProfile {
   contactCompany?: string;
   companyLogo?: string;
   companyWebsite?: string;
+  sponsorLicense?: { status?: string };
 }
 
 export interface Job {
@@ -73,6 +74,7 @@ export interface SavedJobPopulated {
   _id: string;
   userId: string;
   jobId: Job;
+  listingActive?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -223,7 +225,14 @@ export interface DashboardCuratedListingRow {
   companyName: string;
   location?: string;
   country?: string;
+  summary?: string;
+  mobilityTags?: string[];
   sponsorshipAvailable?: boolean;
+  relocationAvailable?: boolean;
+  isFeatured?: boolean;
+  createdAt?: string;
+  sourceType?: string;
+  agencyName?: string;
   hubListingUrl?: string;
 }
 
@@ -344,6 +353,9 @@ export interface ExternalJobListingPublic {
   agencyWebsite?: string;
   expiresAt?: string;
   isFeatured?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  externalPostedAt?: string;
   hubListingUrl?: string;
 }
 

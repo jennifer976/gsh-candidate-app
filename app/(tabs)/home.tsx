@@ -30,6 +30,7 @@ import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
 const FEATURE_TOOLS = [
   { label: "Directory", icon: "people-outline" as const, href: "/partners" },
+  { label: "Expert insights", icon: "school-outline" as const, href: "/expert-insights" },
   { label: "ATS check", icon: "document-text-outline" as const, href: "/ats-assistant" },
   { label: "Visa wizard", icon: "sparkles-outline" as const, href: "/visa-wizard" },
 ] as const;
@@ -406,7 +407,7 @@ export default function HomeScreen() {
 
           <GshLinkRow
             title="Guides & tools"
-            subtitle="Visa wizard · country guides · ATS check"
+            subtitle="Expert insights · visa wizard · ATS check"
             icon="layers-outline"
             accent="purple"
             onPress={() => router.push("/tools-resources")}
@@ -451,9 +452,10 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     marginTop: 2,
   },
-  featureRow: { flexDirection: "row", gap: 8 },
+  featureRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   featureChip: {
-    flex: 1,
+    width: "48%",
+    flexGrow: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

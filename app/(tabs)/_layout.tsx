@@ -73,7 +73,7 @@ export default function TabsLayout() {
 
   if (!token) return <Redirect href="/login" />;
 
-  const bottomInset = Math.max(insets.bottom, Platform.OS === "android" ? 20 : 8);
+  const bottomInset = Math.max(insets.bottom, Platform.OS === "android" ? 10 : 8);
   const tabBarPaddingTop = 8;
   const tabIconRowHeight = 48;
 

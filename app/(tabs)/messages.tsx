@@ -141,10 +141,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.purpleBorder,
   },
-  empty: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.navy },
+  empty: { fontFamily: fontFamily.bold, fontSize: 18, color: colors.white },
   emptySub: {
     textAlign: "center",
-    color: colors.textMuted,
+    color: "rgba(255,255,255,0.55)",
     fontFamily: fontFamily.regular,
     fontSize: 15,
     lineHeight: 22,
