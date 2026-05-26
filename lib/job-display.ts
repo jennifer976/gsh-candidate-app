@@ -63,6 +63,61 @@ export function hubListingChips(job: Job, max = 6): string[] {
   return out;
 }
 
+const MOBILITY_BENEFIT_LABELS = new Set([
+  "Visa Sponsorship",
+  "Relocation Support",
+  "Remote Friendly",
+  "Job Offer Support",
+  "Work Permit Transfer",
+  "Cross-border Remote Allowed",
+  "No Sponsorship Available",
+]);
+
+/** Matches web job detail: mobility vs other benefits. */
+export function splitMobilityAndPerks(job: Job): { mobility: string[]; perks: string[] } {
+  const raw = (job.benefits ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
+  if (job.mobility && job.mobility.length > 0) {
+    return { mobility: job.mobility, perks: raw };
+  }
+  return {
+    mobility: raw.filter((b) => MOBILITY_BENEFIT_LABELS.has(b)),
+    perks: raw.filter((b) => !MOBILITY_BENEFIT_LABELS.has(b)),
+  };
+}
+
+export function stripHtmlToPlainText(html: string): string {
+  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+/** Human-readable location for curated/external cards (API often has `location` only, not `country`). */
+export function getExternalListingLocationLabel(job: ExternalJobListingPublic): string {
+  const loc = typeof job.location === "string" ? job.location.trim() : "";
+  const country = typeof job.country === "string" ? job.country.trim() : "";
+  if (loc && country && !loc.toLowerCase().includes(country.toLowerCase())) {
+    return `${loc} · ${country}`;
+  }
+  if (loc) return loc;
+  if (country) return country;
+
+  const summary = typeof job.summary === "string" ? job.summary.trim() : "";
+  if (summary) {
+    const locLine =
+      summary.match(/(?:Location|Based in|Office(?:\s+location)?)\s*:?\s*([^.\n|]{3,100})/i)?.[1]?.trim() ??
+      "";
+    if (locLine) return locLine;
+    if (/\bremote\b|\bhybrid\b|\bwork from anywhere\b/i.test(summary)) {
+      return "Remote / hybrid — see listing";
+    }
+    const commaPlace = summary.match(/\b(?:in|at)\s+([A-Z][A-Za-z\s,]{2,60})/)?.[1]?.trim();
+    if (commaPlace && commaPlace.length <= 80) return commaPlace;
+  }
+
+  if (job.sponsorshipAvailable || job.relocationAvailable) {
+    return "See listing for location";
+  }
+  return "";
+}
+
 export function externalListingChips(job: ExternalJobListingPublic, max = 6): string[] {
   const tags = (job.mobilityTags ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
   const seen = new Set<string>();

@@ -54,6 +54,10 @@ export interface Job {
   applicantsCount?: number;
   postedBy?: EmployerProfile | null;
   createdAt?: string;
+  updatedAt?: string;
+  expiresAt?: string;
+  experienceLevel?: string;
+  workMode?: string;
   mobility?: string[];
   benefits?: string[];
 }

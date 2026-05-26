@@ -33,6 +33,13 @@ export default function ToolsAndResourcesScreen() {
       accent: "teal",
     },
     {
+      title: "Expert Insights",
+      subtitle: "Expert briefings, deep dives & pinned guides — in-app",
+      path: "expert-insights",
+      icon: "bulb-outline",
+      accent: "teal",
+    },
+    {
       title: "FAQs",
       subtitle: "Candidate help topics",
       path: "faq",
@@ -102,6 +109,20 @@ export default function ToolsAndResourcesScreen() {
             icon="map-outline"
             accent="purple"
             onPress={() => router.push("/guides")}
+          />
+          <GshLinkRow
+            title="Compare countries"
+            subtitle="Shortlist destinations before you commit"
+            icon="git-compare-outline"
+            accent="teal"
+            onPress={() => router.push("/compare-countries")}
+          />
+          <GshLinkRow
+            title="Salary & currency converter"
+            subtitle="Compare headline pay across currencies"
+            icon="cash-outline"
+            accent="teal"
+            onPress={() => router.push("/currency-converter")}
           />
 
           <GshSectionTitle title="Jobs" onDark />

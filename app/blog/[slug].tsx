@@ -2,9 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 import { BlogArticleBody } from "@/components/BlogArticleBody";
-import { GshScreenIntro } from "@/components/gsh-ui-kit";
+import { GshContentAccentBar, GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchBlogArticleBySlug, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
@@ -90,7 +89,7 @@ export default function BlogArticleScreen() {
             {blog.featured_image ? (
               <Image source={{ uri: blog.featured_image }} style={styles.heroImg} accessibilityIgnoresInvertColors />
             ) : null}
-            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+            <GshContentAccentBar />
             <Text style={styles.eyebrow}>{blog.category?.name ?? "Blog"}</Text>
             <Text style={styles.title}>{blog.title}</Text>
             {blog.description ? <Text style={styles.desc}>{blog.description}</Text> : null}

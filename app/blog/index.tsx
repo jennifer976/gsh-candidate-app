@@ -1,9 +1,8 @@
-import { LinearGradient } from "expo-linear-gradient";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { GshScreenIntro } from "@/components/gsh-ui-kit";
+import { GshContentAccentBar, GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchPublishedBlogList, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
@@ -60,7 +59,7 @@ export default function BlogIndexScreen() {
         ) : (
           <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
             <GshScreenIntro eyebrow="Blog" title="Latest articles" subtitle="In-app reading — no browser required." style={{ marginBottom: 10 }} />
-            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+            <GshContentAccentBar />
             {q.data?.map((b) => (
               <Pressable
                 key={b.id}

@@ -338,3 +338,104 @@ const stripStyles = StyleSheet.create({
   },
   fill: { height: "100%", borderRadius: radii.pill },
 });
+
+/** Teal → brand rule used on blog, legal, and content tool screens. */
+export function GshContentAccentBar({ style }: { style?: ViewStyle }) {
+  return (
+    <LinearGradient
+      colors={[colors.teal, colors.brand]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={[{ height: 4, borderRadius: 2, marginBottom: 12 }, style]}
+    />
+  );
+}
+
+export function GshOutlineButton({
+  title,
+  onPress,
+  style,
+}: {
+  title: string;
+  onPress: () => void;
+  style?: ViewStyle;
+}) {
+  return (
+    <Pressable
+      style={[outlineBtnStyles.btn, cardSurfaceStyle(false), style]}
+      onPress={onPress}
+      accessibilityRole="button"
+    >
+      <Text style={outlineBtnStyles.text}>{title}</Text>
+    </Pressable>
+  );
+}
+
+const outlineBtnStyles = StyleSheet.create({
+  btn: {
+    borderWidth: 1,
+    borderColor: colors.brand,
+    borderRadius: radii.sm,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  text: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.brand },
+});
+
+export function GshFilterChip({
+  label,
+  active,
+  onPress,
+}: {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[filterChipStyles.chip, active ? filterChipStyles.active : filterChipStyles.inactive]}
+      accessibilityRole="button"
+      accessibilityState={{ selected: active }}
+    >
+      <Text style={[filterChipStyles.label, active && filterChipStyles.labelActive]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+const filterChipStyles = StyleSheet.create({
+  chip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+  },
+  inactive: {
+    borderColor: colors.border,
+    backgroundColor: colors.white,
+  },
+  active: {
+    borderColor: colors.teal,
+    backgroundColor: "rgba(14, 205, 209, 0.14)",
+  },
+  label: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.navy },
+  labelActive: { color: "#0f766e" },
+});
+
+/** Destination / expert name chips on light content screens. */
+export function GshTopicChip({ label, onPress }: { label: string; onPress: () => void }) {
+  return (
+    <Pressable
+      style={[topicChipStyles.chip, cardSurfaceStyle(true)]}
+      onPress={onPress}
+      accessibilityRole="button"
+    >
+      <Text style={topicChipStyles.text}>{label}</Text>
+    </Pressable>
+  );
+}
+
+const topicChipStyles = StyleSheet.create({
+  chip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: radii.pill },
+  text: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.brand },
+});

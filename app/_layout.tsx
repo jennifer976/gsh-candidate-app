@@ -106,6 +106,9 @@ export default function RootLayout() {
           <Stack.Screen name="blog" options={{ headerShown: false }} />
           <Stack.Screen name="news" options={{ title: "Immigration headlines" }} />
           <Stack.Screen name="faq" options={{ title: "FAQs" }} />
+          <Stack.Screen name="expert-insights" options={{ headerShown: false }} />
+          <Stack.Screen name="currency-converter" options={{ title: "Currency converter" }} />
+          <Stack.Screen name="compare-countries" options={{ title: "Compare countries" }} />
           <Stack.Screen name="contact" options={{ title: "Contact" }} />
           <Stack.Screen name="curated-listings" options={{ title: "Curated listings" }} />
           <Stack.Screen name="external-job/[id]" options={{ title: "Curated role" }} />

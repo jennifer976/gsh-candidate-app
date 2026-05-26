@@ -15,6 +15,7 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { curatedListingPrimaryBadge, normalizeAgencyWebsite } from "@/lib/curated-listing-labels";
+import { getExternalListingLocationLabel } from "@/lib/job-display";
 import { fetchPublicExternalJobById, recordExternalApplyClick } from "@/lib/api-client";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
@@ -123,7 +124,7 @@ export default function ExternalJobDetailScreen() {
               </View>
               <Text style={styles.title}>{listing.title}</Text>
               <Text style={styles.company}>{listing.companyName}</Text>
-              <Text style={styles.meta}>{[listing.location, listing.country].filter(Boolean).join(" · ")}</Text>
+              <Text style={styles.meta}>{getExternalListingLocationLabel(listing) || "Location on employer site"}</Text>
               {(listing.sponsorshipAvailable || listing.relocationAvailable) && (
                 <Text style={styles.tags}>
                   {listing.sponsorshipAvailable ? "Sponsorship noted · " : ""}

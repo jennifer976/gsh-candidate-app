@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -84,7 +84,10 @@ function HubJobCard({
             </View>
           </View>
           {meta ? (
-            <Text style={styles.cardMetaLine} numberOfLines={1}>{meta}</Text>
+            <View style={styles.cardMetaRow}>
+              <Ionicons name="location-outline" size={13} color={colors.textMuted} />
+              <Text style={styles.cardMetaLine} numberOfLines={2}>{meta}</Text>
+            </View>
           ) : null}
           {chips.length > 0 ? (
             <View style={styles.chipWrap}>
@@ -122,7 +125,7 @@ function HubJobCard({
         <View style={styles.cardFooter}>
           {sal ? <Text style={styles.cardSalary} numberOfLines={1}>{sal}</Text> : <View style={styles.cardSalarySpacer} />}
           <View style={styles.cardFooterEnd}>
-            <Text style={styles.cardCta}>View</Text>
+            <Text style={styles.cardCta}>View role</Text>
             <Ionicons name="chevron-forward" size={16} color={colors.brand} />
           </View>
         </View>
@@ -141,7 +144,13 @@ export default function JobsTabScreen() {
   const [pullRefreshing, setPullRefreshing] = useState(false);
   const [topicsModalOpen, setTopicsModalOpen] = useState(false);
   const [listingInfoOpen, setListingInfoOpen] = useState(false);
+  const params = useLocalSearchParams<{ location?: string }>();
   const [locationFilter, setLocationFilter] = useState("");
+
+  useEffect(() => {
+    const loc = typeof params.location === "string" ? decodeURIComponent(params.location).trim() : "";
+    if (loc) setLocationFilter(loc);
+  }, [params.location]);
 
   const qc = useQueryClient();
 
@@ -667,12 +676,13 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
     borderRadius: 14,
-    paddingVertical: 12,
-    paddingRight: 12,
+    paddingVertical: 14,
+    paddingRight: 14,
     paddingLeft: 16,
     borderWidth: 0,
     position: "relative",
     overflow: "hidden",
+    minHeight: 128,
   },
   cardAccentStrip: {
     position: "absolute",
@@ -700,12 +710,12 @@ const styles = StyleSheet.create({
   cardMid: { flex: 1, minWidth: 0 },
   cardBookmarkHit: { paddingTop: 2, paddingLeft: 4 },
   cardTitle: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: fontFamily.bold,
     color: colors.navy,
     letterSpacing: -0.2,
     marginBottom: 2,
-    lineHeight: 19,
+    lineHeight: 20,
   },
   cardCompanyRow: {
     flexDirection: "row",
@@ -729,7 +739,8 @@ const styles = StyleSheet.create({
     color: colors.brandDeep,
     letterSpacing: 0.3,
   },
-  cardMetaLine: { marginTop: 2, fontSize: 11, fontFamily: fontFamily.regular, color: colors.textMuted },
+  cardMetaRow: { marginTop: 4, flexDirection: "row", alignItems: "flex-start", gap: 4, paddingRight: 4 },
+  cardMetaLine: { flex: 1, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 17 },
   chipWrap: { marginTop: 6, flexDirection: "row", flexWrap: "wrap", gap: 4 },
   listChip: { paddingVertical: 3, paddingHorizontal: 8, borderRadius: radii.pill },
   listChipText: { fontSize: 10, fontFamily: fontFamily.medium },

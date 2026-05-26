@@ -16,11 +16,19 @@ import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { GshScreenBackground } from "@/components/GshScreenShell";
 import { SkeletonBox } from "@/components/SkeletonLoader";
 import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-client";
 import { hapticLight, hapticSuccess, hapticWarning } from "@/lib/haptics";
-import { getJobEmployerLabel, getJobLogoUrl, hubListingChips } from "@/lib/job-display";
+import {
+  getJobEmployerLabel,
+  getJobLogoUrl,
+  hubListingChips,
+  splitMobilityAndPerks,
+  stripHtmlToPlainText,
+} from "@/lib/job-display";
 import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
+import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { colors, fontFamily, navHeader, radii } from "@/lib/theme";
 
 function errMsg(e: unknown): string {
@@ -167,42 +175,46 @@ export default function JobDetailScreen() {
   // — Error / empty states —
   if (!jobId.trim()) {
     return (
-      <View style={styles.center}>
-        <Ionicons name="link-outline" size={44} color={colors.borderStrong} />
-        <Text style={styles.errTitle}>Invalid job link</Text>
-        <Pressable style={styles.ghostBtn} onPress={() => router.back()}>
-          <Text style={styles.ghostBtnText}>Go back</Text>
-        </Pressable>
-      </View>
+      <GshScreenBackground>
+        <View style={styles.center}>
+          <Ionicons name="link-outline" size={44} color={colors.borderStrong} />
+          <Text style={styles.errTitle}>Invalid job link</Text>
+          <Pressable style={styles.ghostBtn} onPress={() => router.back()}>
+            <Text style={styles.ghostBtnText}>Go back</Text>
+          </Pressable>
+        </View>
+      </GshScreenBackground>
     );
   }
 
   if (jobQuery.isError) {
     return (
-      <View style={styles.center}>
-        <Ionicons name="cloud-offline-outline" size={44} color={colors.borderStrong} />
-        <Text style={styles.errTitle}>Couldn't load this role</Text>
-        <Text style={styles.errSub}>Check your connection and try again.</Text>
-        <Pressable style={styles.ghostBtn} onPress={() => void jobQuery.refetch()}>
-          <Text style={styles.ghostBtnText}>Retry</Text>
-        </Pressable>
-      </View>
+      <GshScreenBackground>
+        <View style={styles.center}>
+          <Ionicons name="cloud-offline-outline" size={44} color={colors.borderStrong} />
+          <Text style={styles.errTitle}>Couldn't load this role</Text>
+          <Text style={styles.errSub}>Check your connection and try again.</Text>
+          <Pressable style={styles.ghostBtn} onPress={() => void jobQuery.refetch()}>
+            <Text style={styles.ghostBtnText}>Retry</Text>
+          </Pressable>
+        </View>
+      </GshScreenBackground>
     );
   }
 
   // — Skeleton while loading —
   if (jobQuery.isLoading) {
     return (
-      <View style={styles.root}>
+      <GshScreenBackground>
         <Stack.Screen options={{ title: "Job details", ...navHeader }} />
-        <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+        <SafeAreaView style={styles.safe} edges={["bottom"]}>
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPad}>
             <View style={styles.skeletonHeroBand}>
               <JobDetailSkeleton />
             </View>
           </ScrollView>
         </SafeAreaView>
-      </View>
+      </GshScreenBackground>
     );
   }
 
@@ -212,11 +224,14 @@ export default function JobDetailScreen() {
   const location = [job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || "";
   const salary = formatSalary(job.minSalary, job.maxSalary, job.salaryCurrency);
   const chips = hubListingChips(job, 6);
+  const { mobility: mobilityItems, perks: perkItems } = splitMobilityAndPerks(job);
+  const descriptionPlain = job.description ? stripHtmlToPlainText(job.description) : "";
+  const jobTypeLabel = job.jobType ? String(job.jobType).replace(/-/g, " ") : "";
 
   return (
-    <View style={styles.root}>
+    <GshScreenBackground>
       <Stack.Screen options={{ title: "Job details", ...navHeader }} />
-      <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
+      <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPad}>
 
           {/* ── Hero ── */}
@@ -242,10 +257,16 @@ export default function JobDetailScreen() {
                     <Text style={styles.heroMetaText}>{location}</Text>
                   </View>
                 ) : null}
-                {job.jobType ? (
+                {jobTypeLabel ? (
                   <View style={styles.heroMetaRow}>
                     <Ionicons name="briefcase-outline" size={14} color="rgba(255,255,255,0.55)" />
-                    <Text style={styles.heroMetaText}>{job.jobType}</Text>
+                    <Text style={styles.heroMetaText}>{jobTypeLabel}</Text>
+                  </View>
+                ) : null}
+                {job.experienceLevel ? (
+                  <View style={styles.heroMetaRow}>
+                    <Ionicons name="trending-up-outline" size={14} color="rgba(255,255,255,0.55)" />
+                    <Text style={styles.heroMetaText}>{job.experienceLevel}</Text>
                   </View>
                 ) : null}
                 {salary ? (
@@ -300,24 +321,51 @@ export default function JobDetailScreen() {
               </>
             ) : null}
 
-            {job.description ? (
+            {descriptionPlain ? (
               <>
                 <SectionHeading title="About the role" />
-                <Text style={styles.bodyText}>{job.description}</Text>
+                <Text style={styles.bodyText}>{descriptionPlain}</Text>
               </>
             ) : null}
 
-            {job.mobility && job.mobility.length > 0 ? (
+            {mobilityItems.length > 0 ? (
               <>
                 <SectionHeading title="Sponsorship & mobility" />
                 <View style={styles.mobilityList}>
-                  {job.mobility.map((m) => (
+                  {mobilityItems.map((m) => (
                     <View key={m} style={styles.mobilityRow}>
                       <Ionicons name="checkmark-circle" size={18} color={colors.teal} />
                       <Text style={styles.mobilityText}>{m}</Text>
                     </View>
                   ))}
                 </View>
+              </>
+            ) : null}
+
+            {perkItems.length > 0 ? (
+              <>
+                <SectionHeading title="Benefits & perks" />
+                <View style={styles.mobilityList}>
+                  {perkItems.map((p) => (
+                    <View key={p} style={styles.mobilityRow}>
+                      <Ionicons name="gift-outline" size={18} color={colors.teal} />
+                      <Text style={styles.mobilityText}>{p}</Text>
+                    </View>
+                  ))}
+                </View>
+              </>
+            ) : null}
+
+            {job.expiresAt ? (
+              <>
+                <SectionHeading title="Apply by" />
+                <Text style={styles.bodyText}>
+                  {new Date(job.expiresAt).toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </Text>
               </>
             ) : null}
 
@@ -365,16 +413,16 @@ export default function JobDetailScreen() {
           </Animated.View>
         </ScrollView>
       </SafeAreaView>
-    </View>
+    </GshScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.navyDeep },
+  safe: { flex: 1 },
   scrollPad: { paddingBottom: 48 },
   skeletonHeroBand: {
-    backgroundColor: colors.navyDeep,
-    paddingTop: 12,
+    paddingHorizontal: 16,
+    paddingTop: STACK_HEADER_BODY_GAP,
     paddingBottom: 8,
   },
   center: {
@@ -383,18 +431,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 32,
     gap: 14,
-    backgroundColor: colors.surfaceLight,
   },
 
   // Skeleton
-  skeletonPad: { paddingHorizontal: 20, paddingTop: 4, gap: 0 },
+  skeletonPad: { paddingHorizontal: 16, paddingTop: 4, gap: 0 },
   skeletonHero: { flexDirection: "row", gap: 14, alignItems: "flex-start" },
 
   // Hero
   hero: {
-    paddingTop: 12,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
+    paddingTop: STACK_HEADER_BODY_GAP,
+    paddingBottom: 22,
+    paddingHorizontal: 16,
     gap: 14,
   },
   heroTop: { flexDirection: "row", gap: 16, alignItems: "flex-start" },
@@ -458,13 +505,17 @@ const styles = StyleSheet.create({
 
   // Body
   body: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingTop: 20,
+    paddingBottom: 8,
     gap: 0,
-    backgroundColor: colors.surfaceLight,
+    backgroundColor: colors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    marginTop: -4,
+    marginTop: -6,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderBottomWidth: 0,
   },
   sectionHead: {
     flexDirection: "row",
