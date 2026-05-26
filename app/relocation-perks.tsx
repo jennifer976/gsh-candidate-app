@@ -100,11 +100,7 @@ export default function RelocationPerksScreen() {
 
   const header = (
     <View style={styles.headWrap}>
-      <GshScreenIntro
-        eyebrow="Relocation"
-        title={screenTitle}
-        subtitle={screenSubtitle}
-      />
+      <GshScreenIntro title={screenTitle} subtitle={screenSubtitle} />
       {comingSoon ? (
         <View style={[cardSurfaceStyle(false), styles.soonCard]}>
           <View style={styles.soonIconWrap}>
@@ -130,7 +126,7 @@ export default function RelocationPerksScreen() {
         ) : query.isError ? (
           <View style={styles.center}>
             <Ionicons name="cloud-offline-outline" size={40} color={colors.textMuted} />
-            <Text style={styles.errorText}>Relocation perks could not be loaded.</Text>
+            <Text style={styles.errorText}>{screenTitle} could not be loaded.</Text>
             <Pressable style={styles.retryBtn} onPress={() => void query.refetch()}>
               <Text style={styles.retryText}>Try again</Text>
             </Pressable>
