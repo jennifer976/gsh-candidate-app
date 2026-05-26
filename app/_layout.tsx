@@ -114,6 +114,7 @@ export default function RootLayout() {
           <Stack.Screen name="external-job/[id]" options={{ title: "Curated role" }} />
           <Stack.Screen name="ats-assistant" options={{ title: "ATS assistant" }} />
           <Stack.Screen name="forgot-password" options={{ title: "Forgot password", presentation: "modal" }} />
+          <Stack.Screen name="reset-password" options={{ title: "Reset password", presentation: "modal" }} />
         </Stack>
       </QueryClientProvider>
     </SafeAreaProvider>

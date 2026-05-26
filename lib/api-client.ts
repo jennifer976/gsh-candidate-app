@@ -462,6 +462,17 @@ export async function requestForgotPassword(email: string) {
   );
 }
 
+export async function resetPasswordWithOtp(email: string, code: string, newPassword: string) {
+  return apiFetchJson<{ message: string }>(
+    "/auth/reset-password",
+    {
+      method: "POST",
+      body: JSON.stringify({ email, code, newPassword }),
+    },
+    { auth: false }
+  );
+}
+
 export async function changePassword(currentPassword: string, newPassword: string) {
   return apiFetchJson("/auth/change-password", {
     method: "POST",

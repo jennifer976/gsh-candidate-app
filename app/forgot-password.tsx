@@ -28,10 +28,12 @@ export default function ForgotPasswordScreen() {
 
   const mut = useMutation({
     mutationFn: () => requestForgotPassword(email.trim().toLowerCase()),
-    onSuccess: (data) => {
-      Alert.alert("Check your email", data.message || "If an account exists, we sent reset instructions.", [
-        { text: "OK", onPress: () => router.back() },
-      ]);
+    onSuccess: () => {
+      const normalized = email.trim().toLowerCase();
+      router.replace({
+        pathname: "/reset-password",
+        params: { email: encodeURIComponent(normalized) },
+      });
     },
     onError: (e: unknown) =>
       Alert.alert(
@@ -48,7 +50,7 @@ export default function ForgotPasswordScreen() {
             <GshScreenIntro
               eyebrow="Global Sponsor Hub"
               title="Forgot password"
-              subtitle="We will email you a link to reset your password."
+              subtitle="We will email you a one-time code to reset your password."
               style={{ marginBottom: 16 }}
             />
 
@@ -66,7 +68,7 @@ export default function ForgotPasswordScreen() {
                 placeholderTextColor={colors.placeholder}
               />
               <GshGradientPrimaryButton
-                title={mut.isPending ? "Sending…" : "Send reset link"}
+                title={mut.isPending ? "Sending…" : "Send code"}
                 onPress={() => mut.mutate()}
                 disabled={mut.isPending}
               />
