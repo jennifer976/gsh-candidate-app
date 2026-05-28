@@ -33,7 +33,15 @@ export interface EmployerProfile {
   contactCompany?: string;
   companyLogo?: string;
   companyWebsite?: string;
-  sponsorLicense?: { status?: string };
+  employerHiringModel?: {
+    offersSponsorship?: boolean;
+    hiresRemoteGlobally?: boolean;
+  };
+  sponsorLicense?: {
+    status?: string;
+    number?: string;
+    registrationCountry?: string;
+  };
 }
 
 export interface Job {

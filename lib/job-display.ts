@@ -30,14 +30,26 @@ export function getJobLogoUrl(job: Job): string {
   return resolveJobBrandLogo(job);
 }
 
-/** UK sponsor licence badge — matches website JobMarketingCard (Active sponsor / Sponsor · status). */
+function employerOffersSponsorshipFromProfile(pb: EmployerProfile | null | undefined): boolean {
+  if (!pb || typeof pb !== "object") return false;
+  const explicit = (pb as EmployerProfile & { employerHiringModel?: { offersSponsorship?: boolean } })
+    .employerHiringModel?.offersSponsorship;
+  if (explicit === true) return true;
+  if (explicit === false) return false;
+  const status = pb.sponsorLicense?.status?.trim().toLowerCase() ?? "";
+  if (status === "not applicable" || status === "n/a") return false;
+  return Boolean(pb.sponsorLicense?.number?.trim());
+}
+
+/** Sponsor / work-authorisation badge — matches website JobMarketingCard. */
 export function getEmployerSponsorBadge(job: Job): { label: string; positive: boolean } | null {
   const pb = job.postedBy as EmployerProfile | null | undefined;
+  if (!employerOffersSponsorshipFromProfile(pb)) return null;
   const status =
     typeof pb === "object" && pb?.sponsorLicense?.status
       ? String(pb.sponsorLicense.status).trim()
       : "";
-  if (!status) return null;
+  if (!status || status.toLowerCase() === "not applicable") return null;
   const lower = status.toLowerCase();
   const positive = lower === "active" || lower === "approved";
   return {
@@ -55,7 +67,22 @@ export function jobFromSavedRow(item: { jobId?: unknown }): Job | null {
   return { ...(raw as Job), _id: id };
 }
 
-const MOBILITY_PRIORITY = /visa|sponsor|relocat|mobility|work permit/i;
+const REMOTE_GLOBAL_MOBILITY_VALUE = "Cross-border Remote Allowed";
+const MOBILITY_LABELS: Record<string, string> = {
+  [REMOTE_GLOBAL_MOBILITY_VALUE]: "Remote — Global",
+  "Remote Friendly": "Remote friendly",
+  "Visa Sponsorship": "Visa sponsorship",
+  "Relocation Support": "Relocation support",
+  "Job Offer Support": "Job offer support",
+  "Work Permit Transfer": "Work permit transfer",
+  "No Sponsorship Available": "No sponsorship available",
+};
+
+export function formatMobilityLabel(value: string): string {
+  return MOBILITY_LABELS[value] ?? value;
+}
+
+const MOBILITY_PRIORITY = /visa|sponsor|relocat|mobility|work permit|remote/i;
 
 /** Mobility-first chip order for job cards (visa / sponsorship surfaced first). */
 export function hubListingChipsPrioritized(job: Job, max = 2): string[] {
@@ -76,14 +103,14 @@ export function hubListingChips(job: Job, max = 6): string[] {
     const k = m.trim();
     if (seen.has(k)) continue;
     seen.add(k);
-    out.push(k);
+    out.push(formatMobilityLabel(k));
   }
   for (const b of benefits) {
     if (out.length >= max) break;
     const k = b.trim();
     if (seen.has(k)) continue;
     seen.add(k);
-    out.push(k);
+    out.push(formatMobilityLabel(k));
   }
   return out;
 }
@@ -102,10 +129,10 @@ const MOBILITY_BENEFIT_LABELS = new Set([
 export function splitMobilityAndPerks(job: Job): { mobility: string[]; perks: string[] } {
   const raw = (job.benefits ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
   if (job.mobility && job.mobility.length > 0) {
-    return { mobility: job.mobility, perks: raw };
+    return { mobility: job.mobility.map(formatMobilityLabel), perks: raw };
   }
   return {
-    mobility: raw.filter((b) => MOBILITY_BENEFIT_LABELS.has(b)),
+    mobility: raw.filter((b) => MOBILITY_BENEFIT_LABELS.has(b)).map(formatMobilityLabel),
     perks: raw.filter((b) => !MOBILITY_BENEFIT_LABELS.has(b)),
   };
 }
