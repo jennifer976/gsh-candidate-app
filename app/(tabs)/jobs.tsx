@@ -158,6 +158,8 @@ export default function JobsTabScreen() {
   const [listingInfoOpen, setListingInfoOpen] = useState(false);
   const params = useLocalSearchParams<{ location?: string }>();
   const [locationFilter, setLocationFilter] = useState("");
+  const [mobilityFilter, setMobilityFilter] = useState("");
+  const [visaRouteFilter, setVisaRouteFilter] = useState("");
 
   useEffect(() => {
     const loc = typeof params.location === "string" ? decodeURIComponent(params.location).trim() : "";
@@ -185,11 +187,13 @@ export default function JobsTabScreen() {
   }, [debouncedQ]);
 
   const hubJobsQuery = useQuery({
-    queryKey: ["public-jobs", debouncedQ, locationFilter],
+    queryKey: ["public-jobs", debouncedQ, locationFilter, mobilityFilter, visaRouteFilter],
     queryFn: () =>
       fetchPublicJobs({
         q: debouncedQ || undefined,
         location: locationFilter.trim() || undefined,
+        benefit: mobilityFilter.trim() || undefined,
+        visaRoute: visaRouteFilter.trim() || undefined,
         page: 1,
         perPage: 25,
       }),
@@ -253,6 +257,10 @@ export default function JobsTabScreen() {
       : curatedJobsQuery.isLoading && !curatedJobsQuery.data;
 
   const activeError = feedTab === "employer" ? hubJobsQuery.isError : curatedJobsQuery.isError;
+  const activeStructuredFilters = [
+    mobilityFilter ? `Mobility: ${mobilityFilter}` : "",
+    visaRouteFilter ? `Visa: ${visaRouteFilter}` : "",
+  ].filter(Boolean);
 
   const onRefresh = useCallback(() => {
     setPullRefreshing(true);
@@ -324,6 +332,28 @@ export default function JobsTabScreen() {
         </View>
 
       </View>
+
+      {activeStructuredFilters.length > 0 ? (
+        <View style={styles.activeFiltersOuter}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.recentScroll}>
+            {activeStructuredFilters.map((label) => (
+              <Pressable
+                key={label}
+                style={styles.recentChip}
+                onPress={() => {
+                  if (label.startsWith("Mobility:")) setMobilityFilter("");
+                  if (label.startsWith("Visa:")) setVisaRouteFilter("");
+                }}
+                accessibilityRole="button"
+              >
+                <Ionicons name="checkmark-circle-outline" size={12} color={colors.teal} />
+                <Text style={styles.recentChipText} numberOfLines={1}>{label}</Text>
+                <Ionicons name="close" size={12} color={colors.textMuted} />
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+      ) : null}
 
       {/* ── Recent searches ── */}
       {recent.length > 0 ? (
@@ -452,11 +482,17 @@ export default function JobsTabScreen() {
         onClose={() => setTopicsModalOpen(false)}
         query={q}
         location={locationFilter}
+        mobilityFilter={mobilityFilter}
+        visaRouteFilter={visaRouteFilter}
         onPickExplore={setQ}
         onPickCountry={setLocationFilter}
-        onPickMobility={(term) => {
+        onPickMobilityFilter={(benefit) => {
           setFeedTab("employer");
-          setQ(term);
+          setMobilityFilter(benefit);
+        }}
+        onPickVisaRoute={(route) => {
+          setFeedTab("employer");
+          setVisaRouteFilter(route);
         }}
       />
       <DiscoverListingInfoModal
@@ -507,6 +543,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     paddingHorizontal: 16,
   },
+  activeFiltersOuter: { paddingTop: 8, paddingHorizontal: 16 },
   segmentHost: {
     flexDirection: "row",
     backgroundColor: "rgba(255,255,255,0.08)",

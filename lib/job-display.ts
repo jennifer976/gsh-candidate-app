@@ -68,6 +68,29 @@ export function jobFromSavedRow(item: { jobId?: unknown }): Job | null {
 }
 
 const REMOTE_GLOBAL_MOBILITY_VALUE = "Cross-border Remote Allowed";
+export const VISA_ROUTE_OTHER_VALUE = "Other / not listed";
+export const VISA_ROUTE_OPTIONS = [
+  "UK Skilled Worker visa",
+  "UK Health and Care Worker visa",
+  "UK Global Business Mobility",
+  "US H-1B",
+  "US O-1",
+  "US L-1",
+  "Canada LMIA / work permit",
+  "Canada Global Talent Stream",
+  "Australia Subclass 482",
+  "Australia Subclass 186",
+  "Australia Subclass 494",
+  "Germany EU Blue Card",
+  "Germany Skilled Worker visa",
+  "Ireland Critical Skills Employment Permit",
+  "Ireland General Employment Permit",
+  "Netherlands Highly Skilled Migrant",
+  "New Zealand Accredited Employer Work Visa",
+  "UAE employer-sponsored work visa",
+  "Singapore Employment Pass",
+  "Switzerland work permit",
+] as const;
 const MOBILITY_LABELS: Record<string, string> = {
   [REMOTE_GLOBAL_MOBILITY_VALUE]: "Remote — Global",
   "Remote Friendly": "Remote friendly",
@@ -82,11 +105,24 @@ export function formatMobilityLabel(value: string): string {
   return MOBILITY_LABELS[value] ?? value;
 }
 
-const MOBILITY_PRIORITY = /visa|sponsor|relocat|mobility|work permit|remote/i;
+export function visaRouteChips(job: Job, max = 6): string[] {
+  const selected = (job.visaRoutes ?? [])
+    .filter((x): x is string => typeof x === "string" && x.trim().length > 0)
+    .map((x) => x.trim())
+    .filter((x) => x !== VISA_ROUTE_OTHER_VALUE);
+  const other = typeof job.visaRouteOther === "string" ? job.visaRouteOther.trim() : "";
+  return Array.from(new Set([...selected, ...(other ? [other] : [])])).slice(0, max);
+}
+
+export function formatVisaRouteChip(route: string): string {
+  return `Visa: ${route}`;
+}
+
+const MOBILITY_PRIORITY = /visa|sponsor|relocat|mobility|work permit|remote|subclass|skilled worker|blue card|employment pass/i;
 
 /** Mobility-first chip order for job cards (visa / sponsorship surfaced first). */
 export function hubListingChipsPrioritized(job: Job, max = 2): string[] {
-  const all = hubListingChips(job, 6);
+  const all = [...visaRouteChips(job).map(formatVisaRouteChip), ...hubListingChips(job, 6)];
   const priority = all.filter((c) => MOBILITY_PRIORITY.test(c));
   const rest = all.filter((c) => !MOBILITY_PRIORITY.test(c));
   return [...priority, ...rest].slice(0, max);
@@ -94,10 +130,17 @@ export function hubListingChipsPrioritized(job: Job, max = 2): string[] {
 
 /** Mobility + distinct benefit labels for hub job cards (capped for layout). */
 export function hubListingChips(job: Job, max = 6): string[] {
+  const visaRoutes = visaRouteChips(job).map(formatVisaRouteChip);
   const mobility = (job.mobility ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
   const benefits = (job.benefits ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
   const seen = new Set<string>();
   const out: string[] = [];
+  for (const route of visaRoutes) {
+    if (out.length >= max) break;
+    if (seen.has(route)) continue;
+    seen.add(route);
+    out.push(route);
+  }
   for (const m of mobility) {
     if (out.length >= max) break;
     const k = m.trim();

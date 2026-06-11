@@ -3,16 +3,28 @@ import type { ComponentProps } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { JOB_DESTINATION_FILTERS } from "@/lib/jobDiscoverCountries";
+import { VISA_ROUTE_OPTIONS } from "@/lib/job-display";
 import { colors, discoverFeedCardStyle, discoverSearchFieldStyle, fontFamily, radii } from "@/lib/theme";
 import type { DashboardJobListing } from "@/types/models";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
-const MOBILITY_CHIPS: { label: string; q: string; icon: IonName }[] = [
-  { label: "Visa Sponsorship", q: "visa sponsorship", icon: "id-card-outline" },
-  { label: "Relocation", q: "relocation support", icon: "airplane-outline" },
-  { label: "Global Hiring", q: "international hiring global", icon: "globe-outline" },
+const MOBILITY_CHIPS: { label: string; benefit: string; icon: IonName }[] = [
+  { label: "Visa Sponsorship", benefit: "Visa Sponsorship", icon: "id-card-outline" },
+  { label: "Relocation", benefit: "Relocation Support", icon: "airplane-outline" },
+  { label: "Global Hiring", benefit: "Cross-border Remote Allowed", icon: "globe-outline" },
 ];
+
+const FEATURED_VISA_ROUTES = [
+  "UK Skilled Worker visa",
+  "UK Health and Care Worker visa",
+  "US H-1B",
+  "Australia Subclass 482",
+  "Australia Subclass 186",
+  "Germany EU Blue Card",
+  "Ireland Critical Skills Employment Permit",
+  "Canada LMIA / work permit",
+] satisfies Array<(typeof VISA_ROUTE_OPTIONS)[number]>;
 
 const EXPLORE_CHIPS: { label: string; q: string }[] = [
   { label: "All", q: "" },
@@ -28,10 +40,6 @@ function chipActive(currentQ: string, chipQ: string): boolean {
   const t = chipQ.trim().toLowerCase();
   if (t === "") return c === "";
   return c === t;
-}
-
-function mobilityChipActive(currentQ: string, chipQ: string): boolean {
-  return chipActive(currentQ, chipQ);
 }
 
 /** Opens the full topics & mobility sheet (Jobie-style “filters” entry, GSH copy). */
@@ -65,16 +73,22 @@ export function DiscoverTopicsFilterModal({
   onClose,
   query,
   location,
+  mobilityFilter,
+  visaRouteFilter,
   onPickExplore,
-  onPickMobility,
+  onPickMobilityFilter,
+  onPickVisaRoute,
   onPickCountry,
 }: {
   visible: boolean;
   onClose: () => void;
   query: string;
   location: string;
+  mobilityFilter: string;
+  visaRouteFilter: string;
   onPickExplore: (next: string) => void;
-  onPickMobility: (next: string) => void;
+  onPickMobilityFilter: (next: string) => void;
+  onPickVisaRoute: (next: string) => void;
   onPickCountry: (next: string) => void;
 }) {
   return (
@@ -153,15 +167,15 @@ export function DiscoverTopicsFilterModal({
           </View>
 
           <Text style={[styles.modalSectionLabel, { marginTop: 22 }]}>Mobility & sponsorship</Text>
-          <Text style={styles.modalSectionHint}>These switches search employer listings on the Hub.</Text>
+          <Text style={styles.modalSectionHint}>These filters match employer-provided sponsorship labels.</Text>
           <View style={styles.mobilityList}>
             {MOBILITY_CHIPS.map((chip) => {
-              const active = mobilityChipActive(query, chip.q);
+              const active = mobilityFilter === chip.benefit;
               return (
                 <Pressable
                   key={chip.label}
                   onPress={() => {
-                    onPickMobility(chip.q);
+                    onPickMobilityFilter(active ? "" : chip.benefit);
                     onClose();
                   }}
                   style={[styles.mobilityRow, active && styles.mobilityRowActive]}
@@ -173,6 +187,45 @@ export function DiscoverTopicsFilterModal({
                     {chip.label}
                   </Text>
                   {active ? <Ionicons name="checkmark-circle" size={22} color={colors.teal} /> : null}
+                </Pressable>
+              );
+            })}
+          </View>
+
+          <Text style={[styles.modalSectionLabel, { marginTop: 22 }]}>Visa route</Text>
+          <Text style={styles.modalSectionHint}>
+            Filter by a route employers have specifically said they can support.
+          </Text>
+          <View style={styles.exploreWrap}>
+            <Pressable
+              onPress={() => {
+                onPickVisaRoute("");
+                onClose();
+              }}
+              style={[styles.exploreChip, !visaRouteFilter.trim() && styles.exploreChipActive]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: !visaRouteFilter.trim() }}
+            >
+              <Text style={[styles.exploreChipText, !visaRouteFilter.trim() && styles.exploreChipTextActive]}>
+                All routes
+              </Text>
+            </Pressable>
+            {FEATURED_VISA_ROUTES.map((route) => {
+              const active = visaRouteFilter === route;
+              return (
+                <Pressable
+                  key={route}
+                  onPress={() => {
+                    onPickVisaRoute(active ? "" : route);
+                    onClose();
+                  }}
+                  style={[styles.exploreChip, active && styles.exploreChipActive]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}
+                >
+                  <Text style={[styles.exploreChipText, active && styles.exploreChipTextActive]} numberOfLines={1}>
+                    {route}
+                  </Text>
                 </Pressable>
               );
             })}

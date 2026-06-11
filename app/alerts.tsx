@@ -30,6 +30,7 @@ import {
   patchCandidateNotificationPrefs,
   patchJobSearchAlert,
 } from "@/lib/api-client";
+import { VISA_ROUTE_OPTIONS } from "@/lib/job-display";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { Job, JobMatchNotificationRow, JobSearchAlertDto } from "@/types/models";
@@ -73,6 +74,7 @@ export default function AlertsScreen() {
 
   const [newName, setNewName] = useState("");
   const [newQ, setNewQ] = useState("");
+  const [newVisaRoute, setNewVisaRoute] = useState("");
 
   const patchPrefs = useMutation({
     mutationFn: patchCandidateNotificationPrefs,
@@ -116,11 +118,13 @@ export default function AlertsScreen() {
   const createSearch = useMutation({
     mutationFn: () =>
       createJobSearchAlert(newName.trim() || "My search", {
-        q: newQ.trim(),
+        q: newQ.trim() || undefined,
+        visaRoute: newVisaRoute || undefined,
       }),
     onSuccess: () => {
       setNewName("");
       setNewQ("");
+      setNewVisaRoute("");
       qc.invalidateQueries({ queryKey: ["candidate", "job-search-alerts"] });
     },
     onError: (e: unknown) =>
@@ -333,15 +337,34 @@ export default function AlertsScreen() {
         />
         <TextInput
           style={styles.input}
-          placeholder="Keywords (required), e.g. visa sponsorship engineer"
+          placeholder="Keywords, e.g. engineer or nurse"
           placeholderTextColor={colors.placeholder}
           value={newQ}
           onChangeText={setNewQ}
         />
+        <Text style={styles.routeLabel}>Visa route (optional)</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.routeChipRow}>
+          {["", ...VISA_ROUTE_OPTIONS.slice(0, 8)].map((route) => {
+            const active = newVisaRoute === route;
+            return (
+              <Pressable
+                key={route || "any"}
+                style={[styles.routeChip, active && styles.routeChipActive]}
+                onPress={() => setNewVisaRoute(route)}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
+              >
+                <Text style={[styles.routeChipText, active && styles.routeChipTextActive]} numberOfLines={1}>
+                  {route || "Any route"}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
         <GshGradientPrimaryButton
           title={createSearch.isPending ? "Saving…" : "Save alert"}
           onPress={() => createSearch.mutate()}
-          disabled={!newQ.trim() || createSearch.isPending}
+          disabled={(!newQ.trim() && !newVisaRoute) || createSearch.isPending}
           containerStyle={{ marginTop: 4 }}
         />
       </ScrollView>
@@ -370,6 +393,8 @@ function formatFilters(f: Record<string, unknown>): string {
   if (typeof f.q === "string" && f.q.trim()) parts.push(`“${f.q.trim()}”`);
   if (typeof f.location === "string" && f.location.trim()) parts.push(f.location.trim());
   if (typeof f.industry === "string" && f.industry.trim()) parts.push(f.industry.trim());
+  if (typeof f.benefit === "string" && f.benefit.trim()) parts.push(f.benefit.trim());
+  if (typeof f.visaRoute === "string" && f.visaRoute.trim()) parts.push(`Visa: ${f.visaRoute.trim()}`);
   return parts.length ? parts.join(" · ") : "Any filters";
 }
 
@@ -506,5 +531,32 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: colors.textPrimary,
   },
+  routeLabel: {
+    marginTop: 4,
+    marginBottom: 8,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 13,
+    color: colors.textPrimary,
+  },
+  routeChipRow: { gap: 8, paddingBottom: 10 },
+  routeChip: {
+    maxWidth: 220,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.background,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  routeChipActive: {
+    borderColor: "rgba(14, 205, 209, 0.55)",
+    backgroundColor: "rgba(14, 205, 209, 0.1)",
+  },
+  routeChipText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 12,
+    color: colors.textSecondary,
+  },
+  routeChipTextActive: { color: colors.navy },
   disabled: { opacity: 0.55 },
 });

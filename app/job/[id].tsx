@@ -24,8 +24,10 @@ import {
   getJobEmployerLabel,
   getJobLogoUrl,
   hubListingChips,
+  formatVisaRouteChip,
   splitMobilityAndPerks,
   stripHtmlToPlainText,
+  visaRouteChips,
 } from "@/lib/job-display";
 import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
 import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
@@ -224,6 +226,7 @@ export default function JobDetailScreen() {
   const location = [job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || "";
   const salary = formatSalary(job.minSalary, job.maxSalary, job.salaryCurrency);
   const chips = hubListingChips(job, 6);
+  const visaRoutes = visaRouteChips(job);
   const { mobility: mobilityItems, perks: perkItems } = splitMobilityAndPerks(job);
   const descriptionPlain = job.description ? stripHtmlToPlainText(job.description) : "";
   const jobTypeLabel = job.jobType ? String(job.jobType).replace(/-/g, " ") : "";
@@ -328,10 +331,16 @@ export default function JobDetailScreen() {
               </>
             ) : null}
 
-            {mobilityItems.length > 0 ? (
+            {visaRoutes.length > 0 || mobilityItems.length > 0 ? (
               <>
                 <SectionHeading title="Sponsorship & mobility" />
                 <View style={styles.mobilityList}>
+                  {visaRoutes.map((route) => (
+                    <View key={`visa-${route}`} style={styles.mobilityRow}>
+                      <Ionicons name="id-card-outline" size={18} color={colors.teal} />
+                      <Text style={styles.mobilityText}>{formatVisaRouteChip(route)}</Text>
+                    </View>
+                  ))}
                   {mobilityItems.map((m) => (
                     <View key={m} style={styles.mobilityRow}>
                       <Ionicons name="checkmark-circle" size={18} color={colors.teal} />

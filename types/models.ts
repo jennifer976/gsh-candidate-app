@@ -68,6 +68,8 @@ export interface Job {
   experienceLevel?: string;
   workMode?: string;
   mobility?: string[];
+  visaRoutes?: string[];
+  visaRouteOther?: string;
   benefits?: string[];
 }
 
@@ -224,6 +226,8 @@ export interface DashboardJobListing {
   type: string;
   minSalary?: number;
   maxSalary?: number;
+  visaRoutes?: string[];
+  visaRouteOther?: string;
   createdAt: string;
 }
 
