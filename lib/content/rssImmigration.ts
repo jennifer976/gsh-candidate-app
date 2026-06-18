@@ -31,7 +31,7 @@ function textContent(v: unknown): string | undefined {
   return undefined;
 }
 
-type ParsedItem = { title?: string; link?: string; isoDate?: string };
+type ParsedItem = { title?: string; link?: string; isoDate?: string; source?: string };
 
 function parseAtomEntry(entry: Record<string, unknown>): ParsedItem {
   const itemTitle = textContent(entry.title);
@@ -98,26 +98,38 @@ function parseFeedXml(xml: string): { feedTitle?: string; items: ParsedItem[] } 
       typeof pubDate === "string"
         ? pubDate.trim()
         : textContent(pubDate) ?? (typeof item["dc:date"] === "string" ? item["dc:date"] : undefined);
-    return { title, link, isoDate };
+    const source = textContent(item.source);
+    return { title, link, isoDate, source };
   });
 
   return { feedTitle: feedTitle ?? undefined, items };
 }
 
 const DEFAULT_RSS_FEEDS = [
-  "https://freemovement.org.uk/feed/",
-  "https://home-affairs.ec.europa.eu/node/2/rss_en",
-  "https://ec.europa.eu/migrant-integration/news_en.rss",
-  "https://www.iom.int/news/rss.xml",
-  "https://www.unhcr.org/rss.xml",
-  "https://www.uscis.gov/newsroom/all-news/rss",
-  "https://immigrationforum.org/feed/",
-  "https://www.migrationpolicy.org/rss/fullsite",
+  // Google News topic search — most reliable, freshest, broadest. Item titles carry the publisher.
+  "https://news.google.com/rss/search?q=immigration+visa+policy+changes&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=work+visa+sponsorship+skilled+worker&hl=en-GB&gl=GB&ceid=GB:en",
+  "https://news.google.com/rss/search?q=%22immigration+rules%22+OR+%22visa+changes%22&hl=en-GB&gl=GB&ceid=GB:en",
+  "https://news.google.com/rss/search?q=immigration+visa+(Canada+OR+Australia+OR+%22New+Zealand%22+OR+Ireland)&hl=en&gl=US&ceid=US:en",
+  // Official / specialist sources still serving valid feeds.
   "https://www.gov.uk/government/organisations/uk-visas-and-immigration.atom",
-  "https://www.canada.ca/en/immigration-refugees-citizenship/news/feeds/atom.xml",
-  "https://immi.homeaffairs.gov.au/rss-feeds/news-and-updates",
-  "https://www.immigration.govt.nz/about-us/media-centre/news-notifications/feed.rss",
+  "https://www.gov.uk/search/news-and-communications.atom?organisations%5B%5D=uk-visas-and-immigration",
+  "https://home-affairs.ec.europa.eu/node/2/rss_en",
+  "https://freemovement.org.uk/feed/",
 ];
+
+const GOOGLE_NEWS_HOST = "news.google.com";
+
+/** Google News titles are "Headline - Publisher"; split off the publisher for a clean title + source. */
+function splitGoogleNewsTitle(title: string): { title: string; publisher: string | null } {
+  const idx = title.lastIndexOf(" - ");
+  if (idx > 0 && title.length - idx <= 60) {
+    const publisher = title.slice(idx + 3).trim();
+    const clean = title.slice(0, idx).trim();
+    if (clean.length >= 12 && publisher.length >= 2) return { title: clean, publisher };
+  }
+  return { title, publisher: null };
+}
 
 const WORK_MOBILITY_SIGNAL =
   /\b(work permit|work visa|employer|sponsor(?:ship)?|labou?r market impact|lmia|skilled worker|skilled migration|occupation list|shortage list|express entry|provincial nominee|job offer|points[- ]based|graduate route|post[- ]study|pgwp|stem opt|digital nomad|global talent|start[- ]?up visa|salary threshold|right to work|post[- ]study work|blue card|eur(?:opean)? blue card|high[- ]skilled|talent visa)\b/i;
@@ -134,6 +146,15 @@ const TRAVEL_ADVICE_NO_IMMIGRATION =
 const CRISIS_INCIDENT_ONLY =
   /\b(dies?(?: at)? sea|capsiz|shipwreck|found dead|mass grave|drown(?:ing)?|bodies (?:found|recovered))\b/i;
 
+const SPORTS_ENTERTAINMENT_NOISE =
+  /\b(world cup|premier league|footballer|football match|striker|midfielder|defender|goalkeeper|\bnba\b|\bnfl\b|olympics?|cricket|rugby|tennis|box(?:er|ing)|concert|tour dates?|album|movie|film festival|celebrity)\b/i;
+
+const POLICY_ACTION_SIGNAL =
+  /\b(new|change[ds]?|changing|reform|overhaul|tighten\w*|tougher|relax\w*|eas(?:e|ed|ing)|scrap\w*|abolish\w*|cap|quota|ballot|lottery|cut|raise[ds]?|increase[ds]?|hike|threshold|route|scheme|programme|program|white paper|announce\w*|introduc\w*|launch\w*|extend\w*|suspend\w*|resum\w*|reopen\w*|paus\w*|ban\w*|restrict\w*|requir\w*|forc(?:e|ed|ing)|memo|eligibility|requirement|deadline|backlog|processing|fee[s]?|rule[s]?|policy|update[ds]?|crackdown|plan|target|salary)\b/i;
+
+const ENFORCEMENT_CRIME_ONLY =
+  /\b(arrested|charged|sentenced|jailed|convicted|smuggl\w*|trafficking|gang|kidnap\w*|raid(?:ed|s)?|murder|assault)\b/i;
+
 function immigrationTitleScore(title: string): number {
   let s = 0;
   if (WORK_MOBILITY_SIGNAL.test(title)) s += 18;
@@ -142,6 +163,10 @@ function immigrationTitleScore(title: string): number {
   if (/\b(immigration rules|immigration bill|visa fee|visa application|passport office)\b/i.test(title)) s += 10;
   if (/\b(deport|detention|removal|compliance|audit)\b/i.test(title)) s += 6;
   const hasWorkOrPolicy = WORK_MOBILITY_SIGNAL.test(title) || POLICY_VISA_SIGNAL.test(title);
+  const hasDomain = hasWorkOrPolicy || AUTHORITY_SIGNAL.test(title);
+  if (hasDomain && POLICY_ACTION_SIGNAL.test(title)) {
+    s += 8;
+  }
   if (/\b(refugee|asylum|resettlement|humanitarian)\b/i.test(title)) {
     s += hasWorkOrPolicy ? 5 : -12;
   }
@@ -154,10 +179,16 @@ function immigrationTitleScore(title: string): number {
   if (CRISIS_INCIDENT_ONLY.test(title) && !hasWorkOrPolicy) {
     s -= 28;
   }
+  if (SPORTS_ENTERTAINMENT_NOISE.test(title)) {
+    s -= 30;
+  }
+  if (ENFORCEMENT_CRIME_ONLY.test(title) && !POLICY_ACTION_SIGNAL.test(title)) {
+    s -= 26;
+  }
   return s;
 }
 
-const MIN_HEADLINE_SCORE = 12;
+const MIN_HEADLINE_SCORE = 16;
 const MAX_HEADLINES_RETURNED = 14;
 
 function shouldIncludeHeadline(title: string): boolean {
@@ -212,15 +243,26 @@ export async function fetchImmigrationRssHeadlines(): Promise<RssHeadline[]> {
 
   const batches = await Promise.all(
     urls.map(async (url) => {
+      const isGoogleNews = url.includes(GOOGLE_NEWS_HOST);
       try {
         const { title: parsedFeedTitle, items } = await fetchAndParseFeed(url);
-        const source =
+        const feedSource =
           parsedFeedTitle?.replace(/\s*(\(RSS\)|RSS|Feed).*$/i, "").trim() || hostnameLabel(url);
         const headlines: RssHeadline[] = [];
-        for (const item of items.slice(0, 10)) {
+        const limit = isGoogleNews ? 30 : 10;
+        for (const item of items.slice(0, limit)) {
           const link = item.link?.trim();
-          const title = item.title?.trim();
-          if (!link || !title) continue;
+          const rawTitle = item.title?.trim();
+          if (!link || !rawTitle) continue;
+
+          let title = rawTitle;
+          let source = feedSource;
+          if (isGoogleNews) {
+            const split = splitGoogleNewsTitle(rawTitle);
+            title = split.title;
+            source = item.source?.trim() || split.publisher || "Google News";
+          }
+
           if (!shouldIncludeHeadline(title)) continue;
           const isoDate = item.isoDate;
           if (!isWithinFreshnessWindow(isoDate)) continue;
@@ -245,5 +287,15 @@ export async function fetchImmigrationRssHeadlines(): Promise<RssHeadline[]> {
     return immigrationTitleScore(b.title) - immigrationTitleScore(a.title);
   });
 
-  return all.slice(0, MAX_HEADLINES_RETURNED);
+  // De-duplicate across feeds (the Google News queries overlap heavily).
+  const seen = new Set<string>();
+  const deduped: RssHeadline[] = [];
+  for (const h of all) {
+    const key = h.title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(h);
+  }
+
+  return deduped.slice(0, MAX_HEADLINES_RETURNED);
 }
