@@ -107,10 +107,10 @@ function parseFeedXml(xml: string): { feedTitle?: string; items: ParsedItem[] } 
 
 const DEFAULT_RSS_FEEDS = [
   // Google News topic search — most reliable, freshest, broadest. Item titles carry the publisher.
-  "https://news.google.com/rss/search?q=immigration+visa+policy+changes&hl=en-US&gl=US&ceid=US:en",
-  "https://news.google.com/rss/search?q=work+visa+sponsorship+skilled+worker&hl=en-GB&gl=GB&ceid=GB:en",
-  "https://news.google.com/rss/search?q=%22immigration+rules%22+OR+%22visa+changes%22&hl=en-GB&gl=GB&ceid=GB:en",
-  "https://news.google.com/rss/search?q=immigration+visa+(Canada+OR+Australia+OR+%22New+Zealand%22+OR+Ireland)&hl=en&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=immigration+visa+policy+changes+when:60d&hl=en-US&gl=US&ceid=US:en",
+  "https://news.google.com/rss/search?q=work+visa+sponsorship+skilled+worker+when:60d&hl=en-GB&gl=GB&ceid=GB:en",
+  "https://news.google.com/rss/search?q=%22immigration+rules%22+OR+%22visa+changes%22+when:60d&hl=en-GB&gl=GB&ceid=GB:en",
+  "https://news.google.com/rss/search?q=immigration+visa+(Canada+OR+Australia+OR+%22New+Zealand%22+OR+Ireland)+when:60d&hl=en&gl=US&ceid=US:en",
   // Official / specialist sources still serving valid feeds.
   "https://www.gov.uk/government/organisations/uk-visas-and-immigration.atom",
   "https://www.gov.uk/search/news-and-communications.atom?organisations%5B%5D=uk-visas-and-immigration",
@@ -196,14 +196,14 @@ function shouldIncludeHeadline(title: string): boolean {
 }
 
 function maxHeadlineAgeMs(): number {
-  const days = 365;
+  const days = 60;
   return days * 86_400_000;
 }
 
 function isWithinFreshnessWindow(isoDate: string | undefined): boolean {
-  if (!isoDate) return true;
+  if (!isoDate) return false;
   const t = Date.parse(isoDate);
-  if (!Number.isFinite(t)) return true;
+  if (!Number.isFinite(t)) return false;
   return Date.now() - t <= maxHeadlineAgeMs();
 }
 
