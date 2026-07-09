@@ -13,12 +13,21 @@ export type CountryVisaGuideSection = {
   paragraphs?: string[];
   /** Labelled bullets — bold lead + supporting text */
   bullets?: { label: string; text: string }[];
+  /** Optional two-column pros / cons panel rendered after prose. */
+  prosCons?: { pros: string[]; cons: string[] };
+  /** Optional highlighted "candidate experience" / note callout. */
+  callout?: { title: string; body: string };
+  /** Optional visa-pathway stepper ("flowchart" alternative). */
+  pathway?: { title?: string; steps: { title: string; detail?: string }[]; note?: string };
 };
 
 export function countryGuideSectionPlainText(sec: CountryVisaGuideSection): string {
   const ps = sec.paragraphs ?? [];
   const bs = sec.bullets?.map((b) => `${b.label}: ${b.text}`) ?? [];
-  return [...ps, ...bs].join(" ");
+  const pros = sec.prosCons?.pros.map((p) => `Pro: ${p}`) ?? [];
+  const cons = sec.prosCons?.cons.map((c) => `Con: ${c}`) ?? [];
+  const callout = sec.callout ? [`${sec.callout.title}: ${sec.callout.body}`] : [];
+  return [...ps, ...bs, ...pros, ...cons, ...callout].join(" ");
 }
 
 export type QuickFact = {
@@ -51,7 +60,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     flagEmoji: "🇬🇧",
     excerpt: "What the Skilled Worker route means in practice, what salary you need, and how to find employers who will actually sponsor you.",
     metaDescription: "UK Skilled Worker visa explained: salary thresholds, how sponsorship works, what to check before you apply, and where to find real sponsor-backed roles.",
-    updatedISO: "2026-05-01",
+    updatedISO: "2026-06-22",
     openingHook: "The UK is one of the most active markets for international hiring — but 'sponsorship' gets used loosely. Here's what it means in practice.",
     quickFacts: [
       { label: "Main visa route", value: "Skilled Worker" },
@@ -121,7 +130,7 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     flagEmoji: "🇮🇪",
     excerpt: "Ireland's Critical Skills and General Employment Permits, what employers expect, and what arriving actually involves.",
     metaDescription: "Ireland work permit guide for international candidates: Critical Skills vs General permit, salary requirements, and how to find sponsor-backed roles.",
-    updatedISO: "2026-05-01",
+    updatedISO: "2026-06-22",
     openingHook: "Ireland is a genuine tech and pharma hub with active international hiring — but the permit system is less well-known than the UK's. Here's a plain-English breakdown.",
     quickFacts: [
       { label: "Main routes", value: "Critical Skills & General Employment Permit" },
@@ -178,8 +187,8 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
     iso2: "de",
     flagEmoji: "🇩🇪",
     excerpt: "EU Blue Card salary thresholds, how credential recognition works, and what to expect from German employers hiring internationally.",
-    metaDescription: "Germany EU Blue Card guide: salary thresholds for 2024, credential recognition for engineers, what German employers expect, and how to find sponsored roles.",
-    updatedISO: "2026-05-01",
+    metaDescription: "Germany EU Blue Card guide: salary thresholds for 2026, credential recognition for engineers, what German employers expect, and how to find sponsored roles.",
+    updatedISO: "2026-06-22",
     openingHook: "Germany actively wants international talent but has a reputation for complexity. The EU Blue Card cuts through a lot of that — if your qualifications and salary meet the bar.",
     quickFacts: [
       { label: "Main route for non-EU", value: "EU Blue Card" },
@@ -197,6 +206,18 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
           "In 2024, the general threshold is approximately €45,300/year. For shortage occupations (including engineering, IT, healthcare, science), the threshold is lower — around €41,042/year.",
           "Your degree must be officially recognised in Germany. For most candidates from countries in the ANABIN database at the highest recognition level (H+), this is straightforward.",
         ],
+        pathway: {
+          title: "EU Blue Card pathway (high level)",
+          steps: [
+            { title: "Secure a qualifying job offer", detail: "A role that matches your degree from a German employer." },
+            { title: "Confirm degree recognition", detail: "Check ANABIN / ZAB; regulated professions need state-level recognition." },
+            { title: "Meet the salary threshold", detail: "General ~€45,300; shortage occupations ~€41,042 (2024 figures — verify)." },
+            { title: "Apply for the Blue Card", detail: "Via the German mission abroad or locally if already in Germany." },
+            { title: "Register your address (Anmeldung)", detail: "Within two weeks of arrival — needed for almost everything else." },
+            { title: "Receive your residence permit", detail: "Blue Card issued; family can join immediately." },
+          ],
+          note: "Illustrative sequence only. Confirm current thresholds and steps on the official Make it in Germany / BAMF sites.",
+        },
       },
       {
         heading: "Getting your qualifications recognised",
@@ -222,6 +243,31 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
             text: "the Blue Card doesn't require German. But outside the largest companies and tech hubs, daily working life is often in German. Many employers offer language classes — ask.",
           },
         ],
+      },
+      {
+        heading: "Germany at a glance: pros and cons",
+        paragraphs: [
+          "Every destination involves trade-offs. Weigh these against your own priorities — and read the official sources before you commit.",
+        ],
+        prosCons: {
+          pros: [
+            "EU Blue Card and skilled routes with clear, published salary thresholds.",
+            "Strong manufacturing, engineering, and IT sectors actively hiring internationally.",
+            "Excellent public transport and easy weekend travel across the Schengen Area.",
+            "Family can join immediately on the Blue Card.",
+          ],
+          cons: [
+            "Address registration (Anmeldung) and bureaucracy can cause early delays.",
+            "German is often needed for daily life and many roles outside large tech firms.",
+            "Recognition of regulated professions (medicine, law, architecture) takes time.",
+            "Housing in Munich, Berlin, and Frankfurt is competitive and expensive.",
+          ],
+        },
+        callout: {
+          title: "Candidate experience",
+          body:
+            "An Indian software engineer moved to Berlin on a Blue Card in under three months once the salary cleared the shortage-occupation threshold. The job itself was smooth; the slow part was securing an Anmeldung appointment and a long-term flat — both of which they wish they'd started before arriving.",
+        },
       },
     ],
     partnerLinks: [
@@ -263,6 +309,18 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
           "A valid job offer from a Canadian employer can add significant CRS points. Provincial Nominee Programs (PNPs) offer another route — individual provinces can nominate candidates and add points to their CRS score.",
           "The pathway from work permit to permanent residency is one of the clearest in the world — but it requires planning, patience, and often professional advice.",
         ],
+        pathway: {
+          title: "Work permit → permanent residence (high level)",
+          steps: [
+            { title: "Get a job offer (or qualify on points)", detail: "Many roles need an LMIA; some are LMIA-exempt (e.g. CUSMA, intra-company)." },
+            { title: "Obtain an LMIA where required", detail: "Employer proves no suitable Canadian was available." },
+            { title: "Apply for a work permit", detail: "Processing times vary by country and IRCC volumes." },
+            { title: "Create an Express Entry profile", detail: "Get a CRS score; a job offer or PNP can add significant points." },
+            { title: "Receive an Invitation to Apply (ITA)", detail: "Issued during draw rounds above the cut-off score." },
+            { title: "Apply for permanent residence", detail: "Submit documents; spouse may get an open work permit." },
+          ],
+          note: "Illustrative only. Routes and cut-offs change — verify on the official IRCC site.",
+        },
       },
       {
         heading: "Where international hiring is most active",
@@ -270,6 +328,31 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
           "Healthcare, technology, engineering, and skilled trades have the most active international hiring. Ontario, British Columbia, and Alberta have the highest concentration of employers using Global Sponsor Hub.",
           "Many Canadian employers list salary ranges openly — factor in provincial income tax rates, which vary significantly. Take-home pay in Alberta (no provincial income tax) differs from Quebec.",
         ],
+      },
+      {
+        heading: "Canada at a glance: pros and cons",
+        paragraphs: [
+          "Canada is one of the clearest work-to-residence stories in the world, but the employer paperwork is real. Weigh the trade-offs for your situation.",
+        ],
+        prosCons: {
+          pros: [
+            "One of the clearest pathways from work permit to permanent residence (Express Entry, PNPs).",
+            "Open work permit for your spouse in many cases.",
+            "Active hiring in healthcare, tech, engineering, and skilled trades.",
+            "Some routes are LMIA-exempt (intra-company transfers, trade agreements).",
+          ],
+          cons: [
+            "Most employer sponsorship needs an LMIA — costly and slow, so smaller firms often won't.",
+            "Processing times vary widely by province and IRCC volumes.",
+            "Provincial taxes and cost of living differ sharply (Alberta vs Quebec vs BC).",
+            "Regulated occupations require provincial licensing before you can practise.",
+          ],
+        },
+        callout: {
+          title: "Candidate experience",
+          body:
+            "A nurse from the Philippines landed a British Columbia role via a provincial stream, but the licensing and credential assessment took longer than the job offer itself. Starting the regulatory paperwork early was the single biggest time-saver.",
+        },
       },
     ],
     partnerLinks: [
@@ -303,6 +386,18 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
           "Employers must be approved sponsors before they can nominate you. Not all employers are, so ask early in the process. The employer pays the nomination fee; you pay the visa application fee.",
           "Skills assessments are required for many occupations and can take several weeks to months. Start this process before you begin applying.",
         ],
+        pathway: {
+          title: "TSS (482) → permanent residence (high level)",
+          steps: [
+            { title: "Check your occupation list", detail: "MLTSSL leads to PR; STSOL typically does not." },
+            { title: "Complete a skills assessment", detail: "Required for many occupations — can take weeks to months." },
+            { title: "Find an approved sponsor", detail: "Only approved sponsors can nominate you; employer pays the nomination fee." },
+            { title: "Apply for the TSS (subclass 482)", detail: "You pay the visa application fee; processing ~2–6 months." },
+            { title: "Work ~2 years in an MLTSSL role", detail: "Builds eligibility for employer-nominated PR." },
+            { title: "Apply for ENS (subclass 186)", detail: "Permanent residence via the Employer Nomination Scheme." },
+          ],
+          note: "Illustrative only. Occupation lists and thresholds change — verify on the official Department of Home Affairs site.",
+        },
       },
       {
         heading: "Pathway to permanent residency",
@@ -317,6 +412,31 @@ export const COUNTRY_VISA_GUIDES: CountryVisaGuide[] = [
           "Australia has a minimum salary requirement for sponsored workers (the Temporary Skilled Migration Income Threshold — TSMIT). As of 2024 this is AUD 70,000/year. Most sponsored roles pay significantly above this.",
           "Sydney and Melbourne are expensive cities — housing costs are high relative to salaries. Brisbane, Adelaide, and Perth offer similar opportunities with lower living costs.",
         ],
+      },
+      {
+        heading: "Australia at a glance: pros and cons",
+        paragraphs: [
+          "Australia pairs a structured sponsorship system with a real PR pathway — but eligibility hinges on occupation lists and skills assessments. Weigh the trade-offs.",
+        ],
+        prosCons: {
+          pros: [
+            "Structured employer sponsorship with a genuine pathway to permanent residency.",
+            "MLTSSL occupations lead to PR via the Employer Nomination Scheme after 2 years.",
+            "Regional incentives and points routes (subclass 189/190) for high scorers.",
+            "Strong demand and high salaries in many skilled fields.",
+          ],
+          cons: [
+            "Skills assessments are required for many occupations and take weeks to months.",
+            "Only approved sponsors can nominate you — not every employer qualifies.",
+            "STSOL occupations often don't lead to permanent residence.",
+            "Sydney and Melbourne housing is expensive; distance from family and climate risks matter.",
+          ],
+        },
+        callout: {
+          title: "Candidate experience",
+          body:
+            "A mechanical engineer from the UK secured a subclass 482 role in Perth in about four months. The skills assessment was the gating step — booking it before job-hunting meant the visa stage moved quickly once the offer landed.",
+        },
       },
     ],
     partnerLinks: [

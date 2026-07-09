@@ -9,8 +9,21 @@ import { stackListLeadStyle } from "@/lib/screen-layout";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { Application, ApplicationJobRef } from "@/types/models";
 
+function isClosedOrPausedJob(job: ApplicationJobRef | undefined): boolean {
+  const status = job?.status?.toLowerCase();
+  return status === "closed" || status === "de-activate";
+}
+
+function displayStatus(app: Application, job: ApplicationJobRef | undefined): string {
+  const status = job?.status?.toLowerCase();
+  if (status === "de-activate") return "Role paused";
+  if (status === "closed") return "Role closed";
+  return app.status || "Pending";
+}
+
 function statusStyle(status: string) {
   const s = status.toLowerCase();
+  if (s.includes("closed") || s.includes("paused")) return styles.badgeBad;
   if (s.includes("interview") || s.includes("offer")) return styles.badgeGood;
   if (s.includes("reject")) return styles.badgeBad;
   return styles.badgeNeutral;
@@ -76,6 +89,8 @@ export default function ApplicationsScreen() {
             renderItem={({ item }) => {
               const job = item.jobId as ApplicationJobRef | undefined;
               const jid = job?._id;
+              const visibleStatus = displayStatus(item, job);
+              const lockedByJobLifecycle = isClosedOrPausedJob(job);
               return (
                 <View style={[styles.card, feedCardStyle()]}>
                   <View style={styles.accent} />
@@ -91,17 +106,25 @@ export default function ApplicationsScreen() {
                         {job?.location ?? ""}
                         {job?.jobType ? ` · ${job.jobType}` : ""}
                       </Text>
-                      <View style={[styles.badge, statusStyle(item.status)]}>
-                        <Text style={styles.badgeText}>{item.status}</Text>
+                      <View style={[styles.badge, statusStyle(visibleStatus)]}>
+                        <Text style={styles.badgeText}>{visibleStatus}</Text>
                       </View>
                     </Pressable>
-                    <Pressable
-                      style={styles.withdraw}
-                      onPress={() => confirmWithdraw(item._id, job?.title ?? "this role")}
-                      disabled={withdraw.isPending}
-                    >
-                      <Text style={styles.withdrawText}>Withdraw application</Text>
-                    </Pressable>
+                    {lockedByJobLifecycle ? (
+                      <View style={styles.lifecycleNote}>
+                        <Text style={styles.lifecycleNoteText}>
+                          This role is no longer accepting applications.
+                        </Text>
+                      </View>
+                    ) : (
+                      <Pressable
+                        style={styles.withdraw}
+                        onPress={() => confirmWithdraw(item._id, job?.title ?? "this role")}
+                        disabled={withdraw.isPending}
+                      >
+                        <Text style={styles.withdrawText}>Withdraw application</Text>
+                      </Pressable>
+                    )}
                   </View>
                 </View>
               );
@@ -155,6 +178,8 @@ const styles = StyleSheet.create({
   badgeNeutral: { backgroundColor: colors.purpleMuted, borderWidth: 1, borderColor: colors.purpleBorder },
   withdraw: { borderTopWidth: 1, borderTopColor: colors.surfaceMuted, paddingVertical: 14, alignItems: "center" },
   withdrawText: { color: colors.error, fontFamily: fontFamily.semiBold, fontSize: 15 },
+  lifecycleNote: { borderTopWidth: 1, borderTopColor: colors.surfaceMuted, paddingVertical: 14, paddingHorizontal: 16 },
+  lifecycleNoteText: { color: colors.textMuted, fontFamily: fontFamily.medium, fontSize: 13, textAlign: "center" },
   center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
   muted: { color: colors.textMuted, fontSize: 15, fontFamily: fontFamily.medium },
   err: { color: colors.error, textAlign: "center", fontFamily: fontFamily.medium },

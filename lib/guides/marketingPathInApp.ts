@@ -25,6 +25,27 @@ export function navigateMarketingPath(router: Router, rawPath: string): void {
     return;
   }
 
+  if (path === "/tools/visa-wizard") {
+    router.push("/visa-wizard");
+    return;
+  }
+  if (path === "/tools/visa-checker") {
+    router.push("/visa-checker");
+    return;
+  }
+  if (path === "/tools/currency-converter") {
+    router.push("/currency-converter");
+    return;
+  }
+  if (path === "/tools/relocation-worksheets") {
+    router.push("/relocation-worksheets");
+    return;
+  }
+  if (path === "/compare-countries") {
+    router.push("/compare-countries");
+    return;
+  }
+
   if (path.startsWith("/jobs") || path.startsWith("/partners")) {
     navigateGuideLink(router, path);
     return;

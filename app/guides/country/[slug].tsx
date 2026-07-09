@@ -86,6 +86,45 @@ export default function CountryGuideDetailScreen() {
                   {p}
                 </Text>
               ))}
+              {sec.prosCons ? (
+                <View style={styles.prosConsGrid}>
+                  <View style={styles.prosConsCol}>
+                    <Text style={styles.panelTitle}>Pros</Text>
+                    {sec.prosCons.pros.map((item, i) => (
+                      <Text key={`${si}-pro-${i}`} style={styles.panelItem}>• {item}</Text>
+                    ))}
+                  </View>
+                  <View style={styles.prosConsCol}>
+                    <Text style={styles.panelTitle}>Watch-outs</Text>
+                    {sec.prosCons.cons.map((item, i) => (
+                      <Text key={`${si}-con-${i}`} style={styles.panelItem}>• {item}</Text>
+                    ))}
+                  </View>
+                </View>
+              ) : null}
+              {sec.pathway ? (
+                <View style={styles.pathwayBox}>
+                  {sec.pathway.title ? <Text style={styles.panelTitle}>{sec.pathway.title}</Text> : null}
+                  {sec.pathway.steps.map((step, i) => (
+                    <View key={`${si}-step-${i}`} style={styles.stepRow}>
+                      <View style={styles.stepBadge}>
+                        <Text style={styles.stepBadgeText}>{i + 1}</Text>
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.stepTitle}>{step.title}</Text>
+                        {step.detail ? <Text style={styles.stepDetail}>{step.detail}</Text> : null}
+                      </View>
+                    </View>
+                  ))}
+                  {sec.pathway.note ? <Text style={styles.pathwayNote}>{sec.pathway.note}</Text> : null}
+                </View>
+              ) : null}
+              {sec.callout ? (
+                <View style={styles.calloutBox}>
+                  <Text style={styles.calloutTitle}>{sec.callout.title}</Text>
+                  <Text style={styles.calloutBody}>{sec.callout.body}</Text>
+                </View>
+              ) : null}
             </View>
           ))}
 
@@ -218,6 +257,27 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     marginBottom: 10,
   },
+  prosConsGrid: { gap: 10, marginTop: 8 },
+  prosConsCol: { borderRadius: radii.md, backgroundColor: colors.surfaceMuted, padding: 12 },
+  panelTitle: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy, marginBottom: 8 },
+  panelItem: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 21, marginBottom: 6 },
+  pathwayBox: { marginTop: 10, borderRadius: radii.md, borderWidth: 1, borderColor: colors.border, padding: 12 },
+  stepRow: { flexDirection: "row", alignItems: "flex-start", gap: 10, marginBottom: 12 },
+  stepBadge: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.brand,
+  },
+  stepBadgeText: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.white },
+  stepTitle: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.navy },
+  stepDetail: { marginTop: 3, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 19 },
+  pathwayNote: { fontSize: 13, fontFamily: fontFamily.medium, color: colors.textSecondary, lineHeight: 19 },
+  calloutBox: { marginTop: 10, borderRadius: radii.md, backgroundColor: "rgba(14, 205, 209, 0.1)", padding: 12 },
+  calloutTitle: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy, marginBottom: 5 },
+  calloutBody: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 21 },
   linksBlock: { marginTop: 4, gap: 10 },
   linkRow: {
     flexDirection: "row",

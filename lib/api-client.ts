@@ -203,6 +203,25 @@ export async function fetchPublicExternalJobById(id: string) {
   );
 }
 
+export async function fetchPublicSponsorCompanies(params?: {
+  q?: string;
+  country?: string;
+  page?: number;
+  perPage?: number;
+}) {
+  const q = new URLSearchParams();
+  if (params?.q?.trim()) q.set("q", params.q.trim());
+  if (params?.country?.trim()) q.set("country", params.country.trim());
+  if (params?.page != null) q.set("page", String(params.page));
+  if (params?.perPage != null) q.set("perPage", String(params.perPage));
+  const qs = q.toString();
+  return apiFetchJson<import("@/types/models").SponsorCompanyListResponse>(
+    `/sponsor-companies/public${qs ? `?${qs}` : ""}`,
+    undefined,
+    { auth: false }
+  );
+}
+
 export async function recordExternalApplyClick(listingId: string) {
   return apiFetchJson<{ applyUrl?: string }>(
     `/external-job-listings/public/${encodeURIComponent(listingId)}/apply-click`,

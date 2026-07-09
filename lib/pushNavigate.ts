@@ -23,6 +23,22 @@ function navigateInternalPath(router: Router, pathname: string, search: string):
     router.push("/visa-wizard");
     return true;
   }
+  if (pathname.endsWith("/tools/visa-checker")) {
+    router.push("/visa-checker");
+    return true;
+  }
+  if (pathname.endsWith("/tools/currency-converter")) {
+    router.push("/currency-converter");
+    return true;
+  }
+  if (pathname.endsWith("/tools/relocation-worksheets")) {
+    router.push("/relocation-worksheets");
+    return true;
+  }
+  if (pathname === "/compare-countries") {
+    router.push("/compare-countries");
+    return true;
+  }
 
   if (pathname === "/guides") {
     router.push("/guides");

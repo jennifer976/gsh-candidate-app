@@ -88,6 +88,13 @@ export default function ToolsAndResourcesScreen() {
             onPress={() => router.push("/visa-wizard")}
           />
           <GshLinkRow
+            title="Company visa sponsor checker"
+            subtitle="Search sponsor-register data before applying"
+            icon="shield-checkmark-outline"
+            accent="teal"
+            onPress={() => router.push("/visa-checker")}
+          />
+          <GshLinkRow
             title="ATS match assistant"
             subtitle="Match your CV to a job description"
             icon="document-text-outline"
@@ -123,6 +130,13 @@ export default function ToolsAndResourcesScreen() {
             icon="cash-outline"
             accent="teal"
             onPress={() => router.push("/currency-converter")}
+          />
+          <GshLinkRow
+            title="Relocation worksheets"
+            subtitle="Score countries, estimate costs, and prepare negotiation questions"
+            icon="clipboard-outline"
+            accent="ocean"
+            onPress={() => router.push("/relocation-worksheets")}
           />
 
           <GshSectionTitle title="Jobs" onDark />

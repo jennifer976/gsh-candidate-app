@@ -89,6 +89,20 @@ export default function ToolsScreen() {
             onPress={() => router.push("/guides")}
           />
           <GshLinkRow
+            title="Company visa sponsor checker"
+            subtitle="Search sponsor-register data before applying"
+            icon="shield-checkmark-outline"
+            accent="teal"
+            onPress={() => router.push("/visa-checker")}
+          />
+          <GshLinkRow
+            title="Relocation worksheets"
+            subtitle="Score destinations, budget your move, and prepare questions"
+            icon="clipboard-outline"
+            accent="ocean"
+            onPress={() => router.push("/relocation-worksheets")}
+          />
+          <GshLinkRow
             title="Tools & resources"
             subtitle="Blog, news, FAQs, legal, and more"
             icon="grid-outline"

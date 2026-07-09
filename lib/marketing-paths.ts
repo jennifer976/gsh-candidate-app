@@ -4,6 +4,10 @@
  */
 export const MARKETING_PATHS = {
   visaWizard: "/tools/visa-wizard",
+  visaChecker: "/tools/visa-checker",
+  currencyConverter: "/tools/currency-converter",
+  relocationWorksheets: "/tools/relocation-worksheets",
+  compareCountries: "/compare-countries",
   curatedJobs: "/jobs/external",
   guides: "/guides",
   candidateTools: "/candidate/tools",

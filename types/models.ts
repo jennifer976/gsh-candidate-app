@@ -47,6 +47,7 @@ export interface EmployerProfile {
 export interface Job {
   _id: string;
   title: string;
+  status?: "active" | "closed" | "de-activate" | "draft" | "pending_employer_approval" | string;
   companyName?: string;
   companyLogo?: string;
   locationCountry?: string;
@@ -103,6 +104,7 @@ export interface CandidateProfile {
 export interface ApplicationJobRef {
   _id: string;
   title: string;
+  status?: "active" | "closed" | "de-activate" | "draft" | "pending_employer_approval" | string;
   companyName?: string;
   location?: string;
   jobType?: string;
@@ -186,6 +188,33 @@ export interface JobMatchesResponse {
 export interface UploadFileResponse {
   message?: string;
   url: string;
+}
+
+export interface SponsorCompany {
+  _id?: string;
+  companyName: string;
+  slug: string;
+  country?: string;
+  city?: string;
+  industry?: string;
+  website?: string;
+  sponsorStatus?: string;
+  visaRoute?: string;
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceDate?: string;
+  aliases?: string[];
+  claimedEmployerUserId?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface SponsorCompanyListResponse {
+  data: SponsorCompany[];
+  possibleMatches?: SponsorCompany[];
+  total: number;
+  page: number;
+  perPage: number;
 }
 
 // —— Dashboard & notifications (web parity) ——
