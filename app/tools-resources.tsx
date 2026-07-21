@@ -89,7 +89,7 @@ export default function ToolsAndResourcesScreen() {
           />
           <GshLinkRow
             title="Company visa sponsor checker"
-            subtitle="Search sponsor-register data before applying"
+            subtitle="Coming soon — sponsor-register lookup before applying"
             icon="shield-checkmark-outline"
             accent="teal"
             onPress={() => router.push("/visa-checker")}
