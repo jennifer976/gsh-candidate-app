@@ -39,7 +39,7 @@ export function GshTabHeroHeader({ paddingTop, tagline, children }: Props) {
             onPress={() => router.push("/(tabs)/messages")}
             style={styles.iconBtn}
             accessibilityRole="button"
-            accessibilityLabel="Messages"
+            accessibilityLabel="Chats"
           >
             <Ionicons name="chatbubble-outline" size={22} color="rgba(255,255,255,0.9)" />
           </Pressable>
@@ -62,9 +62,9 @@ const styles = StyleSheet.create({
   logo: { width: 200, height: 44, maxWidth: "72%" },
   actions: { flexDirection: "row", gap: 4 },
   iconBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: "rgba(255,255,255,0.1)",
     alignItems: "center",
     justifyContent: "center",

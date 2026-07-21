@@ -30,7 +30,7 @@ export default function ToolsScreen() {
           <GshScreenIntro
             eyebrow="Mobility & CV"
             title="Career toolkit"
-            subtitle="Sponsorship mobility tools and CV alignment — visa wizard and guides hub stay inside this app."
+            subtitle="Visa wizard and ATS match live here. Guides, directory, and reading are under Tools & resources."
             style={{ marginBottom: 12 }}
           />
 

@@ -114,7 +114,7 @@ export default function RootLayout() {
           <Stack.Screen name="currency-converter" options={{ title: "Currency converter" }} />
           <Stack.Screen name="compare-countries" options={{ title: "Compare countries" }} />
           <Stack.Screen name="contact" options={{ title: "Contact" }} />
-          <Stack.Screen name="curated-listings" options={{ title: "Curated listings" }} />
+          <Stack.Screen name="curated-listings" options={{ title: "Curated roles" }} />
           <Stack.Screen name="external-job/[id]" options={{ title: "Curated role" }} />
           <Stack.Screen name="ats-assistant" options={{ title: "ATS assistant" }} />
           <Stack.Screen name="forgot-password" options={{ title: "Forgot password", presentation: "modal" }} />

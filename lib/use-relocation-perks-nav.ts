@@ -3,7 +3,7 @@ import { fetchRelocationPerks } from "@/lib/api-client";
 
 export const RELOCATION_PERKS_QUERY_KEY = ["relocation-perks", "candidate"] as const;
 
-export const RELOCATION_PERKS_FALLBACK_TITLE = "Dashboard Perks";
+export const RELOCATION_PERKS_FALLBACK_TITLE = "Relocation perks";
 export const RELOCATION_PERKS_FALLBACK_SUBTITLE =
   "Discounts and trusted services to help you move for work.";
 

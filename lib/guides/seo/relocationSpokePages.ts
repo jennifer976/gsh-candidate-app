@@ -12,7 +12,7 @@ function bc(last: { name: string; path: string }) {
 
 const STANDARD_LAST_REVIEWED = "2026-04-30";
 const IN_APP_CORRIDOR_BLURB =
-  "**In this app:** [Ireland](/guides/country/ireland-employment-permits-job-search) · [Germany](/guides/country/germany-eu-blue-card-jobseekers) · [United Kingdom](/guides/country/uk-skilled-worker-and-sponsored-jobs). For other countries, use **Discover** with a location filter.";
+  "**In this app:** [Ireland](/guides/country/ireland-employment-permits-job-search) · [Germany](/guides/country/germany-eu-blue-card-jobseekers) · [United Kingdom](/guides/country/uk-skilled-worker-and-sponsored-jobs). For other countries, use **Jobs** with a location filter.";
 
 /** Candidate relocation & trust “spokes” under `/relocating/*` — linked from `/guides` and pillars. */
 export const RELOCATION_GUIDE_PAGES: Record<string, SeoPillarPageConfig> = {

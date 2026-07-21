@@ -252,8 +252,8 @@ export function DiscoverListingInfoModal({
           <Text style={styles.infoTitle}>How this feed works</Text>
           <Text style={styles.infoBody}>
             {feedTab === "employer"
-              ? "Employer posts are hosted on Global Sponsor Hub. Where the employer enables it, you can apply in-app with your profile and CV."
-              : "Curated listings are shared by partners and agencies. Tapping a role opens the employer’s own careers site — you apply there, outside the app."}
+              ? "All jobs are hosted on Global Sponsor Hub (direct roles and employer-connected listings). Where the employer enables it, you can apply in-app with your profile and CV."
+              : "Curated roles are found by GSH or shared by partners and agencies. Tapping a role opens the employer’s own careers site — you apply there, outside the app."}
           </Text>
           <Pressable onPress={onClose} style={styles.infoBtn} accessibilityRole="button">
             <Text style={styles.infoBtnText}>Got it</Text>

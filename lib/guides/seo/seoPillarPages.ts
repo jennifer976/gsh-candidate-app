@@ -18,9 +18,9 @@ function related(...links: SeoPillarRelatedLink[]): SeoPillarRelatedLink[] {
 
 const STANDARD_LAST_REVIEWED = "2026-04-30";
 
-/** In-app country guides + Discover for other destinations (replaces long `/jobs/country/*` web link rows). */
+/** In-app country guides + Jobs for other destinations (replaces long `/jobs/country/*` web link rows). */
 const IN_APP_CORRIDOR_BLURB =
-  "**In this app:** [Ireland](/guides/country/ireland-employment-permits-job-search) · [Germany](/guides/country/germany-eu-blue-card-jobseekers) · [United Kingdom](/guides/country/uk-skilled-worker-and-sponsored-jobs). For Canada, the US, Australia, and elsewhere, open **Discover** and filter by location.";
+  "**In this app:** [Ireland](/guides/country/ireland-employment-permits-job-search) · [Germany](/guides/country/germany-eu-blue-card-jobseekers) · [United Kingdom](/guides/country/uk-skilled-worker-and-sponsored-jobs). For Canada, the US, Australia, and elsewhere, open **Jobs** and filter by location.";
 
 /** Country comparison appendix for the international pillar */
 const INTERNATIONAL_COMPARISON: SeoPillarAppendixTable = {
@@ -339,7 +339,7 @@ export const INTERNATIONAL_JOBS_VISA_SPONSORSHIP: SeoPillarPageConfig = {
   metaDescription:
     "Plain overview to help you shortlist countries for sponsored work: what to compare, where long-form country guides live, and official government links. Not immigration advice—always confirm rules with each country’s authorities.",
   h1: "Compare countries before you pick one",
-  intro: `Not sure **which country** to aim for when you need **employer-backed visas**? This page is **orientation only** — not personal immigration advice.\n\nSkim the table below, open the **country guides** in this app, then use **Discover** with location filters. Always confirm rules on official government sites.`,
+  intro: `Not sure **which country** to aim for when you need **employer-backed visas**? This page is **orientation only** — not personal immigration advice.\n\nSkim the table below, open the **country guides** in this app, then use **Jobs** with location filters. Always confirm rules on official government sites.`,
   lastReviewed: STANDARD_LAST_REVIEWED,
   officialLinks: [
     { label: "IRCC", href: "https://www.canada.ca/en/immigration-refugees-citizenship.html" },

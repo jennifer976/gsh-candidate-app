@@ -97,7 +97,7 @@ export default function RelocationPerksScreen() {
       return (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
     });
   }, [data?.perks]);
-  const comingSoon = data?.comingSoon ?? true;
+  const comingSoon = data?.comingSoon === true;
   const screenTitle = data?.title?.trim() || RELOCATION_PERKS_FALLBACK_TITLE;
   const screenSubtitle =
     data?.subtitle?.trim() || RELOCATION_PERKS_FALLBACK_SUBTITLE;

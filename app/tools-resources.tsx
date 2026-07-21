@@ -62,10 +62,17 @@ export default function ToolsAndResourcesScreen() {
           <GshDarkFeedHeading
             pageLead
             title="Tools & resources"
-            subtitle="Visa wizard, ATS, guides, directory, and more"
+            subtitle="One place for mobility tools, guides, and help — open a tool below when you need it."
           />
 
-          <GshSectionTitle title="Key tools" topSpacing="sm" onDark />
+          <GshSectionTitle title="Mobility & career" topSpacing="sm" onDark />
+          <GshLinkRow
+            title="Career toolkit"
+            subtitle="Visa wizard, ATS match, CV tips, and profile strength"
+            icon="library-outline"
+            accent="purple"
+            onPress={() => router.push("/tools")}
+          />
           <GshLinkRow
             title="Partner directory"
             subtitle="Relocation, legal, and mobility specialists"
@@ -81,34 +88,11 @@ export default function ToolsAndResourcesScreen() {
             onPress={() => router.push("/relocation-perks")}
           />
           <GshLinkRow
-            title="Visa wizard"
-            subtitle="Sponsorship routes and next steps"
-            icon="sparkles-outline"
-            accent="teal"
-            onPress={() => router.push("/visa-wizard")}
-          />
-          <GshLinkRow
             title="Company visa sponsor checker"
             subtitle="Search sponsor-register data before applying"
             icon="shield-checkmark-outline"
             accent="teal"
             onPress={() => router.push("/visa-checker")}
-          />
-          <GshLinkRow
-            title="ATS match assistant"
-            subtitle="Match your CV to a job description"
-            icon="document-text-outline"
-            accent="teal"
-            onPress={() => router.push("/ats-assistant")}
-          />
-
-          <GshSectionTitle title="More tools" onDark />
-          <GshLinkRow
-            title="Career toolkit"
-            subtitle="CV tips and profile strength"
-            icon="library-outline"
-            accent="purple"
-            onPress={() => router.push("/tools")}
           />
           <GshLinkRow
             title="Guides hub"
@@ -141,8 +125,8 @@ export default function ToolsAndResourcesScreen() {
 
           <GshSectionTitle title="Jobs" onDark />
           <GshLinkRow
-            title="Curated listings"
-            subtitle="Agency and partner-curated roles — separate from the main employer feed"
+            title="Curated roles"
+            subtitle="Agency and partner-curated roles — separate from All jobs"
             icon="briefcase-outline"
             accent="ocean"
             onPress={() => router.push("/curated-listings")}

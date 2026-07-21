@@ -96,7 +96,7 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.teal,
-        tabBarInactiveTintColor: "rgba(255,255,255,0.4)",
+        tabBarInactiveTintColor: "rgba(255,255,255,0.55)",
         tabBarStyle: {
           backgroundColor: colors.navyDeep,
           borderTopColor: "rgba(255,255,255,0.08)",
@@ -140,7 +140,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="applications"
         options={{
-          title: "Applications",
+          title: "Applied",
           headerShown: true,
           ...darkHeader,
           tabBarLabel: "Applied",
@@ -152,7 +152,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="messages"
         options={{
-          title: "Messages",
+          title: "Chats",
           headerShown: true,
           ...darkHeader,
           tabBarLabel: "Chats",

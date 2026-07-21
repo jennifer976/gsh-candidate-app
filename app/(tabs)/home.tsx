@@ -57,11 +57,11 @@ function ApplicationsTrendChart({ rows }: { rows: DashboardChartPoint[] }) {
       </View>
       <View style={styles.legendRow}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: colors.brand }]} />
+          <View style={[styles.legendDot, { backgroundColor: colors.teal }]} />
           <Text style={styles.legendText}>Applied</Text>
         </View>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: colors.teal }]} />
+          <View style={[styles.legendDot, { backgroundColor: colors.purple }]} />
           <Text style={styles.legendText}>Interviews</Text>
         </View>
         <View style={styles.legendItem}>
@@ -84,10 +84,10 @@ function ApplicationsTrendChart({ rows }: { rows: DashboardChartPoint[] }) {
                     <View style={[styles.trendSeg, { height: hResp, backgroundColor: colors.borderStrong }]} />
                   ) : null}
                   {hInt > 0 ? (
-                    <View style={[styles.trendSeg, { height: hInt, backgroundColor: colors.teal }]} />
+                    <View style={[styles.trendSeg, { height: hInt, backgroundColor: colors.purple }]} />
                   ) : null}
                   {hApp > 0 ? (
-                    <View style={[styles.trendSeg, { height: hApp, backgroundColor: colors.brand }]} />
+                    <View style={[styles.trendSeg, { height: hApp, backgroundColor: colors.teal }]} />
                   ) : null}
                 </View>
               </View>
@@ -360,7 +360,7 @@ export default function HomeScreen() {
                 <View style={styles.activitySection}>
                   <GshDarkFeedHeading
                     inFeedGroup
-                    title="Curated picks"
+                    title="Curated roles"
                     actionLabel="See all"
                     onAction={() => router.push("/curated-listings")}
                   />

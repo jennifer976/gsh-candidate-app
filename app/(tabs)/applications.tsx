@@ -58,7 +58,7 @@ export default function ApplicationsScreen() {
 
   const listHeader = (
     <View style={styles.listHeader}>
-      <Text style={styles.listEyebrow}>Applications</Text>
+      <Text style={styles.listEyebrow}>Applied</Text>
       <Text style={styles.listSubLead}>Status updates from employers</Text>
     </View>
   );

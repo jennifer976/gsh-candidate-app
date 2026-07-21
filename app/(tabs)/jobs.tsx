@@ -291,18 +291,17 @@ export default function JobsTabScreen() {
             <Pressable onPress={() => setQ("")} hitSlop={12} accessibilityRole="button" accessibilityLabel="Clear search">
               <Ionicons name="close-circle" size={20} color="rgba(255,255,255,0.45)" />
             </Pressable>
-          ) : (
-            <Pressable
-              onPress={() => setTopicsModalOpen(true)}
-              hitSlop={8}
-              style={styles.heroFilterBtn}
-              accessibilityRole="button"
-              accessibilityLabel="Open filters"
-            >
-              <Ionicons name="options-outline" size={18} color="rgba(255,255,255,0.8)" />
-              <Text style={styles.heroFilterLabel}>Filter</Text>
-            </Pressable>
-          )}
+          ) : null}
+          <Pressable
+            onPress={() => setTopicsModalOpen(true)}
+            hitSlop={8}
+            style={styles.heroFilterBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Open filters"
+          >
+            <Ionicons name="options-outline" size={18} color="rgba(255,255,255,0.8)" />
+            <Text style={styles.heroFilterLabel}>Filter</Text>
+          </Pressable>
         </View>
       </GshTabHeroHeader>
 
@@ -316,7 +315,7 @@ export default function JobsTabScreen() {
             accessibilityState={{ selected: feedTab === "employer" }}
           >
             <Text style={[styles.segmentText, feedTab === "employer" && styles.segmentTextOn]}>
-              Employer posts
+              All jobs
             </Text>
           </Pressable>
           <Pressable
@@ -326,7 +325,7 @@ export default function JobsTabScreen() {
             accessibilityState={{ selected: feedTab === "curated" }}
           >
             <Text style={[styles.segmentText, feedTab === "curated" && styles.segmentTextOnCurated]}>
-              Curated picks
+              Curated roles
             </Text>
           </Pressable>
         </View>
@@ -372,7 +371,7 @@ export default function JobsTabScreen() {
 
       <View style={styles.listHeadingWrap}>
         <GshDarkFeedHeading
-          title={feedTab === "employer" ? "Roles for you" : "Curated picks"}
+          title={feedTab === "employer" ? "All jobs" : "Curated roles"}
           subtitle={
             feedTab === "employer"
               ? "Employer-verified sponsor listings on Global Sponsor Hub"

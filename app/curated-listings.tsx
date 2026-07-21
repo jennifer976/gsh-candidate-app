@@ -108,8 +108,8 @@ export default function CuratedListingsScreen() {
       <View style={styles.listHeadTop}>
         <GshScreenIntro
           eyebrow="Jobs"
-          title="Curated listings"
-          subtitle="Recruitment agencies and partner-curated outbound listings — separate from the main employer job feed on Discover."
+          title="Curated roles"
+          subtitle="Recruitment agencies and partner-curated outbound listings — separate from the main All jobs feed."
           style={{ marginBottom: 10 }}
         />
         <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />

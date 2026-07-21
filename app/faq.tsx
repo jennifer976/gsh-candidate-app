@@ -14,8 +14,10 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
 export default function FaqScreen() {
   const [open, setOpen] = useState<string | null>(null);
   const grouped = useMemo(() => {
+    const skip = new Set(["For Employers", "For Partners"]);
     const m = new Map<string, typeof FAQ_ITEMS>();
     for (const item of FAQ_ITEMS) {
+      if (skip.has(item.category)) continue;
       const list = m.get(item.category) ?? [];
       list.push(item);
       m.set(item.category, list);
@@ -35,7 +37,7 @@ export default function FaqScreen() {
           <GshScreenIntro
             eyebrow="Help"
             title="FAQs"
-            subtitle="Answers about Global Sponsor Hub — formatted for quick reading on mobile."
+            subtitle="Candidate help topics — sponsorship, applying, and using the app."
             style={{ marginBottom: 8 }}
           />
           {grouped.map(([category, items], idx) => (

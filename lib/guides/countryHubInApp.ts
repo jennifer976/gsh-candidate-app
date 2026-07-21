@@ -1,6 +1,6 @@
 /**
  * Maps website-style `/jobs/country/:segment` paths to in-app navigation.
- * Segments without a full guide open Discover (candidate can filter by location).
+ * Segments without a full guide open Jobs (candidate can filter by location).
  */
 export type JobsCountryHubResolution =
   | { kind: "appGuide"; slug: string }
