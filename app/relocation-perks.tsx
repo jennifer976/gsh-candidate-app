@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -24,19 +24,14 @@ import {
 } from "@/lib/use-relocation-perks-nav";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { resolveUploadAssetUrl } from "@/lib/media-url";
+import {
+  CANDIDATE_PERK_CATEGORY_ORDER,
+  candidatePerkCategoryLabel,
+  normalizePerkCategory,
+} from "@/lib/perkCategories";
 import { stackFlatListHeadWrapStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { RelocationPerkItem } from "@/types/models";
-
-const CATEGORY_LABELS: Record<string, string> = {
-  housing: "Housing",
-  moving: "Moving",
-  banking: "Banking",
-  insurance: "Insurance",
-  travel: "Travel",
-  settlement: "Settlement",
-  other: "Other",
-};
 
 function openAffiliate(url: string) {
   const href = url.startsWith("http") ? url : `https://${url}`;
@@ -55,7 +50,7 @@ function PerkCard({ item }: { item: RelocationPerkItem }) {
         <CompanyLogo companyName={item.title} logoUrl={logo || undefined} size={48} radius={radii.md} />
         <View style={styles.cardHeadText}>
           <Text style={styles.category}>
-            {CATEGORY_LABELS[item.category || ""] || item.category || "Perk"}
+            {candidatePerkCategoryLabel(item.category)}
           </Text>
           <Text style={styles.title}>{item.title}</Text>
         </View>
@@ -88,7 +83,20 @@ export default function RelocationPerksScreen() {
   });
 
   const data = query.data;
-  const perks = data?.perks ?? [];
+  const perks = useMemo(() => {
+    const list = data?.perks ?? [];
+    const orderIndex = new Map(
+      CANDIDATE_PERK_CATEGORY_ORDER.map((key, i) => [key, i])
+    );
+    return [...list].sort((a, b) => {
+      const aKey = normalizePerkCategory(a.category);
+      const bKey = normalizePerkCategory(b.category);
+      const aOrder = orderIndex.get(aKey as (typeof CANDIDATE_PERK_CATEGORY_ORDER)[number]) ?? 99;
+      const bOrder = orderIndex.get(bKey as (typeof CANDIDATE_PERK_CATEGORY_ORDER)[number]) ?? 99;
+      if (aOrder !== bOrder) return aOrder - bOrder;
+      return (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+    });
+  }, [data?.perks]);
   const comingSoon = data?.comingSoon ?? true;
   const screenTitle = data?.title?.trim() || RELOCATION_PERKS_FALLBACK_TITLE;
   const screenSubtitle =
@@ -108,7 +116,7 @@ export default function RelocationPerksScreen() {
           </View>
           <Text style={styles.soonTitle}>Coming soon</Text>
           <Text style={styles.soonBody}>
-            We are finalising affiliate partnerships for housing, moving, banking, and more.
+            We are finalising affiliate partnerships for travel, banking, moving, wellbeing, and more.
             Offers will appear here when they go live.
           </Text>
         </View>
