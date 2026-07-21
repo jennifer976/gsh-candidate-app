@@ -18,33 +18,33 @@ const LEGACY_CATEGORY_MAP: Record<string, string> = {
   other: "business_services",
 };
 
-/** Candidate-facing labels (mover language). */
-const CANDIDATE_CATEGORY_LABELS: Record<string, string> = {
+/** Shared plain-language labels (same as web FE for all users). */
+const CATEGORY_LABELS: Record<string, string> = {
+  global_mobility: "Moving & settling",
   travel_accommodation: "Travel & stay",
   finance_payments: "Money & banking",
-  global_mobility: "Moving & settling",
-  wellbeing_benefits: "Wellbeing",
-  communication_collaboration: "Stay connected",
+  wellbeing_benefits: "Insurance & wellbeing",
+  communication_collaboration: "Phones & internet",
   learning_development: "Learning",
   hr_recruitment: "Hiring & careers",
-  business_services: "Business help",
   operations: "Work tools",
-  security_compliance: "Security & compliance",
-  marketing_sales: "Marketing & sales",
+  business_services: "Other services",
+  security_compliance: "Security",
+  marketing_sales: "Marketing",
   ai_automation: "AI tools",
 };
 
-/** Candidate browse order — mover needs first. */
+/** Main browse order, then secondary/legacy. */
 export const CANDIDATE_PERK_CATEGORY_ORDER = [
+  "global_mobility",
   "travel_accommodation",
   "finance_payments",
-  "global_mobility",
   "wellbeing_benefits",
   "communication_collaboration",
   "learning_development",
   "hr_recruitment",
-  "business_services",
   "operations",
+  "business_services",
   "security_compliance",
   "marketing_sales",
   "ai_automation",
@@ -53,11 +53,11 @@ export const CANDIDATE_PERK_CATEGORY_ORDER = [
 export function normalizePerkCategory(value?: string | null): string {
   const raw = String(value || "").trim();
   if (!raw) return "global_mobility";
-  if (CANDIDATE_CATEGORY_LABELS[raw]) return raw;
+  if (CATEGORY_LABELS[raw]) return raw;
   return LEGACY_CATEGORY_MAP[raw] || raw;
 }
 
 export function candidatePerkCategoryLabel(value?: string | null): string {
   const key = normalizePerkCategory(value);
-  return CANDIDATE_CATEGORY_LABELS[key] || key.replace(/_/g, " ") || "Perk";
+  return CATEGORY_LABELS[key] || key.replace(/_/g, " ") || "Perk";
 }
