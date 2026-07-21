@@ -20,7 +20,7 @@ export default function VisaCheckerScreen() {
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <GshScreenIntro
             eyebrow="Tools"
-            title="Company visa sponsor checker"
+            title="Company sponsor checker"
             subtitle="Coming soon — sponsor-register lookup before you apply."
             style={{ marginBottom: 10 }}
           />

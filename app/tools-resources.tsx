@@ -88,7 +88,7 @@ export default function ToolsAndResourcesScreen() {
             onPress={() => router.push("/relocation-perks")}
           />
           <GshLinkRow
-            title="Company visa sponsor checker"
+            title="Company sponsor checker"
             subtitle="Coming soon — sponsor-register lookup before applying"
             icon="shield-checkmark-outline"
             accent="teal"

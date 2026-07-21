@@ -104,7 +104,7 @@ export default function RootLayout() {
           <Stack.Screen name="learn" options={{ title: "Guides & resources", headerShown: false }} />
           <Stack.Screen name="guides" options={{ headerShown: false }} />
           <Stack.Screen name="visa-wizard" options={{ title: "Visa wizard" }} />
-          <Stack.Screen name="visa-checker" options={{ title: "Visa checker" }} />
+          <Stack.Screen name="visa-checker" options={{ title: "Sponsor checker" }} />
           <Stack.Screen name="relocation-worksheets" options={{ title: "Relocation worksheets" }} />
           <Stack.Screen name="legal" options={{ headerShown: false }} />
           <Stack.Screen name="blog" options={{ headerShown: false }} />
