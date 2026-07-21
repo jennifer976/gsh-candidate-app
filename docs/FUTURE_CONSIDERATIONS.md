@@ -74,14 +74,14 @@ Items discussed or partially shipped; confirm in production after **EAS build** 
 | Curated/external cards: summary, chips, featured, age | Shipped — dashboard curated fields need **API deploy** |
 | Expert Insights entry on Home “Key tools” | Shipped — content still Supabase-driven |
 | Forgot password OTP → reset screen | Shipped |
-| Grow Your Network entry point | **Next app release:** add a Tools & resources / More link that opens `/grow-your-network` in the in-app browser so users can return to the app. Consider native directory later if usage is strong. |
+| Grow Your Network entry point | Tracked in **`docs/ADD_TO_APP_NEXT_RELEASE.md`** (web Coming soon; app handoff next release). |
 
 **Still worth a pass:**
 
+- **Add to app next release:** always check `docs/ADD_TO_APP_NEXT_RELEASE.md` before an EAS/Play build.
 - **Expert Insights** on Home: optional dedicated section (not only tools link) when catalogue grows.
 - **Push notifications** for applications/messages — wiring vs permission UX.
 - **Deep links** from marketing email → correct app routes (`lib/pushNavigate.ts` maintenance).
-- **Grow Your Network**: first app step should be in-app browser handoff, not external browser; native screen only after usage proves value.
 - **Offline / poor network** messaging on job feed and apply flows.
 - **Accessibility:** VoiceOver order on job cards, filter sheet, tab bar.
 
