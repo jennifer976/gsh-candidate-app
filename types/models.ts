@@ -217,6 +217,11 @@ export interface SponsorCompanyListResponse {
   perPage: number;
 }
 
+export interface SponsorCompanyDetailResponse {
+  company: SponsorCompany;
+  relatedCompanies?: SponsorCompany[];
+}
+
 // —— Dashboard & notifications (web parity) ——
 
 export interface DashboardChartPoint {
@@ -327,6 +332,14 @@ export interface PartnerListItem {
   category: string;
   tier: string;
   location?: string;
+  industry?: string;
+  companySize?: string;
+  foundedYear?: number;
+  jobFunctions?: string[];
+  expertiseIndustries?: string[];
+  bio?: string;
+  directoryCtaUrl?: string;
+  directoryCtaLabel?: string;
 }
 
 export interface PartnersListResponse {
@@ -334,6 +347,32 @@ export interface PartnersListResponse {
   total: number;
   page: number;
   perPage: number;
+}
+
+export interface PartnerDetailResponse {
+  data: PartnerListItem;
+}
+
+export type TrackedApplicationStage =
+  | "interested"
+  | "applied"
+  | "screen"
+  | "interview"
+  | "offer"
+  | "closed";
+
+export interface CandidateTrackedApplication {
+  _id: string;
+  companyName: string;
+  roleTitle: string;
+  destination?: string;
+  roleUrl?: string;
+  stage: TrackedApplicationStage;
+  sponsorshipSignal?: "yes" | "no" | "case-by-case" | "unclear";
+  relocationSignal?: "yes" | "no" | "case-by-case" | "unclear";
+  notes?: string;
+  followUpAt?: string | null;
+  updatedAt?: string;
 }
 
 export interface CandidateOfferItem {

@@ -88,11 +88,11 @@ export default function ToolsAndResourcesScreen() {
             onPress={() => router.push("/relocation-perks")}
           />
           <GshLinkRow
-            title="Company sponsor checker"
-            subtitle="Coming soon — sponsor-register lookup before applying"
+            title="Company directory"
+            subtitle="Search public sponsor-register records before applying"
             icon="shield-checkmark-outline"
             accent="teal"
-            onPress={() => router.push("/visa-checker")}
+            onPress={() => router.push("/companies")}
           />
           <GshLinkRow
             title="Guides hub"
@@ -133,6 +133,13 @@ export default function ToolsAndResourcesScreen() {
           />
 
           <GshSectionTitle title="Reading & help" onDark />
+          <GshLinkRow
+            title="Practical resource hub"
+            subtitle="Checklists, templates, and your application tracker"
+            icon="document-text-outline"
+            accent="teal"
+            onPress={() => router.push("/resources")}
+          />
           <GshLinkRow
             title="Legal & policies"
             subtitle="Privacy, terms, cookies, and acceptable use"

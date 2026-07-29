@@ -75,7 +75,7 @@ export default function ExpertContributorScreen() {
               subtitle="Contributor pages appear here when Expert Insights goes live."
               style={{ marginBottom: 10 }}
             />
-            <ContentComingSoonCard feature="expert-insights" />
+            <ContentComingSoonCard feature="expert-insights" state="not-configured" />
             <GshOutlineButton title="Back to Expert Insights" onPress={() => router.push("/expert-insights")} style={{ marginTop: 14 }} />
           </ScrollView>
         </SafeAreaView>

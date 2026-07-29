@@ -20,6 +20,7 @@ module.exports = () => ({
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.globalsponsorhub.candidate",
+      associatedDomains: ["applinks:www.globalsponsorhub.com", "applinks:globalsponsorhub.com"],
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
         UIBackgroundModes: ["remote-notification"],
@@ -27,6 +28,17 @@ module.exports = () => ({
     },
     android: {
       package: "global.sponsor.hub",
+      intentFilters: [
+        {
+          action: "VIEW",
+          autoVerify: true,
+          data: [
+            { scheme: "https", host: "www.globalsponsorhub.com", pathPrefix: "/" },
+            { scheme: "https", host: "globalsponsorhub.com", pathPrefix: "/" },
+          ],
+          category: ["BROWSABLE", "DEFAULT"],
+        },
+      ],
       adaptiveIcon: {
         foregroundImage: "./assets/brand-icon.png",
         backgroundColor: "#080f2e",

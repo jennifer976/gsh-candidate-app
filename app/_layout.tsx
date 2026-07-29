@@ -97,6 +97,12 @@ export default function RootLayout() {
           <Stack.Screen name="feedback" options={{ title: "Feedback" }} />
           <Stack.Screen name="settings" options={{ title: "Settings" }} />
           <Stack.Screen name="partners" options={{ title: "Partners" }} />
+          <Stack.Screen name="partner/[id]" options={{ title: "Partner profile" }} />
+          <Stack.Screen name="companies" options={{ title: "Company directory" }} />
+          <Stack.Screen name="company/[slug]" options={{ title: "Company details" }} />
+          <Stack.Screen name="resources" options={{ title: "Practical resources" }} />
+          <Stack.Screen name="application-tracker" options={{ title: "Application tracker" }} />
+          <Stack.Screen name="web-fallback" options={{ headerShown: false }} />
           <Stack.Screen name="offers" options={{ title: "Offers" }} />
           <Stack.Screen name="relocation-perks" options={{ title: "" }} />
           <Stack.Screen name="tools" options={{ title: "Career toolkit" }} />

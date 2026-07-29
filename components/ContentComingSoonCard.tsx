@@ -12,14 +12,25 @@ const FEATURE_BODY: Record<ContentFeatureId, string> = {
 };
 
 /** User-facing placeholder while Supabase content is not wired or the catalogue is empty. */
-export function ContentComingSoonCard({ feature }: { feature: ContentFeatureId }) {
+export function ContentComingSoonCard({
+  feature,
+  state = "empty",
+}: {
+  feature: ContentFeatureId;
+  state?: "empty" | "not-configured";
+}) {
+  const notConfigured = state === "not-configured";
   return (
     <View style={[styles.card, cardSurfaceStyle(true)]}>
       <View style={styles.iconWrap}>
         <Ionicons name="sparkles" size={28} color={colors.brand} />
       </View>
-      <Text style={styles.eyebrow}>Coming soon</Text>
-      <Text style={styles.body}>{FEATURE_BODY[feature]}</Text>
+      <Text style={styles.eyebrow}>{notConfigured ? "Content unavailable" : "Coming soon"}</Text>
+      <Text style={styles.body}>
+        {notConfigured
+          ? "This build is missing its Supabase content configuration. Published content may exist; install a correctly configured build or contact support."
+          : FEATURE_BODY[feature]}
+      </Text>
     </View>
   );
 }

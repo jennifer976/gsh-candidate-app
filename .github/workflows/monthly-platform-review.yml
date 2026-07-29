@@ -1,0 +1,64 @@
+name: Monthly platform review
+
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-monthly-platform-review
+  cancel-in-progress: false
+
+jobs:
+  cadence-gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run_review: ${{ steps.gate.outputs.run_review }}
+    steps:
+      - id: gate
+        name: Start with the September 2026 review
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]] || \
+             [[ "$(date -u +%s)" -ge "$(date -u -d '2026-09-01T00:00:00Z' +%s)" ]]; then
+            echo "run_review=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_review=false" >> "$GITHUB_OUTPUT"
+            echo "Scheduled monthly checks begin 1 September 2026."
+          fi
+
+  release-parity:
+    needs: cadence-gate
+    if: needs.cadence-gate.outputs.run_review == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Prepare evidence directory
+        run: mkdir -p reports/monthly
+
+      - name: Candidate release parity and typecheck
+        shell: bash
+        run: set -o pipefail; npm run test:release-parity 2>&1 | tee reports/monthly/release-parity.log
+
+      - name: Upload monthly evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-app-monthly-review-${{ github.run_number }}
+          path: reports/monthly
+          if-no-files-found: warn
+          retention-days: 90

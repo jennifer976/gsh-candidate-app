@@ -222,6 +222,14 @@ export async function fetchPublicSponsorCompanies(params?: {
   );
 }
 
+export async function fetchPublicSponsorCompanyBySlug(slug: string) {
+  return apiFetchJson<import("@/types/models").SponsorCompanyDetailResponse>(
+    `/sponsor-companies/public/${encodeURIComponent(slug)}`,
+    undefined,
+    { auth: false }
+  );
+}
+
 export async function recordExternalApplyClick(listingId: string) {
   return apiFetchJson<{ applyUrl?: string }>(
     `/external-job-listings/public/${encodeURIComponent(listingId)}/apply-click`,
@@ -520,6 +528,51 @@ export async function fetchPartners(params?: Record<string, string | number | un
     `/partners/directory${qs ? `?${qs}` : ""}`,
     undefined,
     { auth: false }
+  );
+}
+
+export async function fetchPartnerById(id: string) {
+  return apiFetchJson<import("@/types/models").PartnerDetailResponse>(
+    `/partners/directory/${encodeURIComponent(id)}`,
+    undefined,
+    { auth: false }
+  );
+}
+
+// —— Candidate practical resources & application tracker ——
+
+export async function fetchTrackedApplications() {
+  return apiFetchJson<{ data: import("@/types/models").CandidateTrackedApplication[] }>(
+    "/candidate-tools/tracked-applications"
+  );
+}
+
+export async function createTrackedApplication(body: {
+  companyName: string;
+  roleTitle: string;
+  destination?: string;
+  stage?: import("@/types/models").TrackedApplicationStage;
+}) {
+  return apiFetchJson<import("@/types/models").CandidateTrackedApplication>(
+    "/candidate-tools/tracked-applications",
+    { method: "POST", body: JSON.stringify(body) }
+  );
+}
+
+export async function patchTrackedApplication(
+  id: string,
+  body: Partial<import("@/types/models").CandidateTrackedApplication>
+) {
+  return apiFetchJson<import("@/types/models").CandidateTrackedApplication>(
+    `/candidate-tools/tracked-applications/${encodeURIComponent(id)}`,
+    { method: "PATCH", body: JSON.stringify(body) }
+  );
+}
+
+export async function deleteTrackedApplication(id: string) {
+  return apiFetchJson<{ message: string }>(
+    `/candidate-tools/tracked-applications/${encodeURIComponent(id)}`,
+    { method: "DELETE" }
   );
 }
 

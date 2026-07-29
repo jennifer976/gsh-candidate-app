@@ -44,7 +44,7 @@ export default function BlogArticleScreen() {
           <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
             <ScrollView contentContainerStyle={styles.pad}>
               <GshScreenIntro eyebrow="Blog" title="Article" subtitle="In-app reading when articles are live." style={{ marginBottom: 10 }} />
-              <ContentComingSoonCard feature="blog" />
+              <ContentComingSoonCard feature="blog" state="not-configured" />
               <GshOutlineButton title="Back to blog" onPress={() => router.push("/blog")} style={{ marginTop: 14 }} />
             </ScrollView>
           </SafeAreaView>

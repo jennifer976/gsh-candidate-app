@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -23,6 +24,7 @@ import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { PartnerListItem } from "@/types/models";
 
 export default function PartnersScreen() {
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [debounced, setDebounced] = useState("");
 
@@ -98,7 +100,13 @@ export default function PartnersScreen() {
             contentContainerStyle={[styles.listPad, rows.length === 0 && styles.listPadEmpty]}
             ListHeaderComponent={header}
             renderItem={({ item }) => (
-              <View style={[cardSurfaceStyle(false), styles.card]}>
+              <Pressable
+                style={[cardSurfaceStyle(false), styles.card]}
+                onPress={() => item._id && router.push(`/partner/${item._id}`)}
+                disabled={!item._id}
+                accessibilityRole="button"
+                accessibilityLabel={`View ${item.businessName}`}
+              >
                 <View style={styles.cardTop}>
                   <CompanyLogo
                     logoUrl={resolvePartnerListLogo(item)}
@@ -131,7 +139,8 @@ export default function PartnersScreen() {
                     <Text style={styles.link}>Company site</Text>
                   </Pressable>
                 ) : null}
-              </View>
+                {item._id ? <Text style={styles.link}>View partner profile</Text> : null}
+              </Pressable>
             )}
             ListEmptyComponent={
               <View style={[styles.emptyCard, cardSurfaceStyle(false)]}>

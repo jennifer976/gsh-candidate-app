@@ -51,7 +51,10 @@ export default function BlogIndexScreen() {
               style={{ marginBottom: 10 }}
             />
             <GshContentAccentBar />
-            <ContentComingSoonCard feature="blog" />
+            <ContentComingSoonCard
+              feature="blog"
+              state={q.isError && isSupabaseNotConfigured(q.error) ? "not-configured" : "empty"}
+            />
             <GshOutlineButton title="Open guides" onPress={() => router.push("/guides")} style={{ marginTop: 14 }} />
             <GshOutlineButton title="Tools & resources" onPress={() => router.push("/tools-resources")} style={{ marginTop: 10 }} />
           </ScrollView>

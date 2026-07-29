@@ -26,25 +26,46 @@ import { fetchOwnProfile, updateProfile, uploadFileFromUri } from "@/lib/api-cli
 import { presentApiError } from "@/lib/api-error";
 import { useAuthStore } from "@/lib/auth-store";
 import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
+import { getCandidateCompletionBreakdown } from "@/lib/profile-completion";
 import { getAllSkillsSorted } from "@/lib/skills-data";
 import { useRelocationPerksNav } from "@/lib/use-relocation-perks-nav";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
 const ALL_SKILLS = getAllSkillsSorted();
 const MAX_SKILLS = 30;
+const SPONSORSHIP_OPTIONS = [
+  "Requires sponsorship",
+  "No sponsorship required",
+  "Already sponsored",
+  "Open to relocation support",
+] as const;
+const NOTICE_OPTIONS = [
+  "Immediately available",
+  "1-2 weeks",
+  "1 month",
+  "2 months",
+  "3 months",
+  "More than 3 months",
+] as const;
+const SEARCH_INTENT_OPTIONS = [
+  "Actively applying now",
+  "Open to the right role",
+  "Exploring relocation options",
+  "Not actively looking",
+] as const;
+const RELOCATION_OPTIONS = [
+  "Ready to relocate",
+  "Can relocate with employer support",
+  "Remote-first only",
+  "Exploring options",
+  "Not willing to relocate",
+] as const;
 
 function mergeCandidateExtras(profile: Record<string, unknown> | undefined, userEmail: string | undefined, body: Record<string, unknown>) {
   const p = profile ?? {};
   const existingEmail = typeof p.email === "string" ? p.email.trim() : "";
   if (!existingEmail) { const em = userEmail?.trim(); if (em) body.email = em; }
-  if (!((typeof p.currentJobTitle === "string") ? p.currentJobTitle.trim() : "")) body.currentJobTitle = "Not specified";
   if (!((typeof p.currentCompany === "string") ? p.currentCompany.trim() : "")) body.currentCompany = "Not specified";
-  const yoe = p.yearsOfExperience;
-  if (typeof yoe !== "number" || yoe < 0) body.yearsOfExperience = 0;
-  const ie = p.industryExperience as { primary?: string; secondary?: string[] } | undefined;
-  if (!ie?.primary?.trim()) {
-    body.industryExperience = { primary: "General", secondary: Array.isArray(ie?.secondary) ? ie.secondary.filter(Boolean).slice(0, 2) : [] };
-  }
 }
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
@@ -61,6 +82,36 @@ function FieldLabel({ label, hint }: { label: string; hint?: string }) {
     <View style={styles.fieldLabelWrap}>
       <Text style={styles.fieldLabel}>{label}</Text>
       {hint ? <Text style={styles.fieldHint}>{hint}</Text> : null}
+    </View>
+  );
+}
+
+function ChoiceChips({
+  options,
+  value,
+  onChange,
+}: {
+  options: readonly string[];
+  value: string;
+  onChange: (next: string) => void;
+}) {
+  return (
+    <View style={[styles.chipGrid, styles.choiceChipGrid]}>
+      {options.map((option) => {
+        const selected = value === option;
+        return (
+          <Pressable
+            key={option}
+            onPress={() => onChange(option)}
+            style={[styles.prefChip, selected && styles.prefChipOn]}
+            accessibilityRole="radio"
+            accessibilityState={{ checked: selected }}
+          >
+            {selected ? <Ionicons name="checkmark" size={13} color={colors.white} style={{ marginRight: 4 }} /> : null}
+            <Text style={[styles.prefChipText, selected && styles.prefChipTextOn]}>{option}</Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
@@ -113,6 +164,20 @@ export default function ProfileScreen() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [location, setLocation] = useState("");
   const [linkedin, setLinkedin] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [currentJobTitle, setCurrentJobTitle] = useState("");
+  const [yearsOfExperience, setYearsOfExperience] = useState("");
+  const [primaryIndustry, setPrimaryIndustry] = useState("");
+  const [sponsorshipStatus, setSponsorshipStatus] = useState("");
+  const [noticePeriod, setNoticePeriod] = useState("");
+  const [jobSearchIntent, setJobSearchIntent] = useState("");
+  const [relocationReadiness, setRelocationReadiness] = useState("");
+  const [targetCountries, setTargetCountries] = useState("");
+  const [careerSummary, setCareerSummary] = useState("");
+  const [workTitle, setWorkTitle] = useState("");
+  const [workCompany, setWorkCompany] = useState("");
+  const [educationDegree, setEducationDegree] = useState("");
+  const [educationSchool, setEducationSchool] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
   const [jobPreferences, setJobPreferences] = useState<string[]>([]);
   const [skillModalOpen, setSkillModalOpen] = useState(false);
@@ -126,6 +191,29 @@ export default function ProfileScreen() {
     setPhoneNumber(typeof p.phoneNumber === "string" ? p.phoneNumber : "");
     setLocation(typeof p.location === "string" ? p.location : "");
     setLinkedin(typeof p.linkedin_profile === "string" ? p.linkedin_profile : "");
+    setNationality(typeof p.nationality === "string" ? p.nationality : "");
+    setCurrentJobTitle(typeof p.currentJobTitle === "string" ? p.currentJobTitle : "");
+    setYearsOfExperience(typeof p.yearsOfExperience === "number" ? String(p.yearsOfExperience) : "");
+    const industry = p.industryExperience as { primary?: unknown } | undefined;
+    setPrimaryIndustry(typeof industry?.primary === "string" ? industry.primary : "");
+    setSponsorshipStatus(typeof p.sponsorshipStatus === "string" ? p.sponsorshipStatus : "");
+    setNoticePeriod(typeof p.noticePeriod === "string" ? p.noticePeriod : "");
+    setJobSearchIntent(typeof p.jobSearchIntent === "string" ? p.jobSearchIntent : "");
+    setRelocationReadiness(typeof p.relocationReadiness === "string" ? p.relocationReadiness : "");
+    setTargetCountries(
+      Array.isArray(p.targetCountries)
+        ? (p.targetCountries as unknown[]).filter((value): value is string => typeof value === "string").join(", ")
+        : ""
+    );
+    setCareerSummary(typeof p.careerSummary === "string" ? p.careerSummary : "");
+    const firstWork = Array.isArray(p.workHistory) ? p.workHistory[0] as Record<string, unknown> | undefined : undefined;
+    setWorkTitle(typeof firstWork?.title === "string" ? firstWork.title : "");
+    setWorkCompany(typeof firstWork?.company === "string" ? firstWork.company : "");
+    const firstEducation = Array.isArray(p.educationHistory)
+      ? p.educationHistory[0] as Record<string, unknown> | undefined
+      : undefined;
+    setEducationDegree(typeof firstEducation?.degree === "string" ? firstEducation.degree : "");
+    setEducationSchool(typeof firstEducation?.school === "string" ? firstEducation.school : "");
     setSkills(Array.isArray(p.skills) ? (p.skills as unknown[]).filter((x): x is string => typeof x === "string") : []);
     setJobPreferences(Array.isArray(p.jobPreferences) ? (p.jobPreferences as unknown[]).filter((x): x is string => typeof x === "string") : []);
   }, [profileQuery.data]);
@@ -145,11 +233,64 @@ export default function ProfileScreen() {
     mutationFn: () => {
       if (skills.length === 0) return Promise.reject(new Error("Select at least one skill."));
       if (jobPreferences.length === 0) return Promise.reject(new Error("Select at least one job preference."));
-      const body: Record<string, unknown> = { firstName: firstName.trim(), lastName: lastName.trim(), phoneNumber: phoneNumber.trim(), location: location.trim(), linkedin_profile: linkedin.trim(), skills, jobPreferences };
+      if ((workTitle.trim() && !workCompany.trim()) || (!workTitle.trim() && workCompany.trim())) {
+        return Promise.reject(new Error("Add both a role title and company for work experience."));
+      }
+      if ((educationDegree.trim() && !educationSchool.trim()) || (!educationDegree.trim() && educationSchool.trim())) {
+        return Promise.reject(new Error("Add both a qualification and institution."));
+      }
+
+      const profile = profileQuery.data ?? {};
+      const existingIndustry = profile.industryExperience as { secondary?: unknown } | undefined;
+      const existingWorkHistory = Array.isArray(profile.workHistory) ? profile.workHistory : [];
+      const existingEducationHistory = Array.isArray(profile.educationHistory) ? profile.educationHistory : [];
+      const parsedYears = yearsOfExperience.trim() === "" ? undefined : Number(yearsOfExperience);
+      if (parsedYears !== undefined && (!Number.isFinite(parsedYears) || parsedYears < 0 || parsedYears > 50)) {
+        return Promise.reject(new Error("Years of experience must be between 0 and 50."));
+      }
+
+      const body: Record<string, unknown> = {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        phoneNumber: phoneNumber.trim(),
+        location: location.trim(),
+        linkedin_profile: linkedin.trim(),
+        nationality: nationality.trim(),
+        currentJobTitle: currentJobTitle.trim(),
+        ...(parsedYears !== undefined ? { yearsOfExperience: parsedYears } : {}),
+        industryExperience: {
+          primary: primaryIndustry.trim(),
+          secondary: Array.isArray(existingIndustry?.secondary)
+            ? existingIndustry.secondary.filter((value): value is string => typeof value === "string").slice(0, 2)
+            : [],
+        },
+        sponsorshipStatus,
+        noticePeriod,
+        jobSearchIntent,
+        relocationReadiness,
+        targetCountries: targetCountries.split(",").map((country) => country.trim()).filter(Boolean).slice(0, 12),
+        careerSummary: careerSummary.trim(),
+        workHistory:
+          workTitle.trim() && workCompany.trim()
+            ? [{ ...(existingWorkHistory[0] as Record<string, unknown> | undefined), title: workTitle.trim(), company: workCompany.trim() }, ...existingWorkHistory.slice(1)]
+            : existingWorkHistory,
+        educationHistory:
+          educationDegree.trim() && educationSchool.trim()
+            ? [{ ...(existingEducationHistory[0] as Record<string, unknown> | undefined), degree: educationDegree.trim(), school: educationSchool.trim() }, ...existingEducationHistory.slice(1)]
+            : existingEducationHistory,
+        skills,
+        jobPreferences,
+      };
       mergeCandidateExtras(profileQuery.data, user?.email, body);
       return updateProfile(body);
     },
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: ["profile", "me"] }); Alert.alert("Profile saved", "Your changes are live."); },
+    onSuccess: () => {
+      void Promise.all([
+        qc.invalidateQueries({ queryKey: ["profile", "me"] }),
+        qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] }),
+      ]);
+      Alert.alert("Profile saved", "Your completion score and profile details are now up to date.");
+    },
     onError: (e: unknown) => Alert.alert("Could not save", e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Try again."),
   });
 
@@ -162,13 +303,19 @@ export default function ProfileScreen() {
       await updateProfile({ resume: up.url });
       return up.url;
     },
-    onSuccess: () => void qc.invalidateQueries({ queryKey: ["profile", "me"] }),
+    onSuccess: () => {
+      void Promise.all([
+        qc.invalidateQueries({ queryKey: ["profile", "me"] }),
+        qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] }),
+      ]);
+    },
     onError: (e: unknown) => { const msg = e instanceof Error && e.message === "cancel" ? null : String(e && typeof e === "object" && "message" in e ? (e as { message: string }).message : "Upload failed"); if (msg) Alert.alert("Upload failed", msg); },
   });
 
   const p = profileQuery.data;
   const profileErrCopy = profileQuery.isError ? presentApiError(profileQuery.error) : null;
   const completion = typeof p?.profileCompletion === "number" ? p.profileCompletion : null;
+  const completionBreakdown = getCandidateCompletionBreakdown(p);
   const resumeUrl = typeof p?.resume === "string" ? p.resume : "";
   const displayName = [firstName, lastName].filter(Boolean).join(" ") || user?.email || "Your profile";
   const initials = [firstName.charAt(0), lastName.charAt(0)].filter(Boolean).join("").toUpperCase() || "?";
@@ -275,6 +422,22 @@ export default function ProfileScreen() {
             </View>
           ) : null}
 
+          {completionBreakdown.missing.length > 0 ? (
+            <SectionCard title="Required to reach 100%">
+              <Text style={styles.completionHelp}>
+                Optional details such as a photo, LinkedIn profile, portfolio, salary expectations and languages do not affect completion.
+              </Text>
+              <View style={styles.missingList}>
+                {completionBreakdown.missing.map((item) => (
+                  <View key={item.path} style={styles.missingRow}>
+                    <View style={styles.missingDot} />
+                    <Text style={styles.missingText}>{item.label}</Text>
+                  </View>
+                ))}
+              </View>
+            </SectionCard>
+          ) : null}
+
           <View
             style={styles.formBlock}
             onLayout={(e) => {
@@ -289,7 +452,63 @@ export default function ProfileScreen() {
             <FieldLabel label="Phone" />
             <TextInput style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} placeholder="Phone number" placeholderTextColor={colors.placeholder} keyboardType="phone-pad" />
             <FieldLabel label="Location" />
-            <TextInput style={[styles.input, { marginBottom: 0 }]} value={location} onChangeText={setLocation} placeholder="City / country" placeholderTextColor={colors.placeholder} />
+            <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder="City / country" placeholderTextColor={colors.placeholder} />
+            <FieldLabel label="Nationality / citizenship" hint="Used to understand relevant mobility routes" />
+            <TextInput style={[styles.input, { marginBottom: 0 }]} value={nationality} onChangeText={setNationality} placeholder="e.g. Nigerian, French" placeholderTextColor={colors.placeholder} />
+          </SectionCard>
+
+          <SectionCard title="Professional details">
+            <FieldLabel label="Current or most recent role" />
+            <TextInput style={styles.input} value={currentJobTitle} onChangeText={setCurrentJobTitle} placeholder="e.g. Senior Software Engineer" placeholderTextColor={colors.placeholder} />
+            <FieldLabel label="Years of experience" />
+            <TextInput
+              style={styles.input}
+              value={yearsOfExperience}
+              onChangeText={setYearsOfExperience}
+              placeholder="0"
+              placeholderTextColor={colors.placeholder}
+              keyboardType="number-pad"
+            />
+            <FieldLabel label="Primary industry" />
+            <TextInput style={[styles.input, { marginBottom: 0 }]} value={primaryIndustry} onChangeText={setPrimaryIndustry} placeholder="e.g. Technology, Healthcare" placeholderTextColor={colors.placeholder} />
+          </SectionCard>
+
+          <SectionCard title="Mobility readiness">
+            <FieldLabel label="Sponsorship status" />
+            <ChoiceChips options={SPONSORSHIP_OPTIONS} value={sponsorshipStatus} onChange={setSponsorshipStatus} />
+            <FieldLabel label="Notice period" />
+            <ChoiceChips options={NOTICE_OPTIONS} value={noticePeriod} onChange={setNoticePeriod} />
+            <FieldLabel label="Job-search intent" />
+            <ChoiceChips options={SEARCH_INTENT_OPTIONS} value={jobSearchIntent} onChange={setJobSearchIntent} />
+            <FieldLabel label="Relocation readiness" />
+            <ChoiceChips options={RELOCATION_OPTIONS} value={relocationReadiness} onChange={setRelocationReadiness} />
+            <FieldLabel label="Target country or countries" hint="Separate multiple countries with commas" />
+            <TextInput
+              style={[styles.input, { marginBottom: 0 }]}
+              value={targetCountries}
+              onChangeText={setTargetCountries}
+              placeholder="e.g. Germany, Netherlands, Canada"
+              placeholderTextColor={colors.placeholder}
+            />
+          </SectionCard>
+
+          <SectionCard title="Career evidence">
+            <FieldLabel label="Career summary" hint="A short overview of your experience and target role" />
+            <TextInput
+              style={[styles.input, styles.multilineInput]}
+              value={careerSummary}
+              onChangeText={setCareerSummary}
+              placeholder="Summarise your experience, strengths and next role"
+              placeholderTextColor={colors.placeholder}
+              multiline
+              textAlignVertical="top"
+            />
+            <FieldLabel label="Most recent work experience" />
+            <TextInput style={styles.input} value={workTitle} onChangeText={setWorkTitle} placeholder="Role title" placeholderTextColor={colors.placeholder} />
+            <TextInput style={styles.input} value={workCompany} onChangeText={setWorkCompany} placeholder="Company" placeholderTextColor={colors.placeholder} />
+            <FieldLabel label="Education / qualification" />
+            <TextInput style={styles.input} value={educationDegree} onChangeText={setEducationDegree} placeholder="Degree, trade or professional qualification" placeholderTextColor={colors.placeholder} />
+            <TextInput style={[styles.input, { marginBottom: 0 }]} value={educationSchool} onChangeText={setEducationSchool} placeholder="Institution or awarding body" placeholderTextColor={colors.placeholder} />
           </SectionCard>
 
           {/* Online presence */}
@@ -494,6 +713,17 @@ const styles = StyleSheet.create({
     borderColor: "#fde68a",
   },
   errorText: { flex: 1, fontSize: 14, fontFamily: fontFamily.medium, color: "#92400e", lineHeight: 20 },
+  completionHelp: {
+    fontSize: 13,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
+    lineHeight: 19,
+    marginBottom: 12,
+  },
+  missingList: { gap: 8 },
+  missingRow: { flexDirection: "row", alignItems: "center", gap: 9 },
+  missingDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.brand },
+  missingText: { flex: 1, fontSize: 13, fontFamily: fontFamily.medium, color: colors.textPrimary },
 
   sectionCard: {
     padding: 16,
@@ -525,12 +755,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fafbfc",
     marginBottom: 14,
   },
+  multilineInput: { minHeight: 110, paddingTop: 12 },
 
   // Chips
   chipGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  choiceChipGrid: { marginBottom: 16 },
   prefChip: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
+    minHeight: 44,
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: radii.pill,

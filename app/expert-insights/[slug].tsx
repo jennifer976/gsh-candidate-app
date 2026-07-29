@@ -57,7 +57,7 @@ export default function ExpertInsightArticleScreen() {
                 subtitle="In-app reading when contributor pieces are live."
                 style={{ marginBottom: 10 }}
               />
-              <ContentComingSoonCard feature="expert-insights" />
+              <ContentComingSoonCard feature="expert-insights" state="not-configured" />
               <GshOutlineButton title="All insights" onPress={() => router.push("/expert-insights")} style={{ marginTop: 14 }} />
             </ScrollView>
           </SafeAreaView>

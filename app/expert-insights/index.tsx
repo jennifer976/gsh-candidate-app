@@ -120,7 +120,10 @@ export default function ExpertInsightsIndexScreen() {
 
             {contentUnavailable ? (
               <>
-                <ContentComingSoonCard feature="expert-insights" />
+                <ContentComingSoonCard
+                  feature="expert-insights"
+                  state={isSupabaseNotConfigured(error) ? "not-configured" : "empty"}
+                />
                 <GshOutlineButton title="Read the blog" onPress={() => router.push("/blog")} style={{ marginTop: 14 }} />
                 <GshOutlineButton title="Open guides" onPress={() => router.push("/guides")} style={{ marginTop: 10 }} />
               </>
