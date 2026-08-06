@@ -222,6 +222,15 @@ export async function fetchPublicSponsorCompanies(params?: {
   );
 }
 
+/** Claimed / hiring employers with optional careers-page badges. */
+export async function fetchPublicEmployersDirectory(limit = 160) {
+  return apiFetchJson<import("@/types/models").PublicEmployersDirectoryResponse>(
+    `/jobs/public/employers?limit=${Math.min(Math.max(limit, 1), 200)}`,
+    undefined,
+    { auth: false }
+  );
+}
+
 export async function fetchPublicSponsorCompanyBySlug(slug: string) {
   return apiFetchJson<import("@/types/models").SponsorCompanyDetailResponse>(
     `/sponsor-companies/public/${encodeURIComponent(slug)}`,

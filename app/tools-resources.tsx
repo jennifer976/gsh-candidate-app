@@ -89,7 +89,7 @@ export default function ToolsAndResourcesScreen() {
           />
           <GshLinkRow
             title="Company directory"
-            subtitle="Search public sponsor-register records before applying"
+            subtitle="Search GSH employers (careers pages linked) and sponsor-register records"
             icon="shield-checkmark-outline"
             accent="teal"
             onPress={() => router.push("/companies")}

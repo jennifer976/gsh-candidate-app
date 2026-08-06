@@ -209,6 +209,24 @@ export interface SponsorCompany {
   updatedAt?: string;
 }
 
+/** GET /jobs/public/employers — claimed / hiring employers on GSH */
+export interface PublicEmployerDirectoryRow {
+  employerUserId: string;
+  companyName: string;
+  activeJobs: number;
+  companyLogo?: string;
+  sponsorLicenseStatus?: string;
+  hasVisaSponsorship?: boolean;
+  hasRelocationSupport?: boolean;
+  hasRemoteGlobalHiring?: boolean;
+  hasCareersLink?: boolean;
+  directoryBadges?: string[];
+}
+
+export interface PublicEmployersDirectoryResponse {
+  data: PublicEmployerDirectoryRow[];
+}
+
 export interface SponsorCompanyListResponse {
   data: SponsorCompany[];
   possibleMatches?: SponsorCompany[];

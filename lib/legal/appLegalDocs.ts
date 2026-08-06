@@ -1,5 +1,5 @@
 /** Mirrors global_sponsor_hub-fe legal pages (same last updated). Bundled for offline/in-app reading — sync when policies change on web. */
-export const LEGAL_LAST_UPDATED = "8 May 2026";
+export const LEGAL_LAST_UPDATED = "6 August 2026";
 
 export type LegalSection = {
   heading: string;
@@ -47,7 +47,7 @@ export const LEGAL_DOCUMENTS: Record<LegalDocId, LegalDocDef> = {
         heading: "3. How We Use Your Information",
         bullets: [
           "Operate and improve the platform",
-          "Show relevant jobs, partners, and resources",
+          "Show relevant jobs, partners, company directory listings, and resources",
           "Facilitate direct contact between candidates, employers, and partners",
           "Process subscription payments",
           "Maintain security",
@@ -105,50 +105,58 @@ export const LEGAL_DOCUMENTS: Record<LegalDocId, LegalDocDef> = {
       {
         heading: "1. Introduction",
         paragraphs: [
-          "Global Sponsor Hub is a global job and relocation advertising platform operated from the United Kingdom.",
-          "We are not a recruitment agency and do not vet candidates, employers, or partners. Connections are direct between parties.",
-          "By using the platform you agree to these Terms. If you disagree, stop using the services.",
+          "Global Sponsor Hub (“we,” “our,” “us”) is a UK-based technology marketplace that connects candidates, employers, recruitment agencies, and trusted mobility partners. We operate an advertising and directory platform from the United Kingdom.",
+          "We are not a recruitment agency acting on anyone’s behalf. We do not employ candidates, sponsor visas, place workers, or provide immigration, legal, tax, accounting, employment, medical, or financial advice. We do not guarantee that any vacancy will be filled. Connections and hiring decisions happen directly between the parties.",
+          "By using the platform (website and candidate mobile app) you agree to these Terms. If you disagree, stop using the services.",
         ],
       },
       {
         heading: "2. Global Services & International Users",
         paragraphs: [
-          "We welcome international users. Core operations are UK‑based; data may be processed globally under UK GDPR / EU GDPR where applicable.",
+          "We welcome international users. Core operations are UK-based; data may be processed globally under UK GDPR / EU GDPR where applicable.",
           "You must comply with laws in your jurisdiction.",
         ],
       },
       {
         heading: "3. How the Platform Works",
         bullets: [
-          "Candidates browse jobs, apply to employers, and contact partners directly.",
-          "Employers post labelled roles and may search opted‑in CVs.",
-          "Partners list directory services and receive direct enquiries.",
-          "External curated listings link to third‑party application flows — we are not the recruiter there.",
+          "Candidates browse jobs and apply to employers where applications are hosted on Global Sponsor Hub.",
+          "Candidates may also search the company directory for employers (including those with a careers or company website linked) and continue on the employer’s own careers page or ATS when openings are listed there.",
+          "Employers post labelled roles, may appear in the company directory, and may search opted-in CVs where their plan allows.",
+          "Optional employer ATS or careers-page connections may create click-out listings; we do not guarantee that every role from an employer’s ATS will be published.",
+          "Recruitment agencies may submit labelled external client roles; candidates typically apply on the client site. Agency accounts do not unlock the candidate CV database.",
+          "Partners list directory services and receive direct enquiries per their plan.",
+          "External curated listings link to third-party application flows — we are not the recruiter there.",
+          "Directory badges and mobility labels summarise platform labelling; they are not government decisions or guarantees of sponsorship.",
         ],
       },
       {
         heading: "4. Sustainability Commitment",
-        paragraphs: ["Tree planting partnership applies per published sustainability rules."],
+        paragraphs: [
+          "For every five candidates who reach 50% profile completion, we plant a tree through our sustainability partner (Treeapp), per published sustainability rules.",
+        ],
       },
       {
         heading: "5. Accounts & Access",
         bullets: [
           "You must be at least 18.",
           "Keep credentials secure; provide accurate information; don’t share accounts.",
+          "You may permanently delete your account in Settings when signed in (website or this app).",
         ],
       },
       {
         heading: "6. Payments & Subscriptions",
         bullets: [
           "Candidate accounts are free.",
-          "Employer/partner subscriptions renew per checkout terms.",
+          "Employer, agency, and partner subscriptions renew per checkout terms shown at purchase.",
         ],
       },
       {
         heading: "7. Content & Responsibility",
         bullets: [
-          "Users are responsible for lawful, accurate listings.",
+          "Users are responsible for lawful, accurate listings and profiles.",
           "We may remove content that breaches these Terms.",
+          "Third-party careers pages, ATS boards, and partner sites have their own terms and privacy notices.",
         ],
       },
       {
@@ -158,7 +166,7 @@ export const LEGAL_DOCUMENTS: Record<LegalDocId, LegalDocDef> = {
       {
         heading: "9. Disclaimers & Limitation of Liability",
         paragraphs: [
-          'Services are provided “as is”. We are not party to hiring contracts between users.',
+          "Services are provided “as is”. We are not party to hiring contracts between users. The AI assistant (where available) can be wrong and is not immigration or legal advice.",
         ],
       },
       {
