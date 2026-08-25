@@ -29,7 +29,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "General",
     question: "What is the tree planting initiative?",
     answer:
-      "We plant one tree for every five candidates who reach 50% profile completion (via Treeapp). Employers who hire through GSH may contribute additional trees — see the About page for live impact stats.",
+      "We fund one tree through Treeapp for every five candidate accounts that complete email verification. Each verified candidate counts once, regardless of profile completion. See the About page for live impact stats.",
   },
   {
     category: "General",

@@ -133,7 +133,7 @@ export const LEGAL_DOCUMENTS: Record<LegalDocId, LegalDocDef> = {
       {
         heading: "4. Sustainability Commitment",
         paragraphs: [
-          "For every five candidates who reach 50% profile completion, we plant a tree through our sustainability partner (Treeapp), per published sustainability rules.",
+          "For every five candidate accounts that complete email verification, we fund one tree through our sustainability partner (Treeapp). Each verified candidate is counted once, regardless of profile completion.",
         ],
       },
       {
