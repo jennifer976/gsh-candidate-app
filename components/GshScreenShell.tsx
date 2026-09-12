@@ -11,12 +11,10 @@ type Props = {
   constrainTabletWidth?: boolean;
 };
 
-/**
- * App screen canvas — dark matches marketing navy bands; light for dense forms.
- */
+/** Native screen canvas. Light is the default; navy is reserved for deliberate bands. */
 export function GshScreenShell({
   children,
-  variant = "dark",
+  variant = "light",
   style,
   constrainTabletWidth = false,
 }: Props) {
@@ -45,6 +43,6 @@ const styles = StyleSheet.create({
     maxWidth: TABLET_MAX_CONTENT_WIDTH,
     alignSelf: "center",
   },
-  dark: { backgroundColor: colors.navyDeep },
-  light: { backgroundColor: colors.surfaceLight },
+  dark: { backgroundColor: colors.navy },
+  light: { backgroundColor: colors.white },
 });

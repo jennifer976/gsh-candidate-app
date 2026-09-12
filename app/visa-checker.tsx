@@ -1,3 +1,5 @@
+import { useAppCopy } from "@/lib/i18n";
+import toolkitCopy from "@/data/candidateToolkitCopy.json";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -13,34 +15,35 @@ import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
  */
 export default function VisaCheckerScreen() {
   const router = useRouter();
+  const { locale } = useAppCopy();
+  const copy = toolkitCopy[locale];
 
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <GshScreenIntro
-            eyebrow="Tools"
-            title="Company sponsor checker"
-            subtitle="Coming soon — sponsor-register lookup before you apply."
+            eyebrow={copy.mobility.toLocaleLowerCase(locale)}
+            title={copy.sponsor}
+            subtitle={copy.comingSoon}
             style={{ marginBottom: 10 }}
           />
           <GshContentAccentBar />
 
           <View style={[styles.card, cardSurfaceStyle(true)]}>
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>Coming soon</Text>
+              <Text style={styles.badgeText}>{copy.comingSoon}</Text>
             </View>
             <Text style={styles.body}>
-              We’re finishing sponsor-register coverage and name matching so results stay useful. When it launches, you’ll
-              search a company, see possible register matches, and confirm against official sources.
+              {copy.sponsorUnavailable}
             </Text>
             <Pressable
               style={styles.primaryBtn}
               onPress={() => router.push("/tools")}
               accessibilityRole="button"
-              accessibilityLabel="Back to career toolkit"
+              accessibilityLabel={copy.backToolkit}
             >
-              <Text style={styles.primaryBtnText}>Back to career toolkit</Text>
+              <Text style={styles.primaryBtnText}>{copy.backToolkit}</Text>
             </Pressable>
             <Pressable
               style={styles.secondaryBtn}
@@ -48,7 +51,7 @@ export default function VisaCheckerScreen() {
               accessibilityRole="button"
             >
               <Ionicons name="briefcase-outline" size={18} color={colors.brandDeep} />
-              <Text style={styles.secondaryBtnText}>Browse jobs</Text>
+              <Text style={styles.secondaryBtnText}>{copy.jobs}</Text>
             </Pressable>
           </View>
         </ScrollView>

@@ -1,4 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { useAccountCopy as useInterfaceCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -17,6 +17,8 @@ const ROWS: { slug: string; title: string; sub: string }[] = [
 ];
 
 export default function LegalHubScreen() {
+ const interfaceCopy = useInterfaceCopy();
+
   const router = useRouter();
 
   return (
@@ -24,12 +26,12 @@ export default function LegalHubScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <GshScreenIntro
-            eyebrow="Legal"
+            eyebrow={interfaceCopy("Legal")}
             title="Policies"
             subtitle={`These policies are included here so you can read them anytime in the app. Last reviewed alignment: ${LEGAL_LAST_UPDATED}.`}
             style={{ marginBottom: 12 }}
           />
-          <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+          <View style={styles.accentBar} />
           {ROWS.map((r) => (
             <Pressable
               key={r.slug}
@@ -56,7 +58,7 @@ export default function LegalHubScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { ...stackScrollContentStyle, paddingBottom: 40, gap: 12 },
-  accentBar: { height: 4, borderRadius: 2, marginBottom: 4 },
+  accentBar: { height: 3, backgroundColor: colors.teal, marginBottom: 4 },
   row: {
     flexDirection: "row",
     alignItems: "center",

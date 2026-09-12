@@ -1,0 +1,746 @@
+{
+  "en": {
+    "slug": "australia-skilled-visa-jobs",
+    "title": "Working in Australia: check the role and plan your move",
+    "countryLabel": "Australia",
+    "iso2": "au",
+    "flagEmoji": "🇦🇺",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://immi.homeaffairs.gov.au/visas/working-in-australia",
+    "excerpt": "Confirm the visa route, employer support and your own requirements. Compare the full offer with the cost of living near the workplace.",
+    "metaDescription": "Confirm the visa route, employer support and your own requirements. Compare the full offer with the cost of living near the workplace.",
+    "openingHook": "Confirm the visa route, employer support and your own requirements. Compare the full offer with the cost of living near the workplace.",
+    "quickFacts": [
+      {
+        "label": "Start here",
+        "value": "Check the job and your work rights"
+      },
+      {
+        "label": "Employer support",
+        "value": "Confirm what is included in writing"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Confirm the employer-sponsored route",
+        "paragraphs": [
+          "The Skills in Demand visa (subclass 482) is temporary. Ask the employer which stream supports the role and whether they will submit the nomination. A job listing is not visa approval."
+        ],
+        "sources": [
+          "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa",
+          "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+        ]
+      },
+      {
+        "heading": "Check salary and occupation requirements",
+        "paragraphs": [
+          "Check the current salary threshold and occupation rules for the stream. Ask how the offer meets the applicable market salary requirement. Do not rely on an old threshold in a job advert."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+        ]
+      },
+      {
+        "heading": "Check your skills evidence",
+        "paragraphs": [
+          "Check whether you need a skills assessment, English evidence or professional registration. These are different requirements. Confirm the responsible authority before paying for an assessment or making travel plans."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+        ]
+      },
+      {
+        "heading": "Treat permanent residence as a separate application",
+        "paragraphs": [
+          "The Employer Nomination Scheme (subclass 186) has its own streams and conditions. Holding a temporary work visa does not guarantee permanent residence; confirm your route and the employer’s commitment separately."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+        ]
+      },
+      {
+        "heading": "Arrange health cover",
+        "paragraphs": [
+          "Medicare eligibility depends on your circumstances. Do not assume that a temporary visa includes access. Check any private insurance requirement for you and each family member before travelling."
+        ],
+        "sources": [
+          "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+        ]
+      },
+      {
+        "heading": "Compare the full offer",
+        "paragraphs": [
+          "Ask whether the quoted salary includes superannuation. Plan tax setup, housing, commuting and moving costs. Get relocation support in writing, including any repayment terms if you leave the job."
+        ],
+        "sources": [
+          "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Search jobs in Australia",
+        "href": "/jobs?location=Australia"
+      },
+      {
+        "label": "Browse independent specialists",
+        "href": "/specialists"
+      },
+      {
+        "label": "Relocation perks",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "fr": {
+    "slug": "australia-skilled-visa-jobs",
+    "title": "Travailler en Australie : vérifier le poste et préparer son installation",
+    "countryLabel": "Australie",
+    "iso2": "au",
+    "flagEmoji": "🇦🇺",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://immi.homeaffairs.gov.au/visas/working-in-australia",
+    "excerpt": "Confirmez le visa, l’aide de l’employeur et vos propres obligations. Comparez l’offre complète au coût de la vie près du travail.",
+    "metaDescription": "Confirmez le visa, l’aide de l’employeur et vos propres obligations. Comparez l’offre complète au coût de la vie près du travail.",
+    "openingHook": "Confirmez le visa, l’aide de l’employeur et vos propres obligations. Comparez l’offre complète au coût de la vie près du travail.",
+    "quickFacts": [
+      {
+        "label": "Pour commencer",
+        "value": "Vérifiez le poste et votre droit de travailler"
+      },
+      {
+        "label": "Aide de l’employeur",
+        "value": "Faites confirmer par écrit ce qui est inclus"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Confirmez la voie parrainée par l’employeur",
+        "paragraphs": [
+          "Le visa Skills in Demand (sous-classe 482) est temporaire. Demandez quel volet correspond au poste et si l’employeur déposera la nomination. Une annonce ne vaut pas accord de visa."
+        ],
+        "sources": [
+          "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa",
+          "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+        ]
+      },
+      {
+        "heading": "Vérifiez salaire et profession",
+        "paragraphs": [
+          "Vérifiez le seuil salarial et les professions du volet concerné. Demandez comment l’offre respecte le salaire de marché applicable. Ne vous fiez pas à un ancien seuil dans une annonce."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+        ]
+      },
+      {
+        "heading": "Vérifiez vos justificatifs de compétences",
+        "paragraphs": [
+          "Vérifiez si une évaluation des compétences, une preuve d’anglais ou une autorisation professionnelle est requise. Ce sont des exigences distinctes. Confirmez l’organisme compétent avant de payer ou de prévoir le voyage."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+        ]
+      },
+      {
+        "heading": "Traitez la résidence permanente séparément",
+        "paragraphs": [
+          "Le programme Employer Nomination Scheme (sous-classe 186) a ses propres volets et conditions. Un visa de travail temporaire ne garantit pas la résidence permanente ; confirmez la voie et l’engagement de l’employeur séparément."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+        ]
+      },
+      {
+        "heading": "Prévoyez la couverture santé",
+        "paragraphs": [
+          "L’accès à Medicare dépend de votre situation. Ne supposez pas qu’un visa temporaire le donne. Vérifiez l’assurance privée requise pour vous et chaque membre de la famille avant le départ."
+        ],
+        "sources": [
+          "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+        ]
+      },
+      {
+        "heading": "Comparez l’offre complète",
+        "paragraphs": [
+          "Demandez si le salaire inclut la superannuation. Prévoyez fiscalité, logement, trajets et déménagement. Obtenez l’aide à l’installation par écrit, y compris un éventuel remboursement si vous quittez le poste."
+        ],
+        "sources": [
+          "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Rechercher un emploi : Australie",
+        "href": "/jobs?location=Australia"
+      },
+      {
+        "label": "Consulter les spécialistes indépendants",
+        "href": "/specialists"
+      },
+      {
+        "label": "Avantages pour le déménagement",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "de": {
+    "slug": "australia-skilled-visa-jobs",
+    "title": "Arbeiten in Australien: Stelle prüfen und Umzug planen",
+    "countryLabel": "Australien",
+    "iso2": "au",
+    "flagEmoji": "🇦🇺",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://immi.homeaffairs.gov.au/visas/working-in-australia",
+    "excerpt": "Kläre Visum, Arbeitgeberunterstützung und deine Voraussetzungen. Vergleiche das gesamte Angebot mit den Lebenshaltungskosten am Arbeitsort.",
+    "metaDescription": "Kläre Visum, Arbeitgeberunterstützung und deine Voraussetzungen. Vergleiche das gesamte Angebot mit den Lebenshaltungskosten am Arbeitsort.",
+    "openingHook": "Kläre Visum, Arbeitgeberunterstützung und deine Voraussetzungen. Vergleiche das gesamte Angebot mit den Lebenshaltungskosten am Arbeitsort.",
+    "quickFacts": [
+      {
+        "label": "Hier beginnen",
+        "value": "Prüfe die Stelle und dein Recht zu arbeiten"
+      },
+      {
+        "label": "Hilfe des Arbeitgebers",
+        "value": "Lass dir schriftlich bestätigen, was enthalten ist"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Kläre den arbeitgebergesponserten Weg",
+        "paragraphs": [
+          "Das Skills-in-Demand-Visum (Unterklasse 482) ist befristet. Frage nach dem passenden Bereich und ob der Arbeitgeber die Nominierung einreicht. Eine Stellenanzeige ist keine Visumgenehmigung."
+        ],
+        "sources": [
+          "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa",
+          "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+        ]
+      },
+      {
+        "heading": "Prüfe Gehalt und Berufsvoraussetzungen",
+        "paragraphs": [
+          "Prüfe die aktuelle Gehaltsgrenze und Berufsregeln des Bereichs. Frage, wie das Angebot den geltenden marktüblichen Lohn erfüllt. Verlasse dich nicht auf alte Grenzwerte in Anzeigen."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+        ]
+      },
+      {
+        "heading": "Prüfe deine Qualifikationsnachweise",
+        "paragraphs": [
+          "Prüfe, ob Kompetenzbewertung, Englischnachweis oder Berufszulassung nötig sind. Das sind unterschiedliche Anforderungen. Kläre die zuständige Stelle, bevor du eine Bewertung bezahlst oder Reisen planst."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+        ]
+      },
+      {
+        "heading": "Betrachte Daueraufenthalt als eigenen Antrag",
+        "paragraphs": [
+          "Das Employer Nomination Scheme (Unterklasse 186) hat eigene Bereiche und Bedingungen. Ein befristetes Arbeitsvisum garantiert keinen Daueraufenthalt; kläre den Weg und die Arbeitgeberzusage gesondert."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+        ]
+      },
+      {
+        "heading": "Plane den Krankenversicherungsschutz",
+        "paragraphs": [
+          "Der Medicare-Zugang hängt von deiner Situation ab. Ein befristetes Visum gewährt ihn nicht automatisch. Prüfe vor der Reise private Versicherungspflichten für dich und jedes Familienmitglied."
+        ],
+        "sources": [
+          "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+        ]
+      },
+      {
+        "heading": "Vergleiche das gesamte Angebot",
+        "paragraphs": [
+          "Frage, ob das Gehalt Superannuation-Beiträge enthält. Plane Steuern, Wohnung, Pendeln und Umzug. Lass Umzugshilfe schriftlich bestätigen, einschließlich möglicher Rückzahlung bei Kündigung."
+        ],
+        "sources": [
+          "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Stellen suchen: Australien",
+        "href": "/jobs?location=Australia"
+      },
+      {
+        "label": "Unabhängige Spezialisten finden",
+        "href": "/specialists"
+      },
+      {
+        "label": "Angebote für deinen Umzug",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "es": {
+    "slug": "australia-skilled-visa-jobs",
+    "title": "Trabajar en Australia: revisa el empleo y prepara la mudanza",
+    "countryLabel": "Australia",
+    "iso2": "au",
+    "flagEmoji": "🇦🇺",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://immi.homeaffairs.gov.au/visas/working-in-australia",
+    "excerpt": "Confirma el visado, el apoyo de la empresa y tus requisitos. Compara la oferta completa con el coste de vivir cerca del trabajo.",
+    "metaDescription": "Confirma el visado, el apoyo de la empresa y tus requisitos. Compara la oferta completa con el coste de vivir cerca del trabajo.",
+    "openingHook": "Confirma el visado, el apoyo de la empresa y tus requisitos. Compara la oferta completa con el coste de vivir cerca del trabajo.",
+    "quickFacts": [
+      {
+        "label": "Empieza aquí",
+        "value": "Comprueba el puesto y tu derecho a trabajar"
+      },
+      {
+        "label": "Ayuda del empleador",
+        "value": "Confirma por escrito lo que incluye"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Confirma la vía patrocinada por la empresa",
+        "paragraphs": [
+          "El visado Skills in Demand (subclase 482) es temporal. Pregunta qué modalidad cubre el puesto y si la empresa presentará la nominación. Un anuncio no es una aprobación de visado."
+        ],
+        "sources": [
+          "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa",
+          "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+        ]
+      },
+      {
+        "heading": "Comprueba sueldo y ocupación",
+        "paragraphs": [
+          "Revisa el umbral salarial y las reglas de ocupación de la modalidad. Pregunta cómo cumple la oferta el salario de mercado aplicable. No te fíes de un umbral antiguo en un anuncio."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+        ]
+      },
+      {
+        "heading": "Revisa tus pruebas de cualificación",
+        "paragraphs": [
+          "Comprueba si necesitas evaluación de competencias, prueba de inglés o habilitación profesional. Son requisitos distintos. Confirma la autoridad competente antes de pagar una evaluación o planificar el viaje."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+        ]
+      },
+      {
+        "heading": "Trata la residencia permanente por separado",
+        "paragraphs": [
+          "El Employer Nomination Scheme (subclase 186) tiene modalidades y condiciones propias. Un visado temporal no garantiza residencia permanente; confirma por separado la vía y el compromiso empresarial."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+        ]
+      },
+      {
+        "heading": "Organiza la cobertura médica",
+        "paragraphs": [
+          "El acceso a Medicare depende de tu situación. No supongas que un visado temporal lo incluye. Revisa el seguro privado requerido para ti y cada familiar antes de viajar."
+        ],
+        "sources": [
+          "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+        ]
+      },
+      {
+        "heading": "Compara la oferta completa",
+        "paragraphs": [
+          "Pregunta si el sueldo incluye superannuation. Planifica trámites fiscales, vivienda, transporte y mudanza. Obtén por escrito las ayudas y posibles devoluciones si dejas el empleo."
+        ],
+        "sources": [
+          "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Buscar empleo: Australia",
+        "href": "/jobs?location=Australia"
+      },
+      {
+        "label": "Buscar especialistas independientes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Ventajas para tu mudanza",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pt": {
+    "slug": "australia-skilled-visa-jobs",
+    "title": "Trabalhar na Austrália: verifique o emprego e prepare a mudança",
+    "countryLabel": "Austrália",
+    "iso2": "au",
+    "flagEmoji": "🇦🇺",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://immi.homeaffairs.gov.au/visas/working-in-australia",
+    "excerpt": "Confirme o visto, o apoio do empregador e os seus requisitos. Compare a oferta completa com o custo de vida perto do trabalho.",
+    "metaDescription": "Confirme o visto, o apoio do empregador e os seus requisitos. Compare a oferta completa com o custo de vida perto do trabalho.",
+    "openingHook": "Confirme o visto, o apoio do empregador e os seus requisitos. Compare a oferta completa com o custo de vida perto do trabalho.",
+    "quickFacts": [
+      {
+        "label": "Comece aqui",
+        "value": "Verifique o emprego e o seu direito a trabalhar"
+      },
+      {
+        "label": "Apoio do empregador",
+        "value": "Confirme por escrito o que está incluído"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Confirme a via patrocinada pelo empregador",
+        "paragraphs": [
+          "O visto Skills in Demand (subclasse 482) é temporário. Pergunte que modalidade abrange o emprego e se o empregador apresentará a nomeação. Um anúncio não é aprovação de visto."
+        ],
+        "sources": [
+          "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa",
+          "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+        ]
+      },
+      {
+        "heading": "Verifique salário e profissão",
+        "paragraphs": [
+          "Verifique o limiar salarial e as regras da profissão para a modalidade. Pergunte como a oferta cumpre o salário de mercado aplicável. Não confie num limiar antigo num anúncio."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+        ]
+      },
+      {
+        "heading": "Verifique as provas de competências",
+        "paragraphs": [
+          "Verifique se precisa de avaliação de competências, prova de inglês ou inscrição profissional. São requisitos diferentes. Confirme a autoridade competente antes de pagar uma avaliação ou planear a viagem."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+        ]
+      },
+      {
+        "heading": "Trate a residência permanente separadamente",
+        "paragraphs": [
+          "O Employer Nomination Scheme (subclasse 186) tem modalidades e condições próprias. Um visto temporário não garante residência permanente; confirme separadamente a via e o compromisso do empregador."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+        ]
+      },
+      {
+        "heading": "Organize a cobertura de saúde",
+        "paragraphs": [
+          "O acesso ao Medicare depende da sua situação. Não presuma que um visto temporário o inclui. Verifique o seguro privado exigido para si e cada familiar antes de viajar."
+        ],
+        "sources": [
+          "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+        ]
+      },
+      {
+        "heading": "Compare a oferta completa",
+        "paragraphs": [
+          "Pergunte se o salário inclui superannuation. Planeie impostos, alojamento, deslocações e mudança. Obtenha o apoio por escrito, incluindo eventual reembolso se deixar o emprego."
+        ],
+        "sources": [
+          "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Procurar emprego: Austrália",
+        "href": "/jobs?location=Australia"
+      },
+      {
+        "label": "Procurar especialistas independentes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantagens para a mudança",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "it": {
+    "slug": "australia-skilled-visa-jobs",
+    "title": "Lavorare in Australia: verifica il ruolo e prepara il trasferimento",
+    "countryLabel": "Australia",
+    "iso2": "au",
+    "flagEmoji": "🇦🇺",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://immi.homeaffairs.gov.au/visas/working-in-australia",
+    "excerpt": "Conferma visto, sostegno del datore e requisiti personali. Confronta l’offerta completa con il costo della vita vicino al lavoro.",
+    "metaDescription": "Conferma visto, sostegno del datore e requisiti personali. Confronta l’offerta completa con il costo della vita vicino al lavoro.",
+    "openingHook": "Conferma visto, sostegno del datore e requisiti personali. Confronta l’offerta completa con il costo della vita vicino al lavoro.",
+    "quickFacts": [
+      {
+        "label": "Inizia qui",
+        "value": "Verifica il lavoro e il tuo diritto a lavorare"
+      },
+      {
+        "label": "Aiuto del datore di lavoro",
+        "value": "Fai confermare per iscritto cosa è incluso"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Conferma il percorso sponsorizzato dal datore",
+        "paragraphs": [
+          "Il visto Skills in Demand (sottoclasse 482) è temporaneo. Chiedi quale percorso copre il ruolo e se il datore presenterà la nomina. Un annuncio non è un visto approvato."
+        ],
+        "sources": [
+          "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa",
+          "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+        ]
+      },
+      {
+        "heading": "Verifica retribuzione e professione",
+        "paragraphs": [
+          "Verifica soglia salariale e regole professionali del percorso. Chiedi come l’offerta rispetta la retribuzione di mercato applicabile. Non affidarti a una soglia vecchia in un annuncio."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+        ]
+      },
+      {
+        "heading": "Verifica le prove delle competenze",
+        "paragraphs": [
+          "Verifica se servono valutazione delle competenze, prova d’inglese o abilitazione professionale. Sono requisiti diversi. Conferma l’ente competente prima di pagare una valutazione o organizzare il viaggio."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+        ]
+      },
+      {
+        "heading": "Considera la residenza permanente separatamente",
+        "paragraphs": [
+          "L’Employer Nomination Scheme (sottoclasse 186) ha percorsi e condizioni propri. Un visto temporaneo non garantisce la residenza permanente; conferma separatamente percorso e impegno del datore."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+        ]
+      },
+      {
+        "heading": "Organizza la copertura sanitaria",
+        "paragraphs": [
+          "L’accesso a Medicare dipende dalla tua situazione. Non presumere che un visto temporaneo lo includa. Verifica l’assicurazione privata richiesta per te e ogni familiare prima di partire."
+        ],
+        "sources": [
+          "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+        ]
+      },
+      {
+        "heading": "Confronta l’offerta completa",
+        "paragraphs": [
+          "Chiedi se lo stipendio include la superannuation. Pianifica adempimenti fiscali, alloggio, trasporti e trasferimento. Ottieni gli aiuti per iscritto, comprese eventuali restituzioni se lasci il lavoro."
+        ],
+        "sources": [
+          "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Cerca lavoro: Australia",
+        "href": "/jobs?location=Australia"
+      },
+      {
+        "label": "Trova specialisti indipendenti",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantaggi per il trasferimento",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "nl": {
+    "slug": "australia-skilled-visa-jobs",
+    "title": "Werken in Australië: controleer de baan en plan je verhuizing",
+    "countryLabel": "Australië",
+    "iso2": "au",
+    "flagEmoji": "🇦🇺",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://immi.homeaffairs.gov.au/visas/working-in-australia",
+    "excerpt": "Bevestig visumroute, werkgeverssteun en je eigen voorwaarden. Vergelijk het volledige aanbod met de kosten rond de werkplek.",
+    "metaDescription": "Bevestig visumroute, werkgeverssteun en je eigen voorwaarden. Vergelijk het volledige aanbod met de kosten rond de werkplek.",
+    "openingHook": "Bevestig visumroute, werkgeverssteun en je eigen voorwaarden. Vergelijk het volledige aanbod met de kosten rond de werkplek.",
+    "quickFacts": [
+      {
+        "label": "Begin hier",
+        "value": "Controleer de baan en je recht om te werken"
+      },
+      {
+        "label": "Hulp van de werkgever",
+        "value": "Laat schriftelijk bevestigen wat is inbegrepen"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Bevestig de werkgeversroute",
+        "paragraphs": [
+          "Het Skills in Demand-visum (subklasse 482) is tijdelijk. Vraag welke categorie bij de baan past en of de werkgever de nominatie indient. Een vacature is geen visumgoedkeuring."
+        ],
+        "sources": [
+          "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa",
+          "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+        ]
+      },
+      {
+        "heading": "Controleer salaris- en beroepseisen",
+        "paragraphs": [
+          "Controleer de actuele salarisgrens en beroepsregels voor de categorie. Vraag hoe het aanbod aan het geldende marktloon voldoet. Vertrouw niet op een oude grens in een vacature."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+        ]
+      },
+      {
+        "heading": "Controleer je kwalificatiebewijzen",
+        "paragraphs": [
+          "Controleer of je een vaardigheidsbeoordeling, Engels bewijs of beroepsregistratie nodig hebt. Dit zijn aparte eisen. Bevestig de bevoegde instantie voordat je betaalt of je reis plant."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+        ]
+      },
+      {
+        "heading": "Zie permanent verblijf als aparte aanvraag",
+        "paragraphs": [
+          "Het Employer Nomination Scheme (subklasse 186) heeft eigen categorieën en voorwaarden. Een tijdelijk werkvisum garandeert geen permanent verblijf; bevestig de route en toezegging van de werkgever apart."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+        ]
+      },
+      {
+        "heading": "Regel zorgdekking",
+        "paragraphs": [
+          "Toegang tot Medicare hangt af van je situatie. Ga er niet van uit dat een tijdelijk visum toegang geeft. Controleer vóór vertrek de particuliere verzekeringseisen voor ieder gezinslid."
+        ],
+        "sources": [
+          "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+        ]
+      },
+      {
+        "heading": "Vergelijk het volledige aanbod",
+        "paragraphs": [
+          "Vraag of het salaris superannuation bevat. Plan belastingzaken, wonen, reizen en verhuiskosten. Leg verhuishulp schriftelijk vast, inclusief eventuele terugbetaling als je de baan verlaat."
+        ],
+        "sources": [
+          "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Werk zoeken: Australië",
+        "href": "/jobs?location=Australia"
+      },
+      {
+        "label": "Onafhankelijke specialisten zoeken",
+        "href": "/specialists"
+      },
+      {
+        "label": "Voordelen voor je verhuizing",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pl": {
+    "slug": "australia-skilled-visa-jobs",
+    "title": "Praca w Australii: sprawdź stanowisko i zaplanuj przeprowadzkę",
+    "countryLabel": "Australia",
+    "iso2": "au",
+    "flagEmoji": "🇦🇺",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://immi.homeaffairs.gov.au/visas/working-in-australia",
+    "excerpt": "Potwierdź ścieżkę wizową, wsparcie pracodawcy i własne wymagania. Porównaj całą ofertę z kosztami życia w pobliżu pracy.",
+    "metaDescription": "Potwierdź ścieżkę wizową, wsparcie pracodawcy i własne wymagania. Porównaj całą ofertę z kosztami życia w pobliżu pracy.",
+    "openingHook": "Potwierdź ścieżkę wizową, wsparcie pracodawcy i własne wymagania. Porównaj całą ofertę z kosztami życia w pobliżu pracy.",
+    "quickFacts": [
+      {
+        "label": "Zacznij tutaj",
+        "value": "Sprawdź ofertę i swoje prawo do pracy"
+      },
+      {
+        "label": "Pomoc pracodawcy",
+        "value": "Uzyskaj pisemne potwierdzenie zakresu pomocy"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Potwierdź ścieżkę sponsorowaną przez pracodawcę",
+        "paragraphs": [
+          "Wiza Skills in Demand (podklasa 482) jest czasowa. Zapytaj, który wariant obejmuje stanowisko i czy pracodawca złoży nominację. Ogłoszenie nie oznacza przyznania wizy."
+        ],
+        "sources": [
+          "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa",
+          "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+        ]
+      },
+      {
+        "heading": "Sprawdź wymogi płacowe i zawodowe",
+        "paragraphs": [
+          "Sprawdź aktualny próg płacowy i zasady zawodowe dla wariantu. Zapytaj, jak oferta spełnia wymóg płacy rynkowej. Nie polegaj na starym progu w ogłoszeniu."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+        ]
+      },
+      {
+        "heading": "Sprawdź dokumenty kwalifikacji",
+        "paragraphs": [
+          "Sprawdź, czy potrzebujesz oceny umiejętności, dowodu znajomości angielskiego lub uprawnień zawodowych. To odrębne wymagania. Ustal właściwy organ przed opłaceniem oceny lub planowaniem podróży."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+        ]
+      },
+      {
+        "heading": "Traktuj pobyt stały jako osobny wniosek",
+        "paragraphs": [
+          "Employer Nomination Scheme (podklasa 186) ma własne warianty i warunki. Czasowa wiza nie gwarantuje pobytu stałego; osobno potwierdź ścieżkę i zobowiązanie pracodawcy."
+        ],
+        "sources": [
+          "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+        ]
+      },
+      {
+        "heading": "Zadbaj o ochronę zdrowotną",
+        "paragraphs": [
+          "Dostęp do Medicare zależy od sytuacji. Nie zakładaj, że czasowa wiza go zapewnia. Przed podróżą sprawdź wymogi prywatnego ubezpieczenia dla siebie i każdej osoby z rodziny."
+        ],
+        "sources": [
+          "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+        ]
+      },
+      {
+        "heading": "Porównaj całą ofertę",
+        "paragraphs": [
+          "Zapytaj, czy płaca obejmuje superannuation. Zaplanuj podatki, mieszkanie, dojazdy i przeprowadzkę. Uzyskaj wsparcie na piśmie, także zasady zwrotu kosztów po odejściu z pracy."
+        ],
+        "sources": [
+          "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Szukaj pracy: Australia",
+        "href": "/jobs?location=Australia"
+      },
+      {
+        "label": "Znajdź niezależnych specjalistów",
+        "href": "/specialists"
+      },
+      {
+        "label": "Oferty na czas przeprowadzki",
+        "href": "/relocation-perks"
+      }
+    ]
+  }
+}

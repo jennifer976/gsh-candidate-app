@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { fontFamily } from "@/lib/theme";
+import { Image, Text, View } from "react-native";
+import { colors, fontFamily } from "@/lib/theme";
 
 const AVATAR_PALETTES = [
-  { bg: "#e0e7ff", text: "#3730a3" },
-  { bg: "#fef9c3", text: "#854d0e" },
-  { bg: "#dcfce7", text: "#166534" },
-  { bg: "#fce7f3", text: "#9d174d" },
-  { bg: "#e0f2fe", text: "#0369a1" },
-  { bg: "#ffedd5", text: "#9a3412" },
-  { bg: "#f3e8ff", text: "#6b21a8" },
-  { bg: "#d1fae5", text: "#065f46" },
+  { bg: colors.surfaceMuted, text: colors.navy },
+  { bg: colors.brandSoft, text: colors.navy },
 ];
 
 function avatarPalette(initial: string) {

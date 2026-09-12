@@ -1,3 +1,6 @@
+import { useToolCopy } from "@/lib/i18n/useToolCopy";
+import { useAppLanguage } from "@/lib/i18n";
+import { parseBudgetCost } from "@/lib/relocationBudget";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
@@ -19,21 +22,23 @@ import {
   convertAmount,
   CURRENCY_CODES,
   fetchLiveRatesToUsd,
-  RATES_TO_USD,
 } from "@/lib/currency/converterRates";
+import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 type PickerTarget = "from" | "to" | null;
 
 export default function CurrencyConverterScreen() {
+ const ac = useToolCopy();
+ const locale = useAppLanguage(s => s.locale);
   const router = useRouter();
   const [amount, setAmount] = useState("50000");
   const [from, setFrom] = useState("USD");
   const [to, setTo] = useState("GBP");
-  const [rates, setRates] = useState<Record<string, number>>(RATES_TO_USD);
-  const [lastUpdated, setLastUpdated] = useState("");
-  const [liveError, setLiveError] = useState("");
+  const [rates, setRates] = useState<Record<string, number>>({});
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
+  const [liveError, setLiveError] = useState(false);
   const [picker, setPicker] = useState<PickerTarget>(null);
 
   useEffect(() => {
@@ -42,12 +47,12 @@ export default function CurrencyConverterScreen() {
       const result = await fetchLiveRatesToUsd(CURRENCY_CODES);
       if (!active) return;
       if ("error" in result) {
-        setLiveError("Using fallback rates at the moment.");
+        setLiveError(true);
         return;
       }
       setRates((prev) => ({ ...prev, ...result.rates }));
-      setLiveError("");
-      setLastUpdated(result.updatedLabel);
+      setLiveError(false);
+      setLastUpdated(result.updatedAt);
     })();
     return () => {
       active = false;
@@ -55,8 +60,8 @@ export default function CurrencyConverterScreen() {
   }, []);
 
   const amountNum = useMemo(() => {
-    const n = Number(amount);
-    return Number.isFinite(n) && n >= 0 ? n : 0;
+    const n = parseBudgetCost(amount);
+    return typeof n === "number" && Number.isFinite(n) && n >= 0 ? n : Number.NaN;
   }, [amount]);
 
   const converted = useMemo(() => convertAmount(amountNum, from, to, rates), [amountNum, from, to, rates]);
@@ -73,26 +78,26 @@ export default function CurrencyConverterScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           <GshScreenIntro
-            eyebrow="Tools"
-            title="Salary & currency converter"
-            subtitle="Compare headline salaries across currencies when you are shortlisting countries — same tool as on the website, built for the app."
+            eyebrow={ac("Career toolkit")}
+            title={ac("Currency converter")}
+            subtitle={ac("This is a currency conversion. It does not estimate tax, take-home pay or living costs.")}
             style={{ marginBottom: 10 }}
           />
           <GshContentAccentBar />
 
           <View style={[styles.card, cardSurfaceStyle(true)]}>
-            <Text style={styles.label}>Amount</Text>
+            <Text style={styles.label}>{ac("Amount")}</Text>
             <TextInput
               style={styles.input}
               value={amount}
               onChangeText={setAmount}
               keyboardType="decimal-pad"
-              accessibilityLabel="Amount"
+              accessibilityLabel={ac("Amount")}
             />
 
             <View style={styles.row}>
               <View style={styles.col}>
-                <Text style={styles.label}>From</Text>
+                <Text style={styles.label}>{ac("From")}</Text>
                 <Pressable style={styles.select} onPress={() => setPicker("from")} accessibilityRole="button">
                   <Text style={styles.selectText}>{from}</Text>
                   <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
@@ -103,13 +108,13 @@ export default function CurrencyConverterScreen() {
                 style={styles.swapBtn}
                 onPress={swapCurrencies}
                 accessibilityRole="button"
-                accessibilityLabel="Swap currencies"
+                accessibilityLabel={ac("Swap currencies")}
               >
                 <Ionicons name="swap-horizontal" size={22} color={colors.brand} />
               </Pressable>
 
               <View style={styles.col}>
-                <Text style={styles.label}>To</Text>
+                <Text style={styles.label}>{ac("To")}</Text>
                 <Pressable style={styles.select} onPress={() => setPicker("to")} accessibilityRole="button">
                   <Text style={styles.selectText}>{to}</Text>
                   <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
@@ -117,38 +122,33 @@ export default function CurrencyConverterScreen() {
               </View>
             </View>
 
-            <Text style={styles.resultLabel}>Converted amount</Text>
-            <Text style={styles.result} accessibilityLabel={`Converted amount ${converted} ${to}`}>
-              {converted.toLocaleString(undefined, { maximumFractionDigits: 2 })} {to}
+            {!Number.isFinite(amountNum) ? <Text accessibilityRole="alert" style={styles.meta}>{ac("Enter an amount of zero or more.")}</Text> : null}
+            <Text style={styles.resultLabel}>{ac("Converted reference amount")}</Text>
+            <Text style={styles.result} accessibilityLabel={`${ac("Converted reference amount")} ${converted === null ? "—" : converted.toLocaleString(locale)} ${to}`}>
+              {converted === null ? "—" : `${converted.toLocaleString(locale, { maximumFractionDigits: 2 })} ${to}`}
             </Text>
 
             <Text style={styles.meta}>
-              {liveError || (lastUpdated ? `Live rates updated: ${lastUpdated}` : "Waiting for live rate update…")}
+              {liveError ? ac("Current reference rates are unavailable. Try again later.") : lastUpdated ? ac("Reference rates dated {date}.", {date: new Date(lastUpdated).toLocaleString(locale, {timeZone: "UTC"}) + " UTC"}) : ac("Loading reference rates…")}
             </Text>
+            <Pressable accessibilityRole="link" onPress={() => openExternalUrlInApp("https://www.exchangerate-api.com")}><Text style={styles.meta}>{ac("Rates by ExchangeRate-API")}</Text></Pressable>
           </View>
 
-          <GshGradientPrimaryButton title="Browse jobs" onPress={() => router.push("/(tabs)/jobs")} containerStyle={{ marginBottom: 12 }} />
+          <GshGradientPrimaryButton title={ac("Browse jobs")} onPress={() => router.push("/(tabs)/jobs")} containerStyle={{ marginBottom: 12 }} />
           <GshLinkRow
-            title="Compare countries"
-            subtitle="Shortlist destinations before you apply"
+            title={ac("Compare countries")}
+            subtitle={ac("Compare destinations, plan your budget and prepare questions.")}
             icon="git-compare-outline"
             accent="teal"
             onPress={() => router.push("/compare-countries")}
-          />
-          <GshLinkRow
-            title="Visa route wizard"
-            subtitle="Orientation for your destination"
-            icon="sparkles-outline"
-            accent="purple"
-            onPress={() => router.push("/visa-wizard")}
           />
         </ScrollView>
 
         <Modal visible={picker !== null} animationType="slide" transparent onRequestClose={() => setPicker(null)}>
           <View style={styles.modalRoot}>
-            <Pressable style={styles.modalBackdrop} onPress={() => setPicker(null)} accessibilityRole="button" accessibilityLabel="Close" />
+            <Pressable style={styles.modalBackdrop} onPress={() => setPicker(null)} accessibilityRole="button" accessibilityLabel={ac("Close")} />
             <View style={[styles.modalSheet, cardSurfaceStyle(true)]}>
-              <Text style={styles.modalTitle}>Select currency</Text>
+              <Text style={styles.modalTitle}>{ac("Select currency")}</Text>
               <FlatList
                 data={CURRENCY_CODES}
                 keyExtractor={(c) => c}
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(97, 10, 144, 0.08)",
+    backgroundColor: colors.brandSoft,
     marginBottom: 2,
   },
   select: {

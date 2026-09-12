@@ -5,6 +5,9 @@ export const STACK_HEADER_BODY_GAP = 20;
 
 /** ScrollView content under a stack header (Tools, Settings, ATS, etc.) */
 export const stackScrollContentStyle: ViewStyle = {
+  width: "100%",
+  maxWidth: 760,
+  alignSelf: "center",
   paddingHorizontal: 16,
   paddingTop: STACK_HEADER_BODY_GAP,
   paddingBottom: 48,

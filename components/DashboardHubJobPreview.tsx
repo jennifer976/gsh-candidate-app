@@ -21,7 +21,6 @@ export function DashboardHubJobPreview({
 
   return (
     <View style={[styles.card, feedCardStyle()]}>
-      <View style={styles.accentStrip} />
       <Pressable onPress={onPress} style={styles.hit} accessibilityRole="button">
         <CompanyLogo logoUrl={logoUrl} companyName={job.companyName} size={40} radius={11} />
         <View style={styles.mid}>
@@ -88,8 +87,8 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     borderRadius: radii.pill,
     borderWidth: 1,
-    borderColor: "rgba(14, 205, 209, 0.35)",
-    backgroundColor: "rgba(14, 205, 209, 0.08)",
+    borderColor: colors.teal,
+    backgroundColor: colors.brandSoft,
     paddingHorizontal: 8,
     paddingVertical: 3,
   },

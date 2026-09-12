@@ -1,0 +1,722 @@
+{
+  "en": {
+    "slug": "singapore-employment-pass-jobs",
+    "title": "Working in Singapore: check the pass and the offer",
+    "countryLabel": "Singapore",
+    "iso2": "sg",
+    "flagEmoji": "🇸🇬",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+    "excerpt": "Confirm the pass your employer proposes, the salary requirements and the steps before you can start. Plan family and living costs separately.",
+    "metaDescription": "Confirm the pass your employer proposes, the salary requirements and the steps before you can start. Plan family and living costs separately.",
+    "openingHook": "Confirm the pass your employer proposes, the salary requirements and the steps before you can start. Plan family and living costs separately.",
+    "quickFacts": [
+      {
+        "label": "Start here",
+        "value": "Check the job and your work rights"
+      },
+      {
+        "label": "Employer support",
+        "value": "Confirm what is included in writing"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Confirm the employer’s application",
+        "paragraphs": [
+          "An Employment Pass application is submitted by the employer or an appointed employment agent. Confirm who will apply, the documents needed and which role the application covers."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+        ]
+      },
+      {
+        "heading": "Check salary and COMPASS separately",
+        "paragraphs": [
+          "Employment Pass applicants must meet the qualifying salary and, unless exempt, pass COMPASS. Salary requirements depend on age, sector and relevant dates. The lowest published figure is not everyone’s threshold."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Treat S Pass as a different route",
+        "paragraphs": [
+          "S Pass has its own salary rules and employer quota and levy requirements. Ask the employer to check these before offering this route; it is not an automatic alternative to Employment Pass."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Check the step that allows you to start",
+        "paragraphs": [
+          "For Employment Pass, the notification letter after pass issuance allows work while you await the card. Do not treat an in-principle approval as the same document; confirm your start with the employer."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+        ]
+      },
+      {
+        "heading": "Check family and partner work rights",
+        "paragraphs": [
+          "Family passes have separate eligibility rules. A Dependant’s Pass does not automatically allow employment. Check the work pass or other permission required for your partner’s intended activity."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility",
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+        ]
+      },
+      {
+        "heading": "Plan your monthly budget",
+        "paragraphs": [
+          "Compare rent, transport, healthcare and school costs with your take-home pay. Ask what the employer pays and when benefits start. Get any moving allowance and repayment terms in writing."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Search jobs in Singapore",
+        "href": "/jobs?location=Singapore"
+      },
+      {
+        "label": "Browse independent specialists",
+        "href": "/specialists"
+      },
+      {
+        "label": "Relocation perks",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "fr": {
+    "slug": "singapore-employment-pass-jobs",
+    "title": "Travailler à Singapour : vérifier le permis et l’offre",
+    "countryLabel": "Singapour",
+    "iso2": "sg",
+    "flagEmoji": "🇸🇬",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+    "excerpt": "Confirmez le permis prévu, le salaire requis et les démarches avant le début du travail. Prévoyez séparément famille et coût de la vie.",
+    "metaDescription": "Confirmez le permis prévu, le salaire requis et les démarches avant le début du travail. Prévoyez séparément famille et coût de la vie.",
+    "openingHook": "Confirmez le permis prévu, le salaire requis et les démarches avant le début du travail. Prévoyez séparément famille et coût de la vie.",
+    "quickFacts": [
+      {
+        "label": "Pour commencer",
+        "value": "Vérifiez le poste et votre droit de travailler"
+      },
+      {
+        "label": "Aide de l’employeur",
+        "value": "Faites confirmer par écrit ce qui est inclus"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Confirmez la demande de l’employeur",
+        "paragraphs": [
+          "La demande d’Employment Pass est déposée par l’employeur ou son agent désigné. Confirmez le responsable, les documents et le poste concerné."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+        ]
+      },
+      {
+        "heading": "Vérifiez séparément salaire et COMPASS",
+        "paragraphs": [
+          "Il faut atteindre le salaire requis et, sauf dispense, réussir COMPASS. Le salaire dépend de l’âge, du secteur et des dates applicables. Le minimum publié ne vaut pas pour tous."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Considérez le S Pass comme une autre voie",
+        "paragraphs": [
+          "Le S Pass a ses propres règles salariales, quotas et prélèvements patronaux. Demandez vérification avant de retenir cette voie ; ce n’est pas une solution automatique à l’Employment Pass."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Vérifiez l’étape autorisant le début du travail",
+        "paragraphs": [
+          "Pour l’Employment Pass, la lettre après délivrance autorise le travail en attendant la carte. Ne la confondez pas avec l’accord de principe ; confirmez le début avec l’employeur."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+        ]
+      },
+      {
+        "heading": "Vérifiez les droits de la famille et du conjoint",
+        "paragraphs": [
+          "Les permis familiaux ont leurs propres critères. Un Dependant’s Pass n’autorise pas automatiquement un emploi. Vérifiez le permis de travail ou autre autorisation pour l’activité du conjoint."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility",
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+        ]
+      },
+      {
+        "heading": "Préparez votre budget mensuel",
+        "paragraphs": [
+          "Comparez loyer, transport, santé et école au revenu net. Demandez ce que paie l’employeur et le début des avantages. Obtenez aide au déménagement et remboursement éventuel par écrit."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Rechercher un emploi : Singapour",
+        "href": "/jobs?location=Singapore"
+      },
+      {
+        "label": "Consulter les spécialistes indépendants",
+        "href": "/specialists"
+      },
+      {
+        "label": "Avantages pour le déménagement",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "de": {
+    "slug": "singapore-employment-pass-jobs",
+    "title": "Arbeiten in Singapur: Arbeitspass und Angebot prüfen",
+    "countryLabel": "Singapur",
+    "iso2": "sg",
+    "flagEmoji": "🇸🇬",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+    "excerpt": "Kläre den vorgesehenen Arbeitspass, Gehaltsanforderungen und Schritte vor Arbeitsbeginn. Plane Familie und Lebenshaltungskosten gesondert.",
+    "metaDescription": "Kläre den vorgesehenen Arbeitspass, Gehaltsanforderungen und Schritte vor Arbeitsbeginn. Plane Familie und Lebenshaltungskosten gesondert.",
+    "openingHook": "Kläre den vorgesehenen Arbeitspass, Gehaltsanforderungen und Schritte vor Arbeitsbeginn. Plane Familie und Lebenshaltungskosten gesondert.",
+    "quickFacts": [
+      {
+        "label": "Hier beginnen",
+        "value": "Prüfe die Stelle und dein Recht zu arbeiten"
+      },
+      {
+        "label": "Hilfe des Arbeitgebers",
+        "value": "Lass dir schriftlich bestätigen, was enthalten ist"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Kläre den Antrag des Arbeitgebers",
+        "paragraphs": [
+          "Der Arbeitgeber oder eine beauftragte Vermittlung beantragt den Employment Pass. Kläre, wer den Antrag stellt, welche Unterlagen nötig sind und für welche Stelle er gilt."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+        ]
+      },
+      {
+        "heading": "Prüfe Gehalt und COMPASS getrennt",
+        "paragraphs": [
+          "Du musst das erforderliche Gehalt erreichen und, sofern nicht befreit, COMPASS bestehen. Gehaltsgrenzen hängen von Alter, Branche und Datum ab. Der niedrigste Wert gilt nicht für alle."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Betrachte den S Pass als eigenen Weg",
+        "paragraphs": [
+          "Der S Pass hat eigene Gehaltsregeln sowie Arbeitgeberquoten und Abgaben. Lass diese vorab prüfen; er ist keine automatische Alternative zum Employment Pass."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Prüfe, ab wann du arbeiten darfst",
+        "paragraphs": [
+          "Beim Employment Pass erlaubt das Schreiben nach Ausstellung die Arbeit bis zum Erhalt der Karte. Verwechsle es nicht mit der vorläufigen Zusage; kläre den Start mit dem Arbeitgeber."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+        ]
+      },
+      {
+        "heading": "Prüfe die Rechte deiner Familie",
+        "paragraphs": [
+          "Familienpässe haben eigene Voraussetzungen. Ein Dependant’s Pass erlaubt nicht automatisch eine Beschäftigung. Prüfe den nötigen Arbeitspass oder eine andere Genehmigung für die geplante Tätigkeit deines Partners."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility",
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+        ]
+      },
+      {
+        "heading": "Plane dein Monatsbudget",
+        "paragraphs": [
+          "Vergleiche Miete, Verkehr, Gesundheit und Schule mit dem Nettolohn. Frage, was der Arbeitgeber ab wann bezahlt. Lass Umzugshilfe und mögliche Rückzahlung schriftlich bestätigen."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Stellen suchen: Singapur",
+        "href": "/jobs?location=Singapore"
+      },
+      {
+        "label": "Unabhängige Spezialisten finden",
+        "href": "/specialists"
+      },
+      {
+        "label": "Angebote für deinen Umzug",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "es": {
+    "slug": "singapore-employment-pass-jobs",
+    "title": "Trabajar en Singapur: revisa el pase y la oferta",
+    "countryLabel": "Singapur",
+    "iso2": "sg",
+    "flagEmoji": "🇸🇬",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+    "excerpt": "Confirma el pase previsto, requisitos salariales y pasos antes de empezar. Planifica aparte familia y coste de vida.",
+    "metaDescription": "Confirma el pase previsto, requisitos salariales y pasos antes de empezar. Planifica aparte familia y coste de vida.",
+    "openingHook": "Confirma el pase previsto, requisitos salariales y pasos antes de empezar. Planifica aparte familia y coste de vida.",
+    "quickFacts": [
+      {
+        "label": "Empieza aquí",
+        "value": "Comprueba el puesto y tu derecho a trabajar"
+      },
+      {
+        "label": "Ayuda del empleador",
+        "value": "Confirma por escrito lo que incluye"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Confirma la solicitud de la empresa",
+        "paragraphs": [
+          "La empresa o su agente designado solicita el Employment Pass. Confirma quién lo presenta, qué documentos necesita y qué puesto cubre."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+        ]
+      },
+      {
+        "heading": "Revisa sueldo y COMPASS por separado",
+        "paragraphs": [
+          "Debes cumplir el sueldo requerido y, salvo exención, superar COMPASS. El salario depende de edad, sector y fechas aplicables. El mínimo publicado no vale para todos."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Trata el S Pass como otra vía",
+        "paragraphs": [
+          "El S Pass tiene reglas salariales, cuotas y tasas empresariales propias. Pide que se revisen antes de proponerlo; no es una alternativa automática al Employment Pass."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Comprueba cuándo puedes empezar",
+        "paragraphs": [
+          "En el Employment Pass, la carta tras la expedición permite trabajar mientras llega la tarjeta. No la confundas con la aprobación de principio; confirma el inicio con la empresa."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+        ]
+      },
+      {
+        "heading": "Revisa derechos de familia y pareja",
+        "paragraphs": [
+          "Los pases familiares tienen requisitos propios. Un Dependant’s Pass no permite trabajar automáticamente. Comprueba el pase laboral u otro permiso necesario para la actividad de tu pareja."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility",
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+        ]
+      },
+      {
+        "heading": "Prepara tu presupuesto mensual",
+        "paragraphs": [
+          "Compara alquiler, transporte, salud y escuela con tu sueldo neto. Pregunta qué paga la empresa y desde cuándo. Obtén ayuda de mudanza y posibles devoluciones por escrito."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Buscar empleo: Singapur",
+        "href": "/jobs?location=Singapore"
+      },
+      {
+        "label": "Buscar especialistas independientes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Ventajas para tu mudanza",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pt": {
+    "slug": "singapore-employment-pass-jobs",
+    "title": "Trabalhar em Singapura: verifique o passe e a oferta",
+    "countryLabel": "Singapura",
+    "iso2": "sg",
+    "flagEmoji": "🇸🇬",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+    "excerpt": "Confirme o passe previsto, requisitos salariais e passos antes de começar. Planeie à parte família e custo de vida.",
+    "metaDescription": "Confirme o passe previsto, requisitos salariais e passos antes de começar. Planeie à parte família e custo de vida.",
+    "openingHook": "Confirme o passe previsto, requisitos salariais e passos antes de começar. Planeie à parte família e custo de vida.",
+    "quickFacts": [
+      {
+        "label": "Comece aqui",
+        "value": "Verifique o emprego e o seu direito a trabalhar"
+      },
+      {
+        "label": "Apoio do empregador",
+        "value": "Confirme por escrito o que está incluído"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Confirme o pedido do empregador",
+        "paragraphs": [
+          "O empregador ou agente designado apresenta o pedido de Employment Pass. Confirme quem o fará, que documentos precisa e que emprego abrange."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+        ]
+      },
+      {
+        "heading": "Verifique salário e COMPASS separadamente",
+        "paragraphs": [
+          "Tem de cumprir o salário exigido e, salvo isenção, passar o COMPASS. O salário depende de idade, setor e datas aplicáveis. O mínimo publicado não se aplica a todos."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Considere o S Pass uma via diferente",
+        "paragraphs": [
+          "O S Pass tem regras salariais, quotas e taxas patronais próprias. Peça uma verificação antes de o propor; não é uma alternativa automática ao Employment Pass."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Verifique quando pode começar",
+        "paragraphs": [
+          "No Employment Pass, a carta após emissão permite trabalhar enquanto aguarda o cartão. Não a confunda com a aprovação de princípio; confirme o início com o empregador."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+        ]
+      },
+      {
+        "heading": "Verifique direitos da família e do parceiro",
+        "paragraphs": [
+          "Os passes familiares têm requisitos próprios. Um Dependant’s Pass não permite emprego automaticamente. Verifique o passe de trabalho ou outra autorização para a atividade do parceiro."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility",
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+        ]
+      },
+      {
+        "heading": "Prepare o orçamento mensal",
+        "paragraphs": [
+          "Compare renda, transporte, saúde e escola com o salário líquido. Pergunte o que o empregador paga e desde quando. Obtenha ajuda à mudança e possíveis reembolsos por escrito."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Procurar emprego: Singapura",
+        "href": "/jobs?location=Singapore"
+      },
+      {
+        "label": "Procurar especialistas independentes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantagens para a mudança",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "it": {
+    "slug": "singapore-employment-pass-jobs",
+    "title": "Lavorare a Singapore: verifica pass e offerta",
+    "countryLabel": "Singapore",
+    "iso2": "sg",
+    "flagEmoji": "🇸🇬",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+    "excerpt": "Conferma pass previsto, requisiti retributivi e passi prima di iniziare. Pianifica separatamente famiglia e costo della vita.",
+    "metaDescription": "Conferma pass previsto, requisiti retributivi e passi prima di iniziare. Pianifica separatamente famiglia e costo della vita.",
+    "openingHook": "Conferma pass previsto, requisiti retributivi e passi prima di iniziare. Pianifica separatamente famiglia e costo della vita.",
+    "quickFacts": [
+      {
+        "label": "Inizia qui",
+        "value": "Verifica il lavoro e il tuo diritto a lavorare"
+      },
+      {
+        "label": "Aiuto del datore di lavoro",
+        "value": "Fai confermare per iscritto cosa è incluso"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Conferma la domanda del datore",
+        "paragraphs": [
+          "Il datore o un agente incaricato presenta la domanda di Employment Pass. Conferma chi la invia, i documenti richiesti e il ruolo coperto."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+        ]
+      },
+      {
+        "heading": "Verifica separatamente stipendio e COMPASS",
+        "paragraphs": [
+          "Devi raggiungere il salario richiesto e, salvo esenzione, superare COMPASS. Le soglie dipendono da età, settore e date. Il minimo pubblicato non vale per tutti."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Considera l’S Pass un percorso diverso",
+        "paragraphs": [
+          "L’S Pass ha regole salariali, quote e contributi del datore propri. Chiedi di verificarli prima di proporlo; non è un’alternativa automatica all’Employment Pass."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Verifica quando puoi iniziare",
+        "paragraphs": [
+          "Per l’Employment Pass, la lettera dopo il rilascio permette di lavorare in attesa della carta. Non confonderla con l’approvazione di principio; conferma l’inizio con il datore."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+        ]
+      },
+      {
+        "heading": "Verifica i diritti di famiglia e partner",
+        "paragraphs": [
+          "I pass familiari hanno requisiti propri. Un Dependant’s Pass non permette automaticamente un impiego. Verifica il pass lavorativo o altro permesso per l’attività del partner."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility",
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+        ]
+      },
+      {
+        "heading": "Prepara il budget mensile",
+        "paragraphs": [
+          "Confronta affitto, trasporti, sanità e scuola con il reddito netto. Chiedi cosa paga il datore e da quando. Ottieni aiuti al trasferimento e restituzioni eventuali per iscritto."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Cerca lavoro: Singapore",
+        "href": "/jobs?location=Singapore"
+      },
+      {
+        "label": "Trova specialisti indipendenti",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantaggi per il trasferimento",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "nl": {
+    "slug": "singapore-employment-pass-jobs",
+    "title": "Werken in Singapore: controleer werkpas en aanbod",
+    "countryLabel": "Singapore",
+    "iso2": "sg",
+    "flagEmoji": "🇸🇬",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+    "excerpt": "Bevestig de voorgestelde werkpas, salarisvoorwaarden en stappen vóór je start. Plan gezins- en leefkosten apart.",
+    "metaDescription": "Bevestig de voorgestelde werkpas, salarisvoorwaarden en stappen vóór je start. Plan gezins- en leefkosten apart.",
+    "openingHook": "Bevestig de voorgestelde werkpas, salarisvoorwaarden en stappen vóór je start. Plan gezins- en leefkosten apart.",
+    "quickFacts": [
+      {
+        "label": "Begin hier",
+        "value": "Controleer de baan en je recht om te werken"
+      },
+      {
+        "label": "Hulp van de werkgever",
+        "value": "Laat schriftelijk bevestigen wat is inbegrepen"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Bevestig de aanvraag van de werkgever",
+        "paragraphs": [
+          "De werkgever of aangestelde arbeidsbemiddelaar vraagt de Employment Pass aan. Bevestig wie aanvraagt, welke documenten nodig zijn en voor welke functie."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+        ]
+      },
+      {
+        "heading": "Controleer salaris en COMPASS apart",
+        "paragraphs": [
+          "Je moet het vereiste salaris halen en, tenzij vrijgesteld, COMPASS doorstaan. Salarisgrenzen hangen af van leeftijd, sector en datum. Het laagste bedrag geldt niet voor iedereen."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Zie de S Pass als een andere route",
+        "paragraphs": [
+          "De S Pass heeft eigen salarisregels, werkgeversquota en heffingen. Laat de werkgever die eerst controleren; het is geen automatisch alternatief voor de Employment Pass."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Controleer wanneer je mag beginnen",
+        "paragraphs": [
+          "Bij de Employment Pass mag je na afgifte met de kennisgevingsbrief werken terwijl je op de kaart wacht. Verwar deze niet met voorlopige goedkeuring; bevestig je start met de werkgever."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+        ]
+      },
+      {
+        "heading": "Controleer gezins- en partnerwerkrechten",
+        "paragraphs": [
+          "Gezinspassen hebben eigen voorwaarden. Een Dependant’s Pass geeft niet automatisch werkrecht. Controleer welke werkpas of andere toestemming je partner voor de activiteit nodig heeft."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility",
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+        ]
+      },
+      {
+        "heading": "Maak je maandbudget",
+        "paragraphs": [
+          "Vergelijk huur, vervoer, zorg en school met je nettoloon. Vraag wat de werkgever betaalt en vanaf wanneer. Leg verhuishulp en eventuele terugbetaling schriftelijk vast."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Werk zoeken: Singapore",
+        "href": "/jobs?location=Singapore"
+      },
+      {
+        "label": "Onafhankelijke specialisten zoeken",
+        "href": "/specialists"
+      },
+      {
+        "label": "Voordelen voor je verhuizing",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pl": {
+    "slug": "singapore-employment-pass-jobs",
+    "title": "Praca w Singapurze: sprawdź pozwolenie i ofertę",
+    "countryLabel": "Singapur",
+    "iso2": "sg",
+    "flagEmoji": "🇸🇬",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+    "excerpt": "Potwierdź proponowane pozwolenie, wymogi płacowe i etapy przed rozpoczęciem. Osobno zaplanuj rodzinę i koszty życia.",
+    "metaDescription": "Potwierdź proponowane pozwolenie, wymogi płacowe i etapy przed rozpoczęciem. Osobno zaplanuj rodzinę i koszty życia.",
+    "openingHook": "Potwierdź proponowane pozwolenie, wymogi płacowe i etapy przed rozpoczęciem. Osobno zaplanuj rodzinę i koszty życia.",
+    "quickFacts": [
+      {
+        "label": "Zacznij tutaj",
+        "value": "Sprawdź ofertę i swoje prawo do pracy"
+      },
+      {
+        "label": "Pomoc pracodawcy",
+        "value": "Uzyskaj pisemne potwierdzenie zakresu pomocy"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Potwierdź wniosek pracodawcy",
+        "paragraphs": [
+          "Pracodawca lub wyznaczony agent składa wniosek o Employment Pass. Ustal, kto go złoży, jakie dokumenty są potrzebne i jakiego stanowiska dotyczy."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+        ]
+      },
+      {
+        "heading": "Sprawdź osobno płacę i COMPASS",
+        "paragraphs": [
+          "Trzeba spełnić próg płacowy i, poza zwolnieniami, przejść COMPASS. Płaca zależy od wieku, sektora i dat. Najniższa opublikowana kwota nie dotyczy wszystkich."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Traktuj S Pass jako odrębną ścieżkę",
+        "paragraphs": [
+          "S Pass ma własne zasady płacowe, limity i opłaty pracodawcy. Poproś o ich sprawdzenie przed wyborem tej ścieżki; nie jest automatycznym zamiennikiem Employment Pass."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+        ]
+      },
+      {
+        "heading": "Sprawdź, kiedy możesz zacząć",
+        "paragraphs": [
+          "Przy Employment Pass pismo po wydaniu pozwolenia umożliwia pracę w oczekiwaniu na kartę. Nie myl go ze wstępną zgodą; potwierdź start z pracodawcą."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+        ]
+      },
+      {
+        "heading": "Sprawdź prawa rodziny i partnera do pracy",
+        "paragraphs": [
+          "Pozwolenia rodzinne mają osobne warunki. Dependant’s Pass nie uprawnia automatycznie do zatrudnienia. Sprawdź pozwolenie na pracę lub inną zgodę wymaganą dla działalności partnera."
+        ],
+        "sources": [
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility",
+          "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+        ]
+      },
+      {
+        "heading": "Zaplanuj budżet miesięczny",
+        "paragraphs": [
+          "Porównaj czynsz, transport, zdrowie i szkołę z płacą netto. Zapytaj, co opłaca pracodawca i od kiedy. Uzyskaj dodatek przeprowadzkowy i zasady zwrotu na piśmie."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Szukaj pracy: Singapur",
+        "href": "/jobs?location=Singapore"
+      },
+      {
+        "label": "Znajdź niezależnych specjalistów",
+        "href": "/specialists"
+      },
+      {
+        "label": "Oferty na czas przeprowadzki",
+        "href": "/relocation-perks"
+      }
+    ]
+  }
+}

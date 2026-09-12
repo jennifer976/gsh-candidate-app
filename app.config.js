@@ -2,11 +2,25 @@
  * Single Expo config (no static app.json — required for `expo doctor`).
  * Build-time env fills `extra` for Supabase (same idea as NEXT_PUBLIC_SUPABASE_* on the website).
  */
-module.exports = () => ({
-  expo: {
-    name: "Global Sponsor Hub",
+module.exports = () => {
+  const isStaging = process.env.GSH_APP_VARIANT?.trim() === "staging";
+  const productionIntentFilters = [
+    {
+      action: "VIEW",
+      autoVerify: true,
+      data: [
+        { scheme: "https", host: "www.globalsponsorhub.com", pathPrefix: "/" },
+        { scheme: "https", host: "globalsponsorhub.com", pathPrefix: "/" },
+      ],
+      category: ["BROWSABLE", "DEFAULT"],
+    },
+  ];
+
+  return {
+    expo: {
+    name: isStaging ? "Global Sponsor Hub Staging" : "Global Sponsor Hub",
     slug: "gsh-candidate-app",
-    scheme: "gsh-candidate",
+    scheme: isStaging ? "gsh-candidate-staging" : "gsh-candidate",
     version: "1.0.1",
     orientation: "portrait",
     icon: "./assets/brand-icon.png",
@@ -15,44 +29,38 @@ module.exports = () => ({
     splash: {
       image: "./assets/brand-lockup-light.png",
       resizeMode: "contain",
-      backgroundColor: "#080f2e",
+      backgroundColor: "#0d194e",
     },
     ios: {
       supportsTablet: true,
-      bundleIdentifier: "com.globalsponsorhub.candidate",
-      associatedDomains: ["applinks:www.globalsponsorhub.com", "applinks:globalsponsorhub.com"],
+      bundleIdentifier: isStaging
+        ? "com.globalsponsorhub.candidate.staging"
+        : "com.globalsponsorhub.candidate",
+      associatedDomains: isStaging
+        ? []
+        : ["applinks:www.globalsponsorhub.com", "applinks:globalsponsorhub.com"],
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
         UIBackgroundModes: ["remote-notification"],
       },
     },
     android: {
-      package: "global.sponsor.hub",
-      intentFilters: [
-        {
-          action: "VIEW",
-          autoVerify: true,
-          data: [
-            { scheme: "https", host: "www.globalsponsorhub.com", pathPrefix: "/" },
-            { scheme: "https", host: "globalsponsorhub.com", pathPrefix: "/" },
-          ],
-          category: ["BROWSABLE", "DEFAULT"],
-        },
-      ],
+      package: isStaging ? "global.sponsor.hub.staging" : "global.sponsor.hub",
+      intentFilters: isStaging ? [] : productionIntentFilters,
       adaptiveIcon: {
         foregroundImage: "./assets/brand-icon.png",
-        backgroundColor: "#080f2e",
+        backgroundColor: "#0d194e",
       },
       predictiveBackGestureEnabled: false,
       softwareKeyboardLayoutMode: "resize",
     },
     androidStatusBar: {
-      backgroundColor: "#080f2e",
+      backgroundColor: "#0d194e",
       barStyle: "light-content",
       translucent: true,
     },
     androidNavigationBar: {
-      backgroundColor: "#080f2e",
+      backgroundColor: "#0d194e",
       barStyle: "light-content",
       enforceContrast: false,
     },
@@ -66,7 +74,7 @@ module.exports = () => ({
         "expo-notifications",
         {
           icon: "./assets/brand-icon.png",
-          color: "#0ecdd1",
+          color: "#42e0e3",
           defaultChannel: "default",
         },
       ],
@@ -74,8 +82,12 @@ module.exports = () => ({
       "expo-web-browser",
     ],
     extra: {
-      apiUrl: "https://api.globalsponsorhub.com",
-      siteUrl: "https://www.globalsponsorhub.com",
+      apiUrl:
+        process.env.EXPO_PUBLIC_API_URL?.trim() ||
+        "https://api.globalsponsorhub.com",
+      siteUrl:
+        process.env.EXPO_PUBLIC_SITE_URL?.trim() ||
+        "https://www.globalsponsorhub.com",
       privacyPolicyUrl: "https://www.globalsponsorhub.com/privacy-policy",
       router: {},
       eas: {
@@ -86,4 +98,5 @@ module.exports = () => ({
     },
     owner: "jennielouxx",
   },
-});
+  };
+};

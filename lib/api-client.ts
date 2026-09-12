@@ -1,3 +1,7 @@
+import {
+  externalJobQuery,
+  type PublicExternalJobFilters,
+} from "@/lib/external-job-filters";
 import { getApiV1BaseUrl, getMobileRegistrationKey } from "./config";
 export interface ApiError {
   message: string;
@@ -22,7 +26,7 @@ export function bindAuthTokenGetter(fn: () => string | null) {
 export async function apiFetchJson<T>(
   path: string,
   init?: RequestInit,
-  opts?: { auth?: boolean; timeoutMs?: number }
+  opts?: { auth?: boolean; timeoutMs?: number },
 ): Promise<T> {
   const auth = opts?.auth !== false;
   const timeoutMs = opts?.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS;
@@ -92,6 +96,10 @@ export async function apiFetchJson<T>(
     throw err;
   }
 
+  if (response.status === 204 || text.length === 0) {
+    return undefined as T;
+  }
+
   try {
     return JSON.parse(text) as T;
   } catch {
@@ -106,7 +114,7 @@ export async function loginRequest(email: string, password: string) {
       method: "POST",
       body: JSON.stringify({ email, password }),
     },
-    { auth: false }
+    { auth: false },
   );
 }
 
@@ -119,11 +127,14 @@ export async function registerCandidate(email: string, password: string) {
       body: JSON.stringify({ email, password, userType: "candidate" }),
       headers: mobileKey ? { "X-GSH-Mobile-Key": mobileKey } : undefined,
     },
-    { auth: false }
+    { auth: false },
   );
 }
 
-export async function registerCandidatePushToken(expoPushToken: string, platform: "ios" | "android" | "web") {
+export async function registerCandidatePushToken(
+  expoPushToken: string,
+  platform: "ios" | "android" | "web",
+) {
   return apiFetchJson<{ ok: boolean }>("/candidate/push-token", {
     method: "POST",
     body: JSON.stringify({ expoPushToken, platform }),
@@ -137,7 +148,13 @@ export async function verifyOtpRequest(userId: string, code: string) {
       method: "POST",
       body: JSON.stringify({ userId, code }),
     },
-    { auth: false }
+    { auth: false },
+  );
+}
+
+export async function fetchAuthSession() {
+  return apiFetchJson<import("@/types/models").AuthSessionResponse>(
+    "/auth/session",
   );
 }
 
@@ -161,45 +178,38 @@ export async function fetchOwnProfile(): Promise<Record<string, unknown>> {
   }
 }
 
-export async function fetchPublicJobs(params: Record<string, string | number | undefined>) {
+export async function fetchPublicJobs(
+  params: Record<string, string | number | undefined>,
+) {
   const q = new URLSearchParams();
   Object.entries(params).forEach(([k, v]) => {
-    if (v !== undefined && v !== null && String(v) !== "") q.append(k, String(v));
+    if (v !== undefined && v !== null && String(v) !== "")
+      q.append(k, String(v));
   });
   const qs = q.toString();
   return apiFetchJson<import("@/types/models").GetJobsResponse>(
     `/jobs/public${qs ? `?${qs}` : ""}`,
     undefined,
-    { auth: false }
+    { auth: false },
   );
 }
 
-export async function fetchPublicExternalJobListings(opts?: {
-  sourceType?: string;
-  q?: string;
-  page?: number;
-  perPage?: number;
-}) {
-  const q = new URLSearchParams();
-  const st = opts?.sourceType?.trim();
-  if (st) q.set("sourceType", st);
-  const search = opts?.q?.trim();
-  if (search) q.set("q", search);
-  if (opts?.page != null) q.set("page", String(opts.page));
-  if (opts?.perPage != null) q.set("perPage", String(opts.perPage));
-  const qs = q.toString();
-  return apiFetchJson<import("@/types/models").ExternalJobListingsPublicResponse>(
-    `/external-job-listings/public${qs ? `?${qs}` : ""}`,
-    undefined,
-    { auth: false }
-  );
+export async function fetchPublicExternalJobListings(
+  opts?: PublicExternalJobFilters,
+) {
+  const qs = externalJobQuery(opts);
+  return apiFetchJson<
+    import("@/types/models").ExternalJobListingsPublicResponse
+  >(`/external-job-listings/public${qs ? `?${qs}` : ""}`, undefined, {
+    auth: false,
+  });
 }
 
 export async function fetchPublicExternalJobById(id: string) {
   return apiFetchJson<import("@/types/models").ExternalJobListingPublic>(
     `/external-job-listings/public/${encodeURIComponent(id)}`,
     undefined,
-    { auth: false }
+    { auth: false },
   );
 }
 
@@ -218,16 +228,18 @@ export async function fetchPublicSponsorCompanies(params?: {
   return apiFetchJson<import("@/types/models").SponsorCompanyListResponse>(
     `/sponsor-companies/public${qs ? `?${qs}` : ""}`,
     undefined,
-    { auth: false }
+    { auth: false },
   );
 }
 
 /** Claimed / hiring employers with optional careers-page badges. */
 export async function fetchPublicEmployersDirectory(limit = 160) {
-  return apiFetchJson<import("@/types/models").PublicEmployersDirectoryResponse>(
+  return apiFetchJson<
+    import("@/types/models").PublicEmployersDirectoryResponse
+  >(
     `/jobs/public/employers?limit=${Math.min(Math.max(limit, 1), 200)}`,
     undefined,
-    { auth: false }
+    { auth: false },
   );
 }
 
@@ -235,7 +247,7 @@ export async function fetchPublicSponsorCompanyBySlug(slug: string) {
   return apiFetchJson<import("@/types/models").SponsorCompanyDetailResponse>(
     `/sponsor-companies/public/${encodeURIComponent(slug)}`,
     undefined,
-    { auth: false }
+    { auth: false },
   );
 }
 
@@ -243,16 +255,20 @@ export async function recordExternalApplyClick(listingId: string) {
   return apiFetchJson<{ applyUrl?: string }>(
     `/external-job-listings/public/${encodeURIComponent(listingId)}/apply-click`,
     { method: "POST" },
-    { auth: false }
+    { auth: false },
   );
 }
 
 export async function fetchJobById(id: string) {
-  return apiFetchJson<import("@/types/models").Job>(`/jobs/${encodeURIComponent(id)}`);
+  return apiFetchJson<import("@/types/models").Job>(
+    `/jobs/${encodeURIComponent(id)}`,
+  );
 }
 
 export async function fetchSavedJobs() {
-  return apiFetchJson<import("@/types/models").SavedJobPopulated[]>("/saved-jobs");
+  return apiFetchJson<import("@/types/models").SavedJobPopulated[]>(
+    "/saved-jobs",
+  );
 }
 
 export async function saveJob(jobId: string) {
@@ -263,18 +279,36 @@ export async function saveJob(jobId: string) {
 }
 
 export async function unsaveJob(savedJobOrJobId: string) {
-  return apiFetchJson(`/saved-jobs/${encodeURIComponent(savedJobOrJobId)}`, {
-    method: "DELETE",
-  });
+  try {
+    return await apiFetchJson(
+      `/saved-jobs/${encodeURIComponent(savedJobOrJobId)}`,
+      {
+        method: "DELETE",
+      },
+    );
+  } catch (error: unknown) {
+    const status = (error as ApiError | undefined)?.status;
+    // DELETE is idempotent from the candidate UI's perspective.
+    if (status === 404 || status === 410) return { message: "Already removed" };
+    throw error;
+  }
 }
 
-export async function applyToJob(jobId: string, coverLetter?: string, resume?: string) {
+export async function applyToJob(
+  jobId: string,
+  coverLetter: string,
+  resume: string,
+  screeningAnswers: import("@/types/models").ScreeningAnswer[] = [],
+  idempotencyKey?: string,
+) {
   return apiFetchJson("/applications", {
     method: "POST",
+    headers: idempotencyKey ? { "Idempotency-Key": idempotencyKey } : undefined,
     body: JSON.stringify({
       jobId,
-      coverLetter: coverLetter || undefined,
-      resume: resume?.trim() || undefined,
+      coverLetter: coverLetter.trim(),
+      resume: resume.trim(),
+      screeningAnswers,
     }),
   });
 }
@@ -284,9 +318,12 @@ export async function fetchApplications() {
 }
 
 export async function withdrawApplication(id: string) {
-  return apiFetchJson<{ message?: string }>(`/applications/${encodeURIComponent(id)}`, {
-    method: "DELETE",
-  });
+  return apiFetchJson<{ message?: string }>(
+    `/applications/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    },
+  );
 }
 
 export async function updateProfile(body: Record<string, unknown>) {
@@ -297,16 +334,21 @@ export async function updateProfile(body: Record<string, unknown>) {
 }
 
 /** Multipart upload — field name `file` per API. */
-export async function uploadFileFromUri(localUri: string, filename: string, mimeType: string) {
+export async function uploadFileFromUri(
+  localUri: string,
+  filename: string,
+  mimeType: string,
+) {
   const token = getToken();
   if (!token) throw { message: "Not signed in", status: 401 } as ApiError;
 
   const url = `${getApiV1BaseUrl()}/uploads/file`;
   const form = new FormData();
-  form.append(
-    "file",
-    { uri: localUri, name: filename, type: mimeType || "application/octet-stream" } as unknown as Blob
-  );
+  form.append("file", {
+    uri: localUri,
+    name: filename,
+    type: mimeType || "application/octet-stream",
+  } as unknown as Blob);
 
   const response = await fetch(url, {
     method: "POST",
@@ -332,12 +374,14 @@ export async function uploadFileFromUri(localUri: string, filename: string, mime
 // —— Messages ——
 
 export async function fetchConversations() {
-  return apiFetchJson<import("@/types/models").ConversationSummary[]>("/messages/conversations");
+  return apiFetchJson<import("@/types/models").ConversationSummary[]>(
+    "/messages/conversations",
+  );
 }
 
 export async function fetchThreadMessages(conversationId: string) {
   return apiFetchJson<import("@/types/models").ThreadMessage[]>(
-    `/messages/conversations/${encodeURIComponent(conversationId)}/messages`
+    `/messages/conversations/${encodeURIComponent(conversationId)}/messages`,
   );
 }
 
@@ -347,7 +391,7 @@ export async function sendThreadMessage(conversationId: string, body: string) {
     {
       method: "POST",
       body: JSON.stringify({ body }),
-    }
+    },
   );
 }
 
@@ -355,80 +399,136 @@ export async function sendThreadMessage(conversationId: string, body: string) {
 
 export async function fetchCandidateNotificationPrefs() {
   return apiFetchJson<import("@/types/models").CandidateNotificationPrefsDto>(
-    "/candidate/notification-prefs"
+    "/candidate/notification-prefs",
   );
 }
 
 export async function patchCandidateNotificationPrefs(
-  patch: Partial<import("@/types/models").CandidateNotificationPrefsDto>
+  patch: Partial<import("@/types/models").CandidateNotificationPrefsDto>,
 ) {
   return apiFetchJson<import("@/types/models").CandidateNotificationPrefsDto>(
     "/candidate/notification-prefs",
     {
       method: "PATCH",
       body: JSON.stringify(patch),
-    }
+    },
   );
 }
 
-export async function fetchJobMatches(opts?: { unread?: boolean; limit?: number }) {
+export async function fetchJobMatches(opts?: {
+  unread?: boolean;
+  limit?: number;
+}) {
   const q = new URLSearchParams();
   if (opts?.unread) q.set("unread", "1");
   if (opts?.limit != null) q.set("limit", String(opts.limit));
   const qs = q.toString();
   return apiFetchJson<import("@/types/models").JobMatchesResponse>(
-    `/candidate/job-matches${qs ? `?${qs}` : ""}`
+    `/candidate/job-matches${qs ? `?${qs}` : ""}`,
   );
 }
 
+export async function fetchEmployerFollows() {
+  return apiFetchJson<import("@/types/models").EmployerFollowListItem[]>(
+    "/candidate/employer-follows",
+  );
+}
+
+export async function createEmployerFollow(employerUserId: string) {
+  return apiFetchJson<import("@/types/models").EmployerFollowListItem>(
+    "/candidate/employer-follows",
+    {
+      method: "POST",
+      body: JSON.stringify({ employerUserId }),
+    },
+  );
+}
+
+export async function deleteEmployerFollow(followIdOrEmployerUserId: string) {
+  try {
+    return await apiFetchJson<{ message: string }>(
+      `/candidate/employer-follows/${encodeURIComponent(followIdOrEmployerUserId)}`,
+      { method: "DELETE" },
+    );
+  } catch (error: unknown) {
+    const status = (error as ApiError | undefined)?.status;
+    if (status === 404 || status === 410)
+      return { message: "Already unfollowed" };
+    throw error;
+  }
+}
+
 export async function markJobMatchRead(matchId: string) {
-  return apiFetchJson(`/candidate/job-matches/${encodeURIComponent(matchId)}/read`, {
-    method: "PATCH",
-    body: "{}",
-  });
+  return apiFetchJson(
+    `/candidate/job-matches/${encodeURIComponent(matchId)}/read`,
+    {
+      method: "PATCH",
+      body: "{}",
+    },
+  );
 }
 
 export async function markAllJobMatchesRead() {
-  return apiFetchJson<{ message: string }>("/candidate/job-matches/mark-all-read", {
-    method: "POST",
-    body: "{}",
-  });
+  return apiFetchJson<{ message: string }>(
+    "/candidate/job-matches/mark-all-read",
+    {
+      method: "POST",
+      body: "{}",
+    },
+  );
 }
 
 export async function fetchJobSearchAlerts() {
-  return apiFetchJson<import("@/types/models").JobSearchAlertDto[]>("/candidate/job-search-alerts");
+  return apiFetchJson<import("@/types/models").JobSearchAlertDto[]>(
+    "/candidate/job-search-alerts",
+  );
 }
 
-export async function createJobSearchAlert(name: string, filters: Record<string, unknown>) {
-  return apiFetchJson<import("@/types/models").JobSearchAlertDto>("/candidate/job-search-alerts", {
-    method: "POST",
-    body: JSON.stringify({ name, filters }),
-  });
+export async function createJobSearchAlert(
+  name: string,
+  filters: Record<string, unknown>,
+) {
+  return apiFetchJson<import("@/types/models").JobSearchAlertDto>(
+    "/candidate/job-search-alerts",
+    {
+      method: "POST",
+      body: JSON.stringify({ name, filters }),
+    },
+  );
 }
 
 export async function patchJobSearchAlert(
   id: string,
-  body: Partial<{ name: string; isActive: boolean; filters: Record<string, unknown> }>
+  body: Partial<{
+    name: string;
+    isActive: boolean;
+    filters: Record<string, unknown>;
+  }>,
 ) {
   return apiFetchJson<import("@/types/models").JobSearchAlertDto>(
     `/candidate/job-search-alerts/${encodeURIComponent(id)}`,
     {
       method: "PATCH",
       body: JSON.stringify(body),
-    }
+    },
   );
 }
 
 export async function deleteJobSearchAlert(id: string) {
-  return apiFetchJson<{ message: string }>(`/candidate/job-search-alerts/${encodeURIComponent(id)}`, {
-    method: "DELETE",
-  });
+  return apiFetchJson<{ message: string }>(
+    `/candidate/job-search-alerts/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    },
+  );
 }
 
 // —— Candidate dashboard ——
 
 export async function fetchCandidateDashboard() {
-  return apiFetchJson<import("@/types/models").CandidateDashboardResponse>("/analytics/candidate-dashboard");
+  return apiFetchJson<import("@/types/models").CandidateDashboardResponse>(
+    "/analytics/candidate-dashboard",
+  );
 }
 
 // —— In-app notification feed (bell / inbox) ——
@@ -444,7 +544,7 @@ export async function fetchNotificationFeed(opts?: {
   if (opts?.before) q.set("before", opts.before);
   const qs = q.toString();
   return apiFetchJson<import("@/types/models").NotificationListResponse>(
-    `/notifications${qs ? `?${qs}` : ""}`
+    `/notifications${qs ? `?${qs}` : ""}`,
   );
 }
 
@@ -465,9 +565,12 @@ export async function markAllAppNotificationsRead() {
 }
 
 export async function dismissAppNotification(id: string) {
-  return apiFetchJson<{ message: string }>(`/notifications/${encodeURIComponent(id)}`, {
-    method: "DELETE",
-  });
+  return apiFetchJson<{ message: string }>(
+    `/notifications/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    },
+  );
 }
 
 // —— Feedback ——
@@ -494,22 +597,29 @@ export async function requestForgotPassword(email: string) {
       method: "POST",
       body: JSON.stringify({ email }),
     },
-    { auth: false }
+    { auth: false },
   );
 }
 
-export async function resetPasswordWithOtp(email: string, code: string, newPassword: string) {
+export async function resetPasswordWithOtp(
+  email: string,
+  code: string,
+  newPassword: string,
+) {
   return apiFetchJson<{ message: string }>(
     "/auth/reset-password",
     {
       method: "POST",
       body: JSON.stringify({ email, code, newPassword }),
     },
-    { auth: false }
+    { auth: false },
   );
 }
 
-export async function changePassword(currentPassword: string, newPassword: string) {
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+) {
   return apiFetchJson("/auth/change-password", {
     method: "POST",
     body: JSON.stringify({ currentPassword, newPassword }),
@@ -527,16 +637,19 @@ export async function deleteCandidateAccount(password: string, reason: string) {
 // —— Partners directory ——
 
 /** Public mobility partner directory (no auth — not the authenticated `/partners` admin list). */
-export async function fetchPartners(params?: Record<string, string | number | undefined>) {
+export async function fetchPartners(
+  params?: Record<string, string | number | undefined>,
+) {
   const q = new URLSearchParams();
   Object.entries(params ?? {}).forEach(([k, v]) => {
-    if (v !== undefined && v !== null && String(v) !== "") q.append(k, String(v));
+    if (v !== undefined && v !== null && String(v) !== "")
+      q.append(k, String(v));
   });
   const qs = q.toString();
   return apiFetchJson<import("@/types/models").PartnersListResponse>(
     `/partners/directory${qs ? `?${qs}` : ""}`,
     undefined,
-    { auth: false }
+    { auth: false },
   );
 }
 
@@ -544,16 +657,16 @@ export async function fetchPartnerById(id: string) {
   return apiFetchJson<import("@/types/models").PartnerDetailResponse>(
     `/partners/directory/${encodeURIComponent(id)}`,
     undefined,
-    { auth: false }
+    { auth: false },
   );
 }
 
 // —— Candidate practical resources & application tracker ——
 
 export async function fetchTrackedApplications() {
-  return apiFetchJson<{ data: import("@/types/models").CandidateTrackedApplication[] }>(
-    "/candidate-tools/tracked-applications"
-  );
+  return apiFetchJson<{
+    data: import("@/types/models").CandidateTrackedApplication[];
+  }>("/candidate-tools/tracked-applications");
 }
 
 export async function createTrackedApplication(body: {
@@ -564,37 +677,71 @@ export async function createTrackedApplication(body: {
 }) {
   return apiFetchJson<import("@/types/models").CandidateTrackedApplication>(
     "/candidate-tools/tracked-applications",
-    { method: "POST", body: JSON.stringify(body) }
+    { method: "POST", body: JSON.stringify(body) },
   );
 }
 
 export async function patchTrackedApplication(
   id: string,
-  body: Partial<import("@/types/models").CandidateTrackedApplication>
+  body: Partial<import("@/types/models").CandidateTrackedApplication>,
 ) {
   return apiFetchJson<import("@/types/models").CandidateTrackedApplication>(
     `/candidate-tools/tracked-applications/${encodeURIComponent(id)}`,
-    { method: "PATCH", body: JSON.stringify(body) }
+    { method: "PATCH", body: JSON.stringify(body) },
   );
 }
 
 export async function deleteTrackedApplication(id: string) {
   return apiFetchJson<{ message: string }>(
     `/candidate-tools/tracked-applications/${encodeURIComponent(id)}`,
-    { method: "DELETE" }
+    { method: "DELETE" },
   );
+}
+
+export async function fetchCandidateResourceSaves() {
+  return apiFetchJson<{
+    data: import("@/types/models").CandidateResourceSave[];
+  }>("/candidate-tools/resource-saves");
+}
+
+export async function createCandidateResourceSave(body: {
+  resourceSlug: string;
+  title: string;
+  resourceUrl?: string;
+}) {
+  return apiFetchJson<import("@/types/models").CandidateResourceSave>(
+    "/candidate-tools/resource-saves",
+    { method: "POST", body: JSON.stringify(body) },
+  );
+}
+
+export async function deleteCandidateResourceSave(id: string) {
+  try {
+    return await apiFetchJson<{ message: string }>(
+      `/candidate-tools/resource-saves/${encodeURIComponent(id)}`,
+      { method: "DELETE" },
+    );
+  } catch (error: unknown) {
+    const status = (error as ApiError | undefined)?.status;
+    if (status === 404 || status === 410) return { message: "Already removed" };
+    throw error;
+  }
 }
 
 // —— Partner offers (referral codes) ——
 
-export async function fetchCandidateOffers(params?: { page?: number; perPage?: number; q?: string }) {
+export async function fetchCandidateOffers(params?: {
+  page?: number;
+  perPage?: number;
+  q?: string;
+}) {
   const q = new URLSearchParams();
   if (params?.page) q.set("page", String(params.page));
   if (params?.perPage) q.set("perPage", String(params.perPage));
   if (params?.q) q.set("q", params.q);
   const qs = q.toString();
   return apiFetchJson<import("@/types/models").ReferralCodesListResponse>(
-    `/referral-codes${qs ? `?${qs}` : ""}`
+    `/referral-codes${qs ? `?${qs}` : ""}`,
   );
 }
 
@@ -607,19 +754,24 @@ export async function trackReferralCodeCopy(id: string) {
 
 // —— Relocation perks (dashboard affiliate offers) ——
 
-export async function fetchRelocationPerks(audience: "candidate" | "employer" = "candidate") {
-  return apiFetchJson<import("@/types/models").RelocationPerksDashboardResponse>(
-    `/relocation-perks?audience=${audience}`
-  );
+export async function fetchRelocationPerks(
+  audience: "candidate" | "employer" = "candidate",
+) {
+  return apiFetchJson<
+    import("@/types/models").RelocationPerksDashboardResponse
+  >(`/relocation-perks?audience=${audience}`);
 }
 
 // —— ATS assistant ——
 
 export async function atsParseProfile(cvText: string) {
-  return apiFetchJson<{ profile: Record<string, unknown> }>("/candidate/ats/parse-profile", {
-    method: "POST",
-    body: JSON.stringify({ cvText }),
-  });
+  return apiFetchJson<{ profile: Record<string, unknown> }>(
+    "/candidate/ats/parse-profile",
+    {
+      method: "POST",
+      body: JSON.stringify({ cvText }),
+    },
+  );
 }
 
 export async function atsAnalyze(body: {
@@ -627,9 +779,206 @@ export async function atsAnalyze(body: {
   jobDescription: string;
   country: string;
   role: string;
+  locale?: import("./i18n/catalog").AppLanguage;
 }) {
-  return apiFetchJson<{ analysis: Record<string, unknown> }>("/candidate/ats/analyze", {
+  return apiFetchJson<{ analysis: Record<string, unknown> }>(
+    "/candidate/ats/analyze",
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+    },
+  );
+}
+
+// —— Candidate mobility compatibility ——
+
+export async function fetchMyJobCompatibility(jobId: string) {
+  return apiFetchJson<{ data: import("@/types/mobility").CompatibilityResult }>(
+    `/compatibility/jobs/${encodeURIComponent(jobId)}/me`,
+    { method: "POST", body: "{}" },
+  );
+}
+
+export async function fetchMyJobsCompatibilityBatch(jobIds: string[]) {
+  return apiFetchJson<{
+    data:
+      | Array<{
+          jobId: string;
+          compatibility: import("@/types/mobility").CompatibilityResult;
+        }>
+      | Record<string, import("@/types/mobility").CompatibilityResult>;
+  }>("/compatibility/jobs/me/batch", {
     method: "POST",
-    body: JSON.stringify(body),
+    body: JSON.stringify({ jobIds: Array.from(new Set(jobIds)).slice(0, 20) }),
   });
+}
+
+// —— Candidate Phase 6 actions ——
+
+export async function fetchMyRelocationHelpRequests() {
+  return apiFetchJson<{
+    data: import("@/types/phase6").RelocationHelpRequest[];
+  }>("/phase6/relocation-help/requests/mine");
+}
+
+export async function fetchMyRelocationHelpRequest(id: string) {
+  const encodedId = encodeURIComponent(id);
+  try {
+    return await apiFetchJson<{
+      data: import("@/types/phase6").RelocationHelpRequest;
+    }>(`/phase6/relocation-help/requests/${encodedId}`);
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    if (apiError.status !== 404) throw error;
+    const legacy = await fetchMyRelocationHelpRequests();
+    const request = legacy.data.find((item) => item._id === id);
+    if (!request) throw error;
+    return { data: request };
+  }
+}
+
+export async function createRelocationHelpRequest(
+  body: import("@/types/phase6").RelocationHelpInput,
+  requestKey?: string,
+) {
+  return apiFetchJson<{ data: import("@/types/phase6").RelocationHelpRequest }>(
+    "/phase6/relocation-help/requests",
+    {
+      method: "POST",
+      ...(requestKey ? { headers: { "Idempotency-Key": requestKey } } : {}),
+      body: JSON.stringify(body),
+    },
+  );
+}
+
+export async function transitionRelocationHelpRequest(
+  id: string,
+  status: "withdrawn" | "closed",
+) {
+  return apiFetchJson<{ data: import("@/types/phase6").RelocationHelpRequest }>(
+    `/phase6/relocation-help/requests/${encodeURIComponent(id)}/status`,
+    { method: "PATCH", body: JSON.stringify({ status }) },
+  );
+}
+
+export async function fetchCandidateAgencyIntroductions(
+  status?: import("@/types/phase6").IntroductionStatus,
+) {
+  const query = status ? `?status=${encodeURIComponent(status)}` : "";
+  return apiFetchJson<{
+    data: import("@/types/phase6").CandidateAgencyIntroduction[];
+    pagination: import("@/types/phase6").Phase6Pagination;
+  }>(`/phase6/candidate/agency-introductions${query}`);
+}
+
+export async function fetchCandidateAgencyIntroduction(id: string) {
+  return apiFetchJson<{
+    data: import("@/types/phase6").CandidateAgencyIntroduction;
+  }>(`/phase6/candidate/agency-introductions/${encodeURIComponent(id)}`);
+}
+
+export async function respondToCandidateAgencyIntroduction(
+  id: string,
+  status: "consented" | "declined",
+  idempotencyKey: string,
+) {
+  return apiFetchJson<{
+    data: import("@/types/phase6").CandidateAgencyIntroduction;
+  }>(
+    `/phase6/candidate/agency-introductions/${encodeURIComponent(id)}/status`,
+    {
+      method: "PATCH",
+      headers: { "Idempotency-Key": idempotencyKey },
+      body: JSON.stringify({ status }),
+    },
+  );
+}
+
+type CandidateJourneyEventName =
+  | "global_mobility_profile_started"
+  | "relocation_help_started";
+const journeyEventsSent = new Set<CandidateJourneyEventName>();
+
+/** Bounded, non-PII, action-triggered analytics. Duplicate passive captures are suppressed per app session. */
+export async function recordCandidateJourneyStart(
+  eventName: CandidateJourneyEventName,
+): Promise<void> {
+  if (journeyEventsSent.has(eventName)) return;
+  journeyEventsSent.add(eventName);
+  try {
+    await apiFetchJson<{ ok: boolean }>("/analytics/journey-event", {
+      method: "POST",
+      body: JSON.stringify({
+        eventName,
+        metadata: { audience: "candidate", role: "candidate" },
+      }),
+    });
+  } catch {
+    journeyEventsSent.delete(eventName);
+  }
+}
+
+type CandidateExtractionJourneyEvent =
+  | "candidate_extraction_review_opened"
+  | "candidate_extraction_review_submitted"
+  | "candidate_extraction_draft_discarded";
+
+/** Extraction telemetry is allowlisted and contains no draft IDs, field values, snippets, or profile data. */
+export async function recordCandidateExtractionJourneyEvent(
+  eventName: CandidateExtractionJourneyEvent,
+): Promise<void> {
+  const metadata =
+    eventName === "candidate_extraction_review_submitted"
+      ? { sourceKind: "resume", outcome: "reviewed" }
+      : { sourceKind: "resume" };
+  await apiFetchJson<{ ok: boolean }>("/analytics/journey-event", {
+    method: "POST",
+    body: JSON.stringify({ eventName, metadata }),
+  }).catch(() => undefined);
+}
+
+// —— Candidate-owned governed extraction ——
+
+export async function fetchCandidateExtractionStatus() {
+  return apiFetchJson<
+    import("@/types/candidate-extraction").CandidateExtractionCapability
+  >("/candidate-extraction/status");
+}
+
+export async function createCandidateResumeExtractionDraft() {
+  return apiFetchJson<
+    import("@/types/candidate-extraction").CandidateExtractionDraft
+  >(
+    "/candidate-extraction/drafts",
+    { method: "POST", body: JSON.stringify({ sourceKind: "resume" }) },
+    { timeoutMs: 65_000 },
+  );
+}
+
+export async function fetchCandidateExtractionDraft(draftId: string) {
+  return apiFetchJson<
+    import("@/types/candidate-extraction").CandidateExtractionDraft
+  >(`/candidate-extraction/drafts/${encodeURIComponent(draftId)}`);
+}
+
+export async function reviewCandidateExtractionDraft(
+  draftId: string,
+  acceptedSuggestionIds: string[],
+  rejectedSuggestionIds: string[],
+) {
+  return apiFetchJson<
+    import("@/types/candidate-extraction").CandidateExtractionReviewResponse
+  >(`/candidate-extraction/drafts/${encodeURIComponent(draftId)}/review`, {
+    method: "POST",
+    body: JSON.stringify({ acceptedSuggestionIds, rejectedSuggestionIds }),
+  });
+}
+
+export async function deleteCandidateExtractionDraft(
+  draftId: string,
+): Promise<void> {
+  await apiFetchJson<void>(
+    `/candidate-extraction/drafts/${encodeURIComponent(draftId)}`,
+    { method: "DELETE" },
+  );
 }

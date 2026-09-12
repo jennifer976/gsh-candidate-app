@@ -1,18 +1,34 @@
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { fetchSavedJobs, unsaveJob } from "@/lib/api-client";
 import { hapticLight, hapticSuccess } from "@/lib/haptics";
-import { getJobEmployerLabel, getJobLogoUrl, jobFromSavedRow } from "@/lib/job-display";
+import {
+  getJobEmployerLabel,
+  getJobLogoUrl,
+  jobFromSavedRow,
+} from "@/lib/job-display";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { Job, SavedJobPopulated } from "@/types/models";
 
 export default function SavedJobsScreen() {
+  const ac = useAccountCopy();
+
   const router = useRouter();
   const qc = useQueryClient();
 
@@ -22,12 +38,15 @@ export default function SavedJobsScreen() {
   });
 
   const unsave = useMutation({
-    mutationFn: (row: SavedJobPopulated) => unsaveJob(row._id),
-    onSuccess: () => { void hapticSuccess(); void qc.invalidateQueries({ queryKey: ["saved-jobs"] }); },
+    mutationFn: (row: SavedJobPopulated) => unsaveJob(row.id ?? row._id),
+    onSuccess: () => {
+      void hapticSuccess();
+      void qc.invalidateQueries({ queryKey: ["saved-jobs"] });
+    },
     onError: (e: unknown) =>
       Alert.alert(
-        "Could not remove",
-        e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Try again."
+        ac("Could not remove"),
+        ac("Please try again."),
       ),
   });
 
@@ -35,9 +54,11 @@ export default function SavedJobsScreen() {
 
   const listHeader = (
     <GshScreenIntro
-      eyebrow="Shortlist"
-      title="Saved roles"
-      subtitle="Roles you bookmarked — tap to view full details or remove ones you're no longer interested in."
+      eyebrow={ac("Your shortlist")}
+      title={ac("Saved jobs")}
+      subtitle={ac(
+        "Open a saved job to see its details, or remove it from your list.",
+      )}
       underStackHeader
       style={{ paddingHorizontal: 16, marginBottom: 4 }}
     />
@@ -49,14 +70,24 @@ export default function SavedJobsScreen() {
         {query.isLoading ? (
           <View style={styles.center}>
             <ActivityIndicator size="large" color={colors.brand} />
-            <Text style={styles.muted}>Loading saved roles…</Text>
+            <Text style={styles.muted}>{ac("Loading saved jobs…")}</Text>
           </View>
         ) : query.isError ? (
           <View style={styles.center}>
-            <Ionicons name="alert-circle-outline" size={40} color={colors.error} />
-            <Text style={styles.err}>Saved jobs could not be loaded.</Text>
-            <Pressable onPress={() => void query.refetch()} accessibilityRole="button" accessibilityLabel="Retry loading saved jobs">
-              <Text style={styles.retry}>Try again</Text>
+            <Ionicons
+              name="alert-circle-outline"
+              size={40}
+              color={colors.error}
+            />
+            <Text style={styles.err}>
+              {ac("Saved jobs could not be loaded.")}
+            </Text>
+            <Pressable
+              onPress={() => void query.refetch()}
+              accessibilityRole="button"
+              accessibilityLabel={ac("Try again")}
+            >
+              <Text style={styles.retry}>{ac("Try again")}</Text>
             </Pressable>
           </View>
         ) : (
@@ -64,7 +95,12 @@ export default function SavedJobsScreen() {
             data={rows}
             keyExtractor={(item) => item._id}
             ListHeaderComponent={listHeader}
-            refreshControl={<RefreshControl refreshing={query.isFetching} onRefresh={() => query.refetch()} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={query.isFetching}
+                onRefresh={() => query.refetch()}
+              />
+            }
             contentContainerStyle={styles.listPad}
             renderItem={({ item }) => {
               const job = jobFromSavedRow(item);
@@ -73,11 +109,18 @@ export default function SavedJobsScreen() {
               const logoUrl = getJobLogoUrl(job);
               return (
                 <View style={[styles.card, cardSurfaceStyle(true)]}>
-                  <View style={styles.accent} />
                   <View style={styles.cardBody}>
-                    <Pressable onPress={() => router.push(`/job/${job._id}`)} style={styles.cardMain}>
+                    <Pressable
+                      onPress={() => router.push(`/job/${job._id}`)}
+                      style={styles.cardMain}
+                    >
                       <View style={styles.cardTitleRow}>
-                        <CompanyLogo logoUrl={logoUrl} companyName={employer} size={44} radius={12} />
+                        <CompanyLogo
+                          logoUrl={logoUrl}
+                          companyName={employer}
+                          size={44}
+                          radius={12}
+                        />
                         <View style={styles.cardTitleCol}>
                           <Text style={styles.cardTitle} numberOfLines={2}>
                             {job.title}
@@ -88,8 +131,12 @@ export default function SavedJobsScreen() {
                         </View>
                       </View>
                       <View style={styles.cardHint}>
-                        <Text style={styles.viewRole}>Open role</Text>
-                        <Ionicons name="chevron-forward" size={18} color={colors.brand} />
+                        <Text style={styles.viewRole}>{ac("Open job")}</Text>
+                        <Ionicons
+                          name="chevron-forward"
+                          size={18}
+                          color={colors.brand}
+                        />
                       </View>
                     </Pressable>
                     <Pressable
@@ -97,10 +144,14 @@ export default function SavedJobsScreen() {
                       onPress={() => unsave.mutate(item)}
                       disabled={unsave.isPending}
                       accessibilityRole="button"
-                      accessibilityLabel="Remove from saved"
+                      accessibilityLabel={ac("Remove from saved")}
                     >
-                      <Ionicons name="trash-outline" size={18} color={colors.error} />
-                      <Text style={styles.removeText}>Remove</Text>
+                      <Ionicons
+                        name="trash-outline"
+                        size={18}
+                        color={colors.error}
+                      />
+                      <Text style={styles.removeText}>{ac("Remove")}</Text>
                     </Pressable>
                   </View>
                 </View>
@@ -109,10 +160,18 @@ export default function SavedJobsScreen() {
             ListEmptyComponent={
               <View style={styles.emptyWrap}>
                 <View style={styles.emptyIcon}>
-                  <Ionicons name="bookmark-outline" size={40} color={colors.brand} />
+                  <Ionicons
+                    name="bookmark-outline"
+                    size={40}
+                    color={colors.brand}
+                  />
                 </View>
-                <Text style={styles.empty}>Nothing saved yet</Text>
-                <Text style={styles.emptySub}>When you find a role worth coming back to, tap the bookmark. It'll be here waiting.</Text>
+                <Text style={styles.empty}>{ac("Nothing saved yet")}</Text>
+                <Text style={styles.emptySub}>
+                  {ac(
+                    "Save a job with the bookmark button to return to it here.",
+                  )}
+                </Text>
               </View>
             }
           />
@@ -125,17 +184,36 @@ export default function SavedJobsScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 12 },
-  card: { flexDirection: "row", borderRadius: radii.lg, overflow: "hidden" },
-  accent: { width: 5, backgroundColor: colors.teal },
+  card: { borderRadius: radii.lg, overflow: "hidden" },
   cardBody: { flex: 1 },
   cardMain: { padding: 16 },
   cardTitleRow: { flexDirection: "row", alignItems: "flex-start", gap: 12 },
   cardTitleCol: { flex: 1, minWidth: 0 },
-  cardTitle: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.2 },
-  cardCompany: { marginTop: 4, fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textMarketing },
-  cardHint: { flexDirection: "row", alignItems: "center", marginTop: 12, gap: 4 },
-  viewRole: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.brand },
+  cardTitle: {
+    fontSize: 17,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+    letterSpacing: -0.2,
+  },
+  cardCompany: {
+    marginTop: 4,
+    fontSize: 15,
+    fontFamily: fontFamily.semiBold,
+    color: colors.textMarketing,
+  },
+  cardHint: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 12,
+    gap: 4,
+  },
+  viewRole: {
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: colors.brand,
+  },
   removeBtn: {
+    minHeight: 48,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -145,23 +223,56 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     backgroundColor: colors.background,
   },
-  removeText: { color: colors.error, fontFamily: fontFamily.semiBold, fontSize: 15 },
-  center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
-  muted: { color: colors.textMuted, fontSize: 15, fontFamily: fontFamily.medium },
-  err: { color: colors.error, textAlign: "center", fontFamily: fontFamily.medium },
-  retry: { color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 16, marginTop: 4 },
-  emptyWrap: { alignItems: "center", paddingHorizontal: 24, marginTop: 32, gap: 10 },
+  removeText: {
+    color: colors.error,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+    gap: 12,
+  },
+  muted: {
+    color: colors.textMuted,
+    fontSize: 15,
+    fontFamily: fontFamily.medium,
+  },
+  err: {
+    color: colors.error,
+    textAlign: "center",
+    fontFamily: fontFamily.medium,
+  },
+  retry: {
+    color: colors.brand,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 16,
+    marginTop: 4,
+  },
+  emptyWrap: {
+    alignItems: "center",
+    paddingHorizontal: 24,
+    marginTop: 32,
+    gap: 10,
+  },
   emptyIcon: {
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: colors.purpleMuted,
+    backgroundColor: colors.brandSoft,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: colors.purpleBorder,
+    borderColor: "rgba(66,224,227,0.45)",
   },
-  empty: { textAlign: "center", color: colors.navy, fontFamily: fontFamily.bold, fontSize: 18 },
+  empty: {
+    textAlign: "center",
+    color: colors.navy,
+    fontFamily: fontFamily.bold,
+    fontSize: 18,
+  },
   emptySub: {
     textAlign: "center",
     color: colors.textMuted,

@@ -30,7 +30,7 @@ function queryTarget(row: InventoryRow, search: string): string | null {
 
 /**
  * Resolves every maintained public route to a native screen or the exact canonical
- * first-party page. Unknown GSH paths deliberately preserve their path/query/hash.
+ * first-party page. Unknown Global Sponsor Hub paths deliberately preserve their path/query/hash.
  */
 export function resolvePublicRoute(input: string): PublicRouteResolution | null {
   const trimmed = input.trim();
@@ -38,9 +38,17 @@ export function resolvePublicRoute(input: string): PublicRouteResolution | null 
 
   let url: URL;
   try {
-    url = /^https?:\/\//i.test(trimmed)
-      ? new URL(trimmed)
-      : new URL(trimmed.startsWith("/") ? trimmed : `/${trimmed}`, getMarketingSiteUrl());
+    if (/^gsh-candidate:\/\//i.test(trimmed)) {
+      const custom = new URL(trimmed);
+      const customPath = custom.hostname
+        ? `/${custom.hostname}${custom.pathname}`
+        : custom.pathname;
+      url = new URL(`${customPath || "/"}${custom.search}${custom.hash}`, getMarketingSiteUrl());
+    } else {
+      url = /^https?:\/\//i.test(trimmed)
+        ? new URL(trimmed)
+        : new URL(trimmed.startsWith("/") ? trimmed : `/${trimmed}`, getMarketingSiteUrl());
+    }
   } catch {
     return null;
   }
@@ -59,7 +67,13 @@ export function resolvePublicRoute(input: string): PublicRouteResolution | null 
       return { kind: "fallback", url: siteUrlFor(pathname, url.search, url.hash) };
     }
     const target = row.mode === "native-query" ? queryTarget(row, url.search) : row.target && replaceCaptures(row.target, match);
-    if (target) return { kind: "native", route: target };
+    if (target) {
+      const separator = target.includes("?") ? "&" : "?";
+      return {
+        kind: "native",
+        route: url.search ? `${target}${separator}${url.search.slice(1)}` : target,
+      };
+    }
     return { kind: "fallback", url: siteUrlFor(pathname, url.search, url.hash) };
   }
 

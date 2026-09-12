@@ -1,0 +1,722 @@
+{
+  "en": {
+    "slug": "germany-eu-blue-card-jobseekers",
+    "title": "Working in Germany: choose your route and plan the move",
+    "countryLabel": "Germany",
+    "iso2": "de",
+    "flagEmoji": "🇩🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+    "excerpt": "Check your work rights, the employer’s offer and any qualification requirements before committing to a move.",
+    "metaDescription": "Check your work rights, the employer’s offer and any qualification requirements before committing to a move.",
+    "openingHook": "Check your work rights, the employer’s offer and any qualification requirements before committing to a move.",
+    "quickFacts": [
+      {
+        "label": "Start here",
+        "value": "Check the job and your work rights"
+      },
+      {
+        "label": "Employer support",
+        "value": "Confirm what is included in writing"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Start with the right work route",
+        "paragraphs": [
+          "The EU Blue Card is one option. A skilled-worker permit may fit when its requirements match your qualification and offer."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+        ]
+      },
+      {
+        "heading": "Check the Blue Card salary rules",
+        "paragraphs": [
+          "In 2026, the general gross annual threshold is €50,700. A €45,934.20 threshold applies in specified cases; other requirements still apply."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+          "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+        ]
+      },
+      {
+        "heading": "Check recognition and professional permission",
+        "paragraphs": [
+          "Regulated professions need the relevant recognition and permission to practise. Requirements for other jobs depend on the route and qualification."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+        ]
+      },
+      {
+        "heading": "Looking before you have an offer",
+        "paragraphs": [
+          "The Opportunity Card has its own eligibility, funding and work limits. It is not unrestricted permission to take any full-time job."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+        ]
+      },
+      {
+        "heading": "Plan family arrangements separately",
+        "paragraphs": [
+          "Family reunification depends on the residence permit and circumstances. Check the documents, timing and work rights for each family member."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+        ]
+      },
+      {
+        "heading": "Agree the offer and arrival costs",
+        "paragraphs": [
+          "Confirm pay, working language and moving support in writing. Budget for housing, deposits, insurance and travel. Find independent practical help through the specialist directory."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Search jobs in Germany",
+        "href": "/jobs?location=Germany"
+      },
+      {
+        "label": "Browse independent specialists",
+        "href": "/specialists"
+      },
+      {
+        "label": "Relocation perks",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "fr": {
+    "slug": "germany-eu-blue-card-jobseekers",
+    "title": "Travailler en Allemagne : choisir sa voie et préparer son installation",
+    "countryLabel": "Allemagne",
+    "iso2": "de",
+    "flagEmoji": "🇩🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+    "excerpt": "Vérifiez votre droit au travail, l’offre et les exigences de qualification avant de vous engager.",
+    "metaDescription": "Vérifiez votre droit au travail, l’offre et les exigences de qualification avant de vous engager.",
+    "openingHook": "Vérifiez votre droit au travail, l’offre et les exigences de qualification avant de vous engager.",
+    "quickFacts": [
+      {
+        "label": "Pour commencer",
+        "value": "Vérifiez le poste et votre droit de travailler"
+      },
+      {
+        "label": "Aide de l’employeur",
+        "value": "Faites confirmer par écrit ce qui est inclus"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Commencez par la voie adaptée",
+        "paragraphs": [
+          "La carte bleue européenne est une option. Un permis pour travailleur qualifié peut convenir selon votre qualification et votre offre."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+        ]
+      },
+      {
+        "heading": "Vérifiez les règles salariales de la carte bleue",
+        "paragraphs": [
+          "En 2026, le seuil général brut annuel est de 50 700 €. Le seuil de 45 934,20 € concerne certains cas ; les autres conditions restent applicables."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+          "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+        ]
+      },
+      {
+        "heading": "Vérifiez la reconnaissance et l’autorisation professionnelle",
+        "paragraphs": [
+          "Les professions réglementées exigent la reconnaissance et l’autorisation nécessaires. Pour les autres métiers, les exigences dépendent de la voie et de la qualification."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+        ]
+      },
+      {
+        "heading": "Chercher avant d’avoir une offre",
+        "paragraphs": [
+          "La carte des opportunités a ses propres conditions, ressources exigées et limites de travail. Elle n’autorise pas tout emploi à temps plein sans restriction."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+        ]
+      },
+      {
+        "heading": "Préparez les démarches familiales séparément",
+        "paragraphs": [
+          "Le regroupement familial dépend du titre de séjour et de la situation. Vérifiez les documents, délais et droits au travail de chaque proche."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+        ]
+      },
+      {
+        "heading": "Convenez de l’offre et des frais d’arrivée",
+        "paragraphs": [
+          "Confirmez par écrit le salaire, la langue de travail et l’aide à l’installation. Prévoyez logement, dépôt, assurance et transport. Trouvez une aide pratique indépendante dans l’annuaire des spécialistes."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Rechercher un emploi : Allemagne",
+        "href": "/jobs?location=Germany"
+      },
+      {
+        "label": "Consulter les spécialistes indépendants",
+        "href": "/specialists"
+      },
+      {
+        "label": "Avantages pour le déménagement",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "de": {
+    "slug": "germany-eu-blue-card-jobseekers",
+    "title": "Arbeiten in Deutschland: passenden Weg wählen und Umzug planen",
+    "countryLabel": "Deutschland",
+    "iso2": "de",
+    "flagEmoji": "🇩🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+    "excerpt": "Prüfe Arbeitsberechtigung, Stellenangebot und Qualifikationsanforderungen, bevor du dich für den Umzug entscheidest.",
+    "metaDescription": "Prüfe Arbeitsberechtigung, Stellenangebot und Qualifikationsanforderungen, bevor du dich für den Umzug entscheidest.",
+    "openingHook": "Prüfe Arbeitsberechtigung, Stellenangebot und Qualifikationsanforderungen, bevor du dich für den Umzug entscheidest.",
+    "quickFacts": [
+      {
+        "label": "Hier beginnen",
+        "value": "Prüfe die Stelle und dein Recht zu arbeiten"
+      },
+      {
+        "label": "Hilfe des Arbeitgebers",
+        "value": "Lass dir schriftlich bestätigen, was enthalten ist"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Beginne mit dem passenden Aufenthaltsweg",
+        "paragraphs": [
+          "Die Blaue Karte EU ist eine Möglichkeit. Eine Fachkräfteerlaubnis kann passen, wenn Qualifikation und Angebot deren Anforderungen erfüllen."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+        ]
+      },
+      {
+        "heading": "Prüfe die Gehaltsregeln der Blauen Karte",
+        "paragraphs": [
+          "2026 beträgt die allgemeine Bruttojahresgrenze 50.700 €. Für bestimmte Fälle gelten 45.934,20 €; weitere Voraussetzungen bleiben bestehen."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+          "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+        ]
+      },
+      {
+        "heading": "Prüfe Anerkennung und Berufszulassung",
+        "paragraphs": [
+          "Reglementierte Berufe erfordern die entsprechende Anerkennung und Berufszulassung. Bei anderen Berufen hängen die Anforderungen von Aufenthaltsweg und Qualifikation ab."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+        ]
+      },
+      {
+        "heading": "Suchen ohne Stellenangebot",
+        "paragraphs": [
+          "Die Chancenkarte hat eigene Voraussetzungen, Finanzierungs- und Arbeitsgrenzen. Sie erlaubt nicht uneingeschränkt jede Vollzeitbeschäftigung."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+        ]
+      },
+      {
+        "heading": "Plane den Familiennachzug gesondert",
+        "paragraphs": [
+          "Familiennachzug hängt vom Aufenthaltstitel und den Umständen ab. Prüfe Unterlagen, Zeitplan und Arbeitsrechte für jedes Familienmitglied."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+        ]
+      },
+      {
+        "heading": "Kläre Angebot und Ankunftskosten",
+        "paragraphs": [
+          "Bestätige Gehalt, Arbeitssprache und Umzugshilfe schriftlich. Plane Wohnung, Kaution, Versicherung und Reise ein. Unabhängige praktische Hilfe findest du im Spezialistenverzeichnis."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Stellen suchen: Deutschland",
+        "href": "/jobs?location=Germany"
+      },
+      {
+        "label": "Unabhängige Spezialisten finden",
+        "href": "/specialists"
+      },
+      {
+        "label": "Angebote für deinen Umzug",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "es": {
+    "slug": "germany-eu-blue-card-jobseekers",
+    "title": "Trabajar en Alemania: elige tu vía y prepara la mudanza",
+    "countryLabel": "Alemania",
+    "iso2": "de",
+    "flagEmoji": "🇩🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+    "excerpt": "Comprueba tu derecho a trabajar, la oferta y las cualificaciones exigidas antes de comprometerte.",
+    "metaDescription": "Comprueba tu derecho a trabajar, la oferta y las cualificaciones exigidas antes de comprometerte.",
+    "openingHook": "Comprueba tu derecho a trabajar, la oferta y las cualificaciones exigidas antes de comprometerte.",
+    "quickFacts": [
+      {
+        "label": "Empieza aquí",
+        "value": "Comprueba el puesto y tu derecho a trabajar"
+      },
+      {
+        "label": "Ayuda del empleador",
+        "value": "Confirma por escrito lo que incluye"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Empieza por la vía adecuada",
+        "paragraphs": [
+          "La Tarjeta Azul UE es una opción. Un permiso para profesionales cualificados puede encajar según tu cualificación y oferta."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+        ]
+      },
+      {
+        "heading": "Comprueba las reglas salariales de la Tarjeta Azul",
+        "paragraphs": [
+          "En 2026, el umbral general bruto anual es de 50.700 €. En ciertos casos se aplican 45.934,20 €; siguen vigentes los demás requisitos."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+          "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+        ]
+      },
+      {
+        "heading": "Comprueba el reconocimiento y la autorización profesional",
+        "paragraphs": [
+          "Las profesiones reguladas requieren el reconocimiento y permiso correspondientes. En otros empleos, los requisitos dependen de la vía y cualificación."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+        ]
+      },
+      {
+        "heading": "Buscar antes de tener una oferta",
+        "paragraphs": [
+          "La Tarjeta de Oportunidades tiene requisitos, financiación y límites laborales propios. No permite aceptar cualquier empleo a jornada completa sin restricciones."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+        ]
+      },
+      {
+        "heading": "Planifica los trámites familiares por separado",
+        "paragraphs": [
+          "La reagrupación familiar depende del permiso de residencia y las circunstancias. Comprueba documentos, plazos y derechos laborales de cada familiar."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+        ]
+      },
+      {
+        "heading": "Acuerda la oferta y los gastos de llegada",
+        "paragraphs": [
+          "Confirma por escrito salario, idioma de trabajo y apoyo a la mudanza. Presupuesta vivienda, fianza, seguro y viaje. Busca ayuda práctica independiente en el directorio de especialistas."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Buscar empleo: Alemania",
+        "href": "/jobs?location=Germany"
+      },
+      {
+        "label": "Buscar especialistas independientes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Ventajas para tu mudanza",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pt": {
+    "slug": "germany-eu-blue-card-jobseekers",
+    "title": "Trabalhar na Alemanha: escolha a via e prepare a mudança",
+    "countryLabel": "Alemanha",
+    "iso2": "de",
+    "flagEmoji": "🇩🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+    "excerpt": "Verifique o direito a trabalhar, a oferta e as qualificações exigidas antes de se comprometer.",
+    "metaDescription": "Verifique o direito a trabalhar, a oferta e as qualificações exigidas antes de se comprometer.",
+    "openingHook": "Verifique o direito a trabalhar, a oferta e as qualificações exigidas antes de se comprometer.",
+    "quickFacts": [
+      {
+        "label": "Comece aqui",
+        "value": "Verifique o emprego e o seu direito a trabalhar"
+      },
+      {
+        "label": "Apoio do empregador",
+        "value": "Confirme por escrito o que está incluído"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Comece pela via adequada",
+        "paragraphs": [
+          "O Cartão Azul UE é uma opção. Uma autorização para profissionais qualificados pode servir conforme a qualificação e a oferta."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+        ]
+      },
+      {
+        "heading": "Verifique as regras salariais do Cartão Azul",
+        "paragraphs": [
+          "Em 2026, o limite geral bruto anual é de 50.700 €. Em casos específicos aplicam-se 45.934,20 €; os outros requisitos continuam a aplicar-se."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+          "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+        ]
+      },
+      {
+        "heading": "Verifique o reconhecimento e a autorização profissional",
+        "paragraphs": [
+          "As profissões regulamentadas exigem o reconhecimento e a autorização correspondentes. Nos outros empregos, os requisitos dependem da via e da qualificação."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+        ]
+      },
+      {
+        "heading": "Procurar antes de ter uma oferta",
+        "paragraphs": [
+          "O Cartão de Oportunidades tem requisitos, meios financeiros e limites de trabalho próprios. Não permite aceitar qualquer emprego a tempo inteiro sem restrições."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+        ]
+      },
+      {
+        "heading": "Planeie os procedimentos familiares separadamente",
+        "paragraphs": [
+          "A reunião familiar depende da autorização de residência e das circunstâncias. Verifique documentos, prazos e direitos de trabalho de cada familiar."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+        ]
+      },
+      {
+        "heading": "Acorde a oferta e os custos de chegada",
+        "paragraphs": [
+          "Confirme por escrito o salário, a língua de trabalho e o apoio à mudança. Inclua habitação, caução, seguros e viagem. Encontre ajuda prática independente no diretório de especialistas."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Procurar emprego: Alemanha",
+        "href": "/jobs?location=Germany"
+      },
+      {
+        "label": "Procurar especialistas independentes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantagens para a mudança",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "it": {
+    "slug": "germany-eu-blue-card-jobseekers",
+    "title": "Lavorare in Germania: scegli il percorso e prepara il trasferimento",
+    "countryLabel": "Germania",
+    "iso2": "de",
+    "flagEmoji": "🇩🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+    "excerpt": "Verifica il diritto al lavoro, l’offerta e le qualifiche richieste prima di impegnarti.",
+    "metaDescription": "Verifica il diritto al lavoro, l’offerta e le qualifiche richieste prima di impegnarti.",
+    "openingHook": "Verifica il diritto al lavoro, l’offerta e le qualifiche richieste prima di impegnarti.",
+    "quickFacts": [
+      {
+        "label": "Inizia qui",
+        "value": "Verifica il lavoro e il tuo diritto a lavorare"
+      },
+      {
+        "label": "Aiuto del datore di lavoro",
+        "value": "Fai confermare per iscritto cosa è incluso"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Parti dal percorso adatto",
+        "paragraphs": [
+          "La Carta blu UE è un’opzione. Un permesso per lavoratori qualificati può essere adatto secondo le tue qualifiche e l’offerta."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+        ]
+      },
+      {
+        "heading": "Verifica le soglie salariali della Carta blu",
+        "paragraphs": [
+          "Nel 2026 la soglia generale lorda annua è 50.700 €. In casi specifici si applicano 45.934,20 €; restano validi gli altri requisiti."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+          "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+        ]
+      },
+      {
+        "heading": "Verifica riconoscimento e abilitazione professionale",
+        "paragraphs": [
+          "Le professioni regolamentate richiedono riconoscimento e abilitazione. Per gli altri lavori, i requisiti dipendono dal percorso e dalla qualifica."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+        ]
+      },
+      {
+        "heading": "Cercare prima di avere un’offerta",
+        "paragraphs": [
+          "La Carta delle opportunità ha requisiti, mezzi finanziari e limiti lavorativi propri. Non autorizza qualsiasi lavoro a tempo pieno senza restrizioni."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+        ]
+      },
+      {
+        "heading": "Pianifica separatamente le procedure familiari",
+        "paragraphs": [
+          "Il ricongiungimento dipende dal permesso di soggiorno e dalla situazione. Verifica documenti, tempi e diritti al lavoro per ogni familiare."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+        ]
+      },
+      {
+        "heading": "Concorda l’offerta e i costi all’arrivo",
+        "paragraphs": [
+          "Conferma per iscritto paga, lingua di lavoro e sostegno al trasferimento. Prevedi casa, deposito, assicurazione e viaggio. Trova aiuto pratico indipendente nell’elenco degli specialisti."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Cerca lavoro: Germania",
+        "href": "/jobs?location=Germany"
+      },
+      {
+        "label": "Trova specialisti indipendenti",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantaggi per il trasferimento",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "nl": {
+    "slug": "germany-eu-blue-card-jobseekers",
+    "title": "Werken in Duitsland: kies je route en plan de verhuizing",
+    "countryLabel": "Duitsland",
+    "iso2": "de",
+    "flagEmoji": "🇩🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+    "excerpt": "Controleer je recht om te werken, het aanbod en de vereiste kwalificaties voordat je toezegt.",
+    "metaDescription": "Controleer je recht om te werken, het aanbod en de vereiste kwalificaties voordat je toezegt.",
+    "openingHook": "Controleer je recht om te werken, het aanbod en de vereiste kwalificaties voordat je toezegt.",
+    "quickFacts": [
+      {
+        "label": "Begin hier",
+        "value": "Controleer de baan en je recht om te werken"
+      },
+      {
+        "label": "Hulp van de werkgever",
+        "value": "Laat schriftelijk bevestigen wat is inbegrepen"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Begin met de juiste werkroute",
+        "paragraphs": [
+          "De Europese blauwe kaart is één optie. Een vergunning voor vakmensen kan passen bij je kwalificatie en aanbod."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+        ]
+      },
+      {
+        "heading": "Controleer de salarisregels voor de blauwe kaart",
+        "paragraphs": [
+          "In 2026 is de algemene brutojaargrens € 50.700. In bepaalde gevallen geldt € 45.934,20; de overige voorwaarden blijven gelden."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+          "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+        ]
+      },
+      {
+        "heading": "Controleer erkenning en beroepsvergunning",
+        "paragraphs": [
+          "Gereglementeerde beroepen vereisen de juiste erkenning en beroepsvergunning. Bij andere banen hangen de eisen af van de route en kwalificatie."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+        ]
+      },
+      {
+        "heading": "Zoeken voordat je een aanbod hebt",
+        "paragraphs": [
+          "De kansenkaart heeft eigen voorwaarden, financiële eisen en werkbeperkingen. Daarmee mag je niet onbeperkt elke voltijdbaan aannemen."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+        ]
+      },
+      {
+        "heading": "Plan gezinszaken afzonderlijk",
+        "paragraphs": [
+          "Gezinshereniging hangt af van de verblijfsvergunning en omstandigheden. Controleer documenten, termijnen en werkrechten voor ieder gezinslid."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+        ]
+      },
+      {
+        "heading": "Spreek het aanbod en de aankomstkosten af",
+        "paragraphs": [
+          "Bevestig salaris, werktaal en verhuishulp schriftelijk. Begroot woning, borg, verzekering en reis. Vind onafhankelijke praktische hulp in de specialistengids."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Werk zoeken: Duitsland",
+        "href": "/jobs?location=Germany"
+      },
+      {
+        "label": "Onafhankelijke specialisten zoeken",
+        "href": "/specialists"
+      },
+      {
+        "label": "Voordelen voor je verhuizing",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pl": {
+    "slug": "germany-eu-blue-card-jobseekers",
+    "title": "Praca w Niemczech: wybierz ścieżkę i zaplanuj przeprowadzkę",
+    "countryLabel": "Niemcy",
+    "iso2": "de",
+    "flagEmoji": "🇩🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+    "excerpt": "Przed podjęciem decyzji sprawdź prawo do pracy, ofertę i wymagane kwalifikacje.",
+    "metaDescription": "Przed podjęciem decyzji sprawdź prawo do pracy, ofertę i wymagane kwalifikacje.",
+    "openingHook": "Przed podjęciem decyzji sprawdź prawo do pracy, ofertę i wymagane kwalifikacje.",
+    "quickFacts": [
+      {
+        "label": "Zacznij tutaj",
+        "value": "Sprawdź ofertę i swoje prawo do pracy"
+      },
+      {
+        "label": "Pomoc pracodawcy",
+        "value": "Uzyskaj pisemne potwierdzenie zakresu pomocy"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Zacznij od właściwej ścieżki pracy",
+        "paragraphs": [
+          "Niebieska Karta UE to jedna z opcji. Zezwolenie dla wykwalifikowanych pracowników może pasować do twoich kwalifikacji i oferty."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+        ]
+      },
+      {
+        "heading": "Sprawdź progi wynagrodzenia Niebieskiej Karty",
+        "paragraphs": [
+          "W 2026 r. ogólny próg roczny brutto wynosi 50 700 €. W określonych przypadkach obowiązuje 45 934,20 €; pozostałe wymagania nadal mają zastosowanie."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+          "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+        ]
+      },
+      {
+        "heading": "Sprawdź uznanie kwalifikacji i uprawnienia zawodowe",
+        "paragraphs": [
+          "Zawody regulowane wymagają uznania kwalifikacji i uprawnień do wykonywania zawodu. Przy innych pracach wymagania zależą od ścieżki i kwalifikacji."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+        ]
+      },
+      {
+        "heading": "Szukanie pracy przed otrzymaniem oferty",
+        "paragraphs": [
+          "Karta Szans ma własne warunki, wymogi finansowe i ograniczenia pracy. Nie pozwala bez ograniczeń podjąć dowolnej pracy na pełen etat."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+        ]
+      },
+      {
+        "heading": "Osobno zaplanuj formalności rodzinne",
+        "paragraphs": [
+          "Łączenie rodzin zależy od zezwolenia na pobyt i sytuacji. Sprawdź dokumenty, terminy i prawo do pracy każdego członka rodziny."
+        ],
+        "sources": [
+          "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+        ]
+      },
+      {
+        "heading": "Uzgodnij ofertę i koszty po przyjeździe",
+        "paragraphs": [
+          "Potwierdź na piśmie płacę, język pracy i pomoc w przeprowadzce. Uwzględnij mieszkanie, kaucję, ubezpieczenie i podróż. Znajdź niezależną pomoc praktyczną w katalogu specjalistów."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Szukaj pracy: Niemcy",
+        "href": "/jobs?location=Germany"
+      },
+      {
+        "label": "Znajdź niezależnych specjalistów",
+        "href": "/specialists"
+      },
+      {
+        "label": "Oferty na czas przeprowadzki",
+        "href": "/relocation-perks"
+      }
+    ]
+  }
+}

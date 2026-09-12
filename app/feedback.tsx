@@ -1,4 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -25,8 +25,11 @@ const TYPES = ["feature", "issue", "update", "request"] as const;
 const PRIOS = ["low", "medium", "high"] as const;
 
 export default function FeedbackScreen() {
+  const ac = useAccountCopy();
+
   const router = useRouter();
   const [title, setTitle] = useState("");
+  const [formError, setFormError] = useState<string | null>(null);
   const [description, setDescription] = useState("");
   const [type, setType] = useState<(typeof TYPES)[number]>("feature");
   const [priority, setPriority] = useState<(typeof PRIOS)[number]>("medium");
@@ -40,18 +43,21 @@ export default function FeedbackScreen() {
         priority,
       }),
     onSuccess: () => {
-      Alert.alert("Thank you", "Your feedback was submitted.", [{ text: "OK", onPress: () => router.back() }]);
+      Alert.alert(ac("Thank you"), ac("Your feedback was submitted."), [
+        { text: "OK", onPress: () => router.back() },
+      ]);
     },
     onError: (e: unknown) =>
       Alert.alert(
-        "Could not send",
-        e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Try again."
+        ac("Could not send"),
+        ac("Please try again."),
       ),
   });
 
   function send() {
+    setFormError(null);
     if (!title.trim() || !description.trim()) {
-      Alert.alert("Missing info", "Please add a title and description.");
+      setFormError("Please add a title and description.");
       return;
     }
     mut.mutate();
@@ -60,18 +66,27 @@ export default function FeedbackScreen() {
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-          <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={{ flex: 1 }}
+        >
+          <ScrollView
+            contentContainerStyle={styles.pad}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
             <GshScreenIntro
               eyebrow="Global Sponsor Hub"
-              title="Feedback"
-              subtitle="Tell us what to improve — bugs, ideas, or UX friction. We read every submission."
+              title={ac("Feedback")}
+              subtitle={ac(
+                "Tell us about a problem or an idea to improve the app.",
+              )}
               style={{ marginBottom: 16 }}
             />
 
-            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+            <View style={styles.accentBar} />
 
-            <Text style={styles.label}>Type</Text>
+            <Text style={styles.label}>{ac("Type")}</Text>
             <View style={styles.row}>
               {TYPES.map((t) => (
                 <Pressable
@@ -81,12 +96,25 @@ export default function FeedbackScreen() {
                   accessibilityRole="radio"
                   accessibilityState={{ selected: type === t }}
                 >
-                  <Text style={[styles.chipText, type === t && styles.chipTextOn]}>{t}</Text>
+                  <Text
+                    style={[styles.chipText, type === t && styles.chipTextOn]}
+                  >
+                    {ac(
+                      (
+                        {
+                          feature: "Feature idea",
+                          issue: "Problem",
+                          update: "Update",
+                          request: "Request",
+                        } as const
+                      )[t],
+                    )}
+                  </Text>
                 </Pressable>
               ))}
             </View>
 
-            <Text style={styles.label}>Priority</Text>
+            <Text style={styles.label}>{ac("Priority")}</Text>
             <View style={styles.row}>
               {PRIOS.map((p) => (
                 <Pressable
@@ -96,34 +124,46 @@ export default function FeedbackScreen() {
                   accessibilityRole="radio"
                   accessibilityState={{ selected: priority === p }}
                 >
-                  <Text style={[styles.chipText, priority === p && styles.chipTextOn]}>{p}</Text>
+                  <Text
+                    style={[
+                      styles.chipText,
+                      priority === p && styles.chipTextOn,
+                    ]}
+                  >
+                    {ac(
+                      ({ low: "Low", medium: "Medium", high: "High" } as const)[
+                        p
+                      ],
+                    )}
+                  </Text>
                 </Pressable>
               ))}
             </View>
 
-            <GshSectionTitle title="Details" topSpacing="md" />
-            <Text style={styles.label}>Title</Text>
+            <GshSectionTitle title={ac("Details")} topSpacing="md" />
+            <Text style={styles.label}>{ac("Title")}</Text>
             <TextInput
               style={styles.input}
               value={title}
               onChangeText={setTitle}
-              placeholder="Short summary"
+              placeholder={ac("Short summary")}
               placeholderTextColor={colors.placeholder}
             />
 
-            <Text style={styles.label}>Description</Text>
+            <Text style={styles.label}>{ac("Description")}</Text>
             <TextInput
               style={[styles.input, styles.area]}
               value={description}
               onChangeText={setDescription}
-              placeholder="What happened? What did you expect?"
+              placeholder={ac("What happened? What did you expect?")}
               placeholderTextColor={colors.placeholder}
               multiline
               textAlignVertical="top"
             />
 
+            {formError ? <Text accessibilityRole="alert" style={{color: colors.error, marginVertical: 12}}>{ac(formError)}</Text> : null}
             <GshGradientPrimaryButton
-              title={mut.isPending ? "Sending…" : "Submit"}
+              title={mut.isPending ? ac("Sending…") : ac("Send feedback")}
               onPress={send}
               disabled={mut.isPending}
               containerStyle={{ marginTop: 20 }}
@@ -138,7 +178,7 @@ export default function FeedbackScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { ...stackScrollContentStyle, paddingBottom: 40 },
-  accentBar: { height: 4, borderRadius: 2, marginBottom: 16 },
+  accentBar: { height: 3, backgroundColor: colors.teal, marginBottom: 16 },
   label: {
     fontSize: 13,
     fontFamily: fontFamily.semiBold,
@@ -155,7 +195,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  chipOn: { backgroundColor: colors.chipOnBg, borderColor: colors.chipOnBorder },
+  chipOn: {
+    backgroundColor: colors.chipOnBg,
+    borderColor: colors.chipOnBorder,
+  },
   chipText: {
     fontSize: 13,
     fontFamily: fontFamily.semiBold,

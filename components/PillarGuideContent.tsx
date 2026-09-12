@@ -1,3 +1,5 @@
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
+import { useAppLanguage } from "@/lib/i18n";
 import * as Linking from "expo-linking";
 import type { Router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -65,7 +67,7 @@ function handleGuideLink(url: string, router: Router): boolean {
     router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(path) } });
     return false;
   }
-  if (path.startsWith("/jobs") || path.startsWith("/partners")) {
+  if (path.startsWith("/jobs") || path.startsWith("/partners") || path === "/specialists") {
     navigateGuideLink(router, path);
     return false;
   }
@@ -92,6 +94,8 @@ function AppendixTable({ table }: { table: SeoPillarAppendixTable }) {
 }
 
 export function PillarGuideContent({ config, router }: { config: SeoPillarPageConfig; router: Router }) {
+  const ac = useAccountCopy();
+  const locale = useAppLanguage((s) => s.locale);
   const onLink = (url: string) => handleGuideLink(url, router);
 
   return (
@@ -102,13 +106,13 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
           {config.intro.trim()}
         </Markdown>
         {config.lastReviewed ? (
-          <Text style={styles.reviewed}>Last reviewed: {config.lastReviewed}</Text>
+          <Text style={styles.reviewed}>{ac("Last reviewed: {date}", { date: new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(new Date(config.lastReviewed)) })}</Text>
         ) : null}
       </View>
 
       {config.officialLinks && config.officialLinks.length > 0 ? (
         <View style={styles.block}>
-          <Text style={styles.blockLabel}>Official sources</Text>
+          <Text style={styles.blockLabel}>{ac("Official sources")}</Text>
           {config.officialLinks.map((l) => (
             <Pressable key={l.href} onPress={() => onLink(l.href)} style={styles.linkRow} accessibilityRole="link">
               <Text style={styles.linkText}>{l.label}</Text>
@@ -130,7 +134,7 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
 
       {config.faqs.length > 0 ? (
         <View style={styles.block}>
-          <Text style={styles.blockLabel}>FAQ</Text>
+          <Text style={styles.blockLabel}>{ac("Common questions")}</Text>
           {config.faqs.map((faq, i) => (
             <View key={i} style={styles.faq}>
               <Text style={styles.faqQ}>{faq.question}</Text>
@@ -150,7 +154,7 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
 
       {config.relatedGuides && config.relatedGuides.length > 0 ? (
         <View style={styles.block}>
-          <Text style={styles.blockLabel}>Related guides</Text>
+          <Text style={styles.blockLabel}>{ac("Related guides")}</Text>
           {config.relatedGuides.map((r) => (
             <Pressable
               key={r.href}
@@ -180,7 +184,7 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
       ) : null}
 
       <Text style={styles.disclaimer}>
-        Education only — not legal advice. Confirm rules with official sources.
+        {ac("This is general information, not legal advice. Check current rules with official sources.")}
       </Text>
     </View>
   );

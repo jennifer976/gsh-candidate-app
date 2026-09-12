@@ -26,6 +26,12 @@ export interface AuthResponse {
   message?: string;
 }
 
+export interface AuthSessionResponse {
+  user: AuthUser;
+  profile?: Record<string, unknown> | null;
+  profileCompleted?: boolean;
+}
+
 export interface EmployerProfile {
   _id?: string;
   companyName?: string;
@@ -46,6 +52,9 @@ export interface EmployerProfile {
 
 export interface Job {
   _id: string;
+  id?: string;
+  listingKind?: "direct" | "employer_connected" | "curated_external";
+  externalListingId?: string;
   title: string;
   status?: "active" | "closed" | "de-activate" | "draft" | "pending_employer_approval" | string;
   companyName?: string;
@@ -72,6 +81,25 @@ export interface Job {
   visaRoutes?: string[];
   visaRouteOther?: string;
   benefits?: string[];
+  industry?: string;
+  skills?: string[];
+  applyMethod?: "gsh_apply" | "external_url" | "email";
+  applicationUrl?: string;
+  screeningQuestions?: ScreeningQuestion[];
+}
+
+export interface ScreeningQuestion {
+  id: string;
+  type: "yes_no" | "short_text";
+  question: string;
+  required?: boolean;
+  knockout?: boolean;
+  expectedAnswer?: "yes" | "no" | "";
+}
+
+export interface ScreeningAnswer {
+  questionId: string;
+  answer: string;
 }
 
 export interface GetJobsResponse {
@@ -83,8 +111,10 @@ export interface GetJobsResponse {
 
 export interface SavedJobPopulated {
   _id: string;
+  id?: string;
   userId: string;
-  jobId: Job;
+  jobId: Job | string;
+  job?: Job;
   listingActive?: boolean;
   createdAt: string;
   updatedAt: string;
@@ -103,6 +133,7 @@ export interface CandidateProfile {
 
 export interface ApplicationJobRef {
   _id: string;
+  id?: string;
   title: string;
   status?: "active" | "closed" | "de-activate" | "draft" | "pending_employer_approval" | string;
   companyName?: string;
@@ -115,6 +146,7 @@ export interface ApplicationJobRef {
 
 export interface Application {
   _id: string;
+  id?: string;
   jobId: ApplicationJobRef;
   userId: string;
   status: string;
@@ -126,6 +158,8 @@ export interface Application {
     timezone?: string;
     meetingLink?: string;
     notes?: string;
+    durationMinutes?: number;
+    location?: string;
   };
 }
 
@@ -133,6 +167,7 @@ export type ConversationSource = "application" | "talent_pool" | "candidate_sear
 
 export interface ConversationSummary {
   _id: string;
+  id?: string;
   source: ConversationSource;
   applicationId: string | null;
   talentPoolId: string | null;
@@ -143,6 +178,8 @@ export interface ConversationSummary {
   lastMessagePreview: string;
   lastMessageAt: string;
   counterpartyLabel: string;
+  unreadCount?: number;
+  read?: boolean;
 }
 
 export interface ThreadMessage {
@@ -173,10 +210,13 @@ export interface JobSearchAlertDto {
 }
 
 export interface JobMatchNotificationRow {
-  _id: string;
-  jobId: unknown;
+  id?: string;
+  _id?: string;
+  jobId: string | Partial<Job>;
+  job?: Partial<Job>;
   source: "saved_search" | "followed_employer";
   read: boolean;
+  matchReasons: string[];
   createdAt: string;
 }
 
@@ -338,6 +378,23 @@ export interface NotificationListResponse {
   nextCursor: string | null;
 }
 
+export interface EmployerFollowListItem {
+  id?: string;
+  _id: string;
+  employerUserId: string;
+  employer?: { companyName?: string; companyLogo?: string | null };
+  createdAt?: string;
+}
+
+export interface CandidateResourceSave {
+  id?: string;
+  _id: string;
+  resourceSlug: string;
+  title: string;
+  resourceUrl?: string;
+  createdAt: string;
+}
+
 export interface PartnerListItem {
   _id?: string;
   userId?: string;
@@ -414,7 +471,8 @@ export interface ReferralCodesListResponse {
 }
 
 export interface RelocationPerkItem {
-  _id: string;
+  id?: string;
+  _id?: string;
   title: string;
   description: string;
   logoUrl?: string;
@@ -424,6 +482,41 @@ export interface RelocationPerkItem {
   audience?: string;
   sortOrder?: number;
   status?: string;
+  eligibility?: {
+    eligible?: boolean;
+    source?: string;
+    status?: string;
+    reason?: string;
+  };
+  benefitPartnerId?: string;
+  agreementId?: string;
+  benefitPartner?: {
+    id: string;
+    status: "pending" | "active" | "suspended" | "ended";
+    approvedDestinationHosts: string[];
+  };
+  agreement?: {
+    id: string;
+    benefitPartnerId: string;
+    status: "draft" | "active" | "expired" | "terminated";
+    validFrom: string;
+    validUntil: string | null;
+    disclosureText: string;
+    disclosureUrl?: string | null;
+    acceptedAt: string | null;
+  };
+  validFrom?: string;
+  validUntil?: string | null;
+  destinationUrl?: string;
+  allowedDestinationHosts?: string[];
+  disclosure?: string;
+  termsUrl?: string | null;
+  redemptionKind?: "external_offer" | "code" | string;
+  redemptionCode?: string | null;
+  analytics?: {
+    clickEvent?: string;
+    redemptionEvent?: string;
+  };
 }
 
 export interface RelocationPerksDashboardResponse {
@@ -432,6 +525,22 @@ export interface RelocationPerksDashboardResponse {
   title: string;
   subtitle: string;
   perks: RelocationPerkItem[];
+  /** Canonical additive collection name; older APIs return `perks`. */
+  data?: RelocationPerkItem[];
+}
+
+export interface BenefitOfferView {
+  id: string;
+  title: string;
+  description: string;
+  category?: string;
+  logoUrl?: string;
+  disclosure: string;
+  termsUrl: string | null;
+  validUntil: string | null;
+  redemptionKind: "external_offer" | "code";
+  destinationUrl: string | null;
+  redemptionCode: string | null;
 }
 
 /** Curated / external listings (`GET /external-job-listings/public`). */
@@ -447,6 +556,8 @@ export interface ExternalJobListingPublic {
   sponsorshipAvailable?: boolean;
   relocationAvailable?: boolean;
   sourceType?: string;
+  sourceRelationship?: "curated_external" | "employer_connected" | "employer_posted";
+  employerPermissionStatus?: "none" | "requested" | "approved" | "revoked";
   agencyName?: string;
   agencyWebsite?: string;
   expiresAt?: string;

@@ -1,5 +1,6 @@
+import { guideLinkLabel } from "@/lib/guides/guideLinkLabel";
+import { useAppCopy } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -12,27 +13,36 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { listCountryVisaGuideSummaries } from "@/lib/guides/countryVisaGuides";
-import { RELOCATION_RESOURCES_NAV_LINKS, SEO_PILLAR_NAV_LINKS } from "@/lib/guides/seoGuideNav";
+import { useCountryGuides } from "@/lib/guides/useCountryGuides";
+import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
+import {
+  RELOCATION_RESOURCES_NAV_LINKS,
+  SEO_PILLAR_NAV_LINKS,
+} from "@/lib/guides/seoGuideNav";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
 const COUNTRY_EMOJIS: Record<string, string> = {
   "United Kingdom": "🇬🇧",
-  "Canada": "🇨🇦",
-  "Australia": "🇦🇺",
+  Canada: "🇨🇦",
+  Australia: "🇦🇺",
   "United States": "🇺🇸",
-  "Germany": "🇩🇪",
-  "Ireland": "🇮🇪",
-  "Netherlands": "🇳🇱",
+  Germany: "🇩🇪",
+  Ireland: "🇮🇪",
+  Netherlands: "🇳🇱",
   "New Zealand": "🇳🇿",
-  "Singapore": "🇸🇬",
-  "UAE": "🇦🇪",
-  "Dubai": "🇦🇪",
+  Singapore: "🇸🇬",
+  UAE: "🇦🇪",
+  Dubai: "🇦🇪",
 };
 
 type GuideAccent = "purple" | "teal" | "amber";
 
-const TOPIC_META: { keyword: string; icon: string; accent: GuideAccent; readMin: number }[] = [
+const TOPIC_META: {
+  keyword: string;
+  icon: string;
+  accent: GuideAccent;
+  readMin: number;
+}[] = [
   { keyword: "visa", icon: "id-card-outline", accent: "purple", readMin: 8 },
   { keyword: "sponsor", icon: "star-outline", accent: "purple", readMin: 6 },
   { keyword: "reloc", icon: "airplane-outline", accent: "teal", readMin: 5 },
@@ -44,12 +54,16 @@ const TOPIC_META: { keyword: string; icon: string; accent: GuideAccent; readMin:
 ];
 
 const ACCENT_STYLES: Record<GuideAccent, { bg: string; icon: string }> = {
-  purple: { bg: "#f5f3ff", icon: colors.brand },
-  teal: { bg: "rgba(14,205,209,0.1)", icon: "#0f766e" },
+  purple: { bg: colors.surfaceMuted, icon: colors.navy },
+  teal: { bg: colors.brandSoft, icon: colors.navy },
   amber: { bg: "#fffbeb", icon: "#92400e" },
 };
 
-function getTopicMeta(label: string): { icon: string; accent: GuideAccent; readMin: number } {
+function getTopicMeta(label: string): {
+  icon: string;
+  accent: GuideAccent;
+  readMin: number;
+} {
   const lower = label.toLowerCase();
   for (const m of TOPIC_META) {
     if (lower.includes(m.keyword)) return m;
@@ -76,19 +90,31 @@ function GuideCard({
 }) {
   const pal = ACCENT_STYLES[accent];
   return (
-    <Pressable style={styles.guideCard} onPress={onPress} accessibilityRole="button">
+    <Pressable
+      style={styles.guideCard}
+      onPress={onPress}
+      accessibilityRole="button"
+    >
       <View style={[styles.guideIconWrap, { backgroundColor: pal.bg }]}>
         <Ionicons name={icon as any} size={22} color={pal.icon} />
       </View>
       <View style={styles.guideCardBody}>
-        <Text style={styles.guideCardTitle} numberOfLines={2}>{title}</Text>
+        <Text style={styles.guideCardTitle} numberOfLines={2}>
+          {title}
+        </Text>
         {subtitle ? (
-          <Text style={styles.guideCardSub} numberOfLines={2}>{subtitle}</Text>
+          <Text style={styles.guideCardSub} numberOfLines={2}>
+            {subtitle}
+          </Text>
         ) : null}
         <View style={styles.guideCardMeta}>
           {readMin ? (
             <View style={styles.readTimeRow}>
-              <Ionicons name="time-outline" size={12} color={colors.textMuted} />
+              <Ionicons
+                name="time-outline"
+                size={12}
+                color={colors.textMuted}
+              />
               <Text style={styles.readTimeText}>{readMin} min</Text>
             </View>
           ) : null}
@@ -99,7 +125,7 @@ function GuideCard({
           ) : null}
         </View>
       </View>
-      <Ionicons name="chevron-forward" size={18} color={colors.borderStrong} />
+      <Ionicons name="chevron-forward" size={18} color={colors.accent} />
     </Pressable>
   );
 }
@@ -107,63 +133,58 @@ function GuideCard({
 type ActiveFilter = "all" | "visa" | "relocation" | "country";
 
 export default function GuidesHubScreen() {
+  const { t, locale } = useAppCopy();
   const router = useRouter();
-  const countries = listCountryVisaGuideSummaries();
+  const { guides: countries } = useCountryGuides();
   const [countryPickerOpen, setCountryPickerOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<ActiveFilter>("all");
 
   const filterPills: { id: ActiveFilter; label: string }[] = [
-    { id: "all", label: "All guides" },
-    { id: "visa", label: "Visa & sponsorship" },
-    { id: "relocation", label: "Relocation" },
-    { id: "country", label: "By country" },
+    { id: "all", label: t("guideAll") },
+    { id: "visa", label: t("guideJobsSupport") },
+    { id: "relocation", label: t("guideRelocation") },
+    { id: "country", label: t("guideByCountry") },
   ];
 
   return (
     <View style={styles.shell}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* ── Hero ── */}
-        <LinearGradient colors={[colors.navy, colors.navyDeep]} style={styles.hero}>
+        <View style={styles.hero}>
           <SafeAreaView edges={["top"]} style={styles.heroInner}>
-            <Text style={styles.heroEyebrow}>Knowledge hub</Text>
-            <Text style={styles.heroTitle}>Guides & resources</Text>
-            <Text style={styles.heroSub}>
-              Visa routes, country hubs, relocation checklists — everything in one place.
-            </Text>
-
-            {/* Visa wizard CTA */}
-            <Pressable
-              style={styles.wizardCta}
-              onPress={() => router.push("/visa-wizard")}
-              accessibilityRole="button"
-            >
-              <View style={styles.wizardCtaLeft}>
-                <View style={styles.wizardCtaIcon}>
-                  <Ionicons name="sparkles" size={20} color={colors.teal} />
-                </View>
-                <View>
-                  <Text style={styles.wizardCtaTitle}>Visa wizard</Text>
-                  <Text style={styles.wizardCtaSub}>Find your sponsorship route</Text>
-                </View>
-              </View>
-              <Ionicons name="arrow-forward-circle" size={26} color={colors.teal} />
-            </Pressable>
+            <Text style={styles.heroEyebrow}>{t("guideEyebrow")}</Text>
+            <Text style={styles.heroTitle}>{t("guideTitle")}</Text>
+            <Text style={styles.heroSub}>{t("guideIntro")}</Text>
           </SafeAreaView>
-        </LinearGradient>
+        </View>
 
         {/* ── Filter pills ── */}
         <View style={styles.filterRow}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterScroll}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filterScroll}
+          >
             {filterPills.map((p) => (
               <Pressable
                 key={p.id}
-                style={[styles.filterPill, activeFilter === p.id && styles.filterPillOn]}
+                style={[
+                  styles.filterPill,
+                  activeFilter === p.id && styles.filterPillOn,
+                ]}
                 onPress={() => setActiveFilter(p.id)}
                 accessibilityRole="button"
                 accessibilityState={{ selected: activeFilter === p.id }}
               >
-                <Text style={[styles.filterPillText, activeFilter === p.id && styles.filterPillTextOn]}>
+                <Text
+                  style={[
+                    styles.filterPillText,
+                    activeFilter === p.id && styles.filterPillTextOn,
+                  ]}
+                >
                   {p.label}
                 </Text>
               </Pressable>
@@ -172,26 +193,30 @@ export default function GuidesHubScreen() {
         </View>
 
         <View style={styles.content}>
-
-          {/* ── Country hubs ── */}
+          {/* ── Countries ── */}
           {(activeFilter === "all" || activeFilter === "country") && (
             <View style={styles.section}>
               <View style={styles.sectionHead}>
                 <View style={styles.sectionTitleRow}>
                   <View style={styles.sectionRule} />
-                  <Text style={styles.sectionTitle}>Country hubs</Text>
+                  <Text style={styles.sectionTitle}>{t("guideCountries")}</Text>
                 </View>
                 <Pressable
                   onPress={() => setCountryPickerOpen(true)}
                   accessibilityRole="button"
                 >
-                  <Text style={styles.sectionAction}>See all</Text>
+                  <Text style={styles.sectionAction}>{t("homeSeeAll")}</Text>
                 </Pressable>
               </View>
 
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.countryScroll}>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.countryScroll}
+              >
                 {countries.slice(0, 8).map((c) => {
-                  const emoji = c.flagEmoji || COUNTRY_EMOJIS[c.countryLabel] || "🌍";
+                  const emoji =
+                    c.flagEmoji || COUNTRY_EMOJIS[c.countryLabel] || "🌍";
                   return (
                     <Pressable
                       key={c.slug}
@@ -200,8 +225,8 @@ export default function GuidesHubScreen() {
                       accessibilityRole="button"
                     >
                       <Text style={styles.countryFlag}>{emoji}</Text>
-                      <Text style={styles.countryName} numberOfLines={1}>{c.countryLabel}</Text>
-                      <Text style={styles.countryCount}>Open guide</Text>
+                      <Text style={styles.countryName}>{c.countryLabel}</Text>
+                      <Text style={styles.countryCount}>{t("guideOpen")}</Text>
                     </Pressable>
                   );
                 })}
@@ -210,20 +235,28 @@ export default function GuidesHubScreen() {
                   onPress={() => setCountryPickerOpen(true)}
                   accessibilityRole="button"
                 >
-                  <Ionicons name="earth-outline" size={28} color={colors.brand} />
-                  <Text style={styles.countryMoreLabel}>All countries</Text>
+                  <Ionicons
+                    name="earth-outline"
+                    size={28}
+                    color={colors.brand}
+                  />
+                  <Text style={styles.countryMoreLabel}>
+                    {t("guideAllCountries")}
+                  </Text>
                 </Pressable>
               </ScrollView>
             </View>
           )}
 
-          {/* ── Visa & sponsorship topics ── */}
+          {/* ── Jobs & support topics ── */}
           {(activeFilter === "all" || activeFilter === "visa") && (
             <View style={styles.section}>
               <View style={styles.sectionHead}>
                 <View style={styles.sectionTitleRow}>
                   <View style={styles.sectionRule} />
-                  <Text style={styles.sectionTitle}>Visa & sponsorship</Text>
+                  <Text style={styles.sectionTitle}>
+                    {t("guideJobsSupport")}
+                  </Text>
                 </View>
               </View>
               {SEO_PILLAR_NAV_LINKS.map((g, i) => {
@@ -231,14 +264,11 @@ export default function GuidesHubScreen() {
                 return (
                   <GuideCard
                     key={g.href}
-                    title={g.label}
+                    title={guideLinkLabel(g.href, g.label, locale)}
                     icon={meta.icon}
                     accent={meta.accent}
-                    readMin={meta.readMin}
-                    badge={i === 0 ? "Popular" : undefined}
-                    onPress={() =>
-                      router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(g.href) } })
-                    }
+                    badge={undefined}
+                    onPress={() => navigateGuideLink(router, g.href)}
                   />
                 );
               })}
@@ -250,8 +280,13 @@ export default function GuidesHubScreen() {
             <View style={styles.section}>
               <View style={styles.sectionHead}>
                 <View style={styles.sectionTitleRow}>
-                  <View style={[styles.sectionRule, { backgroundColor: colors.teal }]} />
-                  <Text style={styles.sectionTitle}>Relocating safely</Text>
+                  <View
+                    style={[
+                      styles.sectionRule,
+                      { backgroundColor: colors.accent },
+                    ]}
+                  />
+                  <Text style={styles.sectionTitle}>{t("guideSafe")}</Text>
                 </View>
               </View>
               {RELOCATION_RESOURCES_NAV_LINKS.map((g) => {
@@ -259,13 +294,10 @@ export default function GuidesHubScreen() {
                 return (
                   <GuideCard
                     key={g.href}
-                    title={g.label}
+                    title={guideLinkLabel(g.href, g.label, locale)}
                     icon={meta.icon}
                     accent="teal"
-                    readMin={meta.readMin}
-                    onPress={() =>
-                      router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(g.href) } })
-                    }
+                    onPress={() => navigateGuideLink(router, g.href)}
                   />
                 );
               })}
@@ -277,21 +309,26 @@ export default function GuidesHubScreen() {
             <View style={styles.section}>
               <View style={styles.sectionHead}>
                 <View style={styles.sectionTitleRow}>
-                  <View style={[styles.sectionRule, { backgroundColor: colors.textMuted }]} />
-                  <Text style={styles.sectionTitle}>Also useful</Text>
+                  <View
+                    style={[
+                      styles.sectionRule,
+                      { backgroundColor: colors.textMuted },
+                    ]}
+                  />
+                  <Text style={styles.sectionTitle}>{t("guideUseful")}</Text>
                 </View>
               </View>
               {[
                 {
-                  label: "Partner directory",
-                  sub: "Relocation, legal & immigration services",
+                  label: t("resourcesSpecialists"),
+                  sub: t("resourcesSpecialistsHelp"),
                   icon: "people-outline",
                   href: "/partners",
                   accent: "purple" as GuideAccent,
                 },
                 {
-                  label: "Tools & resources",
-                  sub: "Blog, FAQs, legal docs, career kit",
+                  label: t("resourcesTitle"),
+                  sub: t("guideToolsHelp"),
                   icon: "layers-outline",
                   href: "/tools-resources",
                   accent: "teal" as GuideAccent,
@@ -320,8 +357,13 @@ export default function GuidesHubScreen() {
       >
         <SafeAreaView style={styles.modalSafe} edges={["top"]}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Choose a country</Text>
-            <Pressable onPress={() => setCountryPickerOpen(false)} hitSlop={12} accessibilityRole="button" accessibilityLabel="Close">
+            <Text style={styles.modalTitle}>{t("guideChoose")}</Text>
+            <Pressable
+              onPress={() => setCountryPickerOpen(false)}
+              hitSlop={12}
+              accessibilityRole="button"
+              accessibilityLabel={t("guideClose")}
+            >
               <Ionicons name="close" size={24} color={colors.navy} />
             </Pressable>
           </View>
@@ -330,7 +372,8 @@ export default function GuidesHubScreen() {
             keyExtractor={(c) => c.slug}
             contentContainerStyle={{ paddingBottom: 32 }}
             renderItem={({ item: c }) => {
-              const emoji = c.flagEmoji || COUNTRY_EMOJIS[c.countryLabel] || "🌍";
+              const emoji =
+                c.flagEmoji || COUNTRY_EMOJIS[c.countryLabel] || "🌍";
               return (
                 <Pressable
                   style={styles.countryRow}
@@ -342,7 +385,11 @@ export default function GuidesHubScreen() {
                 >
                   <Text style={styles.countryRowEmoji}>{emoji}</Text>
                   <Text style={styles.countryRowLabel}>{c.countryLabel}</Text>
-                  <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                  <Ionicons
+                    name="chevron-forward"
+                    size={18}
+                    color={colors.textMuted}
+                  />
                 </Pressable>
               );
             }}
@@ -358,14 +405,14 @@ const styles = StyleSheet.create({
   scrollContent: { paddingBottom: 48 },
 
   // Hero
-  hero: { paddingBottom: 28 },
+  hero: { paddingBottom: 28, backgroundColor: colors.navy },
   heroInner: { paddingHorizontal: 20, paddingTop: 8 },
   heroEyebrow: {
     fontSize: 11,
     fontFamily: fontFamily.semiBold,
-    color: colors.teal,
+    color: colors.accent,
     letterSpacing: 0.8,
-    textTransform: "uppercase",
+    textTransform: "lowercase",
     marginBottom: 10,
   },
   heroTitle: {
@@ -390,14 +437,19 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: "rgba(14,205,209,0.3)",
+    borderColor: colors.accent,
   },
-  wizardCtaLeft: { flexDirection: "row", alignItems: "center", gap: 12, flex: 1 },
+  wizardCtaLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    flex: 1,
+  },
   wizardCtaIcon: {
     width: 38,
     height: 38,
     borderRadius: 10,
-    backgroundColor: "rgba(14,205,209,0.15)",
+    backgroundColor: colors.brandSoft,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -473,7 +525,7 @@ const styles = StyleSheet.create({
   // Country cards
   countryScroll: { gap: 10, paddingBottom: 4 },
   countryCard: {
-    width: 110,
+    width: 156,
     backgroundColor: colors.white,
     borderRadius: 14,
     padding: 14,

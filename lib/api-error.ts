@@ -1,3 +1,4 @@
+import { appCopy, type AppLanguage } from "./i18n/catalog";
 import type { ApiError } from "./api-client";
 
 export function isApiError(e: unknown): e is ApiError {
@@ -28,37 +29,39 @@ export type ApiErrorPresentation = {
 };
 
 /** User-facing copy — avoids blaming connectivity when the API returned a real error. */
-export function presentApiError(e: unknown): ApiErrorPresentation {
+export function presentApiError(
+  e: unknown,
+  locale: AppLanguage = "en",
+): ApiErrorPresentation {
+  const t = (key: Parameters<typeof appCopy>[1]) => appCopy(locale, key);
   const status = getApiErrorStatus(e);
   const message = getApiErrorMessage(e);
 
   if (status === 401) {
     return {
-      title: "Session expired",
-      subtitle: "Please sign in again to continue.",
+      title: t("errorSession"),
+      subtitle: t("errorSessionHelp"),
       isSessionExpired: true,
     };
   }
   if (status === 0) {
     const timedOut = /timed out/i.test(message);
     return {
-      title: timedOut ? "Request timed out" : "Could not reach the server",
-      subtitle: timedOut
-        ? "The connection took too long. Pull down to retry."
-        : "Check your connection and pull down to retry.",
+      title: timedOut ? t("errorTimeout") : t("errorConnection"),
+      subtitle: timedOut ? t("errorTimeoutHelp") : t("errorConnectionHelp"),
       isSessionExpired: false,
     };
   }
   if (status >= 500) {
     return {
-      title: "Server error",
-      subtitle: message || "Something went wrong on our side. Pull down to retry in a moment.",
+      title: t("errorServer"),
+      subtitle: t("errorServerHelp"),
       isSessionExpired: false,
     };
   }
   return {
-    title: "Could not load data",
-    subtitle: message || "Pull down to retry.",
+    title: t("errorLoad"),
+    subtitle: t("errorLoadHelp"),
     isSessionExpired: false,
   };
 }

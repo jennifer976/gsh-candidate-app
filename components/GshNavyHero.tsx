@@ -1,8 +1,7 @@
-import { LinearGradient } from "expo-linear-gradient";
 import type { ReactNode } from "react";
-import { Image, StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
+import { Image, Text, StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { brandMarkLight } from "@/lib/brand-assets";
-import { colors, gradient } from "@/lib/theme";
+import { colors, fontFamily } from "@/lib/theme";
 
 type Props = {
   children: ReactNode;
@@ -12,7 +11,7 @@ type Props = {
   showGlow?: boolean;
 };
 
-/** Navy hero band aligned with the marketing site header gradients. */
+/** Solid navy hero band with a restrained cyan keyline. */
 export function GshNavyHero({
   children,
   variant = "full",
@@ -21,52 +20,46 @@ export function GshNavyHero({
   showGlow = true,
 }: Props) {
   return (
-    <LinearGradient
-      colors={[colors.navy, colors.navyDeep]}
+    <View
       style={[styles.root, variant === "compact" ? styles.compact : styles.full, style]}
     >
       {showWatermark ? (
-        <Image
-          source={brandMarkLight}
-          style={styles.watermark}
-          resizeMode="contain"
-          accessibilityIgnoresInvertColors
-          accessibilityElementsHidden
-          importantForAccessibility="no"
-        />
+        <Text style={styles.watermark} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5} accessible={false} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">MOVE</Text>
       ) : null}
       {showGlow ? (
-        <LinearGradient
-          colors={[...gradient.cyanGlow]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={styles.glow}
+        <View
+          style={styles.accentRule}
           pointerEvents="none"
         />
       ) : null}
       <View style={styles.content}>{children}</View>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { overflow: "hidden", position: "relative" },
-  full: { paddingBottom: 24 },
+  root: { overflow: "hidden", position: "relative", backgroundColor: colors.navy },
+  full: { paddingBottom: 28, borderBottomRightRadius: 36 },
   compact: { paddingBottom: 16 },
   watermark: {
     position: "absolute",
-    top: -48,
-    right: -72,
-    width: 280,
-    height: 280,
-    opacity: 0.08,
+    bottom: -12,
+    left: 16,
+    right: 16,
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 96,
+    letterSpacing: -6,
+    color: colors.white,
+    opacity: 0.055,
   },
-  glow: {
+  accentRule: {
     position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
-    height: 88,
+    height: 0,
+    backgroundColor: colors.teal,
+    opacity: 0.75,
   },
   content: { position: "relative", zIndex: 1 },
 });

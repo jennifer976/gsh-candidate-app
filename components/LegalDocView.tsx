@@ -1,4 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { useAccountCopy as useInterfaceCopy } from "@/lib/i18n/useAccountCopy";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import type { LegalDocDef } from "@/lib/legal/appLegalDocs";
@@ -6,11 +6,13 @@ import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export function LegalDocView({ doc }: { doc: LegalDocDef }) {
+ const interfaceCopy = useInterfaceCopy();
+
   return (
     <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
       <View style={[styles.hero, cardSurfaceStyle(true)]}>
-        <GshScreenIntro eyebrow="Legal" title={doc.title} subtitle={doc.subtitle} style={{ marginBottom: 0 }} />
-        <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+        <GshScreenIntro eyebrow={interfaceCopy("Legal")} title={doc.title} subtitle={doc.subtitle} style={{ marginBottom: 0 }} />
+        <View style={styles.accentBar} />
       </View>
 
       {doc.sections.map((sec) => (
@@ -36,7 +38,7 @@ export function LegalDocView({ doc }: { doc: LegalDocDef }) {
 const styles = StyleSheet.create({
   pad: { ...stackScrollContentStyle, gap: 14 },
   hero: { padding: 18, borderRadius: radii.lg, overflow: "hidden" },
-  accentBar: { height: 4, borderRadius: 2, marginTop: 14 },
+  accentBar: { height: 3, backgroundColor: colors.teal, marginTop: 14 },
   card: { padding: 16, borderRadius: radii.lg },
   sectionTitle: { marginTop: 0, marginBottom: 10 },
   p: { fontSize: 15, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 23, marginBottom: 10 },

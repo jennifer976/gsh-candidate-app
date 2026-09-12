@@ -1,5 +1,7 @@
+import { useAppCopy } from "@/lib/i18n";
+import { appCopy, type AppLanguage } from "@/lib/i18n/catalog";
+import { jobChipLabel } from "@/lib/job-presentation";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
@@ -12,14 +14,19 @@ import {
   TextInput,
   View,
 } from "react-native";
-import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
+import Animated, { FadeIn, FadeInUp, useReducedMotion } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
+import { CandidateCompatibilityCard } from "@/components/CandidateCompatibilityCard";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { SkeletonBox } from "@/components/SkeletonLoader";
 import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-client";
+import { useAuthStore } from "@/lib/auth-store";
+import { computeCandidateReadiness } from "@/lib/candidate-readiness";
+import { persistCandidateReturnIntent } from "@/lib/candidate-return-intent";
 import { hapticLight, hapticSuccess, hapticWarning } from "@/lib/haptics";
+import { clearIdempotencyKey, getOrCreateIdempotencyKey } from "@/lib/idempotency";
 import {
   getJobEmployerLabel,
   getJobLogoUrl,
@@ -29,20 +36,36 @@ import {
   stripHtmlToPlainText,
   visaRouteChips,
 } from "@/lib/job-display";
-import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
 import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { colors, fontFamily, navHeader, radii } from "@/lib/theme";
+import type { Job, ScreeningAnswer } from "@/types/models";
 
 function errMsg(e: unknown): string {
   if (e && typeof e === "object" && "message" in e) return String((e as { message: string }).message);
   return "Something went wrong.";
 }
 
-function formatSalary(minSalary?: number, maxSalary?: number, currency = "GBP"): string {
+function formatSalary(minSalary?: number, maxSalary?: number, currency = "GBP", locale: AppLanguage = "en"): string {
   const sym = currency === "GBP" ? "£" : currency === "EUR" ? "€" : currency === "USD" ? "$" : `${currency} `;
-  if (minSalary != null && maxSalary != null) return `${sym}${minSalary.toLocaleString()}–${maxSalary.toLocaleString()}`;
-  if (minSalary != null) return `From ${sym}${minSalary.toLocaleString()}`;
+  if (minSalary != null && maxSalary != null) return `${sym}${minSalary.toLocaleString(locale)}–${maxSalary.toLocaleString(locale)}`;
+  if (minSalary != null) return appCopy(locale, "jobsSalaryFrom", { amount: `${sym}${minSalary.toLocaleString(locale)}` });
   return "";
+}
+
+function applicationUnavailableReason(job: Job, locale: AppLanguage): string | null {
+  const status = String(job.status || "").toLowerCase();
+  if (status && status !== "active") {
+    if (status === "de-activate" || status === "paused") return appCopy(locale, "detailPaused");
+    return appCopy(locale, "detailClosed");
+  }
+  if (job.expiresAt) {
+    const expiresAt = new Date(job.expiresAt);
+    if (!Number.isFinite(expiresAt.getTime())) return appCopy(locale, "detailUnavailable");
+    if (expiresAt.getTime() <= Date.now()) {
+      return appCopy(locale, "detailExpired");
+    }
+  }
+  return null;
 }
 
 function InfoRow({ icon, label }: { icon: string; label: string }) {
@@ -93,9 +116,14 @@ export default function JobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
+  const { t, locale } = useAppCopy();
+  const reducedMotion = useReducedMotion();
   const jobId = String(id || "");
   const [coverLetter, setCoverLetter] = useState("");
+  const [screeningAnswers, setScreeningAnswers] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
+  const accountEmail = useAuthStore((state) => state.user?.email);
+  const token = useAuthStore((state) => state.token);
 
   const jobQuery = useQuery({
     queryKey: ["job", jobId],
@@ -106,6 +134,7 @@ export default function JobDetailScreen() {
   const profileQuery = useQuery({
     queryKey: ["profile", "me"],
     queryFn: fetchOwnProfile,
+    enabled: Boolean(token),
   });
 
   const resumeUrl =
@@ -127,43 +156,78 @@ export default function JobDetailScreen() {
       if (msg.includes("already saved")) {
         setSaved(true);
       } else {
-        Alert.alert("Could not save", msg);
+        Alert.alert(t("jobsSaveError"), t("jobsActionError"));
       }
     },
   });
 
   const applyMut = useMutation({
-    mutationFn: () => applyToJob(jobId, coverLetter.trim() || undefined, resumeUrl || undefined),
+    mutationFn: async () => {
+      const idempotencyKey = await getOrCreateIdempotencyKey(`application:${jobId}`);
+      const answers: ScreeningAnswer[] = (jobQuery.data?.screeningQuestions ?? []).map((question) => ({
+        questionId: question.id,
+        answer: screeningAnswers[question.id]?.trim() ?? "",
+      }));
+      return applyToJob(jobId, coverLetter, resumeUrl, answers, idempotencyKey);
+    },
     onSuccess: () => {
+      void clearIdempotencyKey(`application:${jobId}`);
       void hapticSuccess();
       void qc.invalidateQueries({ queryKey: ["applications"] });
       void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
       Alert.alert(
-        "Application sent ✓",
-        "The employer can see your profile and CV. You'll hear back via Messages.",
-        [{ text: "OK", onPress: () => router.back() }]
+        t("detailSent"),
+        t("detailSentHelp"),
+        [{ text: t("ok"), onPress: () => router.back() }]
       );
     },
     onError: (e: unknown) => {
       void hapticWarning();
-      Alert.alert("Could not apply", errMsg(e));
+      Alert.alert(t("detailApplyError"), t("detailApplyErrorHelp"));
     },
   });
 
   function onApplyPress() {
-    if (profileQuery.isLoading) {
-      Alert.alert("Please wait", "Loading your profile…");
+    if (!token) {
+      const returnTo = `/job/${encodeURIComponent(jobId)}`;
+      void persistCandidateReturnIntent(returnTo, { kind: "apply_job", jobId }).then(() => {
+        router.push({
+          pathname: "/login",
+          params: { returnTo, pendingAction: "apply_job", pendingTargetId: jobId },
+        });
+      });
       return;
     }
-    if (!resumeUrl) {
+    if (profileQuery.isLoading) {
+      Alert.alert(t("detailWait"), t("detailProfileLoading"));
+      return;
+    }
+    const profile = profileQuery.data as Record<string, unknown> | undefined;
+    const applicationReadiness = computeCandidateReadiness(profile, accountEmail).application;
+    if (applicationReadiness.status !== "ready") {
       Alert.alert(
-        "CV required",
-        "Upload your CV on your Profile tab before applying — employers need it to review you.",
+        t("detailProfile"),
+        applicationReadiness.missing.map(value => {
+          const labels = { "Complete your candidate profile": "detailProfile", "Add your first and last name": "detailName", "Add your location or target countries": "detailLocation", "Add a job title, experience, or skills": "detailExperience", "Upload your CV": "detailCv" } as const;
+          return t(labels[value as keyof typeof labels] ?? "detailProfile");
+        }).join("\n"),
         [
-          { text: "Cancel", style: "cancel" },
-          { text: "Go to Profile", onPress: () => router.push("/(tabs)/profile") },
+          { text: t("cancel"), style: "cancel" },
+          { text: t("profile"), onPress: () => router.push("/(tabs)/profile") },
         ]
       );
+      return;
+    }
+    const unanswered = (jobQuery.data?.screeningQuestions ?? []).filter(
+      (question) => question.required !== false && !screeningAnswers[question.id]?.trim(),
+    );
+    if (unanswered.length) {
+      Alert.alert(t("detailQuestions"), t("detailQuestionsHelp"));
+      return;
+    }
+    const unavailable = jobQuery.data ? applicationUnavailableReason(jobQuery.data, locale) : t("detailUnavailable");
+    if (unavailable) {
+      Alert.alert(t("detailUnavailable"), unavailable);
       return;
     }
     applyMut.mutate();
@@ -171,6 +235,16 @@ export default function JobDetailScreen() {
 
   function onSavePress() {
     void hapticLight();
+    if (!token) {
+      const returnTo = `/job/${encodeURIComponent(jobId)}`;
+      void persistCandidateReturnIntent(returnTo, { kind: "save_job", jobId }).then(() => {
+        router.push({
+          pathname: "/login",
+          params: { returnTo, pendingAction: "save_job", pendingTargetId: jobId },
+        });
+      });
+      return;
+    }
     saveMut.mutate();
   }
 
@@ -180,9 +254,9 @@ export default function JobDetailScreen() {
       <GshScreenBackground>
         <View style={styles.center}>
           <Ionicons name="link-outline" size={44} color={colors.borderStrong} />
-          <Text style={styles.errTitle}>Invalid job link</Text>
+          <Text style={styles.errTitle}>{t("detailInvalid")}</Text>
           <Pressable style={styles.ghostBtn} onPress={() => router.back()}>
-            <Text style={styles.ghostBtnText}>Go back</Text>
+            <Text style={styles.ghostBtnText}>{t("detailBack")}</Text>
           </Pressable>
         </View>
       </GshScreenBackground>
@@ -194,10 +268,10 @@ export default function JobDetailScreen() {
       <GshScreenBackground>
         <View style={styles.center}>
           <Ionicons name="cloud-offline-outline" size={44} color={colors.borderStrong} />
-          <Text style={styles.errTitle}>Couldn't load this role</Text>
-          <Text style={styles.errSub}>Check your connection and try again.</Text>
+          <Text style={styles.errTitle}>{t("detailLoadError")}</Text>
+          <Text style={styles.errSub}>{t("retrySupport")}</Text>
           <Pressable style={styles.ghostBtn} onPress={() => void jobQuery.refetch()}>
-            <Text style={styles.ghostBtnText}>Retry</Text>
+            <Text style={styles.ghostBtnText}>{t("retry")}</Text>
           </Pressable>
         </View>
       </GshScreenBackground>
@@ -208,7 +282,7 @@ export default function JobDetailScreen() {
   if (jobQuery.isLoading) {
     return (
       <GshScreenBackground>
-        <Stack.Screen options={{ title: "Job details", ...navHeader }} />
+        <Stack.Screen options={{ title: t("detailTitle"), ...navHeader }} />
         <SafeAreaView style={styles.safe} edges={["bottom"]}>
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPad}>
             <View style={styles.skeletonHeroBand}>
@@ -221,30 +295,26 @@ export default function JobDetailScreen() {
   }
 
   const job = jobQuery.data!;
-  const employer = getJobEmployerLabel(job);
+  const employer = getJobEmployerLabel(job, locale);
   const logoUrl = getJobLogoUrl(job);
   const location = [job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || "";
-  const salary = formatSalary(job.minSalary, job.maxSalary, job.salaryCurrency);
+  const salary = formatSalary(job.minSalary, job.maxSalary, job.salaryCurrency, locale);
   const chips = hubListingChips(job, 6);
   const visaRoutes = visaRouteChips(job);
   const { mobility: mobilityItems, perks: perkItems } = splitMobilityAndPerks(job);
   const descriptionPlain = job.description ? stripHtmlToPlainText(job.description) : "";
   const jobTypeLabel = job.jobType ? String(job.jobType).replace(/-/g, " ") : "";
+  const unavailableReason = applicationUnavailableReason(job, locale);
 
   return (
     <GshScreenBackground>
-      <Stack.Screen options={{ title: "Job details", ...navHeader }} />
+      <Stack.Screen options={{ title: t("detailTitle"), ...navHeader }} />
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPad}>
 
           {/* ── Hero ── */}
-          <Animated.View entering={FadeIn.duration(400)}>
-            <LinearGradient
-              colors={[colors.navy, colors.navyDeep]}
-              style={styles.hero}
-              start={{ x: 0.2, y: 0 }}
-              end={{ x: 0.8, y: 1 }}
-            >
+          <Animated.View entering={reducedMotion ? undefined : FadeIn.duration(400)}>
+            <View style={styles.hero}>
               <View style={styles.heroTop}>
                 <CompanyLogo logoUrl={logoUrl} companyName={employer} size={56} radius={14} />
                 <View style={styles.heroText}>
@@ -284,67 +354,52 @@ export default function JobDetailScreen() {
               {chips.length > 0 ? (
                 <View style={styles.chipRow}>
                   {chips.map((c) => {
-                    const pal = mobilityChipStyle(c);
+                    
                     return (
                       <View key={c} style={[styles.chip, { backgroundColor: "rgba(255,255,255,0.14)", borderColor: "rgba(255,255,255,0.22)" }]}>
-                        <Text style={[styles.chipText, { color: "rgba(255,255,255,0.9)" }]} numberOfLines={1}>{c}</Text>
+                        <Text style={[styles.chipText, { color: "rgba(255,255,255,0.9)" }]} >{jobChipLabel(c, locale)}</Text>
                       </View>
                     );
                   })}
                 </View>
               ) : null}
 
-              {/* Save button in hero */}
-              <Pressable
-                style={[styles.saveHeroBtn, saved && styles.saveHeroBtnSaved]}
-                onPress={onSavePress}
-                disabled={saveMut.isPending || saved}
-                accessibilityRole="button"
-                accessibilityLabel={saved ? "Job saved" : "Save this job"}
-              >
-                <Ionicons
-                  name={saved ? "bookmark" : "bookmark-outline"}
-                  size={18}
-                  color={saved ? colors.teal : "rgba(255,255,255,0.8)"}
-                />
-                <Text style={[styles.saveHeroBtnText, saved && { color: colors.teal }]}>
-                  {saved ? "Saved" : "Save role"}
-                </Text>
-              </Pressable>
-            </LinearGradient>
+            </View>
           </Animated.View>
 
           {/* ── Body content ── */}
-          <Animated.View entering={FadeInUp.delay(150).duration(400)} style={styles.body}>
+          <Animated.View entering={reducedMotion ? undefined : FadeInUp.delay(150).duration(400)} style={styles.body}>
+
+            <CandidateCompatibilityCard jobId={jobId} />
 
             {job.summary ? (
               <>
-                <SectionHeading title="Overview" />
+                <SectionHeading title={t("detailOverview")} />
                 <Text style={styles.bodyText}>{job.summary}</Text>
               </>
             ) : null}
 
             {descriptionPlain ? (
               <>
-                <SectionHeading title="About the role" />
+                <SectionHeading title={t("detailAbout")} />
                 <Text style={styles.bodyText}>{descriptionPlain}</Text>
               </>
             ) : null}
 
             {visaRoutes.length > 0 || mobilityItems.length > 0 ? (
               <>
-                <SectionHeading title="Sponsorship & mobility" />
+                <SectionHeading title={t("detailSupport")} />
                 <View style={styles.mobilityList}>
                   {visaRoutes.map((route) => (
                     <View key={`visa-${route}`} style={styles.mobilityRow}>
-                      <Ionicons name="id-card-outline" size={18} color={colors.teal} />
-                      <Text style={styles.mobilityText}>{formatVisaRouteChip(route)}</Text>
+                      <Ionicons name="id-card-outline" size={18} color={colors.accent} />
+                      <Text style={styles.mobilityText}>{jobChipLabel(formatVisaRouteChip(route), locale)}</Text>
                     </View>
                   ))}
                   {mobilityItems.map((m) => (
                     <View key={m} style={styles.mobilityRow}>
-                      <Ionicons name="checkmark-circle" size={18} color={colors.teal} />
-                      <Text style={styles.mobilityText}>{m}</Text>
+                      <Ionicons name="checkmark-circle" size={18} color={colors.accent} />
+                      <Text style={styles.mobilityText}>{jobChipLabel(m, locale)}</Text>
                     </View>
                   ))}
                 </View>
@@ -353,11 +408,11 @@ export default function JobDetailScreen() {
 
             {perkItems.length > 0 ? (
               <>
-                <SectionHeading title="Benefits & perks" />
+                <SectionHeading title={t("detailPerks")} />
                 <View style={styles.mobilityList}>
                   {perkItems.map((p) => (
                     <View key={p} style={styles.mobilityRow}>
-                      <Ionicons name="gift-outline" size={18} color={colors.teal} />
+                      <Ionicons name="gift-outline" size={18} color={colors.accent} />
                       <Text style={styles.mobilityText}>{p}</Text>
                     </View>
                   ))}
@@ -367,9 +422,9 @@ export default function JobDetailScreen() {
 
             {job.expiresAt ? (
               <>
-                <SectionHeading title="Apply by" />
+                <SectionHeading title={t("detailDeadline")} />
                 <Text style={styles.bodyText}>
-                  {new Date(job.expiresAt).toLocaleDateString("en-GB", {
+                  {new Date(job.expiresAt).toLocaleDateString(locale, {
                     day: "2-digit",
                     month: "short",
                     year: "numeric",
@@ -378,15 +433,62 @@ export default function JobDetailScreen() {
               </>
             ) : null}
 
+            {job.screeningQuestions?.length ? (
+              <>
+                <SectionHeading title={t("detailQuestions")} />
+                <View style={styles.screeningList}>
+                  {job.screeningQuestions.map((question) => (
+                    <View key={question.id} style={styles.screeningQuestion}>
+                      <Text style={styles.screeningLabel}>
+                        {question.question}
+                        {question.required !== false ? <Text style={styles.required}> *</Text> : null}
+                      </Text>
+                      {question.type === "yes_no" ? (
+                        <View style={styles.answerChoices}>
+                          {(["yes", "no"] as const).map((answer) => {
+                            const selected = screeningAnswers[question.id] === answer;
+                            return (
+                              <Pressable
+                                key={answer}
+                                style={[styles.answerChoice, selected && styles.answerChoiceSelected]}
+                                onPress={() => setScreeningAnswers((current) => ({ ...current, [question.id]: answer }))}
+                                accessibilityRole="radio"
+                                accessibilityState={{ selected }}
+                              >
+                                <Text style={[styles.answerChoiceText, selected && styles.answerChoiceTextSelected]}>
+                                  {answer === "yes" ? t("detailYes") : t("detailNo")}
+                                </Text>
+                              </Pressable>
+                            );
+                          })}
+                        </View>
+                      ) : (
+                        <TextInput
+                          style={styles.screeningInput}
+                          multiline
+                          placeholder={t("detailAnswer")}
+                          placeholderTextColor={colors.placeholder}
+                          value={screeningAnswers[question.id] ?? ""}
+                          onChangeText={(answer) => setScreeningAnswers((current) => ({ ...current, [question.id]: answer }))}
+                          maxLength={1000}
+                          textAlignVertical="top"
+                        />
+                      )}
+                    </View>
+                  ))}
+                </View>
+              </>
+            ) : null}
+
             {/* Cover letter */}
-            <SectionHeading title="Cover note (optional)" />
+            <SectionHeading title={t("detailNote")} />
             <Text style={styles.coverHint}>
-              A short, direct note works best — why this role, why now.
+              {t("detailNoteHelp")}
             </Text>
             <TextInput
               style={styles.cover}
               multiline
-              placeholder="Two or three sentences is enough…"
+              placeholder={t("detailNotePlaceholder")}
               placeholderTextColor={colors.placeholder}
               value={coverLetter}
               onChangeText={setCoverLetter}
@@ -402,25 +504,45 @@ export default function JobDetailScreen() {
               >
                 <Ionicons name="warning-outline" size={20} color="#92400e" />
                 <Text style={styles.cvBannerText}>
-                  Your CV isn't uploaded yet — employers need it to consider you.{" "}
-                  <Text style={styles.cvBannerLink}>Add it to your profile →</Text>
+                  {t("detailCvHelp")}{" "}
+                  <Text style={styles.cvBannerLink}>{t("detailAddCv")}</Text>
                 </Text>
               </Pressable>
             ) : null}
 
-            {/* Apply CTA */}
+            {/* Apply guidance; the action remains visible in the native bottom bar. */}
             <View style={styles.actions}>
-              <GshGradientPrimaryButton
-                title={applyMut.isPending ? "Sending application…" : "Apply now"}
-                onPress={onApplyPress}
-                disabled={applyMut.isPending || profileQuery.isLoading}
-              />
+              {unavailableReason ? (
+                <View style={styles.unavailableBanner}>
+                  <Ionicons name="lock-closed-outline" size={18} color="#92400e" />
+                  <Text style={styles.unavailableText}>{unavailableReason}</Text>
+                </View>
+              ) : null}
               <Text style={styles.applyNote}>
-                Your profile and CV are sent to the employer. You can track the status in Applications.
+                {t("detailSharing")}
               </Text>
             </View>
           </Animated.View>
         </ScrollView>
+        <View style={styles.persistentBar}>
+          <Pressable
+            style={[styles.persistentSave, saved && styles.persistentSaveSaved]}
+            onPress={onSavePress}
+            disabled={saveMut.isPending || saved}
+            accessibilityRole="button"
+            accessibilityLabel={saved ? t("detailSaved") : t("jobsSave")}
+          >
+            <Ionicons name={saved ? "bookmark" : "bookmark-outline"} size={20} color={colors.navy} />
+            <Text style={styles.persistentSaveText}>{saved ? t("detailSaved") : t("detailSave")}</Text>
+          </Pressable>
+          <GshGradientPrimaryButton
+            title={unavailableReason ? t("detailUnavailable") : t("detailApply")}
+            onPress={onApplyPress}
+            loading={applyMut.isPending}
+            disabled={Boolean(unavailableReason) || profileQuery.isLoading}
+            containerStyle={styles.persistentApply}
+          />
+        </View>
       </SafeAreaView>
     </GshScreenBackground>
   );
@@ -428,7 +550,7 @@ export default function JobDetailScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  scrollPad: { paddingBottom: 48 },
+  scrollPad: { paddingBottom: 24 },
   skeletonHeroBand: {
     paddingHorizontal: 16,
     paddingTop: STACK_HEADER_BODY_GAP,
@@ -448,6 +570,7 @@ const styles = StyleSheet.create({
 
   // Hero
   hero: {
+    backgroundColor: colors.navy,
     paddingTop: STACK_HEADER_BODY_GAP,
     paddingBottom: 22,
     paddingHorizontal: 16,
@@ -457,7 +580,7 @@ const styles = StyleSheet.create({
   heroText: { flex: 1, minWidth: 0 },
   heroTitle: {
     fontSize: 20,
-    fontFamily: fontFamily.extraBold,
+    fontFamily: fontFamily.heading,
     color: colors.white,
     letterSpacing: -0.4,
     lineHeight: 26,
@@ -489,29 +612,6 @@ const styles = StyleSheet.create({
   },
   chipText: { fontSize: 11, fontFamily: fontFamily.semiBold },
 
-  // Save btn in hero
-  saveHeroBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "flex-start",
-    gap: 8,
-    paddingVertical: 9,
-    paddingHorizontal: 16,
-    borderRadius: radii.pill,
-    backgroundColor: "rgba(255,255,255,0.1)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
-  },
-  saveHeroBtnSaved: {
-    backgroundColor: "rgba(14,205,209,0.12)",
-    borderColor: "rgba(14,205,209,0.35)",
-  },
-  saveHeroBtnText: {
-    fontSize: 14,
-    fontFamily: fontFamily.semiBold,
-    color: "rgba(255,255,255,0.8)",
-  },
-
   // Body
   body: {
     paddingHorizontal: 16,
@@ -519,12 +619,8 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     gap: 0,
     backgroundColor: colors.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    marginTop: -6,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderBottomWidth: 0,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
   },
   sectionHead: {
     flexDirection: "row",
@@ -541,7 +637,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontFamily: fontFamily.bold,
+    fontFamily: fontFamily.heading,
     color: colors.navy,
     letterSpacing: -0.2,
   },
@@ -559,15 +655,52 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: radii.md,
-    backgroundColor: "rgba(14,205,209,0.07)",
+    backgroundColor: colors.brandSoft,
     borderWidth: 1,
-    borderColor: "rgba(14,205,209,0.2)",
+    borderColor: colors.teal,
   },
   mobilityText: {
     flex: 1,
     fontSize: 14,
     fontFamily: fontFamily.semiBold,
     color: colors.navy,
+  },
+
+  screeningList: { gap: 12 },
+  screeningQuestion: {
+    padding: 14,
+    gap: 10,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.white,
+  },
+  screeningLabel: { fontSize: 14, lineHeight: 20, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
+  required: { color: colors.error },
+  answerChoices: { flexDirection: "row", gap: 9 },
+  answerChoice: {
+    minWidth: 76,
+    minHeight: 44,
+    alignItems: "center",
+    paddingVertical: 10,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceMuted,
+  },
+  answerChoiceSelected: { borderColor: colors.brand, backgroundColor: colors.brandSoft },
+  answerChoiceText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
+  answerChoiceTextSelected: { color: colors.brandDeep },
+  screeningInput: {
+    minHeight: 84,
+    padding: 12,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceMuted,
+    fontSize: 16,
+    fontFamily: fontFamily.regular,
+    color: colors.textPrimary,
   },
 
   // Cover letter
@@ -584,7 +717,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: radii.lg,
     padding: 14,
-    fontSize: 15,
+    fontSize: 16,
     backgroundColor: colors.white,
     color: colors.textPrimary,
     fontFamily: fontFamily.regular,
@@ -617,6 +750,17 @@ const styles = StyleSheet.create({
 
   // Actions
   actions: { marginTop: 28, gap: 12 },
+  unavailableBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 9,
+    padding: 12,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: "#fed7aa",
+    backgroundColor: "#fff7ed",
+  },
+  unavailableText: { flex: 1, fontSize: 13, lineHeight: 18, fontFamily: fontFamily.semiBold, color: "#92400e" },
   applyNote: {
     fontSize: 12,
     fontFamily: fontFamily.regular,
@@ -624,6 +768,32 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 18,
   },
+  persistentBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 8,
+    backgroundColor: colors.white,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+  },
+  persistentSave: {
+    minWidth: 76,
+    paddingHorizontal: 12,
+    minHeight: 52,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 2,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.white,
+  },
+  persistentSaveSaved: { backgroundColor: colors.brandSoft, borderColor: colors.teal },
+  persistentSaveText: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.navy },
+  persistentApply: { flex: 1 },
 
   // Error / ghost
   errTitle: {
@@ -643,7 +813,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 12,
     paddingHorizontal: 24,
-    borderRadius: radii.md,
+    borderRadius: 99,
     borderWidth: 1,
     borderColor: colors.brand,
   },

@@ -1,3 +1,6 @@
+import { useAppLanguage, useAppCopy } from "@/lib/i18n";
+import { getMarketingSiteUrl } from "@/lib/config";
+import { websiteLanguageMessage } from "@/lib/website-language";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Modal, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
@@ -8,7 +11,9 @@ import { colors, fontFamily } from "@/lib/theme";
 /**
  * Full-screen sheet with an embedded browser so candidates are not sent to the system browser for third-party pages.
  */
+const pageTitles = { en: "Linked page", fr: "Page liée", de: "Verlinkte Seite", es: "Página enlazada", pt: "Página ligada", it: "Pagina collegata", nl: "Gekoppelde pagina", pl: "Połączona strona" } as const;
 export function InAppWebHost() {
+  const { t, locale } = useAppCopy();
   const url = useInAppWebStore((s) => s.url);
   const close = useInAppWebStore((s) => s.close);
   const [loading, setLoading] = useState(true);
@@ -26,11 +31,11 @@ export function InAppWebHost() {
     >
       <SafeAreaView style={styles.safe} edges={["top", "left", "right", "bottom"]}>
         <View style={styles.toolbar}>
-          <Pressable onPress={close} style={styles.doneWrap} accessibilityRole="button" accessibilityLabel="Close">
-            <Text style={styles.done}>Done</Text>
+          <Pressable onPress={close} style={styles.doneWrap} accessibilityRole="button" accessibilityLabel={t("jobDone")}>
+            <Text style={styles.done}>{t("jobDone")}</Text>
           </Pressable>
           <Text style={styles.toolbarTitle} numberOfLines={1}>
-            Linked page
+            {pageTitles[locale]}
           </Text>
           <View style={styles.trailing}>
             {loading ? <ActivityIndicator size="small" color={colors.brand} /> : null}
@@ -40,6 +45,10 @@ export function InAppWebHost() {
           <WebView
             source={{ uri: url }}
             style={styles.web}
+            onMessage={(event) => {
+              const locale = websiteLanguageMessage(event.nativeEvent.data, event.nativeEvent.url, getMarketingSiteUrl());
+              if (locale) useAppLanguage.getState().setLocale(locale);
+            }}
             onLoadStart={() => setLoading(true)}
             onLoadEnd={() => setLoading(false)}
             onError={() => setLoading(false)}

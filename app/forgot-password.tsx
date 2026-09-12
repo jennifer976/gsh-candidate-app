@@ -1,9 +1,9 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { AppLanguageSetting } from "@/components/AppLanguageSetting";
+import { useAuthCopy } from "@/lib/i18n/useAuthCopy";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -23,59 +23,84 @@ import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function ForgotPasswordScreen() {
+  const ac = useAuthCopy();
+  const [feedback, setFeedback] = useState<Parameters<typeof ac>[0] | null>(null);
   const router = useRouter();
   const [email, setEmail] = useState("");
 
   const mut = useMutation({
-    mutationFn: () => requestForgotPassword(email.trim().toLowerCase()),
-    onSuccess: () => {
-      const normalized = email.trim().toLowerCase();
+    mutationFn: (address: string) => requestForgotPassword(address),
+    onSuccess: (_, address) => {
+      const normalized = address;
       router.replace({
         pathname: "/reset-password",
-        params: { email: encodeURIComponent(normalized) },
+        params: { email: normalized },
       });
     },
-    onError: (e: unknown) =>
-      Alert.alert(
-        "Request failed",
-        e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Try again."
-      ),
+    onError: () => setFeedback("We could not send a code. Check the address and try again."),
   });
 
+  const sendCode = () => {
+    if (mut.isPending) return;
+    setFeedback(null);
+    const address = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
+      setFeedback("Enter a valid email address.");
+      return;
+    }
+    mut.mutate(address);
+  };
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-          <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={{ flex: 1 }}
+        >
+          <ScrollView
+            contentContainerStyle={styles.pad}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <AppLanguageSetting />
             <GshScreenIntro
               eyebrow="Global Sponsor Hub"
-              title="Forgot password"
-              subtitle="We will email you a one-time code to reset your password."
+              title={ac("Forgot password")}
+              subtitle={ac(
+                "We will email you a one-time code to reset your password.",
+              )}
               style={{ marginBottom: 16 }}
             />
 
-            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+            <View style={styles.accentBar} />
 
             <View style={[cardSurfaceStyle(false), styles.formCard]}>
-              <Text style={styles.label}>Email</Text>
+              <Text style={styles.label}>{ac("Email")}</Text>
               <TextInput
                 style={styles.input}
                 autoCapitalize="none"
                 keyboardType="email-address"
+                accessibilityLabel={ac("Email")}
+                editable={!mut.isPending}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="you@example.com"
                 placeholderTextColor={colors.placeholder}
               />
+              {feedback && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={{ color: "#9f1239", backgroundColor: "#fff1f2", borderRadius: 12, padding: 12, marginBottom: 12, fontFamily: fontFamily.regular, lineHeight: 22 }}>{ac(feedback)}</Text>}
               <GshGradientPrimaryButton
-                title={mut.isPending ? "Sending…" : "Send code"}
-                onPress={() => mut.mutate()}
+                title={mut.isPending ? ac("Sending…") : ac("Send code")}
+                onPress={sendCode}
                 disabled={mut.isPending}
               />
             </View>
 
-            <Pressable style={styles.back} onPress={() => router.back()} accessibilityRole="button">
-              <Text style={styles.backText}>Back to sign in</Text>
+            <Pressable
+              style={styles.back}
+              onPress={() => router.replace("/login")}
+              accessibilityRole="button"
+            >
+              <Text style={styles.backText}>{ac("Back to sign in")}</Text>
             </Pressable>
 
             <LegalConsentFooterRow />
@@ -94,14 +119,19 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 40,
   },
-  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
+  accentBar: { height: 3, backgroundColor: colors.teal, marginBottom: 18 },
   formCard: {
     padding: 20,
     marginBottom: 8,
     borderRadius: radii.lg,
     backgroundColor: colors.background,
   },
-  label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
+  label: {
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -115,5 +145,9 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   back: { marginTop: 24, alignItems: "center", paddingVertical: 8 },
-  backText: { color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 15 },
+  backText: {
+    color: colors.brand,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+  },
 });

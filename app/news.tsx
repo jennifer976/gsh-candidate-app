@@ -1,5 +1,5 @@
+import { useAppCopy } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useQuery } from "@tanstack/react-query";
 import {
   ActivityIndicator,
@@ -19,6 +19,7 @@ import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function ImmigrationNewsScreen() {
+  const { t } = useAppCopy();
   const q = useQuery({
     queryKey: ["rss", "immigration-headlines"],
     queryFn: fetchImmigrationRssHeadlines,
@@ -43,36 +44,50 @@ export default function ImmigrationNewsScreen() {
           }
         >
           <GshScreenIntro
-            eyebrow="News"
-            title="Immigration headlines"
-            subtitle="Headlines from third‑party publishers (government agencies, NGOs, and analysts). Tapping a row opens the article in a sheet inside this app."
+            eyebrow={t("newsEyebrow")}
+            title={t("newsTitle")}
+            subtitle={t("newsIntro")}
             style={{ marginBottom: 12 }}
           />
-          <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+          <View style={styles.accentBar} />
 
           {q.isLoading ? (
             <View style={styles.center}>
               <ActivityIndicator size="large" color={colors.brand} />
-              <Text style={styles.loadingHint}>Fetching headlines from immigration publishers…</Text>
+              <Text style={styles.loadingHint}>{t("newsLoading")}</Text>
             </View>
           ) : q.isError ? (
             <View style={styles.center}>
-              <Ionicons name="cloud-offline-outline" size={44} color={colors.textMuted} />
-              <Text style={styles.errTitle}>Headlines could not be loaded</Text>
-              <Text style={styles.errSub}>Check your connection and pull down to retry.</Text>
-              <Pressable style={styles.retryBtn} onPress={() => void q.refetch()} accessibilityRole="button">
-                <Text style={styles.retryBtnText}>Try again</Text>
+              <Ionicons
+                name="cloud-offline-outline"
+                size={44}
+                color={colors.textMuted}
+              />
+              <Text style={styles.errTitle}>{t("newsError")}</Text>
+              <Text style={styles.errSub}>{t("newsErrorHelp")}</Text>
+              <Pressable
+                style={styles.retryBtn}
+                onPress={() => void q.refetch()}
+                accessibilityRole="button"
+              >
+                <Text style={styles.retryBtnText}>{t("retry")}</Text>
               </Pressable>
             </View>
           ) : headlines.length === 0 ? (
             <View style={styles.center}>
-              <Ionicons name="newspaper-outline" size={44} color={colors.textMuted} />
-              <Text style={styles.empty}>No matching headlines right now.</Text>
-              <Text style={styles.errSub}>Pull down to refresh — feeds are filtered to visa and work-mobility topics.</Text>
+              <Ionicons
+                name="newspaper-outline"
+                size={44}
+                color={colors.textMuted}
+              />
+              <Text style={styles.empty}>{t("newsEmpty")}</Text>
+              <Text style={styles.errSub}>{t("newsEmptyHelp")}</Text>
             </View>
           ) : (
             <>
-              <Text style={styles.countLine}>{headlines.length} headline{headlines.length === 1 ? "" : "s"}</Text>
+              <Text style={styles.countLine}>
+                {t("newsCount", { count: headlines.length })}
+              </Text>
               {headlines.map((h, i) => (
                 <Pressable
                   key={`${h.link}-${i}`}
@@ -89,9 +104,11 @@ export default function ImmigrationNewsScreen() {
                   <View style={{ flex: 1 }}>
                     <Text style={styles.source}>{h.source}</Text>
                     <Text style={styles.title}>{h.title}</Text>
-                    {h.isoDate ? <Text style={styles.date}>{h.isoDate.slice(0, 10)}</Text> : null}
+                    {h.isoDate ? (
+                      <Text style={styles.date}>{h.isoDate.slice(0, 10)}</Text>
+                    ) : null}
                   </View>
-                  <Text style={styles.open}>Open ↗</Text>
+                  <Text style={styles.open}>{t("openArticle")}</Text>
                 </Pressable>
               ))}
             </>
@@ -106,7 +123,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { ...stackScrollContentStyle, paddingBottom: 40, gap: 12, flexGrow: 1 },
   center: { alignItems: "center", paddingVertical: 32, gap: 10 },
-  accentBar: { height: 4, borderRadius: 2, marginBottom: 8 },
+  accentBar: { height: 3, backgroundColor: colors.teal, marginBottom: 8 },
   loadingHint: {
     marginTop: 12,
     fontSize: 14,
@@ -128,12 +145,38 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: radii.md,
   },
-  source: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.teal, letterSpacing: 0.2 },
-  title: { marginTop: 6, fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.navy, lineHeight: 22 },
-  date: { marginTop: 6, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
+  source: {
+    fontSize: 12,
+    fontFamily: fontFamily.semiBold,
+    color: colors.teal,
+    letterSpacing: 0.2,
+  },
+  title: {
+    marginTop: 6,
+    fontSize: 16,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+    lineHeight: 22,
+  },
+  date: {
+    marginTop: 6,
+    fontSize: 12,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+  },
   open: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
-  empty: { fontSize: 16, color: colors.navy, fontFamily: fontFamily.semiBold, textAlign: "center" },
-  errTitle: { fontFamily: fontFamily.semiBold, fontSize: 17, color: colors.navy, textAlign: "center" },
+  empty: {
+    fontSize: 16,
+    color: colors.navy,
+    fontFamily: fontFamily.semiBold,
+    textAlign: "center",
+  },
+  errTitle: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 17,
+    color: colors.navy,
+    textAlign: "center",
+  },
   errSub: {
     fontFamily: fontFamily.regular,
     fontSize: 14,
@@ -149,5 +192,9 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
     backgroundColor: colors.brand,
   },
-  retryBtnText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.white },
+  retryBtnText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    color: colors.white,
+  },
 });

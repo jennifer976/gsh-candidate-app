@@ -1,8 +1,8 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { AppLanguageSetting } from "@/components/AppLanguageSetting";
+import { useAuthCopy } from "@/lib/i18n/useAuthCopy";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -22,67 +22,83 @@ import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function ResetPasswordScreen() {
+  const ac = useAuthCopy();
+  const [feedback, setFeedback] = useState<Parameters<typeof ac>[0] | null>(null);
   const router = useRouter();
   const params = useLocalSearchParams<{ email?: string | string[] }>();
   const email = useMemo(() => {
     const raw = params.email;
     const value = Array.isArray(raw) ? raw[0] : raw;
-    return decodeURIComponent(value ?? "").trim().toLowerCase();
+    return (value ?? "")
+      .trim()
+      .toLowerCase();
   }, [params.email]);
 
+  const [passwordUpdated, setPasswordUpdated] = useState(false);
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function onSubmit() {
+    if (loading) return;
+    setFeedback(null);
     if (!email) {
-      Alert.alert("Email missing", "Start again from forgot password and enter your email.");
+      setFeedback('Start again from forgot password and enter your email.');
       return;
     }
     const otp = code.trim();
-    if (!otp) {
-      Alert.alert("Enter your code", "Use the one-time code from your email.");
+    if (!/^\d{6}$/.test(otp)) {
+      setFeedback('Use the one-time code from your email.');
       return;
     }
     if (newPassword.length < 8) {
-      Alert.alert("Password too short", "Use at least 8 characters.");
+      setFeedback('Use at least 8 characters.');
       return;
     }
     if (newPassword !== confirmPassword) {
-      Alert.alert("Passwords do not match", "Check your new password and confirmation.");
+      setFeedback('Check your new password and confirmation.');
       return;
     }
 
     setLoading(true);
     try {
       await resetPasswordWithOtp(email, otp, newPassword);
-      Alert.alert("Password updated", "You can sign in with your new password.", [
-        { text: "Sign in", onPress: () => router.replace("/login") },
-      ]);
+      setPasswordUpdated(true);
     } catch (err: unknown) {
-      const msg =
-        err && typeof err === "object" && "message" in err
-          ? String((err as { message: string }).message)
-          : "Could not reset password. Check the code and try again.";
-      Alert.alert("Reset failed", msg);
+      setFeedback("Could not reset password. Check the code and try again.");
     } finally {
       setLoading(false);
     }
   }
+
+  if (passwordUpdated) return (
+    <GshScreenBackground><SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
+      <ScrollView contentContainerStyle={styles.pad}>
+        <AppLanguageSetting />
+        <GshScreenIntro title={ac("Password updated")} subtitle={ac("You can sign in with your new password.")} style={{ marginBottom: 24 }} />
+        <GshGradientPrimaryButton title={ac("Sign in")} onPress={() => router.replace("/login")} />
+      </ScrollView>
+    </SafeAreaView></GshScreenBackground>
+  );
 
   if (!email) {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.safe} edges={["bottom"]}>
           <ScrollView contentContainerStyle={styles.pad}>
+            <AppLanguageSetting />
             <GshScreenIntro
-              title="Reset password"
-              subtitle="We need your email to continue. Go back and request a new code."
+              title={ac("Reset password")}
+              subtitle={ac("This link is incomplete. Request a new code.")}
               style={{ marginBottom: 16 }}
             />
-            <Pressable style={styles.back} onPress={() => router.replace("/forgot-password")} accessibilityRole="button">
-              <Text style={styles.backText}>Forgot password</Text>
+            <Pressable
+              style={styles.back}
+              onPress={() => router.replace("/forgot-password")}
+              accessibilityRole="button"
+            >
+              <Text style={styles.backText}>{ac("Forgot password")}</Text>
             </Pressable>
           </ScrollView>
         </SafeAreaView>
@@ -93,64 +109,91 @@ export default function ResetPasswordScreen() {
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-          <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={{ flex: 1 }}
+        >
+          <ScrollView
+            contentContainerStyle={styles.pad}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <AppLanguageSetting />
             <GshScreenIntro
               eyebrow="Global Sponsor Hub"
-              title="Reset password"
-              subtitle={`Enter the code we sent to ${email} and choose a new password.`}
+              title={ac("Reset password")}
+              subtitle={ac(
+                "Enter the code sent to {email} and choose a new password.",
+                { email },
+              )}
               style={{ marginBottom: 16 }}
             />
 
-            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+            <View style={styles.accentBar} />
 
             <View style={[cardSurfaceStyle(false), styles.formCard]}>
-              <Text style={styles.label}>One-time code</Text>
+              <Text style={styles.label}>{ac("One-time code")}</Text>
               <TextInput
                 style={[styles.input, styles.codeInput]}
                 autoCapitalize="characters"
                 autoCorrect={false}
                 keyboardType="number-pad"
+                editable={!loading}
                 value={code}
                 onChangeText={setCode}
                 placeholder="123456"
                 placeholderTextColor={colors.placeholder}
-                accessibilityLabel="Verification code"
+                accessibilityLabel={ac("Verification code")}
               />
 
-              <Text style={styles.label}>New password</Text>
+              <Text style={styles.label}>{ac("New password")}</Text>
               <TextInput
                 style={styles.input}
                 secureTextEntry
                 autoCapitalize="none"
+                editable={!loading}
                 value={newPassword}
                 onChangeText={setNewPassword}
-                placeholder="At least 8 characters"
+                placeholder={ac("At least 8 characters")}
                 placeholderTextColor={colors.placeholder}
-                accessibilityLabel="New password"
+                accessibilityLabel={ac("New password")}
               />
 
-              <Text style={styles.label}>Confirm password</Text>
+              <Text style={styles.label}>{ac("Confirm password")}</Text>
               <TextInput
                 style={styles.input}
                 secureTextEntry
                 autoCapitalize="none"
+                editable={!loading}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-                placeholder="Repeat new password"
+                placeholder={ac("Repeat new password")}
                 placeholderTextColor={colors.placeholder}
-                accessibilityLabel="Confirm password"
+                accessibilityLabel={ac("Confirm password")}
               />
 
-              <GshGradientPrimaryButton title="Reset password" onPress={onSubmit} loading={loading} />
+              {feedback && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={{ color: "#9f1239", backgroundColor: "#fff1f2", borderRadius: 12, padding: 12, marginBottom: 12, fontFamily: fontFamily.regular, lineHeight: 22 }}>{ac(feedback)}</Text>}
+              <GshGradientPrimaryButton
+                title={ac("Reset password")}
+                onPress={onSubmit}
+                loading={loading}
+              />
             </View>
 
-            <Pressable style={styles.back} onPress={() => router.replace("/forgot-password")} accessibilityRole="button">
-              <Text style={styles.backText}>Resend code</Text>
+            <Pressable
+              style={styles.back}
+              onPress={() => router.replace("/forgot-password")}
+              accessibilityRole="button"
+            >
+              <Text style={styles.backText}>{ac("Resend code")}</Text>
             </Pressable>
 
-            <Pressable style={styles.back} onPress={() => router.replace("/login")} accessibilityRole="button">
-              <Text style={styles.backText}>Back to sign in</Text>
+            <Pressable
+              style={styles.back}
+              onPress={() => router.replace("/login")}
+              accessibilityRole="button"
+            >
+              <Text style={styles.backText}>{ac("Back to sign in")}</Text>
             </Pressable>
 
             <LegalConsentFooterRow />
@@ -169,14 +212,19 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 40,
   },
-  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
+  accentBar: { height: 3, backgroundColor: colors.teal, marginBottom: 18 },
   formCard: {
     padding: 20,
     marginBottom: 8,
     borderRadius: radii.lg,
     backgroundColor: colors.background,
   },
-  label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
+  label: {
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -195,5 +243,9 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
   },
   back: { marginTop: 12, alignItems: "center", paddingVertical: 8 },
-  backText: { color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 15 },
+  backText: {
+    color: colors.brand,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+  },
 });

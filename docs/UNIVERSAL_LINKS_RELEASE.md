@@ -50,3 +50,27 @@ is `com.globalsponsorhub.candidate`.
 After deployment, verify both hosts with Android Digital Asset Links and on a
 physical iOS device. A new native build is required after changing associated
 domains or Android intent filters.
+
+## Expected route mappings
+
+The local parity resolver and release fixtures cover both HTTPS URLs and the
+`gsh-candidate://` custom scheme for:
+
+- login, candidate registration, and OTP verification (including allowlisted
+  `returnTo` query values);
+- saved-search alerts and rules-based job matches;
+- the notification inbox;
+- governed candidate benefit offers.
+
+Examples expected to resolve natively:
+
+- `gsh-candidate://alerts`
+- `gsh-candidate://candidate/job-matches`
+- `gsh-candidate://candidate/notifications`
+- `gsh-candidate://candidate/benefits`
+- `https://www.globalsponsorhub.com/auth/login?returnTo=%2Falerts`
+- `https://globalsponsorhub.com/candidate/job-alerts`
+
+These are local routing expectations only. They do not prove that Apple or
+Android has verified either production domain, that association files have
+been deployed, or that a signed build has passed device testing.

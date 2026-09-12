@@ -10,7 +10,7 @@
  * - **Ordered decisions**: Sections follow a plausible timeline (search → offer → permits → arrival).
  * - **Country drill-down**: Universal pages link into `/jobs/country/[slug]` for jurisdiction detail.
  * - **Official links**: Governments change rules — cite primary portals via `officialLinks` + verify there.
- * - **GSH fit**: Short “how to use listing filters / directory” alongside due diligence reminders.
+ * - **Global Sponsor Hub fit**: Short “how to use listing filters / directory” alongside due diligence reminders.
  * - **FAQs + related**: Surface real questions and cross-links (`relatedGuides`).
  * - **lastReviewed**: ISO date string; schedule re-checks for salary thresholds / programme names.
  */

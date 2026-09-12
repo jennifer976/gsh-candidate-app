@@ -1,15 +1,9 @@
+import { useAppCopy } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export type ContentFeatureId = "blog" | "expert-insights";
-
-const FEATURE_BODY: Record<ContentFeatureId, string> = {
-  blog:
-    "We're preparing articles on UK mobility, careers, and sponsorship. New posts will appear here when they go live.",
-  "expert-insights":
-    "We're onboarding vetted mobility experts now. Briefings and deep dives will appear here when the first pieces publish.",
-};
 
 /** User-facing placeholder while Supabase content is not wired or the catalogue is empty. */
 export function ContentComingSoonCard({
@@ -19,17 +13,20 @@ export function ContentComingSoonCard({
   feature: ContentFeatureId;
   state?: "empty" | "not-configured";
 }) {
+  const { t } = useAppCopy();
   const notConfigured = state === "not-configured";
   return (
     <View style={[styles.card, cardSurfaceStyle(true)]}>
       <View style={styles.iconWrap}>
         <Ionicons name="sparkles" size={28} color={colors.brand} />
       </View>
-      <Text style={styles.eyebrow}>{notConfigured ? "Content unavailable" : "Coming soon"}</Text>
+      <Text style={styles.eyebrow}>
+        {notConfigured ? t("articlesUnavailable") : t("articlesEmpty")}
+      </Text>
       <Text style={styles.body}>
         {notConfigured
-          ? "This build is missing its Supabase content configuration. Published content may exist; install a correctly configured build or contact support."
-          : FEATURE_BODY[feature]}
+          ? t("articlesUnavailableHelp")
+          : t(feature === "blog" ? "articlesEmptyHelp" : "articlesResources")}
       </Text>
     </View>
   );
@@ -51,8 +48,13 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.teal,
     letterSpacing: 0.6,
-    textTransform: "uppercase",
+    textTransform: "lowercase",
     marginBottom: 6,
   },
-  body: { fontFamily: fontFamily.regular, fontSize: 14, lineHeight: 20, color: colors.textMuted },
+  body: {
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.textMuted,
+  },
 });

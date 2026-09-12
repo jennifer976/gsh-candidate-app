@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),Module=require('node:module'),ts=require('typescript');
+const file=path.resolve(__dirname,'../lib/relocationBudget.ts'),loaded=new Module(file,module);loaded.filename=file;
+loaded._compile(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,file);
+const {parseBudgetCost,summarizeBudget,restoreBudgetCost}=loaded.exports;
+for(const raw of ['12.50','12,50',12.5])assert.equal(parseBudgetCost(raw),12.5);
+assert.equal(parseBudgetCost('0'),0);assert.equal(parseBudgetCost(''),undefined);
+for(const raw of ['1,000','1.000','1,234.50','1 000','-1','1e3','not a number',Infinity])assert.equal(parseBudgetCost(raw),null);
+assert.equal(restoreBudgetCost('12,50'),'12,50');
+assert.deepEqual(summarizeBudget({a:'12,50',b:'0'},['a','b','c']),{total:12.5,missingCount:1,invalid:false,invalidItems:[]});
+assert.equal(summarizeBudget({a:''},['a']).total,null);
+assert.equal(summarizeBudget({a:'1,000'},['a']).invalid,true);
+console.log('Passed decimal comma/point, explicit zero, missing costs, original-value retention and ambiguous grouping rejection.');

@@ -49,10 +49,12 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   btn: {
+    minHeight: 44,
+    justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: radii.pill,
     backgroundColor: colors.brand,
   },
-  btnText: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.navyDeep },
+  btnText: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.white },
 });

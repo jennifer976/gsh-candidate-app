@@ -1,25 +1,37 @@
+import { appCopy, type AppLanguage } from "@/lib/i18n/catalog";
 import { resolveJobBrandLogo } from "@/lib/brand-logo";
-import type { EmployerProfile, ExternalJobListingPublic, Job } from "@/types/models";
+import type {
+  EmployerProfile,
+  ExternalJobListingPublic,
+  Job,
+} from "@/types/models";
 
 /**
  * Extracts the employer label from a job, preferring companyName,
  * then falling back to the populated postedBy profile.
  */
-export function getJobEmployerLabel(job: Job): string {
-  const direct = typeof job.companyName === "string" ? job.companyName.trim() : "";
+export function getJobEmployerLabel(
+  job: Job,
+  locale: AppLanguage = "en",
+): string {
+  const direct =
+    typeof job.companyName === "string" ? job.companyName.trim() : "";
   if (direct) return direct;
 
   const pb = job.postedBy as EmployerProfile | null | undefined;
   if (pb && typeof pb === "object") {
-    const fromCompany = typeof pb.companyName === "string" ? pb.companyName.trim() : "";
+    const fromCompany =
+      typeof pb.companyName === "string" ? pb.companyName.trim() : "";
     if (fromCompany) return fromCompany;
-    const fromBiz = typeof pb.businessName === "string" ? pb.businessName.trim() : "";
+    const fromBiz =
+      typeof pb.businessName === "string" ? pb.businessName.trim() : "";
     if (fromBiz) return fromBiz;
-    const fromContact = typeof pb.contactCompany === "string" ? pb.contactCompany.trim() : "";
+    const fromContact =
+      typeof pb.contactCompany === "string" ? pb.contactCompany.trim() : "";
     if (fromContact) return fromContact;
   }
 
-  return "Employer";
+  return appCopy(locale, "screenEmployer");
 }
 
 /**
@@ -30,10 +42,15 @@ export function getJobLogoUrl(job: Job): string {
   return resolveJobBrandLogo(job);
 }
 
-function employerOffersSponsorshipFromProfile(pb: EmployerProfile | null | undefined): boolean {
+function employerOffersSponsorshipFromProfile(
+  pb: EmployerProfile | null | undefined,
+): boolean {
   if (!pb || typeof pb !== "object") return false;
-  const explicit = (pb as EmployerProfile & { employerHiringModel?: { offersSponsorship?: boolean } })
-    .employerHiringModel?.offersSponsorship;
+  const explicit = (
+    pb as EmployerProfile & {
+      employerHiringModel?: { offersSponsorship?: boolean };
+    }
+  ).employerHiringModel?.offersSponsorship;
   if (explicit === true) return true;
   if (explicit === false) return false;
   const status = pb.sponsorLicense?.status?.trim().toLowerCase() ?? "";
@@ -42,7 +59,18 @@ function employerOffersSponsorshipFromProfile(pb: EmployerProfile | null | undef
 }
 
 /** Sponsor / work-authorisation badge — matches website JobMarketingCard. */
-export function getEmployerSponsorBadge(job: Job): { label: string; positive: boolean } | null {
+export function getEmployerSponsorBadge(
+  job: Job,
+  locale: AppLanguage = "en",
+): { label: string; positive: boolean } | null {
+  if (
+    [...(job.mobility ?? []), ...(job.benefits ?? [])].some(
+      (value) =>
+        typeof value === "string" &&
+        value.trim().toLowerCase() === "no sponsorship available",
+    )
+  )
+    return null;
   const pb = job.postedBy as EmployerProfile | null | undefined;
   if (!employerOffersSponsorshipFromProfile(pb)) return null;
   const status =
@@ -53,7 +81,9 @@ export function getEmployerSponsorBadge(job: Job): { label: string; positive: bo
   const lower = status.toLowerCase();
   const positive = lower === "active" || lower === "approved";
   return {
-    label: positive ? "Active sponsor" : `Sponsor · ${status}`,
+    label: positive
+      ? appCopy(locale, "jobsSponsorDeclared")
+      : appCopy(locale, "jobsSponsorStatus", { status }),
     positive,
   };
 }
@@ -110,19 +140,27 @@ export function visaRouteChips(job: Job, max = 6): string[] {
     .filter((x): x is string => typeof x === "string" && x.trim().length > 0)
     .map((x) => x.trim())
     .filter((x) => x !== VISA_ROUTE_OTHER_VALUE);
-  const other = typeof job.visaRouteOther === "string" ? job.visaRouteOther.trim() : "";
-  return Array.from(new Set([...selected, ...(other ? [other] : [])])).slice(0, max);
+  const other =
+    typeof job.visaRouteOther === "string" ? job.visaRouteOther.trim() : "";
+  return Array.from(new Set([...selected, ...(other ? [other] : [])])).slice(
+    0,
+    max,
+  );
 }
 
 export function formatVisaRouteChip(route: string): string {
   return `Visa: ${route}`;
 }
 
-const MOBILITY_PRIORITY = /visa|sponsor|relocat|mobility|work permit|remote|subclass|skilled worker|blue card|employment pass/i;
+const MOBILITY_PRIORITY =
+  /visa|sponsor|relocat|mobility|work permit|remote|subclass|skilled worker|blue card|employment pass/i;
 
 /** Mobility-first chip order for job cards (visa / sponsorship surfaced first). */
 export function hubListingChipsPrioritized(job: Job, max = 2): string[] {
-  const all = [...visaRouteChips(job).map(formatVisaRouteChip), ...hubListingChips(job, 6)];
+  const all = [
+    ...visaRouteChips(job).map(formatVisaRouteChip),
+    ...hubListingChips(job, 6),
+  ];
   const priority = all.filter((c) => MOBILITY_PRIORITY.test(c));
   const rest = all.filter((c) => !MOBILITY_PRIORITY.test(c));
   return [...priority, ...rest].slice(0, max);
@@ -131,8 +169,12 @@ export function hubListingChipsPrioritized(job: Job, max = 2): string[] {
 /** Mobility + distinct benefit labels for hub job cards (capped for layout). */
 export function hubListingChips(job: Job, max = 6): string[] {
   const visaRoutes = visaRouteChips(job).map(formatVisaRouteChip);
-  const mobility = (job.mobility ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
-  const benefits = (job.benefits ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
+  const mobility = (job.mobility ?? []).filter(
+    (x): x is string => typeof x === "string" && x.trim().length > 0,
+  );
+  const benefits = (job.benefits ?? []).filter(
+    (x): x is string => typeof x === "string" && x.trim().length > 0,
+  );
   const seen = new Set<string>();
   const out: string[] = [];
   for (const route of visaRoutes) {
@@ -169,23 +211,35 @@ const MOBILITY_BENEFIT_LABELS = new Set([
 ]);
 
 /** Matches web job detail: mobility vs other benefits. */
-export function splitMobilityAndPerks(job: Job): { mobility: string[]; perks: string[] } {
-  const raw = (job.benefits ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
+export function splitMobilityAndPerks(job: Job): {
+  mobility: string[];
+  perks: string[];
+} {
+  const raw = (job.benefits ?? []).filter(
+    (x): x is string => typeof x === "string" && x.trim().length > 0,
+  );
   if (job.mobility && job.mobility.length > 0) {
     return { mobility: job.mobility.map(formatMobilityLabel), perks: raw };
   }
   return {
-    mobility: raw.filter((b) => MOBILITY_BENEFIT_LABELS.has(b)).map(formatMobilityLabel),
+    mobility: raw
+      .filter((b) => MOBILITY_BENEFIT_LABELS.has(b))
+      .map(formatMobilityLabel),
     perks: raw.filter((b) => !MOBILITY_BENEFIT_LABELS.has(b)),
   };
 }
 
 export function stripHtmlToPlainText(html: string): string {
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 /** Human-readable location for curated/external cards (API often has `location` only, not `country`). */
-export function getExternalListingLocationLabel(job: ExternalJobListingPublic): string {
+export function getExternalListingLocationLabel(
+  job: ExternalJobListingPublic,
+): string {
   const loc = typeof job.location === "string" ? job.location.trim() : "";
   const country = typeof job.country === "string" ? job.country.trim() : "";
   if (loc && country && !loc.toLowerCase().includes(country.toLowerCase())) {
@@ -197,13 +251,18 @@ export function getExternalListingLocationLabel(job: ExternalJobListingPublic): 
   const summary = typeof job.summary === "string" ? job.summary.trim() : "";
   if (summary) {
     const locLine =
-      summary.match(/(?:Location|Based in|Office(?:\s+location)?)\s*:?\s*([^.\n|]{3,100})/i)?.[1]?.trim() ??
-      "";
+      summary
+        .match(
+          /(?:Location|Based in|Office(?:\s+location)?)\s*:?\s*([^.\n|]{3,100})/i,
+        )?.[1]
+        ?.trim() ?? "";
     if (locLine) return locLine;
     if (/\bremote\b|\bhybrid\b|\bwork from anywhere\b/i.test(summary)) {
       return "Remote / hybrid — see listing";
     }
-    const commaPlace = summary.match(/\b(?:in|at)\s+([A-Z][A-Za-z\s,]{2,60})/)?.[1]?.trim();
+    const commaPlace = summary
+      .match(/\b(?:in|at)\s+([A-Z][A-Za-z\s,]{2,60})/)?.[1]
+      ?.trim();
     if (commaPlace && commaPlace.length <= 80) return commaPlace;
   }
 
@@ -214,7 +273,10 @@ export function getExternalListingLocationLabel(job: ExternalJobListingPublic): 
 }
 
 /** Plain-text preview for curated/external cards (strips HTML from ingested summaries). */
-export function getExternalListingSummaryPreview(job: ExternalJobListingPublic, maxLen = 160): string {
+export function getExternalListingSummaryPreview(
+  job: ExternalJobListingPublic,
+  maxLen = 160,
+): string {
   const s = typeof job.summary === "string" ? job.summary.trim() : "";
   if (!s) return "";
   const plain = stripHtmlToPlainText(s);
@@ -240,22 +302,29 @@ export function formatExternalListingAge(iso?: string): string | null {
 }
 
 /** Headline mobility flags when tags are sparse (matches public API booleans). */
-export function externalListingHighlightFlags(job: ExternalJobListingPublic): string[] {
+export function externalListingHighlightFlags(
+  job: ExternalJobListingPublic,
+): string[] {
   const out: string[] = [];
   const tags = (job.mobilityTags ?? []).map((t) => t.toLowerCase());
   const hasVisa =
-    job.sponsorshipAvailable ||
-    tags.some((t) => /visa|sponsor/.test(t));
+    job.sponsorshipAvailable || tags.some((t) => /visa|sponsor/.test(t));
   const hasReloc =
-    job.relocationAvailable ||
-    tags.some((t) => /relocat/.test(t));
-  if (hasVisa && !tags.some((t) => /visa|sponsor/.test(t))) out.push("Visa sponsorship");
-  if (hasReloc && !tags.some((t) => /relocat/.test(t))) out.push("Relocation support");
+    job.relocationAvailable || tags.some((t) => /relocat/.test(t));
+  if (hasVisa && !tags.some((t) => /visa|sponsor/.test(t)))
+    out.push("Visa sponsorship");
+  if (hasReloc && !tags.some((t) => /relocat/.test(t)))
+    out.push("Relocation support");
   return out;
 }
 
-export function externalListingChips(job: ExternalJobListingPublic, max = 6): string[] {
-  const tags = (job.mobilityTags ?? []).filter((x): x is string => typeof x === "string" && x.trim().length > 0);
+export function externalListingChips(
+  job: ExternalJobListingPublic,
+  max = 6,
+): string[] {
+  const tags = (job.mobilityTags ?? []).filter(
+    (x): x is string => typeof x === "string" && x.trim().length > 0,
+  );
   const seen = new Set<string>();
   const out: string[] = [];
   for (const flag of externalListingHighlightFlags(job)) {

@@ -1,6 +1,7 @@
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
+import { useAppLanguage } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -23,6 +24,8 @@ import { colors, fontFamily, radii } from "@/lib/theme";
 import { authUserId, type ThreadMessage } from "@/types/models";
 
 export default function ConversationScreen() {
+  const ac = useAccountCopy();
+  const locale = useAppLanguage((s) => s.locale);
   const { id } = useLocalSearchParams<{ id: string }>();
   const conversationId = String(id || "").trim();
   const router = useRouter();
@@ -42,33 +45,58 @@ export default function ConversationScreen() {
     mutationFn: () => sendThreadMessage(conversationId, draft.trim()),
     onSuccess: () => {
       setDraft("");
-      void qc.invalidateQueries({ queryKey: ["message-thread", conversationId] });
+      void qc.invalidateQueries({
+        queryKey: ["message-thread", conversationId],
+      });
       void qc.invalidateQueries({ queryKey: ["message-conversations"] });
     },
-    onError: (e: unknown) => {
-      const msg =
-        e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Send failed";
-      Alert.alert("Message not sent", msg);
+    onError: () => {
+      Alert.alert(
+        ac("Message not sent"),
+        ac(
+          "Check the conversation before trying again to avoid sending the same message twice.",
+        ),
+      );
     },
   });
 
   const messages = threadQuery.data ?? [];
+  const canReply = Boolean(
+    me && messages.some((message) => message.senderUserId !== me),
+  );
 
   const renderItem = useCallback(
     ({ item }: { item: ThreadMessage }) => {
       const mine = item.senderUserId === me;
       return (
-        <View style={[styles.bubbleWrap, mine ? styles.bubbleWrapMe : styles.bubbleWrapThem]}>
-          <View style={[styles.bubble, mine ? styles.bubbleMe : styles.bubbleThem]}>
-            <Text style={[styles.bubbleText, mine ? styles.bubbleTextMe : styles.bubbleTextThem]}>{item.body}</Text>
+        <View
+          style={[
+            styles.bubbleWrap,
+            mine ? styles.bubbleWrapMe : styles.bubbleWrapThem,
+          ]}
+        >
+          <View
+            style={[styles.bubble, mine ? styles.bubbleMe : styles.bubbleThem]}
+          >
+            <Text
+              style={[
+                styles.bubbleText,
+                mine ? styles.bubbleTextMe : styles.bubbleTextThem,
+              ]}
+            >
+              {item.body}
+            </Text>
             <Text style={[styles.time, mine ? styles.timeMe : styles.timeThem]}>
-              {new Date(item.createdAt).toLocaleString(undefined, { hour: "2-digit", minute: "2-digit" })}
+              {new Date(item.createdAt).toLocaleString(locale, {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </Text>
           </View>
         </View>
       );
     },
-    [me]
+    [me, locale],
   );
 
   if (!conversationId) {
@@ -76,11 +104,17 @@ export default function ConversationScreen() {
       <GshScreenBackground>
         <View style={styles.center}>
           <View style={styles.emptyIcon}>
-            <Ionicons name="chatbubble-ellipses-outline" size={40} color={colors.brand} />
+            <Ionicons
+              name="chatbubble-ellipses-outline"
+              size={40}
+              color={colors.brand}
+            />
           </View>
-          <Text style={styles.err}>This conversation link is not valid.</Text>
+          <Text style={styles.err}>
+            {ac("This conversation link is not valid.")}
+          </Text>
           <Pressable onPress={() => router.back()} accessibilityRole="button">
-            <Text style={styles.link}>Go back</Text>
+            <Text style={styles.link}>{ac("Go back")}</Text>
           </Pressable>
         </View>
       </GshScreenBackground>
@@ -97,19 +131,30 @@ export default function ConversationScreen() {
         {threadQuery.isLoading ? (
           <View style={styles.center}>
             <ActivityIndicator size="large" color={colors.brand} />
-            <Text style={styles.loadingText}>Loading thread…</Text>
+            <Text style={styles.loadingText}>
+              {ac("Loading conversations…")}
+            </Text>
           </View>
         ) : threadQuery.isError ? (
           <View style={styles.center}>
             <View style={styles.emptyIcon}>
-              <Ionicons name="cloud-offline-outline" size={40} color={colors.teal} />
+              <Ionicons
+                name="cloud-offline-outline"
+                size={40}
+                color={colors.teal}
+              />
             </View>
-            <Text style={styles.err}>Could not load thread.</Text>
-            <Pressable onPress={() => void threadQuery.refetch()} accessibilityRole="button">
-              <Text style={styles.link}>Retry</Text>
+            <Text style={styles.err}>{ac("Could not load messages.")}</Text>
+            <Pressable
+              onPress={() => void threadQuery.refetch()}
+              accessibilityRole="button"
+            >
+              <Text style={styles.link}>{ac("Try again")}</Text>
             </Pressable>
             <Pressable onPress={() => router.back()} accessibilityRole="button">
-              <Text style={[styles.link, styles.linkMuted]}>Go back</Text>
+              <Text style={[styles.link, styles.linkMuted]}>
+                {ac("Go back")}
+              </Text>
             </Pressable>
           </View>
         ) : (
@@ -122,33 +167,60 @@ export default function ConversationScreen() {
               inverted
               contentContainerStyle={styles.threadPad}
             />
-            <LinearGradient
-              colors={["rgba(97,10,144,0.06)", "rgba(14,205,209,0.08)"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.threadTip}
-            >
-              <Ionicons name="shield-checkmark-outline" size={20} color={colors.navy} />
+            <View style={styles.threadTip}>
+              <Ionicons
+                name="shield-checkmark-outline"
+                size={20}
+                color={colors.navy}
+              />
               <Text style={styles.threadTipText}>
-                Keep it professional — clear updates help employers respond faster.
+                {ac("Keep messages clear and relevant to the role.")}
               </Text>
-            </LinearGradient>
-            <View style={[styles.composer, { paddingBottom: Math.max(insets.bottom, 12) }]}>
+            </View>
+            <View
+              style={[
+                styles.composer,
+                { paddingBottom: Math.max(insets.bottom, 12) },
+              ]}
+            >
+              {!canReply ? (
+                <View style={styles.replyLocked}>
+                  <Ionicons
+                    name="lock-closed-outline"
+                    size={17}
+                    color={colors.textMuted}
+                  />
+                  <Text style={styles.replyLockedText}>
+                    {ac(
+                      "Reply when an employer or agency starts a conversation.",
+                    )}
+                  </Text>
+                </View>
+              ) : null}
               <TextInput
                 style={styles.input}
-                placeholder="Write a message…"
+                placeholder={
+                  canReply
+                    ? ac("Write a message…")
+                    : ac("Waiting for a message")
+                }
                 placeholderTextColor={colors.placeholder}
                 value={draft}
                 onChangeText={setDraft}
                 multiline
                 maxLength={8000}
+                editable={canReply}
               />
               <Pressable
-                style={[styles.sendBtn, (!draft.trim() || sendMut.isPending) && styles.sendDisabled]}
+                style={[
+                  styles.sendBtn,
+                  (!canReply || !draft.trim() || sendMut.isPending) &&
+                    styles.sendDisabled,
+                ]}
                 onPress={() => sendMut.mutate()}
-                disabled={!draft.trim() || sendMut.isPending}
+                disabled={!canReply || !draft.trim() || sendMut.isPending}
                 accessibilityRole="button"
-                accessibilityLabel="Send message"
+                accessibilityLabel={ac("Send message")}
               >
                 <Ionicons name="send" size={20} color={colors.white} />
               </Pressable>
@@ -164,8 +236,18 @@ const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: "transparent" },
   threadShell: { flex: 1 },
   threadList: { flex: 1 },
-  center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
-  loadingText: { fontFamily: fontFamily.medium, fontSize: 15, color: colors.textMuted },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+    gap: 12,
+  },
+  loadingText: {
+    fontFamily: fontFamily.medium,
+    fontSize: 15,
+    color: colors.textMuted,
+  },
   emptyIcon: {
     width: 72,
     height: 72,
@@ -177,7 +259,13 @@ const styles = StyleSheet.create({
     borderColor: colors.purpleBorder,
     marginBottom: 4,
   },
-  err: { color: colors.navy, marginBottom: 4, fontFamily: fontFamily.semiBold, textAlign: "center", fontSize: 16 },
+  err: {
+    color: colors.navy,
+    marginBottom: 4,
+    fontFamily: fontFamily.semiBold,
+    textAlign: "center",
+    fontSize: 16,
+  },
   link: { color: colors.brand, fontFamily: fontFamily.semiBold },
   linkMuted: { color: colors.textMuted, marginTop: 4 },
   threadPad: { paddingHorizontal: 12, paddingVertical: 12 },
@@ -192,6 +280,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: colors.border,
+    backgroundColor: colors.surfaceMuted,
   },
   threadTipText: {
     flex: 1,
@@ -203,17 +292,32 @@ const styles = StyleSheet.create({
   bubbleWrap: { marginBottom: 10, maxWidth: "100%" },
   bubbleWrapMe: { alignSelf: "flex-end" },
   bubbleWrapThem: { alignSelf: "flex-start" },
-  bubble: { maxWidth: "88%", borderRadius: radii.lg, paddingHorizontal: 14, paddingVertical: 10 },
+  bubble: {
+    maxWidth: "88%",
+    borderRadius: radii.lg,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
   bubbleMe: { backgroundColor: colors.brand },
-  bubbleThem: { backgroundColor: colors.surfaceMuted, borderWidth: 1, borderColor: colors.border },
+  bubbleThem: {
+    backgroundColor: colors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   bubbleText: { fontSize: 16, lineHeight: 22, fontFamily: fontFamily.regular },
   bubbleTextMe: { color: colors.white },
   bubbleTextThem: { color: colors.textPrimary },
-  time: { marginTop: 6, fontSize: 11, alignSelf: "flex-end", fontFamily: fontFamily.medium },
+  time: {
+    marginTop: 6,
+    fontSize: 11,
+    alignSelf: "flex-end",
+    fontFamily: fontFamily.medium,
+  },
   timeMe: { color: "rgba(255,255,255,0.75)" },
   timeThem: { color: colors.textMuted },
   composer: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "flex-end",
     gap: 10,
     paddingHorizontal: 12,
@@ -221,11 +325,20 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.border,
     backgroundColor: colors.background,
-    shadowColor: "#0f172a",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    elevation: 8,
+  },
+  replyLocked: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
+    paddingBottom: 2,
+  },
+  replyLockedText: {
+    flex: 1,
+    fontSize: 12,
+    lineHeight: 17,
+    fontFamily: fontFamily.medium,
+    color: colors.textMuted,
   },
   input: {
     flex: 1,

@@ -1,18 +1,54 @@
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
+import type { AppCopyKey } from "@/lib/i18n/catalog";
+import { useAppCopy } from "@/lib/i18n";
+import { jobChipLabel, jobCountryLabel } from "@/lib/job-presentation";
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { JOB_DESTINATION_FILTERS } from "@/lib/jobDiscoverCountries";
 import { VISA_ROUTE_OPTIONS } from "@/lib/job-display";
-import { colors, discoverFeedCardStyle, discoverSearchFieldStyle, fontFamily, radii } from "@/lib/theme";
+import {
+  colors,
+  discoverFeedCardStyle,
+  discoverSearchFieldStyle,
+  fontFamily,
+  radii,
+} from "@/lib/theme";
 import type { DashboardJobListing } from "@/types/models";
 
+const sectorKeys: Record<string, AppCopyKey> = {
+  All: "jobAllSectors",
+  Engineering: "jobEngineering",
+  Healthcare: "jobHealthcare",
+  Education: "jobEducation",
+  Finance: "jobFinance",
+};
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
 const MOBILITY_CHIPS: { label: string; benefit: string; icon: IonName }[] = [
-  { label: "Visa Sponsorship", benefit: "Visa Sponsorship", icon: "id-card-outline" },
-  { label: "Relocation", benefit: "Relocation Support", icon: "airplane-outline" },
-  { label: "Global Hiring", benefit: "Cross-border Remote Allowed", icon: "globe-outline" },
+  {
+    label: "Visa Sponsorship",
+    benefit: "Visa Sponsorship",
+    icon: "id-card-outline",
+  },
+  {
+    label: "Relocation",
+    benefit: "Relocation Support",
+    icon: "airplane-outline",
+  },
+  {
+    label: "Remote — Global",
+    benefit: "Cross-border Remote Allowed",
+    icon: "globe-outline",
+  },
 ];
 
 const FEATURED_VISA_ROUTES = [
@@ -32,7 +68,6 @@ const EXPLORE_CHIPS: { label: string; q: string }[] = [
   { label: "Healthcare", q: "nurse healthcare clinical" },
   { label: "Education", q: "teacher lecturer education" },
   { label: "Finance", q: "finance accountant analyst" },
-  { label: "Sponsorship", q: "visa sponsorship skilled worker" },
 ];
 
 function chipActive(currentQ: string, chipQ: string): boolean {
@@ -42,24 +77,34 @@ function chipActive(currentQ: string, chipQ: string): boolean {
   return c === t;
 }
 
-/** Opens the full topics & mobility sheet (Jobie-style “filters” entry, GSH copy). */
-export function DiscoverTopicsFilterTrigger({ onPress, query }: { onPress: () => void; query: string }) {
+/** Opens the full topics & mobility sheet (Jobie-style “filters” entry, Global Sponsor Hub copy). */
+export function DiscoverTopicsFilterTrigger({
+  onPress,
+  query,
+}: {
+  onPress: () => void;
+  query: string;
+}) {
+  const { t, locale } = useAppCopy();
+
   const trimmed = query.trim();
   return (
     <Pressable
       onPress={onPress}
       style={[styles.triggerRow, discoverSearchFieldStyle()]}
       accessibilityRole="button"
-      accessibilityLabel="Open topics, sectors, and mobility filters"
+      accessibilityLabel={t("jobFilterOpen")}
     >
       <View style={styles.triggerLeft}>
         <View style={styles.triggerIconWrap}>
           <Ionicons name="options-outline" size={20} color={colors.brand} />
         </View>
         <View style={styles.triggerTextCol}>
-          <Text style={styles.triggerTitle}>Topics & filters</Text>
+          <Text style={styles.triggerTitle}>{t("jobFiltersTitle")}</Text>
           <Text style={styles.triggerSub} numberOfLines={1}>
-            {trimmed ? `Search: “${trimmed}”` : "Sectors, sponsorship, relocation"}
+            {trimmed
+              ? t("jobFilterSearch", { query: trimmed })
+              : t("jobFilterSummary")}
           </Text>
         </View>
       </View>
@@ -69,6 +114,8 @@ export function DiscoverTopicsFilterTrigger({ onPress, query }: { onPress: () =>
 }
 
 export function DiscoverTopicsFilterModal({
+  workModeFilter = "",
+  onPickWorkMode,
   visible,
   onClose,
   query,
@@ -84,6 +131,8 @@ export function DiscoverTopicsFilterModal({
   onClose: () => void;
   query: string;
   location: string;
+  workModeFilter?: string;
+  onPickWorkMode?: (next: string) => void;
   mobilityFilter: string;
   visaRouteFilter: string;
   onPickExplore: (next: string) => void;
@@ -91,13 +140,26 @@ export function DiscoverTopicsFilterModal({
   onPickVisaRoute: (next: string) => void;
   onPickCountry: (next: string) => void;
 }) {
+  const { t, locale } = useAppCopy();
+  const ac = useAccountCopy();
+
   return (
-    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={onClose}
+    >
       <SafeAreaView style={styles.modalSafe} edges={["top", "bottom"]}>
         <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>Topics & filters</Text>
-          <Pressable onPress={onClose} hitSlop={12} accessibilityRole="button" accessibilityLabel="Close filters">
-            <Text style={styles.modalDone}>Done</Text>
+          <Text style={styles.modalTitle}>{t("jobFiltersTitle")}</Text>
+          <Pressable
+            onPress={onClose}
+            hitSlop={12}
+            accessibilityRole="button"
+            accessibilityLabel={t("jobFilterClose")}
+          >
+            <Text style={styles.modalDone}>{t("jobDone")}</Text>
           </Pressable>
         </View>
         <ScrollView
@@ -105,48 +167,82 @@ export function DiscoverTopicsFilterModal({
           contentContainerStyle={styles.modalScroll}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.modalSectionLabel}>Sector & role focus</Text>
-          <Text style={styles.modalSectionHint}>Pick a lane — you can still fine-tune with the search bar.</Text>
+          {onPickWorkMode ? <>
+            <Text style={styles.modalSectionLabel}>{ac("Work location")}</Text>
+            <View style={[styles.exploreWrap, { marginBottom: 22 }]}>
+              {[["", "Any work location"], ["remote", "Remote"], ["hybrid", "Hybrid"], ["onsite", "On-site"]].map(([value, label]) => (
+                <Pressable key={value} onPress={() => { onPickWorkMode(value); onClose(); }}
+                  accessibilityRole="button" accessibilityState={{ selected: workModeFilter === value }}
+                  style={[styles.exploreChip, workModeFilter === value && styles.exploreChipActive]}>
+                  <Text style={[styles.exploreChipText, workModeFilter === value && styles.exploreChipTextActive]}>{ac(label)}</Text>
+                </Pressable>
+              ))}
+            </View>
+          </> : null}
+          <Text style={styles.modalSectionLabel}>{t("jobFilterSector")}</Text>
+          <Text style={styles.modalSectionHint}>
+            {t("jobFilterSectorHint")}
+          </Text>
           <View style={styles.exploreWrap}>
             {EXPLORE_CHIPS.map((chip) => {
               const active = chipActive(query, chip.q);
               return (
                 <Pressable
-                  key={chip.label}
+                  key={chip.q}
                   onPress={() => {
                     onPickExplore(chip.q);
                     onClose();
                   }}
-                  style={[styles.exploreChip, active && styles.exploreChipActive]}
+                  style={[
+                    styles.exploreChip,
+                    active && styles.exploreChipActive,
+                  ]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: active }}
                 >
-                  <Text style={[styles.exploreChipText, active && styles.exploreChipTextActive]} numberOfLines={1}>
-                    {chip.label}
+                  <Text
+                    style={[
+                      styles.exploreChipText,
+                      active && styles.exploreChipTextActive,
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {t(sectorKeys[chip.label] ?? "jobAllSectors")}
                   </Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={[styles.modalSectionLabel, { marginTop: 22 }]}>Destination country</Text>
-          <Text style={styles.modalSectionHint}>
-            Same countries as the website jobs board — filters employer listings by location.
+          <Text style={[styles.modalSectionLabel, { marginTop: 22 }]}>
+            {t("jobDestination")}
           </Text>
+          <Text style={styles.modalSectionHint}>{t("jobDestinationHint")}</Text>
           <View style={styles.exploreWrap}>
             <Pressable
               onPress={() => {
                 onPickCountry("");
                 onClose();
               }}
-              style={[styles.exploreChip, !location.trim() && styles.exploreChipActive]}
+              style={[
+                styles.exploreChip,
+                !location.trim() && styles.exploreChipActive,
+              ]}
               accessibilityRole="button"
               accessibilityState={{ selected: !location.trim() }}
             >
-              <Text style={[styles.exploreChipText, !location.trim() && styles.exploreChipTextActive]}>All countries</Text>
+              <Text
+                style={[
+                  styles.exploreChipText,
+                  !location.trim() && styles.exploreChipTextActive,
+                ]}
+              >
+                {t("guideAllCountries")}
+              </Text>
             </Pressable>
             {JOB_DESTINATION_FILTERS.map((c) => {
-              const active = location.trim().toLowerCase() === c.value.toLowerCase();
+              const active =
+                location.trim().toLowerCase() === c.value.toLowerCase();
               return (
                 <Pressable
                   key={c.value}
@@ -154,60 +250,98 @@ export function DiscoverTopicsFilterModal({
                     onPickCountry(c.value);
                     onClose();
                   }}
-                  style={[styles.exploreChip, active && styles.exploreChipActive]}
+                  style={[
+                    styles.exploreChip,
+                    active && styles.exploreChipActive,
+                  ]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: active }}
                 >
-                  <Text style={[styles.exploreChipText, active && styles.exploreChipTextActive]} numberOfLines={1}>
-                    {c.label}
+                  <Text
+                    style={[
+                      styles.exploreChipText,
+                      active && styles.exploreChipTextActive,
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {jobCountryLabel(c.value, locale)}
                   </Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={[styles.modalSectionLabel, { marginTop: 22 }]}>Mobility & sponsorship</Text>
-          <Text style={styles.modalSectionHint}>These filters match employer-provided sponsorship labels.</Text>
+          <Text style={[styles.modalSectionLabel, { marginTop: 22 }]}>
+            {t("jobMobility")}
+          </Text>
+          <Text style={styles.modalSectionHint}>{t("jobMobilityHint")}</Text>
           <View style={styles.mobilityList}>
             {MOBILITY_CHIPS.map((chip) => {
               const active = mobilityFilter === chip.benefit;
               return (
                 <Pressable
-                  key={chip.label}
+                  key={chip.benefit}
                   onPress={() => {
                     onPickMobilityFilter(active ? "" : chip.benefit);
                     onClose();
                   }}
-                  style={[styles.mobilityRow, active && styles.mobilityRowActive]}
+                  style={[
+                    styles.mobilityRow,
+                    active && styles.mobilityRowActive,
+                  ]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: active }}
                 >
-                  <Ionicons name={chip.icon} size={20} color={active ? colors.navy : colors.textSecondary} />
-                  <Text style={[styles.mobilityRowText, active && styles.mobilityRowTextActive]} numberOfLines={2}>
-                    {chip.label}
+                  <Ionicons
+                    name={chip.icon}
+                    size={20}
+                    color={active ? colors.navy : colors.textSecondary}
+                  />
+                  <Text
+                    style={[
+                      styles.mobilityRowText,
+                      active && styles.mobilityRowTextActive,
+                    ]}
+                    numberOfLines={2}
+                  >
+                    {jobChipLabel(chip.benefit, locale)}
                   </Text>
-                  {active ? <Ionicons name="checkmark-circle" size={22} color={colors.teal} /> : null}
+                  {active ? (
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={22}
+                      color={colors.teal}
+                    />
+                  ) : null}
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={[styles.modalSectionLabel, { marginTop: 22 }]}>Visa route</Text>
-          <Text style={styles.modalSectionHint}>
-            Filter by a route employers have specifically said they can support.
+          <Text style={[styles.modalSectionLabel, { marginTop: 22 }]}>
+            {t("jobVisa")}
           </Text>
+          <Text style={styles.modalSectionHint}>{t("jobVisaHint")}</Text>
           <View style={styles.exploreWrap}>
             <Pressable
               onPress={() => {
                 onPickVisaRoute("");
                 onClose();
               }}
-              style={[styles.exploreChip, !visaRouteFilter.trim() && styles.exploreChipActive]}
+              style={[
+                styles.exploreChip,
+                !visaRouteFilter.trim() && styles.exploreChipActive,
+              ]}
               accessibilityRole="button"
               accessibilityState={{ selected: !visaRouteFilter.trim() }}
             >
-              <Text style={[styles.exploreChipText, !visaRouteFilter.trim() && styles.exploreChipTextActive]}>
-                All routes
+              <Text
+                style={[
+                  styles.exploreChipText,
+                  !visaRouteFilter.trim() && styles.exploreChipTextActive,
+                ]}
+              >
+                {t("jobAllRoutes")}
               </Text>
             </Pressable>
             {FEATURED_VISA_ROUTES.map((route) => {
@@ -219,11 +353,20 @@ export function DiscoverTopicsFilterModal({
                     onPickVisaRoute(active ? "" : route);
                     onClose();
                   }}
-                  style={[styles.exploreChip, active && styles.exploreChipActive]}
+                  style={[
+                    styles.exploreChip,
+                    active && styles.exploreChipActive,
+                  ]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: active }}
                 >
-                  <Text style={[styles.exploreChipText, active && styles.exploreChipTextActive]} numberOfLines={1}>
+                  <Text
+                    style={[
+                      styles.exploreChipText,
+                      active && styles.exploreChipTextActive,
+                    ]}
+                    numberOfLines={1}
+                  >
                     {route}
                   </Text>
                 </Pressable>
@@ -243,23 +386,46 @@ export function DiscoverListingInfoModal({
 }: {
   visible: boolean;
   onClose: () => void;
-  feedTab: "employer" | "curated";
+  feedTab: "direct" | "connected" | "curated";
 }) {
+  const { t, locale } = useAppCopy();
+
   return (
-    <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
-      <Pressable style={styles.infoBackdrop} onPress={onClose} accessibilityRole="button" accessibilityLabel="Dismiss">
-        <View style={[styles.infoCard, discoverFeedCardStyle()]}>
-          <Text style={styles.infoTitle}>How this feed works</Text>
-          <Text style={styles.infoBody}>
-            {feedTab === "employer"
-              ? "All jobs are hosted on Global Sponsor Hub (direct roles and employer-connected listings). Where the employer enables it, you can apply in-app with your profile and CV."
-              : "Curated roles are found by GSH or shared by partners and agencies. Tapping a role opens the employer’s own careers site — you apply there, outside the app."}
-          </Text>
-          <Pressable onPress={onClose} style={styles.infoBtn} accessibilityRole="button">
-            <Text style={styles.infoBtnText}>Got it</Text>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={onClose}
+    >
+      <SafeAreaView style={styles.modalSafe} edges={["top", "bottom"]}>
+        <View style={styles.modalHeader}>
+          <Text style={styles.infoTitle}>{t("jobsInfo")}</Text>
+          <Pressable
+            onPress={onClose}
+            style={styles.modalCloseHit}
+            accessibilityRole="button"
+            accessibilityLabel={t("guideClose")}
+          >
+            <Text style={styles.modalDone}>{t("jobDone")}</Text>
           </Pressable>
         </View>
-      </Pressable>
+        <View style={styles.infoSheetBody}>
+          <Text style={styles.infoBody}>
+            {feedTab === "direct"
+              ? t("jobFeedDirectBody")
+              : feedTab === "connected"
+                ? t("jobFeedConnectedBody")
+                : t("jobFeedExternalBody")}
+          </Text>
+          <Pressable
+            onPress={onClose}
+            style={styles.infoBtn}
+            accessibilityRole="button"
+          >
+            <Text style={styles.infoBtnText}>{t("jobGotIt")}</Text>
+          </Pressable>
+        </View>
+      </SafeAreaView>
     </Modal>
   );
 }
@@ -268,29 +434,43 @@ export function DiscoverFeaturedStrip({
   jobs,
   onOpen,
   onViewAll,
-  sectionTitle = "Spotlight roles",
+  sectionTitle,
 }: {
   jobs: DashboardJobListing[];
   onOpen: (id: string) => void;
   onViewAll?: () => void;
-  /** GSH-voice section heading (Jobie-style “Suggested” strip). */
+  /** Global Sponsor Hub-voice section heading (Jobie-style “Suggested” strip). */
   sectionTitle?: string;
 }) {
+  const { t, locale } = useAppCopy();
+
   if (jobs.length === 0) return null;
 
   return (
     <View style={styles.featuredOuter}>
       <View style={styles.featuredHeadRow}>
-        <Text style={styles.featuredSectionTitle}>{sectionTitle}</Text>
+        <Text style={styles.featuredSectionTitle}>
+          {sectionTitle ?? t("jobSpotlight")}
+        </Text>
         {onViewAll ? (
-          <Pressable onPress={onViewAll} accessibilityRole="button" accessibilityLabel="View all spotlight roles">
-            <Text style={styles.featuredViewAll}>View all</Text>
+          <Pressable
+            onPress={onViewAll}
+            accessibilityRole="button"
+            accessibilityLabel={t("jobSpotlightAll")}
+          >
+            <Text style={styles.featuredViewAll}>{t("homeSeeAll")}</Text>
           </Pressable>
         ) : null}
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.featuredScroll}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.featuredScroll}
+      >
         {jobs.map((job) => {
-          const initial = (job.companyName?.trim()?.charAt(0) || "G").toUpperCase();
+          const initial = (
+            job.companyName?.trim()?.charAt(0) || "G"
+          ).toUpperCase();
           return (
             <Pressable
               key={job._id}
@@ -310,11 +490,19 @@ export function DiscoverFeaturedStrip({
                 {job.companyName}
               </Text>
               <Text style={styles.featuredCardMeta} numberOfLines={1}>
-                {[job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || ""}
+                {[job.locationCity, job.locationCountry]
+                  .filter(Boolean)
+                  .join(", ") ||
+                  job.location ||
+                  ""}
               </Text>
               <View style={styles.featuredCardFooter}>
-                <Text style={styles.featuredCardCta}>View</Text>
-                <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
+                <Text style={styles.featuredCardCta}>{t("jobsView")}</Text>
+                <Ionicons
+                  name="chevron-forward"
+                  size={16}
+                  color={colors.textMuted}
+                />
               </View>
             </Pressable>
           );
@@ -333,7 +521,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
   },
-  triggerLeft: { flexDirection: "row", alignItems: "center", gap: 12, flex: 1, minWidth: 0 },
+  triggerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    flex: 1,
+    minWidth: 0,
+  },
   triggerIconWrap: {
     width: 40,
     height: 40,
@@ -345,8 +539,18 @@ const styles = StyleSheet.create({
     borderColor: colors.purpleBorder,
   },
   triggerTextCol: { flex: 1, minWidth: 0 },
-  triggerTitle: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.navy, letterSpacing: -0.2 },
-  triggerSub: { marginTop: 2, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
+  triggerTitle: {
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+    letterSpacing: -0.2,
+  },
+  triggerSub: {
+    marginTop: 2,
+    fontSize: 12,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+  },
 
   modalSafe: { flex: 1, backgroundColor: colors.background },
   modalHeader: {
@@ -358,15 +562,30 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
   },
-  modalTitle: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.3 },
-  modalDone: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.brand },
+  modalTitle: {
+    fontSize: 20,
+    fontFamily: fontFamily.heading,
+    color: colors.navy,
+    letterSpacing: -0.3,
+  },
+  modalCloseHit: {
+    minWidth: 44,
+    minHeight: 44,
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+  modalDone: {
+    fontSize: 16,
+    fontFamily: fontFamily.semiBold,
+    color: colors.brand,
+  },
   modalScroll: { paddingHorizontal: 16, paddingBottom: 28, paddingTop: 8 },
   modalSectionLabel: {
     fontSize: 12,
     fontFamily: fontFamily.semiBold,
-    color: colors.navy,
+    color: colors.accent,
     letterSpacing: 0.2,
-    textTransform: "uppercase",
+    textTransform: "lowercase",
   },
   modalSectionHint: {
     marginTop: 6,
@@ -378,6 +597,8 @@ const styles = StyleSheet.create({
   },
   exploreWrap: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   exploreChip: {
+    minHeight: 44,
+    justifyContent: "center",
     paddingVertical: 9,
     paddingHorizontal: 14,
     borderRadius: radii.pill,
@@ -386,8 +607,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   exploreChipActive: {
-    borderColor: "rgba(14, 205, 209, 0.55)",
-    backgroundColor: "rgba(14, 205, 209, 0.1)",
+    borderColor: colors.teal,
+    backgroundColor: colors.brandSoft,
   },
   exploreChipText: {
     fontSize: 13,
@@ -408,8 +629,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceMuted,
   },
   mobilityRowActive: {
-    borderColor: "rgba(14, 205, 209, 0.5)",
-    backgroundColor: "rgba(14, 205, 209, 0.08)",
+    borderColor: colors.teal,
+    backgroundColor: colors.brandSoft,
   },
   mobilityRowText: {
     flex: 1,
@@ -420,20 +641,13 @@ const styles = StyleSheet.create({
   },
   mobilityRowTextActive: { color: colors.navy },
 
-  infoBackdrop: {
-    flex: 1,
-    backgroundColor: "rgba(15, 23, 42, 0.45)",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 24,
+  infoSheetBody: { flex: 1, padding: 20 },
+  infoTitle: {
+    fontSize: 18,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+    letterSpacing: -0.35,
   },
-  infoCard: {
-    width: "100%",
-    maxWidth: 420,
-    padding: 20,
-    borderRadius: radii.lg,
-  },
-  infoTitle: { fontSize: 18, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.35 },
   infoBody: {
     marginTop: 12,
     fontSize: 15,
@@ -443,13 +657,20 @@ const styles = StyleSheet.create({
   },
   infoBtn: {
     marginTop: 18,
-    alignSelf: "flex-start",
+    minHeight: 48,
+    alignSelf: "stretch",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: radii.pill,
+    borderRadius: radii.md,
     backgroundColor: colors.brand,
   },
-  infoBtnText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.white },
+  infoBtnText: {
+    fontSize: 15,
+    fontFamily: fontFamily.semiBold,
+    color: colors.white,
+  },
 
   featuredOuter: { marginTop: 12 },
   featuredHeadRow: {
@@ -490,7 +711,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  featuredAvatarText: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.brand },
+  featuredAvatarText: {
+    fontSize: 15,
+    fontFamily: fontFamily.bold,
+    color: colors.brand,
+  },
   featuredCardTitle: {
     fontSize: 15,
     fontFamily: fontFamily.bold,
@@ -498,8 +723,18 @@ const styles = StyleSheet.create({
     letterSpacing: -0.22,
     minHeight: 38,
   },
-  featuredCardCo: { marginTop: 6, fontSize: 12, fontFamily: fontFamily.medium, color: colors.textMarketing },
-  featuredCardMeta: { marginTop: 3, fontSize: 11, fontFamily: fontFamily.regular, color: colors.textMuted },
+  featuredCardCo: {
+    marginTop: 6,
+    fontSize: 12,
+    fontFamily: fontFamily.medium,
+    color: colors.textMarketing,
+  },
+  featuredCardMeta: {
+    marginTop: 3,
+    fontSize: 11,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+  },
   featuredCardFooter: {
     marginTop: 10,
     flexDirection: "row",
@@ -507,5 +742,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 2,
   },
-  featuredCardCta: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.brand },
+  featuredCardCta: {
+    fontSize: 13,
+    fontFamily: fontFamily.bold,
+    color: colors.brand,
+  },
 });

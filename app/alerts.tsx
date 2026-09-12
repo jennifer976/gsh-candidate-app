@@ -1,3 +1,6 @@
+import { parseBudgetCost } from "@/lib/relocationBudget";
+import { useAppLanguage } from "@/lib/i18n";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -30,32 +33,27 @@ import {
   patchCandidateNotificationPrefs,
   patchJobSearchAlert,
 } from "@/lib/api-client";
+import { useAuthStore } from "@/lib/auth-store";
+import { persistCandidateReturnIntent } from "@/lib/candidate-return-intent";
+import {
+  normalizeJobMatches,
+  type NormalizedJobMatch,
+} from "@/lib/candidate-matches";
 import { VISA_ROUTE_OPTIONS } from "@/lib/job-display";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
-import type { Job, JobMatchNotificationRow, JobSearchAlertDto } from "@/types/models";
-
-function resolveJobId(jobField: unknown): string | null {
-  if (!jobField || typeof jobField !== "object") return null;
-  const j = jobField as Job;
-  return j._id ? String(j._id) : null;
-}
-
-function jobTitleFromMatch(jobField: unknown): string {
-  if (!jobField || typeof jobField !== "object") return "Job";
-  const j = jobField as Job;
-  return j.title || "Role";
-}
-
-function companyFromMatch(jobField: unknown): string {
-  if (!jobField || typeof jobField !== "object") return "";
-  const j = jobField as Job;
-  return j.companyName || "";
-}
+import type { JobSearchAlertDto } from "@/types/models";
 
 export default function AlertsScreen() {
+  const ac = useAccountCopy();
+  const locale = useAppLanguage((s) => s.locale);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const actionFailed = () =>
+    setActionError("Could not save this change. Refresh before trying again.");
+
   const router = useRouter();
   const qc = useQueryClient();
+  const token = useAuthStore((state) => state.token);
 
   const prefsQuery = useQuery({
     queryKey: ["candidate", "notification-prefs"],
@@ -74,302 +72,641 @@ export default function AlertsScreen() {
 
   const [newName, setNewName] = useState("");
   const [newQ, setNewQ] = useState("");
+  const [newLocation, setNewLocation] = useState("");
+  const [newIndustry, setNewIndustry] = useState("");
+  const [newBenefit, setNewBenefit] = useState("");
   const [newVisaRoute, setNewVisaRoute] = useState("");
+  const [newJobType, setNewJobType] = useState("");
+  const [newExperienceLevel, setNewExperienceLevel] = useState("");
+  const [newSkills, setNewSkills] = useState("");
+  const [newWorkMode, setNewWorkMode] = useState("");
+  const [newMinSalary, setNewMinSalary] = useState("");
+  const [newMaxSalary, setNewMaxSalary] = useState("");
+  const [newPostedWithinDays, setNewPostedWithinDays] = useState("");
+  const pendingSearchFilters = () => ({
+    q: newQ.trim() || undefined,
+    location: newLocation.trim() || undefined,
+    industry: newIndustry.trim() || undefined,
+    benefit: newBenefit.trim() || undefined,
+    visaRoute: newVisaRoute || undefined,
+    jobType: newJobType.trim() || undefined,
+    experienceLevel: newExperienceLevel.trim() || undefined,
+    skills: newSkills.trim() || undefined,
+    workMode: newWorkMode.trim() || undefined,
+    minSalary: parseBudgetCost(newMinSalary) ?? undefined,
+    maxSalary: parseBudgetCost(newMaxSalary) ?? undefined,
+    postedWithinDays: newPostedWithinDays
+      ? Number(newPostedWithinDays)
+      : undefined,
+  });
 
   const patchPrefs = useMutation({
     mutationFn: patchCandidateNotificationPrefs,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["candidate", "notification-prefs"] }),
+    onError: actionFailed,
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["candidate", "notification-prefs"] }),
   });
 
   const markAll = useMutation({
     mutationFn: markAllJobMatchesRead,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["candidate", "job-matches"] }),
+    onError: actionFailed,
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["candidate", "job-matches"] }),
   });
 
   const openMatch = useMutation({
-    mutationFn: async (row: JobMatchNotificationRow) => {
-      const jid = resolveJobId(row.jobId);
-      if (!jid) throw new Error("Job unavailable");
-      await markJobMatchRead(row._id);
-      return jid;
+    mutationFn: async (row: NormalizedJobMatch) => {
+      await markJobMatchRead(row.id);
+      return row.jobId;
     },
     onSuccess: (jobId) => {
       void qc.invalidateQueries({ queryKey: ["candidate", "job-matches"] });
       router.push(`/job/${jobId}`);
     },
-    onError: (e: unknown) =>
-      Alert.alert(
-        "Could not open",
-        e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Try again."
-      ),
+    onError: actionFailed,
   });
 
   const toggleSearch = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
       patchJobSearchAlert(id, { isActive: !isActive }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["candidate", "job-search-alerts"] }),
+    onError: actionFailed,
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["candidate", "job-search-alerts"] }),
   });
 
   const removeSearch = useMutation({
     mutationFn: deleteJobSearchAlert,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["candidate", "job-search-alerts"] }),
+    onError: actionFailed,
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["candidate", "job-search-alerts"] }),
   });
 
   const createSearch = useMutation({
     mutationFn: () =>
-      createJobSearchAlert(newName.trim() || "My search", {
-        q: newQ.trim() || undefined,
-        visaRoute: newVisaRoute || undefined,
-      }),
+      createJobSearchAlert(
+        newName.trim() || ac("My search"),
+        pendingSearchFilters(),
+      ),
     onSuccess: () => {
       setNewName("");
       setNewQ("");
+      setNewLocation("");
+      setNewIndustry("");
+      setNewBenefit("");
       setNewVisaRoute("");
+      setNewJobType("");
+      setNewExperienceLevel("");
+      setNewSkills("");
+      setNewWorkMode("");
+      setNewMinSalary("");
+      setNewMaxSalary("");
+      setNewPostedWithinDays("");
       qc.invalidateQueries({ queryKey: ["candidate", "job-search-alerts"] });
     },
-    onError: (e: unknown) =>
-      Alert.alert(
-        "Could not create alert",
-        e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Try again."
-      ),
+    onError: actionFailed,
   });
 
   const prefs = prefsQuery.data;
-  const matches = matchesQuery.data?.data ?? [];
+  const matches = normalizeJobMatches(matchesQuery.data?.data ?? []);
   const unread = matchesQuery.data?.unreadCount ?? 0;
   const searches = searchesQuery.data ?? [];
 
   const prefsErrNoData = prefsQuery.isError && prefsQuery.data === undefined;
-  const matchesErrNoData = matchesQuery.isError && matchesQuery.data === undefined;
-  const searchesErrNoData = searchesQuery.isError && searchesQuery.data === undefined;
+  const matchesErrNoData =
+    matchesQuery.isError && matchesQuery.data === undefined;
+  const searchesErrNoData =
+    searchesQuery.isError && searchesQuery.data === undefined;
 
   const prefsBoot = prefsQuery.isPending && prefsQuery.data === undefined;
   const matchesBoot = matchesQuery.isPending && matchesQuery.data === undefined;
-  const searchesBoot = searchesQuery.isPending && searchesQuery.data === undefined;
+  const searchesBoot =
+    searchesQuery.isPending && searchesQuery.data === undefined;
 
-  const refreshing = prefsQuery.isFetching || matchesQuery.isFetching || searchesQuery.isFetching;
+  const refreshing =
+    prefsQuery.isFetching ||
+    matchesQuery.isFetching ||
+    searchesQuery.isFetching;
+
+  async function saveSearchOrAuthenticate() {
+    setActionError(null);
+    const min = parseBudgetCost(newMinSalary),
+      max = parseBudgetCost(newMaxSalary);
+    const days = newPostedWithinDays.trim();
+    if (
+      min === null ||
+      max === null ||
+      (min !== undefined && max !== undefined && min > max) ||
+      (days &&
+        (!/^\d+$/.test(days) ||
+          !Number.isSafeInteger(Number(days)) ||
+          Number(days) < 1))
+    ) {
+      setActionError("Check the salary range and number of days.");
+      return;
+    }
+    if (token) {
+      createSearch.mutate();
+      return;
+    }
+    await persistCandidateReturnIntent("/alerts", {
+      kind: "create_alert",
+      name: newName.trim() || ac("My search"),
+      filters: pendingSearchFilters(),
+    });
+    router.push({ pathname: "/login", params: { returnTo: "/alerts" } });
+  }
 
   return (
     <GshScreenBackground>
-    <SafeAreaView style={styles.safe} edges={["bottom"]}>
-      <ScrollView
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {
-          void prefsQuery.refetch();
-          void matchesQuery.refetch();
-          void searchesQuery.refetch();
-        }} />}
-        contentContainerStyle={styles.pad}
-      >
-        <GshScreenIntro
-          eyebrow="Stay in the loop"
-          title="Alerts & notifications"
-          subtitle="Control email, job alerts, and push. When you are signed in, pushes mirror important updates — tapping opens the right screen when a link is included."
-          style={{ marginBottom: 4 }}
-        />
-        {prefsBoot ? (
-          <ActivityIndicator style={{ marginVertical: 16 }} color={colors.brand} />
-        ) : prefsErrNoData ? (
-          <View style={[styles.sectionErrCard, cardSurfaceStyle(false)]}>
-            <Ionicons name="cloud-offline-outline" size={28} color={colors.textMuted} />
-            <Text style={styles.sectionErrTitle}>Notification preferences could not be loaded</Text>
-            <Text style={styles.sectionErrSub}>Check your connection and try again.</Text>
-            <Pressable
-              style={styles.sectionRetryBtn}
-              onPress={() => void prefsQuery.refetch()}
-              accessibilityRole="button"
-              accessibilityLabel="Retry loading notification preferences"
+      <SafeAreaView style={styles.safe} edges={["bottom"]}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                void prefsQuery.refetch();
+                void matchesQuery.refetch();
+                void searchesQuery.refetch();
+              }}
+            />
+          }
+          contentContainerStyle={styles.pad}
+        >
+          <GshScreenIntro
+            eyebrow={ac("Stay up to date")}
+            title={ac("Alerts and notifications")}
+            subtitle={ac(
+              "Choose your updates and save searches for jobs that interest you.",
+            )}
+            style={{ marginBottom: 4 }}
+          />
+          {actionError ? (
+            <Text
+              accessibilityRole="alert"
+              style={{ color: colors.error, marginVertical: 12 }}
             >
-              <Text style={styles.sectionRetryBtnText}>Try again</Text>
-            </Pressable>
-          </View>
-        ) : prefs ? (
-          <View style={[styles.prefsCard, cardSurfaceStyle(false)]}>
-            {prefsQuery.isError ? (
-              <Text style={styles.staleHint}>Could not refresh preferences — showing last saved settings.</Text>
-            ) : null}
-            <RowSwitch
-              label="Email notifications"
-              value={prefs.emailNotifications}
-              onValueChange={(v) => patchPrefs.mutate({ emailNotifications: v })}
-              disabled={patchPrefs.isPending}
-              showDivider
+              {ac(actionError)}
+            </Text>
+          ) : null}
+          {prefsBoot ? (
+            <ActivityIndicator
+              style={{ marginVertical: 16 }}
+              color={colors.brand}
             />
-            <RowSwitch
-              label="Job alert emails"
-              value={prefs.jobAlerts}
-              onValueChange={(v) => patchPrefs.mutate({ jobAlerts: v })}
-              disabled={patchPrefs.isPending}
-              showDivider
-            />
-            <RowSwitch
-              label="Application updates"
-              value={prefs.applicationUpdates}
-              onValueChange={(v) => patchPrefs.mutate({ applicationUpdates: v })}
-              disabled={patchPrefs.isPending}
-              showDivider
-            />
-            <RowSwitch
-              label="Push notifications"
-              value={prefs.pushNotifications ?? true}
-              onValueChange={(v) => patchPrefs.mutate({ pushNotifications: v })}
-              disabled={patchPrefs.isPending}
-            />
-          </View>
-        ) : null}
-
-        <GshSectionTitle title="New role matches" topSpacing="md" />
-        <Text style={styles.sub}>
-          {matchesErrNoData
-            ? "Matches could not be loaded."
-            : unread > 0
-              ? `${unread} unread`
-              : "You're up to date"}
-        </Text>
-        {!matchesErrNoData && matches.length > 0 ? (
-          <Pressable
-            style={[styles.secondaryBtn, markAll.isPending && styles.disabled]}
-            onPress={() => markAll.mutate()}
-            disabled={markAll.isPending}
-          >
-            <Text style={styles.secondaryBtnText}>Mark all as read</Text>
-          </Pressable>
-        ) : null}
-
-        {matchesBoot ? (
-          <ActivityIndicator style={{ marginVertical: 12 }} color={colors.brand} />
-        ) : matchesErrNoData ? (
-          <View style={[styles.sectionErrCard, cardSurfaceStyle(false)]}>
-            <Ionicons name="cloud-offline-outline" size={28} color={colors.textMuted} />
-            <Text style={styles.sectionErrTitle}>Role matches could not be loaded</Text>
-            <Text style={styles.sectionErrSub}>Pull down or retry below.</Text>
-            <Pressable
-              style={styles.sectionRetryBtn}
-              onPress={() => void matchesQuery.refetch()}
-              accessibilityRole="button"
-              accessibilityLabel="Retry loading role matches"
-            >
-              <Text style={styles.sectionRetryBtnText}>Try again</Text>
-            </Pressable>
-          </View>
-        ) : (
-          matches.map((row) => {
-            const jid = resolveJobId(row.jobId);
-            return (
+          ) : prefsErrNoData ? (
+            <View style={[styles.sectionErrCard, cardSurfaceStyle(false)]}>
+              <Ionicons
+                name="cloud-offline-outline"
+                size={28}
+                color={colors.textMuted}
+              />
+              <Text style={styles.sectionErrTitle}>
+                {ac("Notification preferences could not be loaded")}
+              </Text>
+              <Text style={styles.sectionErrSub}>
+                {ac("Check your connection and try again.")}
+              </Text>
               <Pressable
-                key={row._id}
-                style={[cardSurfaceStyle(true), styles.matchCard, !row.read && styles.matchUnread]}
-                onPress={() => jid && openMatch.mutate(row)}
-                disabled={openMatch.isPending || !jid}
+                style={styles.sectionRetryBtn}
+                onPress={() => void prefsQuery.refetch()}
+                accessibilityRole="button"
+                accessibilityLabel={ac("Try again")}
               >
-                <Text style={styles.matchTitle} numberOfLines={2}>
-                  {jobTitleFromMatch(row.jobId)}
-                </Text>
-                <Text style={styles.matchCo} numberOfLines={1}>
-                  {companyFromMatch(row.jobId)}
-                </Text>
-                <Text style={styles.matchHint} numberOfLines={1}>
-                  {row.source === "followed_employer" ? "From employer you follow" : "From saved search"}
+                <Text style={styles.sectionRetryBtnText}>
+                  {ac("Try again")}
                 </Text>
               </Pressable>
-            );
-          })
-        )}
-        {!matchesBoot && !matchesErrNoData && matches.length === 0 ? (
-          <View style={[styles.emptyCard, cardSurfaceStyle(false)]}>
-            <Text style={styles.empty}>No matches yet. Add a saved search below.</Text>
-          </View>
-        ) : null}
+            </View>
+          ) : prefs ? (
+            <View style={[styles.prefsCard, cardSurfaceStyle(false)]}>
+              {prefsQuery.isError ? (
+                <Text style={styles.staleHint}>
+                  {ac(
+                    "Could not refresh preferences. Showing your last saved settings.",
+                  )}
+                </Text>
+              ) : null}
+              <RowSwitch
+                label={ac("Email notifications")}
+                value={prefs.emailNotifications}
+                onValueChange={(v) =>
+                  patchPrefs.mutate({ emailNotifications: v })
+                }
+                disabled={patchPrefs.isPending}
+                showDivider
+              />
+              <RowSwitch
+                label={ac("Job alert emails")}
+                value={prefs.jobAlerts}
+                onValueChange={(v) => patchPrefs.mutate({ jobAlerts: v })}
+                disabled={patchPrefs.isPending}
+                showDivider
+              />
+              <RowSwitch
+                label={ac("Application updates")}
+                value={prefs.applicationUpdates}
+                onValueChange={(v) =>
+                  patchPrefs.mutate({ applicationUpdates: v })
+                }
+                disabled={patchPrefs.isPending}
+                showDivider
+              />
+              <RowSwitch
+                label={ac("Push notifications")}
+                value={prefs.pushNotifications ?? true}
+                onValueChange={(v) =>
+                  patchPrefs.mutate({ pushNotifications: v })
+                }
+                disabled={patchPrefs.isPending}
+              />
+            </View>
+          ) : null}
 
-        <GshSectionTitle title="Saved searches" topSpacing="lg" />
-        <Text style={styles.sub}>We notify you when new listings match your filters.</Text>
-
-        {searchesBoot ? (
-          <ActivityIndicator style={{ marginVertical: 12 }} color={colors.brand} />
-        ) : searchesErrNoData ? (
-          <View style={[styles.sectionErrCard, cardSurfaceStyle(false)]}>
-            <Ionicons name="cloud-offline-outline" size={28} color={colors.textMuted} />
-            <Text style={styles.sectionErrTitle}>Saved searches could not be loaded</Text>
-            <Text style={styles.sectionErrSub}>Check your connection and try again.</Text>
+          <GshSectionTitle title={ac("New job matches")} topSpacing="md" />
+          <Text style={styles.sub}>
+            {matchesErrNoData
+              ? ac("Matches could not be loaded.")
+              : unread > 0
+                ? ac("Unread: {count}", {
+                    count: unread.toLocaleString(locale),
+                  })
+                : ac("You are up to date")}
+          </Text>
+          {!matchesErrNoData && matches.length > 0 ? (
             <Pressable
-              style={styles.sectionRetryBtn}
-              onPress={() => void searchesQuery.refetch()}
-              accessibilityRole="button"
-              accessibilityLabel="Retry loading saved searches"
+              style={[
+                styles.secondaryBtn,
+                markAll.isPending && styles.disabled,
+              ]}
+              onPress={() => markAll.mutate()}
+              disabled={markAll.isPending}
             >
-              <Text style={styles.sectionRetryBtnText}>Try again</Text>
+              <Text style={styles.secondaryBtnText}>
+                {ac("Mark all as read")}
+              </Text>
             </Pressable>
-          </View>
-        ) : (
-          searches.map((s: JobSearchAlertDto) => (
-          <View key={s._id} style={[cardSurfaceStyle(false), styles.searchRow]}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.searchName}>{s.name?.trim() || "Saved search"}</Text>
-              <Text style={styles.searchFilters} numberOfLines={2}>
-                {formatFilters(s.filters)}
+          ) : null}
+
+          {matchesBoot ? (
+            <ActivityIndicator
+              style={{ marginVertical: 12 }}
+              color={colors.brand}
+            />
+          ) : matchesErrNoData ? (
+            <View style={[styles.sectionErrCard, cardSurfaceStyle(false)]}>
+              <Ionicons
+                name="cloud-offline-outline"
+                size={28}
+                color={colors.textMuted}
+              />
+              <Text style={styles.sectionErrTitle}>
+                {ac("Matches could not be loaded.")}
+              </Text>
+              <Text style={styles.sectionErrSub}>
+                {ac("Please try again.")}
+              </Text>
+              <Pressable
+                style={styles.sectionRetryBtn}
+                onPress={() => void matchesQuery.refetch()}
+                accessibilityRole="button"
+                accessibilityLabel={ac("Try again")}
+              >
+                <Text style={styles.sectionRetryBtnText}>
+                  {ac("Try again")}
+                </Text>
+              </Pressable>
+            </View>
+          ) : (
+            matches.map((row) => {
+              return (
+                <Pressable
+                  key={row.id}
+                  style={[
+                    cardSurfaceStyle(true),
+                    styles.matchCard,
+                    !row.read && styles.matchUnread,
+                  ]}
+                  onPress={() => openMatch.mutate(row)}
+                  disabled={openMatch.isPending}
+                >
+                  <Text style={styles.matchTitle} numberOfLines={2}>
+                    {row.job?.title || ac("Job")}
+                  </Text>
+                  <Text style={styles.matchCo} numberOfLines={1}>
+                    {row.job?.companyName || ""}
+                  </Text>
+                  <Text style={styles.matchHint} numberOfLines={1}>
+                    {row.source === "followed_employer"
+                      ? ac("From an employer you follow")
+                      : ac("From a saved search")}
+                  </Text>
+                  {row.matchReasons.map((reason) => (
+                    <Text key={reason} style={styles.matchReason}>
+                      •{" "}
+                      {reason.startsWith("Matches saved search: ")
+                        ? ac("Matches saved search: {name}", {
+                            name: reason.slice("Matches saved search: ".length),
+                          })
+                        : ac(reason)}
+                    </Text>
+                  ))}
+                </Pressable>
+              );
+            })
+          )}
+          {!matchesBoot && !matchesErrNoData && matches.length === 0 ? (
+            <View style={[styles.emptyCard, cardSurfaceStyle(false)]}>
+              <Text style={styles.empty}>
+                {ac("No matches yet. Add a saved search below.")}
               </Text>
             </View>
-            <Switch
-              value={s.isActive}
-              onValueChange={() => toggleSearch.mutate({ id: s._id, isActive: s.isActive })}
-            />
-            <Pressable
-              style={styles.deleteBtn}
-              onPress={() =>
-                Alert.alert("Delete saved search?", undefined, [
-                  { text: "Cancel", style: "cancel" },
-                  { text: "Delete", style: "destructive", onPress: () => removeSearch.mutate(s._id) },
-                ])
-              }
-            >
-              <Text style={styles.deleteText}>✕</Text>
-            </Pressable>
-          </View>
-          ))
-        )}
+          ) : null}
 
-        <GshSectionTitle title="Add saved search" topSpacing="md" />
-        <TextInput
-          style={styles.input}
-          placeholder="Label (optional)"
-          placeholderTextColor={colors.placeholder}
-          value={newName}
-          onChangeText={setNewName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Keywords, e.g. engineer or nurse"
-          placeholderTextColor={colors.placeholder}
-          value={newQ}
-          onChangeText={setNewQ}
-        />
-        <Text style={styles.routeLabel}>Visa route (optional)</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.routeChipRow}>
-          {["", ...VISA_ROUTE_OPTIONS.slice(0, 8)].map((route) => {
-            const active = newVisaRoute === route;
-            return (
+          <GshSectionTitle title={ac("Saved searches")} topSpacing="lg" />
+          <Text style={styles.sub}>
+            {ac("We notify you when new jobs match your filters.")}
+          </Text>
+
+          {searchesBoot ? (
+            <ActivityIndicator
+              style={{ marginVertical: 12 }}
+              color={colors.brand}
+            />
+          ) : searchesErrNoData ? (
+            <View style={[styles.sectionErrCard, cardSurfaceStyle(false)]}>
+              <Ionicons
+                name="cloud-offline-outline"
+                size={28}
+                color={colors.textMuted}
+              />
+              <Text style={styles.sectionErrTitle}>
+                {ac("Saved searches could not be loaded")}
+              </Text>
+              <Text style={styles.sectionErrSub}>
+                {ac("Check your connection and try again.")}
+              </Text>
               <Pressable
-                key={route || "any"}
-                style={[styles.routeChip, active && styles.routeChipActive]}
-                onPress={() => setNewVisaRoute(route)}
+                style={styles.sectionRetryBtn}
+                onPress={() => void searchesQuery.refetch()}
                 accessibilityRole="button"
-                accessibilityState={{ selected: active }}
+                accessibilityLabel={ac("Try again")}
               >
-                <Text style={[styles.routeChipText, active && styles.routeChipTextActive]} numberOfLines={1}>
-                  {route || "Any route"}
+                <Text style={styles.sectionRetryBtnText}>
+                  {ac("Try again")}
                 </Text>
               </Pressable>
-            );
-          })}
+            </View>
+          ) : (
+            searches.map((s: JobSearchAlertDto) => (
+              <View
+                key={s._id}
+                style={[cardSurfaceStyle(false), styles.searchRow]}
+              >
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.searchName}>
+                    {s.name?.trim() || ac("Saved search")}
+                  </Text>
+                  <Text style={styles.searchFilters} numberOfLines={2}>
+                    {formatFilters(s.filters, ac, locale)}
+                  </Text>
+                </View>
+                <Switch
+                  trackColor={{false: colors.border, true: "#bceff2"}}
+                  thumbColor={s.isActive ? colors.accent : colors.white}
+                  accessibilityLabel={s.name?.trim() || ac("Saved search")}
+                  disabled={toggleSearch.isPending}
+                  value={s.isActive}
+                  onValueChange={() =>
+                    toggleSearch.mutate({ id: s._id, isActive: s.isActive })
+                  }
+                />
+                <Pressable
+                  style={styles.deleteBtn}
+                  accessibilityLabel={`${ac("Delete")}: ${s.name?.trim() || ac("Saved search")}`}
+                  disabled={removeSearch.isPending}
+                  onPress={() => {
+                    if (Platform.OS === "web") {
+                      if (globalThis.confirm(ac("Delete saved search?")))
+                        removeSearch.mutate(s._id);
+                    } else
+                      Alert.alert(ac("Delete saved search?"), undefined, [
+                        { text: ac("Cancel"), style: "cancel" },
+                        {
+                          text: ac("Delete"),
+                          style: "destructive",
+                          onPress: () => removeSearch.mutate(s._id),
+                        },
+                      ]);
+                  }}
+                >
+                  <Text style={styles.deleteText}>✕</Text>
+                </Pressable>
+              </View>
+            ))
+          )}
+
+          <GshSectionTitle title={ac("Add saved search")} topSpacing="md" />
+          <TextInput
+            style={styles.input}
+            placeholder={ac("Name (optional)")}
+            placeholderTextColor={colors.placeholder}
+            value={newName}
+            onChangeText={setNewName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder={ac("Keywords, such as engineer or nurse")}
+            placeholderTextColor={colors.placeholder}
+            value={newQ}
+            onChangeText={setNewQ}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder={ac("Location")}
+            placeholderTextColor={colors.placeholder}
+            value={newLocation}
+            onChangeText={setNewLocation}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder={ac("Industry")}
+            placeholderTextColor={colors.placeholder}
+            value={newIndustry}
+            onChangeText={setNewIndustry}
+          />
+          <AlertChoices
+            label={ac("Mobility or benefit")}
+            value={newBenefit}
+            onChange={setNewBenefit}
+            options={[
+              ["", "All"],
+              ["Visa Sponsorship", "Visa sponsorship"],
+              ["Relocation Support", "Relocation support"],
+              ["Remote Friendly", "Remote friendly"],
+              ["Cross-border Remote Allowed", "Remote \u2014 Global"],
+              ["Job Offer Support", "Job offer support"],
+            ]}
+          />
+          <AlertChoices
+            label={ac("Job type")}
+            value={newJobType}
+            onChange={setNewJobType}
+            options={[
+              ["", "All"],
+              ["full-time", "Full-time"],
+              ["part-time", "Part-time"],
+              ["contract", "Contract"],
+              ["internship", "Internship"],
+            ]}
+          />
+          <AlertChoices
+            label={ac("Experience level")}
+            value={newExperienceLevel}
+            onChange={setNewExperienceLevel}
+            options={[
+              ["", "All"],
+              ["Entry Level", "Entry Level"],
+              ["Mid Level", "Mid Level"],
+              ["Senior Level", "Senior Level"],
+              ["Executive", "Executive"],
+            ]}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder={ac("Skills (separated by commas)")}
+            placeholderTextColor={colors.placeholder}
+            value={newSkills}
+            onChangeText={setNewSkills}
+          />
+          <AlertChoices
+            label={ac("Work arrangement")}
+            value={newWorkMode}
+            onChange={setNewWorkMode}
+            options={[
+              ["", "All"],
+              ["remote", "Remote"],
+              ["hybrid", "Hybrid"],
+              ["onsite", "On-site"],
+            ]}
+          />
+          <View style={styles.numericRow}>
+            <TextInput
+              style={[styles.input, styles.numericInput]}
+              placeholder={ac("Minimum salary")}
+              placeholderTextColor={colors.placeholder}
+              value={newMinSalary}
+              onChangeText={setNewMinSalary}
+              keyboardType="number-pad"
+            />
+            <TextInput
+              style={[styles.input, styles.numericInput]}
+              placeholder={ac("Maximum salary")}
+              placeholderTextColor={colors.placeholder}
+              value={newMaxSalary}
+              onChangeText={setNewMaxSalary}
+              keyboardType="number-pad"
+            />
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder={ac("Posted within days")}
+            placeholderTextColor={colors.placeholder}
+            value={newPostedWithinDays}
+            onChangeText={setNewPostedWithinDays}
+            keyboardType="number-pad"
+          />
+          <Text style={styles.routeLabel}>{ac("Visa route (optional)")}</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.routeChipRow}
+          >
+            {["", ...VISA_ROUTE_OPTIONS.slice(0, 8)].map((route) => {
+              const active = newVisaRoute === route;
+              return (
+                <Pressable
+                  key={route || "any"}
+                  style={[styles.routeChip, active && styles.routeChipActive]}
+                  onPress={() => setNewVisaRoute(route)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}
+                >
+                  <Text
+                    style={[
+                      styles.routeChipText,
+                      active && styles.routeChipTextActive,
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {route || ac("Any route")}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+          <GshGradientPrimaryButton
+            title={createSearch.isPending ? ac("Saving…") : ac("Save alert")}
+            onPress={() => void saveSearchOrAuthenticate()}
+            disabled={
+              ![
+                newQ,
+                newLocation,
+                newIndustry,
+                newBenefit,
+                newVisaRoute,
+                newJobType,
+                newExperienceLevel,
+                newSkills,
+                newWorkMode,
+                newMinSalary,
+                newMaxSalary,
+                newPostedWithinDays,
+              ].some((value) => value.trim()) || createSearch.isPending
+            }
+            containerStyle={{ marginTop: 4 }}
+          />
         </ScrollView>
-        <GshGradientPrimaryButton
-          title={createSearch.isPending ? "Saving…" : "Save alert"}
-          onPress={() => createSearch.mutate()}
-          disabled={(!newQ.trim() && !newVisaRoute) || createSearch.isPending}
-          containerStyle={{ marginTop: 4 }}
-        />
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
     </GshScreenBackground>
+  );
+}
+
+function AlertChoices({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: string[][];
+}) {
+  const ac = useAccountCopy();
+  return (
+    <View style={{ marginBottom: 12 }}>
+      <Text style={styles.routeLabel}>{label}</Text>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+        {options.map(([id, name]) => (
+          <Pressable
+            key={id}
+            onPress={() => onChange(id)}
+            accessibilityRole="radio"
+            accessibilityState={{ selected: value === id }}
+            style={[styles.routeChip, value === id && styles.routeChipActive]}
+          >
+            <Text
+              style={[
+                styles.routeChipText,
+                value === id && styles.routeChipTextActive,
+              ]}
+            >
+              {ac(name)}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    </View>
   );
 }
 
@@ -381,21 +718,48 @@ function RowSwitch(props: {
   showDivider?: boolean;
 }) {
   return (
-    <View style={[styles.switchRow, props.showDivider ? styles.switchRowDivider : null]}>
+    <View
+      style={[
+        styles.switchRow,
+        props.showDivider ? styles.switchRowDivider : null,
+      ]}
+    >
       <Text style={styles.switchLabel}>{props.label}</Text>
-      <Switch value={props.value} onValueChange={props.onValueChange} disabled={props.disabled} />
+      <Switch
+        trackColor={{false: colors.border, true: "#bceff2"}}
+        thumbColor={props.value ? colors.accent : colors.white}
+        accessibilityLabel={props.label}
+        value={props.value}
+        onValueChange={props.onValueChange}
+        disabled={props.disabled}
+      />
     </View>
   );
 }
 
-function formatFilters(f: Record<string, unknown>): string {
+function formatFilters(
+  f: Record<string, unknown>,
+  ac: (key: string) => string,
+  locale: string,
+): string {
   const parts: string[] = [];
   if (typeof f.q === "string" && f.q.trim()) parts.push(`“${f.q.trim()}”`);
-  if (typeof f.location === "string" && f.location.trim()) parts.push(f.location.trim());
-  if (typeof f.industry === "string" && f.industry.trim()) parts.push(f.industry.trim());
-  if (typeof f.benefit === "string" && f.benefit.trim()) parts.push(f.benefit.trim());
-  if (typeof f.visaRoute === "string" && f.visaRoute.trim()) parts.push(`Visa: ${f.visaRoute.trim()}`);
-  return parts.length ? parts.join(" · ") : "Any filters";
+  if (typeof f.location === "string" && f.location.trim())
+    parts.push(f.location.trim());
+  if (typeof f.industry === "string" && f.industry.trim())
+    parts.push(f.industry.trim());
+  if (typeof f.benefit === "string" && f.benefit.trim())
+    parts.push(f.benefit.trim());
+  if (typeof f.visaRoute === "string" && f.visaRoute.trim())
+    parts.push(`${ac("Visa route (optional)")}: ${f.visaRoute.trim()}`);
+  const labels: Record<string,string> = {jobType:"Job type",experienceLevel:"Experience level",skills:"Skills",workMode:"Work arrangement",minSalary:"Minimum salary",maxSalary:"Maximum salary",postedWithinDays:"Posted within days"};
+  const optionLabels: Record<string,string> = {"full-time":"Full-time","part-time":"Part-time",contract:"Contract",internship:"Internship",remote:"Remote",hybrid:"Hybrid",onsite:"On-site","Entry Level":"Entry Level","Mid Level":"Mid Level","Senior Level":"Senior Level",Executive:"Executive"};
+  for (const [key,label] of Object.entries(labels)) {
+    const value=f[key]; if (value===undefined || value===null || value==="") continue;
+    const display=typeof value==="number" ? value.toLocaleString(locale) : typeof value==="string" ? (optionLabels[value] && key!=="skills" ? ac(optionLabels[value]) : value) : "";
+    if(display) parts.push(`${ac(label)}: ${display}`);
+  }
+  return parts.length ? parts.join(" · ") : ac("Any filters");
 }
 
 const styles = StyleSheet.create({
@@ -450,7 +814,11 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
     backgroundColor: colors.brand,
   },
-  sectionRetryBtnText: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.white },
+  sectionRetryBtnText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    color: colors.white,
+  },
   switchRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -490,10 +858,34 @@ const styles = StyleSheet.create({
     borderRadius: radii.lg,
     backgroundColor: colors.background,
   },
-  matchUnread: { borderColor: colors.unreadBorder, backgroundColor: colors.unreadBg },
-  matchTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.textPrimary },
-  matchCo: { marginTop: 4, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary },
-  matchHint: { marginTop: 6, fontSize: 12, fontFamily: fontFamily.medium, color: colors.textMuted },
+  matchUnread: {
+    borderColor: colors.unreadBorder,
+    backgroundColor: colors.unreadBg,
+  },
+  matchTitle: {
+    fontSize: 16,
+    fontFamily: fontFamily.bold,
+    color: colors.textPrimary,
+  },
+  matchCo: {
+    marginTop: 4,
+    fontSize: 14,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
+  },
+  matchHint: {
+    marginTop: 6,
+    fontSize: 12,
+    fontFamily: fontFamily.medium,
+    color: colors.textMuted,
+  },
+  matchReason: {
+    marginTop: 4,
+    fontSize: 12,
+    lineHeight: 17,
+    fontFamily: fontFamily.regular,
+    color: colors.brandDeep,
+  },
   emptyCard: {
     paddingVertical: 18,
     paddingHorizontal: 16,
@@ -515,10 +907,23 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     backgroundColor: colors.background,
   },
-  searchName: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.textPrimary },
-  searchFilters: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
+  searchName: {
+    fontSize: 15,
+    fontFamily: fontFamily.bold,
+    color: colors.textPrimary,
+  },
+  searchFilters: {
+    marginTop: 4,
+    fontSize: 13,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+  },
   deleteBtn: { padding: 8 },
-  deleteText: { fontSize: 18, color: colors.error, fontFamily: fontFamily.bold },
+  deleteText: {
+    fontSize: 18,
+    color: colors.error,
+    fontFamily: fontFamily.bold,
+  },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -531,6 +936,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: colors.textPrimary,
   },
+  numericRow: { flexDirection: "row", gap: 10 },
+  numericInput: { flex: 1 },
   routeLabel: {
     marginTop: 4,
     marginBottom: 8,
@@ -549,8 +956,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   routeChipActive: {
-    borderColor: "rgba(14, 205, 209, 0.55)",
-    backgroundColor: "rgba(14, 205, 209, 0.1)",
+    borderColor: colors.teal,
+    backgroundColor: colors.brandSoft,
   },
   routeChipText: {
     fontFamily: fontFamily.semiBold,

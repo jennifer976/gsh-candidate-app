@@ -4,9 +4,9 @@ import { navHeader } from "@/lib/theme";
 export default function ExpertInsightsLayout() {
   return (
     <Stack screenOptions={{ ...navHeader }}>
-      <Stack.Screen name="index" options={{ title: "Expert Insights" }} />
-      <Stack.Screen name="[slug]" options={{ title: "Insight" }} />
-      <Stack.Screen name="experts/[slug]" options={{ title: "Expert" }} />
+      <Stack.Screen name="index" options={{ title: "Resources" }} />
+      <Stack.Screen name="[slug]" options={{ title: "Article" }} />
+      <Stack.Screen name="experts/[slug]" options={{ title: "Author" }} />
     </Stack>
   );
 }

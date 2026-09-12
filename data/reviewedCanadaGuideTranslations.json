@@ -1,0 +1,746 @@
+{
+  "en": {
+    "slug": "canada-work-permit-jobs",
+    "title": "Working in Canada: check your work permit and plan the move",
+    "countryLabel": "Canada",
+    "iso2": "ca",
+    "flagEmoji": "🇨🇦",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+    "excerpt": "Confirm the route for your job, check professional requirements and budget for the province where you will live.",
+    "metaDescription": "Confirm the route for your job, check professional requirements and budget for the province where you will live.",
+    "openingHook": "Confirm the route for your job, check professional requirements and budget for the province where you will live.",
+    "quickFacts": [
+      {
+        "label": "Start here",
+        "value": "Check the job and your work rights"
+      },
+      {
+        "label": "Employer support",
+        "value": "Confirm what is included in writing"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Start with your work rights",
+        "paragraphs": [
+          "An offer alone does not authorise work. An employer-specific permit limits where or for whom you can work. Open permits have separate eligibility rules and may also carry restrictions."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+        ]
+      },
+      {
+        "heading": "Confirm what the employer must provide",
+        "paragraphs": [
+          "Ask whether an LMIA is required or which exemption applies. Confirm the contract and supporting documents before applying. An LMIA-exempt role may still require employer steps and a work permit."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+        ]
+      },
+      {
+        "heading": "Keep permanent residence separate",
+        "paragraphs": [
+          "Express Entry is separate from a work permit. Since 25 March 2025, job offers earn no CRS points, but may still matter for some programme requirements."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+        ]
+      },
+      {
+        "heading": "Check professional registration",
+        "paragraphs": [
+          "For a regulated profession, contact the regulator in your destination province or territory. An immigration credential assessment does not automatically grant professional recognition or a licence."
+        ],
+        "sources": [
+          "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top=",
+          "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+        ]
+      },
+      {
+        "heading": "Prepare your first weeks",
+        "paragraphs": [
+          "Arrange your Social Insurance Number and check provincial health coverage. Budget for housing, transport and any coverage gap; confirm who pays for required insurance before you travel."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+        ]
+      },
+      {
+        "heading": "Agree the practical details",
+        "paragraphs": [
+          "Get pay, hours, workplace and moving support in writing. Compare local costs with take-home pay. Browse specialists for practical help; opening a profile does not submit a request."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Search jobs in Canada",
+        "href": "/jobs?location=Canada"
+      },
+      {
+        "label": "Browse independent specialists",
+        "href": "/specialists"
+      },
+      {
+        "label": "Relocation perks",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "fr": {
+    "slug": "canada-work-permit-jobs",
+    "title": "Travailler au Canada : vérifier le permis et préparer son installation",
+    "countryLabel": "Canada",
+    "iso2": "ca",
+    "flagEmoji": "🇨🇦",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+    "excerpt": "Confirmez le permis adapté au poste, les exigences professionnelles et le budget dans votre province d’installation.",
+    "metaDescription": "Confirmez le permis adapté au poste, les exigences professionnelles et le budget dans votre province d’installation.",
+    "openingHook": "Confirmez le permis adapté au poste, les exigences professionnelles et le budget dans votre province d’installation.",
+    "quickFacts": [
+      {
+        "label": "Pour commencer",
+        "value": "Vérifiez le poste et votre droit de travailler"
+      },
+      {
+        "label": "Aide de l’employeur",
+        "value": "Faites confirmer par écrit ce qui est inclus"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Commencez par votre droit au travail",
+        "paragraphs": [
+          "Une offre ne suffit pas pour travailler. Un permis lié à un employeur limite le lieu ou l’employeur autorisé. Les permis ouverts ont leurs propres critères et peuvent aussi comporter des restrictions."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+        ]
+      },
+      {
+        "heading": "Confirmez les documents fournis par l’employeur",
+        "paragraphs": [
+          "Demandez si une EIMT est nécessaire ou quelle dispense s’applique. Confirmez le contrat et les justificatifs avant de déposer la demande. Une dispense d’EIMT peut encore exiger des démarches de l’employeur et un permis."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+        ]
+      },
+      {
+        "heading": "Distinguez la résidence permanente",
+        "paragraphs": [
+          "Entrée express est distincte du permis de travail. Depuis le 25 mars 2025, les offres ne rapportent plus de points SCG, mais peuvent compter pour certains critères de programme."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+        ]
+      },
+      {
+        "heading": "Vérifiez l’autorisation professionnelle",
+        "paragraphs": [
+          "Pour une profession réglementée, contactez l’organisme compétent de la province ou du territoire. Une évaluation des diplômes pour l’immigration ne donne pas automatiquement la reconnaissance professionnelle ni un permis d’exercice."
+        ],
+        "sources": [
+          "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top=",
+          "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+        ]
+      },
+      {
+        "heading": "Préparez les premières semaines",
+        "paragraphs": [
+          "Préparez votre numéro d’assurance sociale et vérifiez la couverture santé provinciale. Prévoyez logement, transport et éventuelle période non couverte ; confirmez qui paie l’assurance requise avant le départ."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+        ]
+      },
+      {
+        "heading": "Convenez des aspects pratiques",
+        "paragraphs": [
+          "Obtenez par écrit salaire, horaires, lieu et aide à l’installation. Comparez les coûts locaux au revenu net. Consultez les spécialistes ; ouvrir un profil n’envoie pas de demande."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Rechercher un emploi : Canada",
+        "href": "/jobs?location=Canada"
+      },
+      {
+        "label": "Consulter les spécialistes indépendants",
+        "href": "/specialists"
+      },
+      {
+        "label": "Avantages pour le déménagement",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "de": {
+    "slug": "canada-work-permit-jobs",
+    "title": "Arbeiten in Kanada: Arbeitserlaubnis prüfen und Umzug planen",
+    "countryLabel": "Kanada",
+    "iso2": "ca",
+    "flagEmoji": "🇨🇦",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+    "excerpt": "Kläre den Weg für deine Stelle, prüfe berufliche Anforderungen und plane dein Budget für die Zielprovinz.",
+    "metaDescription": "Kläre den Weg für deine Stelle, prüfe berufliche Anforderungen und plane dein Budget für die Zielprovinz.",
+    "openingHook": "Kläre den Weg für deine Stelle, prüfe berufliche Anforderungen und plane dein Budget für die Zielprovinz.",
+    "quickFacts": [
+      {
+        "label": "Hier beginnen",
+        "value": "Prüfe die Stelle und dein Recht zu arbeiten"
+      },
+      {
+        "label": "Hilfe des Arbeitgebers",
+        "value": "Lass dir schriftlich bestätigen, was enthalten ist"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Prüfe zuerst deine Arbeitsberechtigung",
+        "paragraphs": [
+          "Ein Angebot allein erlaubt keine Arbeit. Arbeitgebergebundene Genehmigungen beschränken Arbeitsort oder Arbeitgeber. Offene Genehmigungen haben eigene Voraussetzungen und können ebenfalls Einschränkungen enthalten."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+        ]
+      },
+      {
+        "heading": "Kläre die Unterlagen des Arbeitgebers",
+        "paragraphs": [
+          "Frage, ob eine LMIA nötig ist oder welche Ausnahme gilt. Kläre Vertrag und Nachweise vor dem Antrag. Auch ohne LMIA können Arbeitgeberschritte und eine Arbeitserlaubnis nötig sein."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+        ]
+      },
+      {
+        "heading": "Betrachte Daueraufenthalt gesondert",
+        "paragraphs": [
+          "Express Entry ist von der Arbeitserlaubnis getrennt. Seit dem 25. März 2025 geben Stellenangebote keine CRS-Punkte, können aber für Voraussetzungen einzelner Programme relevant bleiben."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+        ]
+      },
+      {
+        "heading": "Prüfe die Berufszulassung",
+        "paragraphs": [
+          "Wende dich bei einem reglementierten Beruf an die zuständige Stelle deiner Zielprovinz oder deines Territoriums. Eine Bildungsbewertung für die Einwanderung gewährt nicht automatisch Anerkennung oder Berufszulassung."
+        ],
+        "sources": [
+          "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top=",
+          "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+        ]
+      },
+      {
+        "heading": "Plane die ersten Wochen",
+        "paragraphs": [
+          "Kümmere dich um deine Sozialversicherungsnummer und prüfe die Krankenversorgung der Provinz. Plane Wohnen, Verkehr und Versicherungslücken; kläre vor der Reise, wer erforderliche Versicherungen bezahlt."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+        ]
+      },
+      {
+        "heading": "Kläre die praktischen Details",
+        "paragraphs": [
+          "Lass Gehalt, Stunden, Arbeitsort und Umzugshilfe schriftlich bestätigen. Vergleiche lokale Kosten mit dem Nettolohn. Suche bei Bedarf Spezialisten; ein Profilaufruf sendet keine Anfrage."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Stellen suchen: Kanada",
+        "href": "/jobs?location=Canada"
+      },
+      {
+        "label": "Unabhängige Spezialisten finden",
+        "href": "/specialists"
+      },
+      {
+        "label": "Angebote für deinen Umzug",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "es": {
+    "slug": "canada-work-permit-jobs",
+    "title": "Trabajar en Canadá: revisa el permiso y prepara la mudanza",
+    "countryLabel": "Canadá",
+    "iso2": "ca",
+    "flagEmoji": "🇨🇦",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+    "excerpt": "Confirma la vía para tu empleo, los requisitos profesionales y el presupuesto para la provincia donde vivirás.",
+    "metaDescription": "Confirma la vía para tu empleo, los requisitos profesionales y el presupuesto para la provincia donde vivirás.",
+    "openingHook": "Confirma la vía para tu empleo, los requisitos profesionales y el presupuesto para la provincia donde vivirás.",
+    "quickFacts": [
+      {
+        "label": "Empieza aquí",
+        "value": "Comprueba el puesto y tu derecho a trabajar"
+      },
+      {
+        "label": "Ayuda del empleador",
+        "value": "Confirma por escrito lo que incluye"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Empieza por tu derecho a trabajar",
+        "paragraphs": [
+          "Una oferta no autoriza a trabajar. Un permiso específico limita dónde o para quién puedes trabajar. Los permisos abiertos tienen requisitos propios y también pueden incluir restricciones."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+        ]
+      },
+      {
+        "heading": "Confirma qué debe aportar la empresa",
+        "paragraphs": [
+          "Pregunta si hace falta una LMIA o qué exención se aplica. Confirma contrato y documentos antes de solicitar. Una exención de LMIA puede seguir exigiendo trámites empresariales y permiso."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+        ]
+      },
+      {
+        "heading": "Distingue la residencia permanente",
+        "paragraphs": [
+          "Express Entry es independiente del permiso de trabajo. Desde el 25 de marzo de 2025, las ofertas no dan puntos CRS, aunque pueden importar para requisitos de ciertos programas."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+        ]
+      },
+      {
+        "heading": "Comprueba la habilitación profesional",
+        "paragraphs": [
+          "Para una profesión regulada, consulta al regulador provincial o territorial. Una evaluación de estudios para inmigración no concede automáticamente reconocimiento profesional ni licencia."
+        ],
+        "sources": [
+          "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top=",
+          "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+        ]
+      },
+      {
+        "heading": "Prepara las primeras semanas",
+        "paragraphs": [
+          "Tramita tu número de seguro social y revisa la cobertura sanitaria provincial. Presupuesta vivienda, transporte y posibles periodos sin cobertura; confirma quién paga el seguro requerido antes de viajar."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+        ]
+      },
+      {
+        "heading": "Acuerda los detalles prácticos",
+        "paragraphs": [
+          "Obtén por escrito sueldo, horario, lugar y ayuda con la mudanza. Compara gastos locales y salario neto. Consulta especialistas; abrir un perfil no envía ninguna solicitud."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Buscar empleo: Canadá",
+        "href": "/jobs?location=Canada"
+      },
+      {
+        "label": "Buscar especialistas independientes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Ventajas para tu mudanza",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pt": {
+    "slug": "canada-work-permit-jobs",
+    "title": "Trabalhar no Canadá: verifique a autorização e prepare a mudança",
+    "countryLabel": "Canadá",
+    "iso2": "ca",
+    "flagEmoji": "🇨🇦",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+    "excerpt": "Confirme a via para o emprego, os requisitos profissionais e o orçamento para a província onde vai viver.",
+    "metaDescription": "Confirme a via para o emprego, os requisitos profissionais e o orçamento para a província onde vai viver.",
+    "openingHook": "Confirme a via para o emprego, os requisitos profissionais e o orçamento para a província onde vai viver.",
+    "quickFacts": [
+      {
+        "label": "Comece aqui",
+        "value": "Verifique o emprego e o seu direito a trabalhar"
+      },
+      {
+        "label": "Apoio do empregador",
+        "value": "Confirme por escrito o que está incluído"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Comece pelo direito a trabalhar",
+        "paragraphs": [
+          "Uma oferta não autoriza a trabalhar. Uma autorização específica limita onde ou para quem pode trabalhar. As autorizações abertas têm requisitos próprios e podem ter restrições."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+        ]
+      },
+      {
+        "heading": "Confirme o que o empregador deve fornecer",
+        "paragraphs": [
+          "Pergunte se é necessária uma LMIA ou que isenção se aplica. Confirme contrato e documentos antes do pedido. A isenção de LMIA pode ainda exigir passos do empregador e uma autorização."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+        ]
+      },
+      {
+        "heading": "Separe a residência permanente",
+        "paragraphs": [
+          "O Express Entry é separado da autorização de trabalho. Desde 25 de março de 2025, as ofertas não dão pontos CRS, mas podem contar para requisitos de alguns programas."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+        ]
+      },
+      {
+        "heading": "Verifique a inscrição profissional",
+        "paragraphs": [
+          "Numa profissão regulamentada, contacte o regulador da província ou território de destino. Uma avaliação de qualificações para imigração não concede automaticamente reconhecimento profissional ou licença."
+        ],
+        "sources": [
+          "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top=",
+          "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+        ]
+      },
+      {
+        "heading": "Prepare as primeiras semanas",
+        "paragraphs": [
+          "Trate do número de seguro social e verifique a cobertura de saúde provincial. Planeie alojamento, transporte e períodos sem cobertura; confirme quem paga o seguro exigido antes de viajar."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+        ]
+      },
+      {
+        "heading": "Acorde os detalhes práticos",
+        "paragraphs": [
+          "Obtenha por escrito salário, horário, local e apoio à mudança. Compare custos locais com salário líquido. Consulte especialistas; abrir um perfil não envia um pedido."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Procurar emprego: Canadá",
+        "href": "/jobs?location=Canada"
+      },
+      {
+        "label": "Procurar especialistas independentes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantagens para a mudança",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "it": {
+    "slug": "canada-work-permit-jobs",
+    "title": "Lavorare in Canada: verifica il permesso e prepara il trasferimento",
+    "countryLabel": "Canada",
+    "iso2": "ca",
+    "flagEmoji": "🇨🇦",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+    "excerpt": "Conferma il percorso per il lavoro, i requisiti professionali e il budget per la provincia in cui vivrai.",
+    "metaDescription": "Conferma il percorso per il lavoro, i requisiti professionali e il budget per la provincia in cui vivrai.",
+    "openingHook": "Conferma il percorso per il lavoro, i requisiti professionali e il budget per la provincia in cui vivrai.",
+    "quickFacts": [
+      {
+        "label": "Inizia qui",
+        "value": "Verifica il lavoro e il tuo diritto a lavorare"
+      },
+      {
+        "label": "Aiuto del datore di lavoro",
+        "value": "Fai confermare per iscritto cosa è incluso"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Parti dal diritto al lavoro",
+        "paragraphs": [
+          "Un’offerta non autorizza a lavorare. Un permesso specifico limita il luogo o il datore di lavoro. I permessi aperti hanno requisiti propri e possono prevedere restrizioni."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+        ]
+      },
+      {
+        "heading": "Conferma cosa deve fornire il datore",
+        "paragraphs": [
+          "Chiedi se serve una LMIA o quale esenzione si applica. Conferma contratto e documenti prima della domanda. L’esenzione dalla LMIA può comunque richiedere adempimenti del datore e un permesso."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+        ]
+      },
+      {
+        "heading": "Distingui la residenza permanente",
+        "paragraphs": [
+          "Express Entry è distinto dal permesso di lavoro. Dal 25 marzo 2025 le offerte non danno punti CRS, ma possono contare per i requisiti di alcuni programmi."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+        ]
+      },
+      {
+        "heading": "Verifica l’abilitazione professionale",
+        "paragraphs": [
+          "Per una professione regolamentata, contatta l’ente della provincia o del territorio di destinazione. Una valutazione dei titoli per l’immigrazione non concede automaticamente riconoscimento professionale o abilitazione."
+        ],
+        "sources": [
+          "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top=",
+          "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+        ]
+      },
+      {
+        "heading": "Prepara le prime settimane",
+        "paragraphs": [
+          "Organizza il numero di assicurazione sociale e verifica la copertura sanitaria provinciale. Prevedi alloggio, trasporti e periodi scoperti; chiarisci chi paga l’assicurazione richiesta prima di partire."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+        ]
+      },
+      {
+        "heading": "Concorda i dettagli pratici",
+        "paragraphs": [
+          "Chiedi per iscritto retribuzione, orari, sede e sostegno al trasferimento. Confronta costi locali e stipendio netto. Cerca specialisti; aprire un profilo non invia richieste."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Cerca lavoro: Canada",
+        "href": "/jobs?location=Canada"
+      },
+      {
+        "label": "Trova specialisti indipendenti",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantaggi per il trasferimento",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "nl": {
+    "slug": "canada-work-permit-jobs",
+    "title": "Werken in Canada: controleer je werkvergunning en plan de verhuizing",
+    "countryLabel": "Canada",
+    "iso2": "ca",
+    "flagEmoji": "🇨🇦",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+    "excerpt": "Bevestig de route voor je baan, controleer beroepseisen en maak een budget voor de provincie waar je gaat wonen.",
+    "metaDescription": "Bevestig de route voor je baan, controleer beroepseisen en maak een budget voor de provincie waar je gaat wonen.",
+    "openingHook": "Bevestig de route voor je baan, controleer beroepseisen en maak een budget voor de provincie waar je gaat wonen.",
+    "quickFacts": [
+      {
+        "label": "Begin hier",
+        "value": "Controleer de baan en je recht om te werken"
+      },
+      {
+        "label": "Hulp van de werkgever",
+        "value": "Laat schriftelijk bevestigen wat is inbegrepen"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Begin met je werkrecht",
+        "paragraphs": [
+          "Een aanbod geeft geen werkrecht. Een werkgeversgebonden vergunning beperkt waar of voor wie je mag werken. Open vergunningen hebben eigen voorwaarden en kunnen ook beperkingen bevatten."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+        ]
+      },
+      {
+        "heading": "Controleer wat de werkgever moet leveren",
+        "paragraphs": [
+          "Vraag of een LMIA nodig is of welke vrijstelling geldt. Controleer contract en bewijsstukken vóór de aanvraag. Een LMIA-vrijstelling kan nog werkgeversstappen en een werkvergunning vereisen."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+        ]
+      },
+      {
+        "heading": "Bekijk permanent verblijf apart",
+        "paragraphs": [
+          "Express Entry staat los van een werkvergunning. Sinds 25 maart 2025 leveren baanaanbiedingen geen CRS-punten op, maar een baanaanbod kan nog meetellen voor bepaalde programmavoorwaarden."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+        ]
+      },
+      {
+        "heading": "Controleer beroepsregistratie",
+        "paragraphs": [
+          "Neem bij een gereglementeerd beroep contact op met de bevoegde instantie in je provincie of territorium. Een diplomawaardering voor immigratie geeft niet automatisch beroepserkenning of een vergunning."
+        ],
+        "sources": [
+          "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top=",
+          "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+        ]
+      },
+      {
+        "heading": "Bereid je eerste weken voor",
+        "paragraphs": [
+          "Regel je Social Insurance Number en controleer de provinciale zorgdekking. Begroot wonen, vervoer en eventuele dekkingsgaten; bevestig vóór vertrek wie de vereiste verzekering betaalt."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+        ]
+      },
+      {
+        "heading": "Spreek praktische zaken af",
+        "paragraphs": [
+          "Leg loon, uren, werkplek en verhuishulp schriftelijk vast. Vergelijk lokale kosten met nettoloon. Bekijk specialisten voor praktische hulp; een profiel openen verstuurt geen aanvraag."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Werk zoeken: Canada",
+        "href": "/jobs?location=Canada"
+      },
+      {
+        "label": "Onafhankelijke specialisten zoeken",
+        "href": "/specialists"
+      },
+      {
+        "label": "Voordelen voor je verhuizing",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pl": {
+    "slug": "canada-work-permit-jobs",
+    "title": "Praca w Kanadzie: sprawdź zezwolenie i zaplanuj przeprowadzkę",
+    "countryLabel": "Kanada",
+    "iso2": "ca",
+    "flagEmoji": "🇨🇦",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+    "excerpt": "Potwierdź ścieżkę dla swojego stanowiska, sprawdź wymogi zawodowe i budżet w wybranej prowincji.",
+    "metaDescription": "Potwierdź ścieżkę dla swojego stanowiska, sprawdź wymogi zawodowe i budżet w wybranej prowincji.",
+    "openingHook": "Potwierdź ścieżkę dla swojego stanowiska, sprawdź wymogi zawodowe i budżet w wybranej prowincji.",
+    "quickFacts": [
+      {
+        "label": "Zacznij tutaj",
+        "value": "Sprawdź ofertę i swoje prawo do pracy"
+      },
+      {
+        "label": "Pomoc pracodawcy",
+        "value": "Uzyskaj pisemne potwierdzenie zakresu pomocy"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Zacznij od prawa do pracy",
+        "paragraphs": [
+          "Sama oferta nie uprawnia do pracy. Zezwolenie powiązane z pracodawcą ogranicza miejsce pracy lub pracodawcę. Otwarte zezwolenia mają osobne kryteria i również mogą zawierać ograniczenia."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+        ]
+      },
+      {
+        "heading": "Ustal, co musi dostarczyć pracodawca",
+        "paragraphs": [
+          "Zapytaj, czy wymagana jest LMIA lub jakie zwolnienie ma zastosowanie. Potwierdź umowę i dokumenty przed wnioskiem. Zwolnienie z LMIA może nadal wymagać działań pracodawcy i zezwolenia."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+        ]
+      },
+      {
+        "heading": "Oddziel pobyt stały",
+        "paragraphs": [
+          "Express Entry jest odrębne od zezwolenia na pracę. Od 25 marca 2025 r. oferty nie dają punktów CRS, ale mogą mieć znaczenie dla wymogów niektórych programów."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+        ]
+      },
+      {
+        "heading": "Sprawdź uprawnienia zawodowe",
+        "paragraphs": [
+          "W zawodzie regulowanym skontaktuj się z właściwym organem prowincji lub terytorium. Ocena wykształcenia do celów imigracyjnych nie daje automatycznie uznania kwalifikacji ani licencji zawodowej."
+        ],
+        "sources": [
+          "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top=",
+          "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+        ]
+      },
+      {
+        "heading": "Przygotuj pierwsze tygodnie",
+        "paragraphs": [
+          "Zadbaj o numer ubezpieczenia społecznego i sprawdź ochronę zdrowotną w prowincji. Zaplanuj mieszkanie, transport i luki w ochronie; przed wyjazdem ustal, kto płaci wymagane ubezpieczenie."
+        ],
+        "sources": [
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html",
+          "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+        ]
+      },
+      {
+        "heading": "Uzgodnij szczegóły praktyczne",
+        "paragraphs": [
+          "Uzyskaj na piśmie płacę, godziny, miejsce pracy i wsparcie przeprowadzki. Porównaj lokalne koszty z płacą netto. Przeglądaj specjalistów; otwarcie profilu nie wysyła prośby."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Szukaj pracy: Kanada",
+        "href": "/jobs?location=Canada"
+      },
+      {
+        "label": "Znajdź niezależnych specjalistów",
+        "href": "/specialists"
+      },
+      {
+        "label": "Oferty na czas przeprowadzki",
+        "href": "/relocation-perks"
+      }
+    ]
+  }
+}

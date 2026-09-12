@@ -1,3 +1,4 @@
+import { useAccountCopy as useInterfaceCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import type { ReactNode } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
@@ -14,6 +15,8 @@ type Props = {
 
 /** Shared navy hero for Home and Jobs tabs — lockup, alerts, messages, optional body. */
 export function GshTabHeroHeader({ paddingTop, tagline, children }: Props) {
+ const interfaceCopy = useInterfaceCopy();
+
   const router = useRouter();
 
   return (
@@ -31,7 +34,7 @@ export function GshTabHeroHeader({ paddingTop, tagline, children }: Props) {
             onPress={() => router.push("/notification-feed")}
             style={styles.iconBtn}
             accessibilityRole="button"
-            accessibilityLabel="Notifications"
+            accessibilityLabel={interfaceCopy("Notifications")}
           >
             <Ionicons name="notifications-outline" size={22} color="rgba(255,255,255,0.9)" />
           </Pressable>
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     paddingTop: 12,
   },
-  logo: { width: 200, height: 44, maxWidth: "72%" },
+  logo: { width: 200, height: 44, maxWidth: "60%", flexShrink: 1 },
   actions: { flexDirection: "row", gap: 4 },
   iconBtn: {
     width: 44,
@@ -70,9 +73,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   tagline: {
-    fontSize: 14,
+    fontSize: 12,
+    letterSpacing: 1,
     fontFamily: fontFamily.medium,
-    color: "rgba(255,255,255,0.65)",
+    color: colors.accent,
     marginBottom: 12,
     lineHeight: 20,
   },

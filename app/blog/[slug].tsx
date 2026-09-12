@@ -1,21 +1,44 @@
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BlogArticleBody } from "@/components/BlogArticleBody";
 import { ContentComingSoonCard } from "@/components/ContentComingSoonCard";
-import { GshContentAccentBar, GshOutlineButton, GshScreenIntro } from "@/components/gsh-ui-kit";
+import {
+  GshContentAccentBar,
+  GshOutlineButton,
+  GshScreenIntro,
+} from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { isSupabaseNotConfigured } from "@/lib/content/contentAvailability";
-import { fetchBlogArticleBySlug, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
+import {
+  fetchBlogArticleBySlug,
+  SupabaseNotConfiguredError,
+} from "@/lib/content/blogQueries";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function BlogArticleScreen() {
+  const ac = useAccountCopy();
+
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
   const raw = typeof slug === "string" ? slug : "";
-  const decoded = decodeURIComponent(raw);
+  let decoded = raw;
+  try {
+    decoded = decodeURIComponent(raw);
+  } catch {
+    /* Treat malformed encoding as an unmatched slug. */
+  }
 
   const q = useQuery({
     queryKey: ["blog", decoded],
@@ -43,9 +66,18 @@ export default function BlogArticleScreen() {
         <GshScreenBackground>
           <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
             <ScrollView contentContainerStyle={styles.pad}>
-              <GshScreenIntro eyebrow="Blog" title="Article" subtitle="In-app reading when articles are live." style={{ marginBottom: 10 }} />
+              <GshScreenIntro
+                eyebrow={ac("Blog")}
+                title={ac("Blog")}
+                subtitle={ac("All articles")}
+                style={{ marginBottom: 10 }}
+              />
               <ContentComingSoonCard feature="blog" state="not-configured" />
-              <GshOutlineButton title="Back to blog" onPress={() => router.push("/blog")} style={{ marginTop: 14 }} />
+              <GshOutlineButton
+                title={ac("Back to blog")}
+                onPress={() => router.push("/blog")}
+                style={{ marginTop: 14 }}
+              />
             </ScrollView>
           </SafeAreaView>
         </GshScreenBackground>
@@ -55,18 +87,26 @@ export default function BlogArticleScreen() {
       <GshScreenBackground>
         <SafeAreaView style={styles.center} edges={["bottom"]}>
           <GshScreenIntro
-            title="Could not load this article"
-            subtitle="Check your connection and try again."
+            title={ac("Could not load this article")}
+            subtitle={ac("Check your connection and try again.")}
             style={{ marginBottom: 8 }}
           />
-          <Pressable style={styles.primaryOutline} onPress={() => void q.refetch()} accessibilityRole="button">
-            <Text style={styles.linkStrong}>Try again</Text>
+          <Pressable
+            style={styles.primaryOutline}
+            onPress={() => void q.refetch()}
+            accessibilityRole="button"
+          >
+            <Text style={styles.linkStrong}>{ac("Try again")}</Text>
           </Pressable>
-          <Pressable style={styles.primaryOutline} onPress={() => router.push("/blog")} accessibilityRole="button">
-            <Text style={styles.linkStrong}>All articles</Text>
+          <Pressable
+            style={styles.primaryOutline}
+            onPress={() => router.push("/blog")}
+            accessibilityRole="button"
+          >
+            <Text style={styles.linkStrong}>{ac("All articles")}</Text>
           </Pressable>
           <Pressable onPress={() => router.back()} accessibilityRole="button">
-            <Text style={styles.link}>Go back</Text>
+            <Text style={styles.link}>{ac("Go back")}</Text>
           </Pressable>
         </SafeAreaView>
       </GshScreenBackground>
@@ -77,12 +117,19 @@ export default function BlogArticleScreen() {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.center} edges={["bottom"]}>
-          <GshScreenIntro title="We could not find that article." style={{ marginBottom: 8 }} />
-          <Pressable style={styles.primaryOutline} onPress={() => router.push("/blog")} accessibilityRole="button">
-            <Text style={styles.linkStrong}>Back to blog list</Text>
+          <GshScreenIntro
+            title={ac("Article unavailable")}
+            style={{ marginBottom: 8 }}
+          />
+          <Pressable
+            style={styles.primaryOutline}
+            onPress={() => router.push("/blog")}
+            accessibilityRole="button"
+          >
+            <Text style={styles.linkStrong}>{ac("Back to blog")}</Text>
           </Pressable>
           <Pressable onPress={() => router.back()} accessibilityRole="button">
-            <Text style={styles.link}>Go back</Text>
+            <Text style={styles.link}>{ac("Go back")}</Text>
           </Pressable>
         </SafeAreaView>
       </GshScreenBackground>
@@ -94,15 +141,26 @@ export default function BlogArticleScreen() {
   return (
     <GshScreenBackground>
       <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
-        <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.pad}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={[styles.hero, cardSurfaceStyle(true)]}>
             {blog.featured_image ? (
-              <Image source={{ uri: blog.featured_image }} style={styles.heroImg} accessibilityIgnoresInvertColors />
+              <Image
+                source={{ uri: blog.featured_image }}
+                style={styles.heroImg}
+                accessibilityIgnoresInvertColors
+              />
             ) : null}
             <GshContentAccentBar />
-            <Text style={styles.eyebrow}>{blog.category?.name ?? "Blog"}</Text>
+            <Text style={styles.eyebrow}>
+              {blog.category?.name ?? ac("Blog")}
+            </Text>
             <Text style={styles.title}>{blog.title}</Text>
-            {blog.description ? <Text style={styles.desc}>{blog.description}</Text> : null}
+            {blog.description ? (
+              <Text style={styles.desc}>{blog.description}</Text>
+            ) : null}
           </View>
           <BlogArticleBody sections={sections} />
         </ScrollView>
@@ -112,27 +170,54 @@ export default function BlogArticleScreen() {
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24, gap: 12 },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+    gap: 12,
+  },
   pad: stackScrollContentStyle,
   hero: { padding: 16, borderRadius: radii.lg, marginBottom: 16 },
-  heroImg: { width: "100%", height: 200, borderRadius: radii.sm, marginBottom: 14, resizeMode: "cover" },
+  heroImg: {
+    width: "100%",
+    height: 200,
+    borderRadius: radii.pill,
+    marginBottom: 14,
+    resizeMode: "cover",
+  },
   accentBar: { height: 4, borderRadius: 2, marginBottom: 12 },
   eyebrow: {
     fontSize: 12,
     fontFamily: fontFamily.semiBold,
-    color: colors.teal,
+    color: colors.accent,
     letterSpacing: 0.2,
     marginBottom: 8,
   },
-  title: { fontSize: 24, fontFamily: fontFamily.extraBold, color: colors.navy, letterSpacing: -0.35 },
-  desc: { marginTop: 10, fontSize: 15, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 22 },
+  title: {
+    fontSize: 24,
+    fontFamily: fontFamily.heading,
+    color: colors.navy,
+    letterSpacing: -0.35,
+  },
+  desc: {
+    marginTop: 10,
+    fontSize: 15,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+    lineHeight: 22,
+  },
   link: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.brand },
-  linkStrong: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.brand },
+  linkStrong: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 16,
+    color: colors.brand,
+  },
   primaryOutline: {
     marginTop: 8,
     borderWidth: 1,
     borderColor: colors.brand,
-    borderRadius: radii.sm,
+    borderRadius: radii.pill,
     paddingVertical: 12,
     paddingHorizontal: 20,
     alignItems: "center",

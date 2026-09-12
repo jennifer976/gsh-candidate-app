@@ -1,7 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import type { ReactNode } from "react";
-import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, Text, View, type ViewStyle } from "react-native";
 import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -11,9 +10,9 @@ type IonName = ComponentProps<typeof Ionicons>["name"];
 export type GshLinkAccent = "teal" | "purple" | "ocean";
 
 const ACCENT: Record<GshLinkAccent, { wrap: string; icon: string }> = {
-  teal: { wrap: "rgba(14, 205, 209, 0.18)", icon: "#0f766e" },
-  purple: { wrap: "rgba(97, 10, 144, 0.12)", icon: colors.purple },
-  ocean: { wrap: "rgba(59, 130, 246, 0.14)", icon: "#1d4ed8" },
+  teal: { wrap: colors.brandSoft, icon: colors.navy },
+  purple: { wrap: colors.surfaceMuted, icon: colors.navy },
+  ocean: { wrap: colors.surfaceMuted, icon: colors.navy },
 };
 
 export function GshScreenIntro({
@@ -47,12 +46,12 @@ const introStyles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.teal,
     letterSpacing: 0.8,
-    textTransform: "uppercase",
+    textTransform: "lowercase",
     marginBottom: 8,
   },
   title: {
     fontSize: 26,
-    fontFamily: fontFamily.extraBold,
+    fontFamily: fontFamily.headingStrong,
     color: colors.navy,
     letterSpacing: -0.5,
     marginBottom: 6,
@@ -90,7 +89,7 @@ export function GshSectionTitle({
         <View style={secStyles.rule} />
         <Text style={[secStyles.title, onDark && secStyles.titleOnDark]}>{title}</Text>
         {actionLabel && onAction ? (
-          <Pressable onPress={onAction} hitSlop={10} accessibilityRole="button">
+          <Pressable style={secStyles.actionHit} onPress={onAction} hitSlop={10} accessibilityRole="button">
             <Text style={[secStyles.action, onDark && secStyles.actionOnDark]}>{actionLabel}</Text>
           </Pressable>
         ) : null}
@@ -111,6 +110,7 @@ const secStyles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   titleOnDark: { color: colors.white },
+  actionHit: { minHeight: 44, justifyContent: "center" },
   action: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.brand },
   actionOnDark: { color: colors.teal },
   hint: {
@@ -160,17 +160,17 @@ export function GshLinkRow({
 
 const rowStyles = StyleSheet.create({
   row: {
+    minHeight: 72,
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
     paddingVertical: 16,
     paddingHorizontal: 16,
-    borderRadius: radii.lg,
   },
   pressed: { opacity: 0.92 },
   iconTile: {
-    width: 52,
-    height: 52,
+    width: 44,
+    height: 44,
     borderRadius: radii.md,
     alignItems: "center",
     justifyContent: "center",
@@ -202,25 +202,20 @@ export function GshNavyHeroCard({
   footer?: ReactNode;
 }) {
   return (
-    <LinearGradient
-      colors={[colors.navy, "#1a237e", colors.brand]}
-      locations={[0, 0.55, 1]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={heroStyles.card}
-    >
+    <View style={heroStyles.card}>
       <View style={heroStyles.badge}>
         <Text style={heroStyles.badgeText}>{badge}</Text>
       </View>
       <Text style={heroStyles.title}>{title}</Text>
       {typeof children === "string" ? <Text style={heroStyles.body}>{children}</Text> : <View>{children}</View>}
       {footer ? <View style={heroStyles.footer}>{footer}</View> : null}
-    </LinearGradient>
+    </View>
   );
 }
 
 const heroStyles = StyleSheet.create({
   card: {
+    backgroundColor: colors.navy,
     padding: 22,
     marginBottom: 8,
     borderRadius: radii.xl,
@@ -241,11 +236,11 @@ const heroStyles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: "rgba(255,255,255,0.95)",
     letterSpacing: 0.6,
-    textTransform: "uppercase",
+    textTransform: "lowercase",
   },
   title: {
     fontSize: 26,
-    fontFamily: fontFamily.extraBold,
+    fontFamily: fontFamily.headingStrong,
     color: colors.white,
     letterSpacing: -0.5,
     marginBottom: 10,
@@ -261,28 +256,23 @@ const heroStyles = StyleSheet.create({
 
 export function GshMessengerTip({ children }: { children: string }) {
   return (
-    <LinearGradient
-      colors={["rgba(97,10,144,0.08)", "rgba(14,205,209,0.1)"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={tipStyles.grad}
-    >
+    <View style={tipStyles.wrap}>
       <View style={tipStyles.inner}>
         <Ionicons name="chatbubble-ellipses-outline" size={24} color={colors.navy} />
         <Text style={tipStyles.text}>{children}</Text>
       </View>
-    </LinearGradient>
+    </View>
   );
 }
 
 const tipStyles = StyleSheet.create({
-  grad: {
-    marginHorizontal: 16,
+  wrap: {
     marginTop: 8,
     marginBottom: 12,
     borderRadius: radii.lg,
     borderWidth: 1,
-    borderColor: "rgba(97, 10, 144, 0.2)",
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceMuted,
     overflow: "hidden",
   },
   inner: { flexDirection: "row", alignItems: "flex-start", gap: 12, padding: 16 },
@@ -306,12 +296,7 @@ export function GshCompletionStrip({ pct }: { pct: number | null }) {
         <Text style={stripStyles.hint}>{pct >= 100 ? "Great work" : "Strong profiles get more replies"}</Text>
       </View>
       <View style={stripStyles.track}>
-        <LinearGradient
-          colors={[colors.teal, colors.brand]}
-          start={{ x: 0, y: 0.5 }}
-          end={{ x: 1, y: 0.5 }}
-          style={[stripStyles.fill, { width: `${w}%` }]}
-        />
+        <View style={[stripStyles.fill, { width: `${w}%` }]} />
       </View>
     </View>
   );
@@ -325,7 +310,7 @@ const stripStyles = StyleSheet.create({
   },
   label: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textSecondary, letterSpacing: 0.3 },
   row: { flexDirection: "row", alignItems: "baseline", gap: 10, marginTop: 6 },
-  pct: { fontSize: 28, fontFamily: fontFamily.extraBold, color: colors.brand, letterSpacing: -0.5 },
+  pct: { fontSize: 28, fontFamily: fontFamily.headingStrong, color: colors.brand, letterSpacing: -0.5 },
   hint: { flex: 1, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 18 },
   track: {
     marginTop: 12,
@@ -336,19 +321,12 @@ const stripStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  fill: { height: "100%", borderRadius: radii.pill },
+  fill: { height: "100%", borderRadius: radii.pill, backgroundColor: colors.teal },
 });
 
 /** Teal → brand rule used on blog, legal, and content tool screens. */
 export function GshContentAccentBar({ style }: { style?: ViewStyle }) {
-  return (
-    <LinearGradient
-      colors={[colors.teal, colors.brand]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      style={[{ height: 4, borderRadius: 2, marginBottom: 12 }, style]}
-    />
-  );
+  return <View style={[{ height: 3, backgroundColor: colors.teal, marginBottom: 12 }, style]} />;
 }
 
 export function GshOutlineButton({
@@ -362,7 +340,7 @@ export function GshOutlineButton({
 }) {
   return (
     <Pressable
-      style={[outlineBtnStyles.btn, cardSurfaceStyle(false), style]}
+      style={[cardSurfaceStyle(false), outlineBtnStyles.btn, style]}
       onPress={onPress}
       accessibilityRole="button"
     >
@@ -373,9 +351,10 @@ export function GshOutlineButton({
 
 const outlineBtnStyles = StyleSheet.create({
   btn: {
+    borderRadius: radii.pill,
+    minHeight: 48,
     borderWidth: 1,
     borderColor: colors.brand,
-    borderRadius: radii.sm,
     paddingVertical: 14,
     alignItems: "center",
   },
@@ -405,6 +384,8 @@ export function GshFilterChip({
 
 const filterChipStyles = StyleSheet.create({
   chip: {
+    minHeight: 44,
+    justifyContent: "center",
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: radii.pill,
@@ -416,10 +397,10 @@ const filterChipStyles = StyleSheet.create({
   },
   active: {
     borderColor: colors.teal,
-    backgroundColor: "rgba(14, 205, 209, 0.14)",
+    backgroundColor: colors.brandSoft,
   },
   label: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.navy },
-  labelActive: { color: "#0f766e" },
+  labelActive: { color: colors.navy },
 });
 
 /** Destination / expert name chips on light content screens. */
@@ -436,6 +417,6 @@ export function GshTopicChip({ label, onPress }: { label: string; onPress: () =>
 }
 
 const topicChipStyles = StyleSheet.create({
-  chip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: radii.pill },
+  chip: { minHeight: 44, justifyContent: "center", paddingHorizontal: 14, paddingVertical: 8, borderRadius: radii.pill },
   text: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.brand },
 });

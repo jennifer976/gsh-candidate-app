@@ -1,29 +1,40 @@
-import { useMemo, useState } from "react";
-import { LayoutAnimation, Platform, Pressable, ScrollView, StyleSheet, Text, UIManager, View } from "react-native";
+import { useState } from "react";
+import {
+  LayoutAnimation,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  UIManager,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { FAQ_ITEMS } from "@/lib/content/faqData";
+import { useAppCopy } from "@/lib/i18n";
+import faqCatalog from "@/lib/i18n/candidate-faqs.json";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
-if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 export default function FaqScreen() {
+  const { locale } = useAppCopy();
+  const content = faqCatalog[locale];
   const [open, setOpen] = useState<string | null>(null);
-  const grouped = useMemo(() => {
-    const skip = new Set(["For Employers", "For Partners"]);
-    const m = new Map<string, typeof FAQ_ITEMS>();
-    for (const item of FAQ_ITEMS) {
-      if (skip.has(item.category)) continue;
-      const list = m.get(item.category) ?? [];
-      list.push(item);
-      m.set(item.category, list);
-    }
-    return [...m.entries()];
-  }, []);
+  const grouped = content.groups.map(
+    (group) =>
+      [
+        group.title,
+        group.items.map((item) => ({ question: item.q, answer: item.a })),
+      ] as const,
+  );
 
   function toggle(key: string) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -33,26 +44,39 @@ export default function FaqScreen() {
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.pad}
+          showsVerticalScrollIndicator={false}
+        >
           <GshScreenIntro
-            eyebrow="Help"
-            title="FAQs"
-            subtitle="Candidate help topics — sponsorship, applying, and using the app."
+            eyebrow={content.eyebrow}
+            title={content.title}
+            subtitle={content.intro}
             style={{ marginBottom: 8 }}
           />
           {grouped.map(([category, items], idx) => (
             <View key={category} style={styles.section}>
-              <GshSectionTitle title={category} topSpacing={idx === 0 ? "none" : "sm"} />
+              <GshSectionTitle
+                title={category}
+                topSpacing={idx === 0 ? "none" : "sm"}
+              />
               {items.map((item) => {
                 const key = `${category}::${item.question}`;
                 const isOpen = open === key;
                 return (
                   <View key={key} style={[styles.card, cardSurfaceStyle(true)]}>
-                    <Pressable onPress={() => toggle(key)} accessibilityRole="button">
+                    <Pressable
+                      onPress={() => toggle(key)}
+                      accessibilityRole="button"
+                    >
                       <Text style={styles.q}>{item.question}</Text>
-                      <Text style={styles.toggle}>{isOpen ? "Hide" : "Show"}</Text>
+                      <Text style={styles.toggle}>
+                        {isOpen ? "Hide" : "Show"}
+                      </Text>
                     </Pressable>
-                    {isOpen ? <Text style={styles.a}>{item.answer}</Text> : null}
+                    {isOpen ? (
+                      <Text style={styles.a}>{item.answer}</Text>
+                    ) : null}
                   </View>
                 );
               })}
@@ -69,7 +93,12 @@ const styles = StyleSheet.create({
   pad: { ...stackScrollContentStyle, gap: 16 },
   section: { gap: 10 },
   card: { padding: 14, borderRadius: radii.lg },
-  q: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy, paddingRight: 56 },
+  q: {
+    fontSize: 16,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+    paddingRight: 56,
+  },
   toggle: {
     position: "absolute",
     right: 14,
@@ -78,5 +107,11 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.brand,
   },
-  a: { marginTop: 12, fontSize: 15, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 22 },
+  a: {
+    marginTop: 12,
+    fontSize: 15,
+    fontFamily: fontFamily.regular,
+    color: colors.textMarketing,
+    lineHeight: 22,
+  },
 });

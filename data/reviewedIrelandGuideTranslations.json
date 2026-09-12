@@ -1,0 +1,730 @@
+{
+  "en": {
+    "slug": "ireland-employment-permits-job-search",
+    "title": "Working in Ireland: permits and your move",
+    "countryLabel": "Ireland",
+    "iso2": "ie",
+    "flagEmoji": "🇮🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/",
+    "excerpt": "Check the offer, your work rights and the steps before you travel.",
+    "metaDescription": "Check the offer, your work rights and the steps before you travel.",
+    "openingHook": "Check the offer, your work rights and the steps before you travel.",
+    "quickFacts": [
+      {
+        "label": "Start here",
+        "value": "Check the job and your work rights"
+      },
+      {
+        "label": "Employer support",
+        "value": "Confirm what is included in writing"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Start with your work rights",
+        "paragraphs": [
+          "Nationality and existing permission matter. Check whether you need an employment permit before arranging the move."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Check the permit for this job",
+        "paragraphs": [
+          "Critical Skills requires an eligible role and a job offer lasting at least two years. General permits cover a broader range of eligible jobs."
+        ],
+        "sources": [
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Confirm pay and employer requirements",
+        "paragraphs": [
+          "Salary rules depend on the permit and circumstances. General permits usually require a labour market test; exceptions apply."
+        ],
+        "sources": [
+          "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Arrange entry and registration",
+        "paragraphs": [
+          "An employment permit is not an entry visa or residence permission. Check which separate steps apply to you before travelling."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Plan for anyone moving with you",
+        "paragraphs": [
+          "Family eligibility, waiting periods and work rights depend on the permission and family circumstances. Check each person’s position separately."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+        ]
+      },
+      {
+        "heading": "Agree the practical details",
+        "paragraphs": [
+          "Get pay, location, hours and moving support in writing. Compare housing and travel costs. Browse specialists if you need practical help; viewing a profile does not send a request."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Search jobs in Ireland",
+        "href": "/jobs?location=Ireland"
+      },
+      {
+        "label": "Browse independent specialists",
+        "href": "/specialists"
+      },
+      {
+        "label": "Relocation perks",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "fr": {
+    "slug": "ireland-employment-permits-job-search",
+    "title": "Travailler en Irlande : permis et installation",
+    "countryLabel": "Irlande",
+    "iso2": "ie",
+    "flagEmoji": "🇮🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/",
+    "excerpt": "Vérifiez l’offre, votre droit au travail et les démarches avant de partir.",
+    "metaDescription": "Vérifiez l’offre, votre droit au travail et les démarches avant de partir.",
+    "openingHook": "Vérifiez l’offre, votre droit au travail et les démarches avant de partir.",
+    "quickFacts": [
+      {
+        "label": "Pour commencer",
+        "value": "Vérifiez le poste et votre droit de travailler"
+      },
+      {
+        "label": "Aide de l’employeur",
+        "value": "Faites confirmer par écrit ce qui est inclus"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Commencez par votre droit au travail",
+        "paragraphs": [
+          "Votre nationalité et votre statut actuel comptent. Vérifiez si un permis de travail est nécessaire avant d’organiser le départ."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Vérifiez le permis adapté au poste",
+        "paragraphs": [
+          "Critical Skills exige un poste admissible et une offre d’au moins deux ans. Le permis General couvre un éventail plus large de postes admissibles."
+        ],
+        "sources": [
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Confirmez le salaire et les obligations de l’employeur",
+        "paragraphs": [
+          "Les règles salariales dépendent du permis et de la situation. Le permis General exige généralement un test du marché du travail ; des exceptions existent."
+        ],
+        "sources": [
+          "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Organisez l’entrée et l’enregistrement",
+        "paragraphs": [
+          "Un permis de travail n’est ni un visa d’entrée ni un titre de séjour. Vérifiez les démarches distinctes qui vous concernent avant de partir."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Prévoyez les démarches pour vos proches",
+        "paragraphs": [
+          "L’admissibilité familiale, les délais et le droit au travail dépendent du titre et de la situation familiale. Vérifiez chaque cas séparément."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+        ]
+      },
+      {
+        "heading": "Convenez des détails pratiques",
+        "paragraphs": [
+          "Obtenez par écrit le salaire, le lieu, les horaires et l’aide à l’installation. Comparez les frais de logement et de transport. Consultez des spécialistes si nécessaire ; voir un profil n’envoie pas de demande."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Rechercher un emploi : Irlande",
+        "href": "/jobs?location=Ireland"
+      },
+      {
+        "label": "Consulter les spécialistes indépendants",
+        "href": "/specialists"
+      },
+      {
+        "label": "Avantages pour le déménagement",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "de": {
+    "slug": "ireland-employment-permits-job-search",
+    "title": "Arbeiten in Irland: Genehmigungen und Umzug",
+    "countryLabel": "Irland",
+    "iso2": "ie",
+    "flagEmoji": "🇮🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/",
+    "excerpt": "Prüfe vor der Reise das Angebot, deine Arbeitsberechtigung und die nötigen Schritte.",
+    "metaDescription": "Prüfe vor der Reise das Angebot, deine Arbeitsberechtigung und die nötigen Schritte.",
+    "openingHook": "Prüfe vor der Reise das Angebot, deine Arbeitsberechtigung und die nötigen Schritte.",
+    "quickFacts": [
+      {
+        "label": "Hier beginnen",
+        "value": "Prüfe die Stelle und dein Recht zu arbeiten"
+      },
+      {
+        "label": "Hilfe des Arbeitgebers",
+        "value": "Lass dir schriftlich bestätigen, was enthalten ist"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Prüfe zuerst deine Arbeitsberechtigung",
+        "paragraphs": [
+          "Staatsangehörigkeit und bestehende Erlaubnisse sind entscheidend. Prüfe vor dem Umzug, ob du eine Arbeitsgenehmigung brauchst."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Prüfe die Genehmigung für diese Stelle",
+        "paragraphs": [
+          "Critical Skills setzt eine geeignete Stelle und ein Angebot für mindestens zwei Jahre voraus. General-Genehmigungen decken mehr zulässige Berufe ab."
+        ],
+        "sources": [
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Kläre Gehalt und Arbeitgeberanforderungen",
+        "paragraphs": [
+          "Gehaltsregeln hängen von Genehmigung und Umständen ab. General-Genehmigungen erfordern meist eine Arbeitsmarktprüfung; Ausnahmen gelten."
+        ],
+        "sources": [
+          "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Kümmere dich um Einreise und Registrierung",
+        "paragraphs": [
+          "Eine Arbeitsgenehmigung ist weder Einreisevisum noch Aufenthaltserlaubnis. Prüfe vor der Reise, welche zusätzlichen Schritte für dich gelten."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Plane für mitziehende Angehörige",
+        "paragraphs": [
+          "Familiennachzug, Wartezeiten und Arbeitsrechte hängen von Erlaubnis und Familiensituation ab. Prüfe die Lage jeder Person einzeln."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+        ]
+      },
+      {
+        "heading": "Kläre die praktischen Einzelheiten",
+        "paragraphs": [
+          "Lass dir Gehalt, Arbeitsort, Zeiten und Umzugshilfe schriftlich bestätigen. Vergleiche Wohn- und Fahrtkosten. Suche bei Bedarf praktische Hilfe bei Spezialisten; ein Profilaufruf sendet keine Anfrage."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Stellen suchen: Irland",
+        "href": "/jobs?location=Ireland"
+      },
+      {
+        "label": "Unabhängige Spezialisten finden",
+        "href": "/specialists"
+      },
+      {
+        "label": "Angebote für deinen Umzug",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "es": {
+    "slug": "ireland-employment-permits-job-search",
+    "title": "Trabajar en Irlanda: permisos y mudanza",
+    "countryLabel": "Irlanda",
+    "iso2": "ie",
+    "flagEmoji": "🇮🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/",
+    "excerpt": "Comprueba la oferta, tu derecho a trabajar y los trámites antes de viajar.",
+    "metaDescription": "Comprueba la oferta, tu derecho a trabajar y los trámites antes de viajar.",
+    "openingHook": "Comprueba la oferta, tu derecho a trabajar y los trámites antes de viajar.",
+    "quickFacts": [
+      {
+        "label": "Empieza aquí",
+        "value": "Comprueba el puesto y tu derecho a trabajar"
+      },
+      {
+        "label": "Ayuda del empleador",
+        "value": "Confirma por escrito lo que incluye"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Comprueba primero tu derecho a trabajar",
+        "paragraphs": [
+          "Tu nacionalidad y permiso actual importan. Comprueba si necesitas un permiso de trabajo antes de organizar la mudanza."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Comprueba el permiso para este puesto",
+        "paragraphs": [
+          "Critical Skills exige un puesto admisible y una oferta de al menos dos años. El permiso General cubre más tipos de empleos admisibles."
+        ],
+        "sources": [
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Confirma el salario y los requisitos del empleador",
+        "paragraphs": [
+          "Las reglas salariales dependen del permiso y las circunstancias. El permiso General suele exigir una prueba del mercado laboral; hay excepciones."
+        ],
+        "sources": [
+          "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Organiza la entrada y el registro",
+        "paragraphs": [
+          "Un permiso de trabajo no es un visado de entrada ni un permiso de residencia. Comprueba los trámites separados que te corresponden antes de viajar."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Planifica para quienes se mudan contigo",
+        "paragraphs": [
+          "La admisibilidad familiar, las esperas y el derecho a trabajar dependen del permiso y la situación familiar. Comprueba cada caso por separado."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+        ]
+      },
+      {
+        "heading": "Acuerda los detalles prácticos",
+        "paragraphs": [
+          "Confirma por escrito salario, lugar, horario y ayuda para la mudanza. Compara vivienda y transporte. Consulta especialistas si necesitas ayuda práctica; ver un perfil no envía una solicitud."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Buscar empleo: Irlanda",
+        "href": "/jobs?location=Ireland"
+      },
+      {
+        "label": "Buscar especialistas independientes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Ventajas para tu mudanza",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pt": {
+    "slug": "ireland-employment-permits-job-search",
+    "title": "Trabalhar na Irlanda: autorizações e mudança",
+    "countryLabel": "Irlanda",
+    "iso2": "ie",
+    "flagEmoji": "🇮🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/",
+    "excerpt": "Verifique a oferta, o seu direito a trabalhar e os passos necessários antes de viajar.",
+    "metaDescription": "Verifique a oferta, o seu direito a trabalhar e os passos necessários antes de viajar.",
+    "openingHook": "Verifique a oferta, o seu direito a trabalhar e os passos necessários antes de viajar.",
+    "quickFacts": [
+      {
+        "label": "Comece aqui",
+        "value": "Verifique o emprego e o seu direito a trabalhar"
+      },
+      {
+        "label": "Apoio do empregador",
+        "value": "Confirme por escrito o que está incluído"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Comece pelo seu direito a trabalhar",
+        "paragraphs": [
+          "A nacionalidade e a autorização atual são importantes. Verifique se precisa de uma autorização de trabalho antes de organizar a mudança."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Verifique a autorização para este emprego",
+        "paragraphs": [
+          "Critical Skills exige uma função elegível e uma oferta de pelo menos dois anos. A autorização General abrange mais tipos de empregos elegíveis."
+        ],
+        "sources": [
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Confirme o salário e os requisitos do empregador",
+        "paragraphs": [
+          "As regras salariais dependem da autorização e das circunstâncias. A autorização General exige normalmente um teste do mercado de trabalho; há exceções."
+        ],
+        "sources": [
+          "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Trate da entrada e do registo",
+        "paragraphs": [
+          "Uma autorização de trabalho não é um visto de entrada nem uma autorização de residência. Verifique os passos adicionais aplicáveis antes de viajar."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Planeie para quem se muda consigo",
+        "paragraphs": [
+          "A elegibilidade familiar, os prazos de espera e o direito a trabalhar dependem da autorização e da situação familiar. Verifique cada caso separadamente."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+        ]
+      },
+      {
+        "heading": "Acorde os detalhes práticos",
+        "paragraphs": [
+          "Confirme por escrito o salário, o local, o horário e o apoio à mudança. Compare os custos de habitação e transporte. Consulte especialistas se precisar de ajuda prática; ver um perfil não envia um pedido."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Procurar emprego: Irlanda",
+        "href": "/jobs?location=Ireland"
+      },
+      {
+        "label": "Procurar especialistas independentes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantagens para a mudança",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "it": {
+    "slug": "ireland-employment-permits-job-search",
+    "title": "Lavorare in Irlanda: permessi e trasferimento",
+    "countryLabel": "Irlanda",
+    "iso2": "ie",
+    "flagEmoji": "🇮🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/",
+    "excerpt": "Verifica l’offerta, il tuo diritto a lavorare e le procedure prima di partire.",
+    "metaDescription": "Verifica l’offerta, il tuo diritto a lavorare e le procedure prima di partire.",
+    "openingHook": "Verifica l’offerta, il tuo diritto a lavorare e le procedure prima di partire.",
+    "quickFacts": [
+      {
+        "label": "Inizia qui",
+        "value": "Verifica il lavoro e il tuo diritto a lavorare"
+      },
+      {
+        "label": "Aiuto del datore di lavoro",
+        "value": "Fai confermare per iscritto cosa è incluso"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Parti dal tuo diritto a lavorare",
+        "paragraphs": [
+          "Contano la nazionalità e il permesso attuale. Verifica se serve un permesso di lavoro prima di organizzare il trasferimento."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Verifica il permesso per questo lavoro",
+        "paragraphs": [
+          "Critical Skills richiede un ruolo idoneo e un’offerta di almeno due anni. Il permesso General copre più categorie di lavori idonei."
+        ],
+        "sources": [
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Conferma retribuzione e requisiti del datore di lavoro",
+        "paragraphs": [
+          "Le regole salariali dipendono dal permesso e dalla situazione. Il permesso General richiede di norma una verifica del mercato del lavoro; esistono eccezioni."
+        ],
+        "sources": [
+          "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Organizza ingresso e registrazione",
+        "paragraphs": [
+          "Un permesso di lavoro non è un visto d’ingresso né un permesso di soggiorno. Verifica le procedure separate che ti riguardano prima di partire."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Pianifica per chi si trasferisce con te",
+        "paragraphs": [
+          "Requisiti familiari, tempi di attesa e diritto al lavoro dipendono dal permesso e dalla situazione familiare. Verifica ogni caso separatamente."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+        ]
+      },
+      {
+        "heading": "Concorda i dettagli pratici",
+        "paragraphs": [
+          "Conferma per iscritto paga, sede, orari e sostegno al trasferimento. Confronta i costi di casa e trasporti. Cerca specialisti per aiuto pratico; visualizzare un profilo non invia una richiesta."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Cerca lavoro: Irlanda",
+        "href": "/jobs?location=Ireland"
+      },
+      {
+        "label": "Trova specialisti indipendenti",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantaggi per il trasferimento",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "nl": {
+    "slug": "ireland-employment-permits-job-search",
+    "title": "Werken in Ierland: vergunningen en verhuizing",
+    "countryLabel": "Ierland",
+    "iso2": "ie",
+    "flagEmoji": "🇮🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/",
+    "excerpt": "Controleer het aanbod, je recht om te werken en de stappen vóór vertrek.",
+    "metaDescription": "Controleer het aanbod, je recht om te werken en de stappen vóór vertrek.",
+    "openingHook": "Controleer het aanbod, je recht om te werken en de stappen vóór vertrek.",
+    "quickFacts": [
+      {
+        "label": "Begin hier",
+        "value": "Controleer de baan en je recht om te werken"
+      },
+      {
+        "label": "Hulp van de werkgever",
+        "value": "Laat schriftelijk bevestigen wat is inbegrepen"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Begin met je recht om te werken",
+        "paragraphs": [
+          "Je nationaliteit en huidige verblijfsstatus zijn van belang. Controleer vóór de verhuizing of je een werkvergunning nodig hebt."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Controleer de vergunning voor deze baan",
+        "paragraphs": [
+          "Critical Skills vereist een geschikte functie en een aanbod voor minstens twee jaar. General-vergunningen gelden voor meer soorten toegestane banen."
+        ],
+        "sources": [
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Bevestig het salaris en de eisen voor de werkgever",
+        "paragraphs": [
+          "Salarisregels hangen af van de vergunning en omstandigheden. General-vergunningen vereisen meestal een arbeidsmarkttoets; er zijn uitzonderingen."
+        ],
+        "sources": [
+          "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Regel de toegang en registratie",
+        "paragraphs": [
+          "Een werkvergunning is geen inreisvisum of verblijfsvergunning. Controleer vóór vertrek welke afzonderlijke stappen voor jou gelden."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Plan voor wie met je meeverhuist",
+        "paragraphs": [
+          "Voorwaarden voor gezinshereniging, wachttijden en werkrechten hangen af van de vergunning en gezinssituatie. Controleer iedere situatie afzonderlijk."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+        ]
+      },
+      {
+        "heading": "Spreek de praktische zaken af",
+        "paragraphs": [
+          "Laat salaris, locatie, uren en verhuishulp schriftelijk vastleggen. Vergelijk woon- en reiskosten. Bekijk specialisten als je praktische hulp nodig hebt; een profiel bekijken verstuurt geen aanvraag."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Werk zoeken: Ierland",
+        "href": "/jobs?location=Ireland"
+      },
+      {
+        "label": "Onafhankelijke specialisten zoeken",
+        "href": "/specialists"
+      },
+      {
+        "label": "Voordelen voor je verhuizing",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pl": {
+    "slug": "ireland-employment-permits-job-search",
+    "title": "Praca w Irlandii: zezwolenia i przeprowadzka",
+    "countryLabel": "Irlandia",
+    "iso2": "ie",
+    "flagEmoji": "🇮🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/",
+    "excerpt": "Przed wyjazdem sprawdź ofertę, prawo do pracy i wymagane formalności.",
+    "metaDescription": "Przed wyjazdem sprawdź ofertę, prawo do pracy i wymagane formalności.",
+    "openingHook": "Przed wyjazdem sprawdź ofertę, prawo do pracy i wymagane formalności.",
+    "quickFacts": [
+      {
+        "label": "Zacznij tutaj",
+        "value": "Sprawdź ofertę i swoje prawo do pracy"
+      },
+      {
+        "label": "Pomoc pracodawcy",
+        "value": "Uzyskaj pisemne potwierdzenie zakresu pomocy"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Zacznij od prawa do pracy",
+        "paragraphs": [
+          "Znaczenie mają obywatelstwo i obecny status pobytu. Przed organizacją przeprowadzki sprawdź, czy potrzebujesz zezwolenia na pracę."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Sprawdź zezwolenie dla tej pracy",
+        "paragraphs": [
+          "Critical Skills wymaga kwalifikującego się stanowiska i oferty na co najmniej dwa lata. Zezwolenie General obejmuje szerszy zakres dopuszczalnych zawodów."
+        ],
+        "sources": [
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Potwierdź wynagrodzenie i wymagania dla pracodawcy",
+        "paragraphs": [
+          "Zasady wynagrodzenia zależą od zezwolenia i sytuacji. Zezwolenie General zwykle wymaga testu rynku pracy; obowiązują wyjątki."
+        ],
+        "sources": [
+          "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/",
+          "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        ]
+      },
+      {
+        "heading": "Zadbaj o wjazd i rejestrację",
+        "paragraphs": [
+          "Zezwolenie na pracę nie jest wizą wjazdową ani zgodą na pobyt. Przed podróżą sprawdź, jakie osobne formalności cię dotyczą."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        ]
+      },
+      {
+        "heading": "Zaplanuj przeprowadzkę bliskich",
+        "paragraphs": [
+          "Warunki sprowadzenia rodziny, okresy oczekiwania i prawo do pracy zależą od zezwolenia i sytuacji rodzinnej. Sprawdź sytuację każdej osoby osobno."
+        ],
+        "sources": [
+          "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+        ]
+      },
+      {
+        "heading": "Uzgodnij szczegóły praktyczne",
+        "paragraphs": [
+          "Potwierdź na piśmie płacę, miejsce, godziny pracy i pomoc w przeprowadzce. Porównaj koszty mieszkania i dojazdów. Przeglądaj specjalistów, jeśli potrzebujesz pomocy; otwarcie profilu nie wysyła zgłoszenia."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Szukaj pracy: Irlandia",
+        "href": "/jobs?location=Ireland"
+      },
+      {
+        "label": "Znajdź niezależnych specjalistów",
+        "href": "/specialists"
+      },
+      {
+        "label": "Oferty na czas przeprowadzki",
+        "href": "/relocation-perks"
+      }
+    ]
+  }
+}

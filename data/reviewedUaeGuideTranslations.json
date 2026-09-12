@@ -1,0 +1,730 @@
+{
+  "en": {
+    "slug": "uae-work-visa-jobs",
+    "title": "Working in the UAE: check the offer and the paperwork",
+    "countryLabel": "United Arab Emirates",
+    "iso2": "ae",
+    "flagEmoji": "🇦🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://u.ae/en/information-and-services/jobs",
+    "excerpt": "Confirm the employer, contract, work permission and residence steps. Compare the full package and plan separately for anyone moving with you.",
+    "metaDescription": "Confirm the employer, contract, work permission and residence steps. Compare the full package and plan separately for anyone moving with you.",
+    "openingHook": "Confirm the employer, contract, work permission and residence steps. Compare the full package and plan separately for anyone moving with you.",
+    "quickFacts": [
+      {
+        "label": "Start here",
+        "value": "Check the job and your work rights"
+      },
+      {
+        "label": "Employer support",
+        "value": "Confirm what is included in writing"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Verify the offer",
+        "paragraphs": [
+          "Check the offer through the relevant official channel. Confirm whether MoHRE or a free-zone authority handles the job. Compare the final contract with the offer before signing."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+        ]
+      },
+      {
+        "heading": "Check work permission before starting",
+        "paragraphs": [
+          "A visit or tourist visa does not allow work. Ask the employer to confirm your work permit, residence process and lawful start date before you begin."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+        ]
+      },
+      {
+        "heading": "Know which costs belong to the employer",
+        "paragraphs": [
+          "Official worker guidance places recruitment and employment residence-processing costs on the employer. Question requests to pay these charges yourself and verify them with the responsible authority before sending money."
+        ],
+        "sources": [
+          "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+        ]
+      },
+      {
+        "heading": "Check self-sponsored options separately",
+        "paragraphs": [
+          "Green Residence has separate categories and evidence requirements. Do not assume that residence status alone permits every type of work; confirm the work permission needed for your employment or freelance activity."
+        ],
+        "sources": [
+          "https://icp.gov.ae/en/services/uae-green-residency/",
+          "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+        ]
+      },
+      {
+        "heading": "Plan family residence and health cover",
+        "paragraphs": [
+          "Check each family member’s residence requirements and insurance. Employer and sponsor duties differ by emirate and situation. Confirm who is covered, when cover begins and who pays."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+          "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+        ]
+      },
+      {
+        "heading": "Compare the complete package",
+        "paragraphs": [
+          "Separate basic pay from housing, flights, insurance and school allowances. Check rent payment dates, deposits and commuting costs. Get support, probation and notice terms in writing before you accept."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Search jobs in the UAE",
+        "href": "/jobs?location=UAE"
+      },
+      {
+        "label": "Browse independent specialists",
+        "href": "/specialists"
+      },
+      {
+        "label": "Relocation perks",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "fr": {
+    "slug": "uae-work-visa-jobs",
+    "title": "Travailler aux Émirats : vérifier l’offre et les démarches",
+    "countryLabel": "Émirats arabes unis",
+    "iso2": "ae",
+    "flagEmoji": "🇦🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://u.ae/en/information-and-services/jobs",
+    "excerpt": "Confirmez employeur, contrat, autorisation de travail et résidence. Comparez l’ensemble des avantages et préparez séparément l’installation des proches.",
+    "metaDescription": "Confirmez employeur, contrat, autorisation de travail et résidence. Comparez l’ensemble des avantages et préparez séparément l’installation des proches.",
+    "openingHook": "Confirmez employeur, contrat, autorisation de travail et résidence. Comparez l’ensemble des avantages et préparez séparément l’installation des proches.",
+    "quickFacts": [
+      {
+        "label": "Pour commencer",
+        "value": "Vérifiez le poste et votre droit de travailler"
+      },
+      {
+        "label": "Aide de l’employeur",
+        "value": "Faites confirmer par écrit ce qui est inclus"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Vérifiez l’offre",
+        "paragraphs": [
+          "Vérifiez l’offre par le canal officiel compétent. Confirmez si le poste relève du MoHRE ou d’une zone franche. Comparez contrat final et offre avant de signer."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+        ]
+      },
+      {
+        "heading": "Vérifiez le droit au travail avant de commencer",
+        "paragraphs": [
+          "Un visa de visite ou de tourisme n’autorise pas le travail. Demandez confirmation du permis, des démarches de résidence et de la date légale de début."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+        ]
+      },
+      {
+        "heading": "Identifiez les frais de l’employeur",
+        "paragraphs": [
+          "Les consignes officielles mettent recrutement et traitement du séjour professionnel à la charge de l’employeur. Vérifiez toute demande de paiement de ces frais auprès de l’autorité compétente avant d’envoyer de l’argent."
+        ],
+        "sources": [
+          "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+        ]
+      },
+      {
+        "heading": "Examinez séparément les options sans sponsor",
+        "paragraphs": [
+          "La résidence verte a ses propres catégories et justificatifs. Ne supposez pas qu’un titre de séjour autorise toute activité ; vérifiez l’autorisation nécessaire pour votre emploi ou activité indépendante."
+        ],
+        "sources": [
+          "https://icp.gov.ae/en/services/uae-green-residency/",
+          "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+        ]
+      },
+      {
+        "heading": "Préparez résidence familiale et assurance santé",
+        "paragraphs": [
+          "Vérifiez résidence et assurance pour chaque proche. Les obligations varient selon l’émirat et la situation. Confirmez les personnes couvertes, le début de couverture et le payeur."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+          "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+        ]
+      },
+      {
+        "heading": "Comparez l’ensemble des avantages",
+        "paragraphs": [
+          "Distinguez salaire de base, logement, vols, assurance et école. Vérifiez échéances du loyer, dépôt et trajets. Obtenez aide, période d’essai et préavis par écrit avant d’accepter."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Rechercher un emploi : Émirats arabes unis",
+        "href": "/jobs?location=UAE"
+      },
+      {
+        "label": "Consulter les spécialistes indépendants",
+        "href": "/specialists"
+      },
+      {
+        "label": "Avantages pour le déménagement",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "de": {
+    "slug": "uae-work-visa-jobs",
+    "title": "Arbeiten in den VAE: Angebot und Unterlagen prüfen",
+    "countryLabel": "Vereinigte Arabische Emirate",
+    "iso2": "ae",
+    "flagEmoji": "🇦🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://u.ae/en/information-and-services/jobs",
+    "excerpt": "Prüfe Arbeitgeber, Vertrag, Arbeitsberechtigung und Aufenthalt. Vergleiche das ganze Paket und plane für mitziehende Angehörige gesondert.",
+    "metaDescription": "Prüfe Arbeitgeber, Vertrag, Arbeitsberechtigung und Aufenthalt. Vergleiche das ganze Paket und plane für mitziehende Angehörige gesondert.",
+    "openingHook": "Prüfe Arbeitgeber, Vertrag, Arbeitsberechtigung und Aufenthalt. Vergleiche das ganze Paket und plane für mitziehende Angehörige gesondert.",
+    "quickFacts": [
+      {
+        "label": "Hier beginnen",
+        "value": "Prüfe die Stelle und dein Recht zu arbeiten"
+      },
+      {
+        "label": "Hilfe des Arbeitgebers",
+        "value": "Lass dir schriftlich bestätigen, was enthalten ist"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Prüfe das Angebot",
+        "paragraphs": [
+          "Prüfe das Angebot über die zuständige offizielle Stelle. Kläre, ob MoHRE oder eine Freizonenbehörde zuständig ist. Vergleiche Vertrag und Angebot vor der Unterschrift."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+        ]
+      },
+      {
+        "heading": "Prüfe die Arbeitsberechtigung vor dem Start",
+        "paragraphs": [
+          "Ein Besuchs- oder Touristenvisum erlaubt keine Arbeit. Lass dir Arbeitserlaubnis, Aufenthaltsverfahren und zulässiges Startdatum vor Arbeitsbeginn bestätigen."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+        ]
+      },
+      {
+        "heading": "Kenne die Kosten des Arbeitgebers",
+        "paragraphs": [
+          "Offizielle Hinweise ordnen Anwerbung und Bearbeitung des Arbeitsaufenthalts dem Arbeitgeber zu. Hinterfrage eigene Zahlungsforderungen und prüfe sie bei der zuständigen Stelle, bevor du Geld sendest."
+        ],
+        "sources": [
+          "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+        ]
+      },
+      {
+        "heading": "Prüfe Wege ohne Arbeitgebersponsor gesondert",
+        "paragraphs": [
+          "Green Residence hat eigene Kategorien und Nachweise. Ein Aufenthaltsstatus erlaubt nicht automatisch jede Arbeit; kläre die nötige Berechtigung für Anstellung oder Selbstständigkeit."
+        ],
+        "sources": [
+          "https://icp.gov.ae/en/services/uae-green-residency/",
+          "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+        ]
+      },
+      {
+        "heading": "Plane Familienaufenthalt und Krankenversicherung",
+        "paragraphs": [
+          "Prüfe Aufenthalt und Versicherung für jedes Familienmitglied. Pflichten unterscheiden sich nach Emirat und Situation. Kläre, wer ab wann versichert ist und wer bezahlt."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+          "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+        ]
+      },
+      {
+        "heading": "Vergleiche das gesamte Paket",
+        "paragraphs": [
+          "Trenne Grundgehalt von Wohnung, Flügen, Versicherung und Schulzuschüssen. Prüfe Miettermine, Kaution und Pendelkosten. Lass Unterstützung, Probezeit und Kündigungsfristen vor der Zusage schriftlich bestätigen."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Stellen suchen: Vereinigte Arabische Emirate",
+        "href": "/jobs?location=UAE"
+      },
+      {
+        "label": "Unabhängige Spezialisten finden",
+        "href": "/specialists"
+      },
+      {
+        "label": "Angebote für deinen Umzug",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "es": {
+    "slug": "uae-work-visa-jobs",
+    "title": "Trabajar en los EAU: revisa la oferta y los trámites",
+    "countryLabel": "Emiratos Árabes Unidos",
+    "iso2": "ae",
+    "flagEmoji": "🇦🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://u.ae/en/information-and-services/jobs",
+    "excerpt": "Confirma empresa, contrato, permiso de trabajo y residencia. Compara el paquete completo y planifica aparte para quienes se muden contigo.",
+    "metaDescription": "Confirma empresa, contrato, permiso de trabajo y residencia. Compara el paquete completo y planifica aparte para quienes se muden contigo.",
+    "openingHook": "Confirma empresa, contrato, permiso de trabajo y residencia. Compara el paquete completo y planifica aparte para quienes se muden contigo.",
+    "quickFacts": [
+      {
+        "label": "Empieza aquí",
+        "value": "Comprueba el puesto y tu derecho a trabajar"
+      },
+      {
+        "label": "Ayuda del empleador",
+        "value": "Confirma por escrito lo que incluye"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Verifica la oferta",
+        "paragraphs": [
+          "Verifica la oferta por el canal oficial competente. Confirma si corresponde al MoHRE o a una zona franca. Compara contrato final y oferta antes de firmar."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+        ]
+      },
+      {
+        "heading": "Comprueba el permiso antes de empezar",
+        "paragraphs": [
+          "Un visado de visita o turismo no permite trabajar. Pide confirmación del permiso, proceso de residencia y fecha legal de inicio antes de empezar."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+        ]
+      },
+      {
+        "heading": "Identifica los costes de la empresa",
+        "paragraphs": [
+          "La guía oficial asigna a la empresa los costes de contratación y tramitación de residencia laboral. Consulta a la autoridad competente si te piden pagarlos, antes de enviar dinero."
+        ],
+        "sources": [
+          "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+        ]
+      },
+      {
+        "heading": "Revisa por separado las opciones sin patrocinador",
+        "paragraphs": [
+          "Green Residence tiene categorías y pruebas propias. No supongas que residir permite cualquier trabajo; confirma el permiso necesario para tu empleo o actividad autónoma."
+        ],
+        "sources": [
+          "https://icp.gov.ae/en/services/uae-green-residency/",
+          "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+        ]
+      },
+      {
+        "heading": "Planifica residencia familiar y seguro médico",
+        "paragraphs": [
+          "Revisa residencia y seguro de cada familiar. Las obligaciones varían según emirato y situación. Confirma quién está cubierto, desde cuándo y quién paga."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+          "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+        ]
+      },
+      {
+        "heading": "Compara el paquete completo",
+        "paragraphs": [
+          "Separa sueldo base de vivienda, vuelos, seguro y ayudas escolares. Revisa pagos de alquiler, fianza y transporte. Obtén apoyo, prueba y preaviso por escrito antes de aceptar."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Buscar empleo: Emiratos Árabes Unidos",
+        "href": "/jobs?location=UAE"
+      },
+      {
+        "label": "Buscar especialistas independientes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Ventajas para tu mudanza",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pt": {
+    "slug": "uae-work-visa-jobs",
+    "title": "Trabalhar nos EAU: verifique a oferta e os documentos",
+    "countryLabel": "Emirados Árabes Unidos",
+    "iso2": "ae",
+    "flagEmoji": "🇦🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://u.ae/en/information-and-services/jobs",
+    "excerpt": "Confirme empregador, contrato, autorização de trabalho e residência. Compare o pacote completo e planeie separadamente para quem o acompanha.",
+    "metaDescription": "Confirme empregador, contrato, autorização de trabalho e residência. Compare o pacote completo e planeie separadamente para quem o acompanha.",
+    "openingHook": "Confirme empregador, contrato, autorização de trabalho e residência. Compare o pacote completo e planeie separadamente para quem o acompanha.",
+    "quickFacts": [
+      {
+        "label": "Comece aqui",
+        "value": "Verifique o emprego e o seu direito a trabalhar"
+      },
+      {
+        "label": "Apoio do empregador",
+        "value": "Confirme por escrito o que está incluído"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Verifique a oferta",
+        "paragraphs": [
+          "Verifique a oferta pelo canal oficial competente. Confirme se o emprego cabe ao MoHRE ou a uma zona franca. Compare contrato final e oferta antes de assinar."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+        ]
+      },
+      {
+        "heading": "Verifique a autorização antes de começar",
+        "paragraphs": [
+          "Um visto de visita ou turismo não permite trabalhar. Peça confirmação da autorização, processo de residência e data legal de início antes de começar."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+        ]
+      },
+      {
+        "heading": "Saiba que custos cabem ao empregador",
+        "paragraphs": [
+          "A orientação oficial atribui ao empregador os custos de recrutamento e tratamento da residência laboral. Questione pedidos para os pagar e confirme com a autoridade antes de enviar dinheiro."
+        ],
+        "sources": [
+          "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+        ]
+      },
+      {
+        "heading": "Verifique separadamente opções sem patrocinador",
+        "paragraphs": [
+          "A Green Residence tem categorias e provas próprias. Não presuma que a residência permite qualquer trabalho; confirme a autorização para o seu emprego ou atividade independente."
+        ],
+        "sources": [
+          "https://icp.gov.ae/en/services/uae-green-residency/",
+          "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+        ]
+      },
+      {
+        "heading": "Planeie residência familiar e seguro de saúde",
+        "paragraphs": [
+          "Verifique residência e seguro de cada familiar. As obrigações variam por emirado e situação. Confirme quem está coberto, desde quando e quem paga."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+          "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+        ]
+      },
+      {
+        "heading": "Compare o pacote completo",
+        "paragraphs": [
+          "Separe salário base de alojamento, voos, seguro e subsídios escolares. Verifique datas da renda, caução e deslocações. Obtenha apoio, período experimental e aviso prévio por escrito antes de aceitar."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Procurar emprego: Emirados Árabes Unidos",
+        "href": "/jobs?location=UAE"
+      },
+      {
+        "label": "Procurar especialistas independentes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantagens para a mudança",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "it": {
+    "slug": "uae-work-visa-jobs",
+    "title": "Lavorare negli Emirati: verifica offerta e documenti",
+    "countryLabel": "Emirati Arabi Uniti",
+    "iso2": "ae",
+    "flagEmoji": "🇦🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://u.ae/en/information-and-services/jobs",
+    "excerpt": "Conferma datore, contratto, permesso di lavoro e residenza. Confronta il pacchetto completo e pianifica separatamente per chi si trasferisce con te.",
+    "metaDescription": "Conferma datore, contratto, permesso di lavoro e residenza. Confronta il pacchetto completo e pianifica separatamente per chi si trasferisce con te.",
+    "openingHook": "Conferma datore, contratto, permesso di lavoro e residenza. Confronta il pacchetto completo e pianifica separatamente per chi si trasferisce con te.",
+    "quickFacts": [
+      {
+        "label": "Inizia qui",
+        "value": "Verifica il lavoro e il tuo diritto a lavorare"
+      },
+      {
+        "label": "Aiuto del datore di lavoro",
+        "value": "Fai confermare per iscritto cosa è incluso"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Verifica l’offerta",
+        "paragraphs": [
+          "Verifica l’offerta tramite il canale ufficiale competente. Conferma se il ruolo dipende dal MoHRE o da una zona franca. Confronta contratto finale e offerta prima di firmare."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+        ]
+      },
+      {
+        "heading": "Verifica il permesso prima di iniziare",
+        "paragraphs": [
+          "Un visto turistico o di visita non permette di lavorare. Chiedi conferma di permesso, residenza e data legale d’inizio prima di cominciare."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+        ]
+      },
+      {
+        "heading": "Distingui i costi a carico del datore",
+        "paragraphs": [
+          "Le indicazioni ufficiali attribuiscono al datore i costi di reclutamento e delle pratiche di soggiorno lavorativo. Verifica richieste di pagarli con l’autorità competente prima di inviare denaro."
+        ],
+        "sources": [
+          "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+        ]
+      },
+      {
+        "heading": "Valuta separatamente le opzioni senza sponsor",
+        "paragraphs": [
+          "Green Residence ha categorie e prove proprie. Non presumere che il soggiorno permetta qualsiasi lavoro; conferma il permesso richiesto per impiego o attività autonoma."
+        ],
+        "sources": [
+          "https://icp.gov.ae/en/services/uae-green-residency/",
+          "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+        ]
+      },
+      {
+        "heading": "Pianifica residenza familiare e copertura sanitaria",
+        "paragraphs": [
+          "Verifica residenza e assicurazione di ogni familiare. Gli obblighi variano per emirato e situazione. Conferma chi è coperto, da quando e chi paga."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+          "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+        ]
+      },
+      {
+        "heading": "Confronta il pacchetto completo",
+        "paragraphs": [
+          "Distingui paga base da alloggio, voli, assicurazione e scuola. Verifica scadenze d’affitto, deposito e trasporti. Chiedi aiuti, prova e preavviso per iscritto prima di accettare."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Cerca lavoro: Emirati Arabi Uniti",
+        "href": "/jobs?location=UAE"
+      },
+      {
+        "label": "Trova specialisti indipendenti",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantaggi per il trasferimento",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "nl": {
+    "slug": "uae-work-visa-jobs",
+    "title": "Werken in de VAE: controleer aanbod en documenten",
+    "countryLabel": "Verenigde Arabische Emiraten",
+    "iso2": "ae",
+    "flagEmoji": "🇦🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://u.ae/en/information-and-services/jobs",
+    "excerpt": "Bevestig werkgever, contract, werkrecht en verblijfsstappen. Vergelijk het hele pakket en plan apart voor mensen die meeverhuizen.",
+    "metaDescription": "Bevestig werkgever, contract, werkrecht en verblijfsstappen. Vergelijk het hele pakket en plan apart voor mensen die meeverhuizen.",
+    "openingHook": "Bevestig werkgever, contract, werkrecht en verblijfsstappen. Vergelijk het hele pakket en plan apart voor mensen die meeverhuizen.",
+    "quickFacts": [
+      {
+        "label": "Begin hier",
+        "value": "Controleer de baan en je recht om te werken"
+      },
+      {
+        "label": "Hulp van de werkgever",
+        "value": "Laat schriftelijk bevestigen wat is inbegrepen"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Controleer het aanbod",
+        "paragraphs": [
+          "Controleer het aanbod via de bevoegde officiële instantie. Bevestig of MoHRE of een vrijzoneautoriteit de baan behandelt. Vergelijk contract en aanbod vóór ondertekening."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+        ]
+      },
+      {
+        "heading": "Controleer werkrecht vóór je begint",
+        "paragraphs": [
+          "Een bezoek- of toeristenvisum geeft geen werkrecht. Laat de werkgever werkvergunning, verblijfsproces en toegestane startdatum bevestigen vóór je begint."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+        ]
+      },
+      {
+        "heading": "Weet welke kosten voor de werkgever zijn",
+        "paragraphs": [
+          "Officiële werknemersinformatie legt werving en verwerking van arbeidsverblijf bij de werkgever. Betwist verzoeken om zelf te betalen en controleer ze bij de bevoegde instantie vóór je geld stuurt."
+        ],
+        "sources": [
+          "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+        ]
+      },
+      {
+        "heading": "Bekijk opties zonder werkgeverssponsor apart",
+        "paragraphs": [
+          "Green Residence kent eigen categorieën en bewijseisen. Ga er niet van uit dat verblijf elke vorm van werk toestaat; bevestig het werkrecht voor je baan of freelancewerk."
+        ],
+        "sources": [
+          "https://icp.gov.ae/en/services/uae-green-residency/",
+          "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+        ]
+      },
+      {
+        "heading": "Plan gezinsverblijf en zorgdekking",
+        "paragraphs": [
+          "Controleer verblijf en verzekering voor ieder gezinslid. Verplichtingen verschillen per emiraat en situatie. Bevestig wie gedekt is, vanaf wanneer en wie betaalt."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+          "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+        ]
+      },
+      {
+        "heading": "Vergelijk het hele pakket",
+        "paragraphs": [
+          "Scheid basisloon van wonen, vluchten, verzekering en schooltoelagen. Controleer huurtermijnen, borg en woon-werkkosten. Leg steun, proeftijd en opzegtermijn vast vóór je toezegt."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Werk zoeken: Verenigde Arabische Emiraten",
+        "href": "/jobs?location=UAE"
+      },
+      {
+        "label": "Onafhankelijke specialisten zoeken",
+        "href": "/specialists"
+      },
+      {
+        "label": "Voordelen voor je verhuizing",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pl": {
+    "slug": "uae-work-visa-jobs",
+    "title": "Praca w ZEA: sprawdź ofertę i dokumenty",
+    "countryLabel": "Zjednoczone Emiraty Arabskie",
+    "iso2": "ae",
+    "flagEmoji": "🇦🇪",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://u.ae/en/information-and-services/jobs",
+    "excerpt": "Potwierdź pracodawcę, umowę, prawo do pracy i pobyt. Porównaj cały pakiet i osobno zaplanuj potrzeby osób jadących z Tobą.",
+    "metaDescription": "Potwierdź pracodawcę, umowę, prawo do pracy i pobyt. Porównaj cały pakiet i osobno zaplanuj potrzeby osób jadących z Tobą.",
+    "openingHook": "Potwierdź pracodawcę, umowę, prawo do pracy i pobyt. Porównaj cały pakiet i osobno zaplanuj potrzeby osób jadących z Tobą.",
+    "quickFacts": [
+      {
+        "label": "Zacznij tutaj",
+        "value": "Sprawdź ofertę i swoje prawo do pracy"
+      },
+      {
+        "label": "Pomoc pracodawcy",
+        "value": "Uzyskaj pisemne potwierdzenie zakresu pomocy"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Zweryfikuj ofertę",
+        "paragraphs": [
+          "Zweryfikuj ofertę przez właściwy kanał urzędowy. Ustal, czy stanowisko podlega MoHRE czy władzom strefy wolnocłowej. Porównaj końcową umowę z ofertą przed podpisaniem."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+        ]
+      },
+      {
+        "heading": "Sprawdź prawo do pracy przed rozpoczęciem",
+        "paragraphs": [
+          "Wiza turystyczna lub odwiedzinowa nie pozwala pracować. Poproś pracodawcę o potwierdzenie zezwolenia, procesu pobytu i legalnej daty rozpoczęcia."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+        ]
+      },
+      {
+        "heading": "Ustal koszty należące do pracodawcy",
+        "paragraphs": [
+          "Oficjalne wytyczne obciążają pracodawcę kosztami rekrutacji i obsługi pobytu pracowniczego. Zakwestionuj żądanie zapłaty tych kosztów i sprawdź je we właściwym urzędzie przed wysłaniem pieniędzy."
+        ],
+        "sources": [
+          "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+        ]
+      },
+      {
+        "heading": "Osobno sprawdź opcje bez sponsora",
+        "paragraphs": [
+          "Green Residence ma osobne kategorie i wymagane dowody. Nie zakładaj, że pobyt pozwala na każdą pracę; potwierdź wymagane uprawnienie do zatrudnienia lub działalności niezależnej."
+        ],
+        "sources": [
+          "https://icp.gov.ae/en/services/uae-green-residency/",
+          "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+        ]
+      },
+      {
+        "heading": "Zaplanuj pobyt rodziny i ochronę zdrowotną",
+        "paragraphs": [
+          "Sprawdź pobyt i ubezpieczenie każdej osoby z rodziny. Obowiązki różnią się według emiratu i sytuacji. Potwierdź zakres, datę rozpoczęcia ochrony i płatnika."
+        ],
+        "sources": [
+          "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+          "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+        ]
+      },
+      {
+        "heading": "Porównaj cały pakiet",
+        "paragraphs": [
+          "Oddziel płacę podstawową od mieszkania, lotów, ubezpieczenia i dodatków szkolnych. Sprawdź terminy czynszu, kaucję i dojazdy. Uzyskaj wsparcie, próbę i wypowiedzenie na piśmie przed przyjęciem."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Szukaj pracy: Zjednoczone Emiraty Arabskie",
+        "href": "/jobs?location=UAE"
+      },
+      {
+        "label": "Znajdź niezależnych specjalistów",
+        "href": "/specialists"
+      },
+      {
+        "label": "Oferty na czas przeprowadzki",
+        "href": "/relocation-perks"
+      }
+    ]
+  }
+}

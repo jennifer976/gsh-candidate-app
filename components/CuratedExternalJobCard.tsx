@@ -1,10 +1,15 @@
+import { useAppCopy } from "@/lib/i18n";
+import {
+  jobChipLabel,
+  jobCountryLabel,
+  jobAgeLabel,
+} from "@/lib/job-presentation";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { curatedListingPrimaryBadge } from "@/lib/curated-listing-labels";
 import {
   externalListingChips,
-  formatExternalListingAge,
   getExternalListingLocationLabel,
   getExternalListingSummaryPreview,
 } from "@/lib/job-display";
@@ -15,6 +20,8 @@ import type { ExternalJobListingPublic } from "@/types/models";
 const CHIP_CAP = 4;
 
 function ChipWrap({ chips }: { chips: string[] }) {
+  const { locale } = useAppCopy();
+
   if (chips.length === 0) return null;
   return (
     <View style={styles.chipWrap}>
@@ -23,7 +30,7 @@ function ChipWrap({ chips }: { chips: string[] }) {
         return (
           <View key={c} style={[styles.listChip, pal.wrap]}>
             <Text style={[styles.listChipText, pal.text]} numberOfLines={1}>
-              {c}
+              {jobChipLabel(c, locale)}
             </Text>
           </View>
         );
@@ -33,36 +40,98 @@ function ChipWrap({ chips }: { chips: string[] }) {
 }
 
 /** Curated / agency listing — richer preview before opening external detail. */
-export function CuratedExternalJobCard({ job, onPress }: { job: ExternalJobListingPublic; onPress: () => void }) {
+export function CuratedExternalJobCard({
+  job,
+  onPress,
+}: {
+  job: ExternalJobListingPublic;
+  onPress: () => void;
+}) {
+  const { t, locale } = useAppCopy();
+
   const chips = externalListingChips(job, CHIP_CAP);
-  const locationLabel = getExternalListingLocationLabel(job);
+  const rawLocation = getExternalListingLocationLabel(job);
+  const locationLabel =
+    rawLocation === "See listing for location"
+      ? t("jobLocationHint")
+      : rawLocation === "Remote / hybrid — see listing"
+        ? t("jobRemoteHint")
+        : jobCountryLabel(rawLocation, locale);
   const summaryPreview = getExternalListingSummaryPreview(job);
   const primaryBadge = curatedListingPrimaryBadge(job);
   const isAgency = primaryBadge === "Agency";
-  const timeCaption = formatExternalListingAge(job.externalPostedAt ?? job.createdAt);
-  const companyLine = [job.companyName || "Employer", locationLabel].filter(Boolean).join(" · ");
+  const isConnected =
+    job.sourceRelationship === "employer_connected" &&
+    job.employerPermissionStatus === "approved";
+  const timeCaption = jobAgeLabel(
+    job.externalPostedAt ?? job.createdAt,
+    locale,
+  );
+  const companyLine = [job.companyName || t("screenEmployer"), locationLabel]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
-    <View style={[styles.card, feedCardStyle(), summaryPreview ? styles.cardWithSummary : null]}>
-      <View style={[styles.cardAccentStrip, isAgency ? styles.cardAccentAgency : null]} />
-      <Pressable onPress={onPress} style={styles.cardMainHit} accessibilityRole="button">
-        <CompanyLogo logoUrl="" companyName={job.companyName || "Employer"} size={48} radius={12} />
+    <View
+      style={[
+        styles.card,
+        feedCardStyle(),
+        summaryPreview ? styles.cardWithSummary : null,
+      ]}
+    >
+      <Pressable
+        onPress={onPress}
+        style={styles.cardMainHit}
+        accessibilityRole="button"
+      >
+        <CompanyLogo
+          logoUrl=""
+          companyName={job.companyName || t("screenEmployer")}
+          size={48}
+          radius={12}
+        />
         <View style={styles.cardMid}>
           <View style={styles.topMetaRow}>
             <View style={styles.badgeRow}>
-              <View style={[styles.kindBadge, isAgency ? styles.kindBadgeAgency : styles.kindBadgeCurated]}>
-                <Text style={[styles.kindBadgeText, isAgency ? styles.kindBadgeTextAgency : styles.kindBadgeTextCurated]}>
-                  {isAgency ? "Agency" : "Curated"}
+              <View
+                style={[
+                  styles.kindBadge,
+                  isConnected
+                    ? styles.kindBadgeConnected
+                    : isAgency
+                      ? styles.kindBadgeAgency
+                      : styles.kindBadgeCurated,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.kindBadgeText,
+                    isConnected
+                      ? styles.kindBadgeTextConnected
+                      : isAgency
+                        ? styles.kindBadgeTextAgency
+                        : styles.kindBadgeTextCurated,
+                  ]}
+                >
+                  {isConnected
+                    ? t("jobsConnectedBadge")
+                    : isAgency
+                      ? t("jobsAgency")
+                      : t("jobsExternalBadge")}
                 </Text>
               </View>
               {job.isFeatured ? (
                 <View style={styles.featuredBadge}>
                   <Ionicons name="star" size={9} color={colors.warningText} />
-                  <Text style={styles.featuredBadgeText}>Featured</Text>
+                  <Text style={styles.featuredBadgeText}>
+                    {t("jobsFeatured")}
+                  </Text>
                 </View>
               ) : null}
             </View>
-            {timeCaption ? <Text style={styles.timeCaption}>{timeCaption}</Text> : null}
+            {timeCaption ? (
+              <Text style={styles.timeCaption}>{timeCaption}</Text>
+            ) : null}
           </View>
           <Text style={styles.cardTitle} numberOfLines={2}>
             {job.title}
@@ -70,11 +139,12 @@ export function CuratedExternalJobCard({ job, onPress }: { job: ExternalJobListi
           <Text style={styles.cardCompanyLine} numberOfLines={2}>
             {companyLine}
           </Text>
-          {typeof job.agencyName === "string" && job.agencyName.trim().length > 0 ? (
+          {typeof job.agencyName === "string" &&
+          job.agencyName.trim().length > 0 ? (
             <Text style={styles.agencyVia} numberOfLines={1}>
               {job.sourceType === "agency_submitted"
-                ? `Submitted by ${job.agencyName.trim()}`
-                : `Via ${job.agencyName.trim()}`}
+                ? t("jobsSubmitted", { name: job.agencyName.trim() })
+                : t("jobsVia", { name: job.agencyName.trim() })}
             </Text>
           ) : null}
           {summaryPreview ? (
@@ -87,9 +157,11 @@ export function CuratedExternalJobCard({ job, onPress }: { job: ExternalJobListi
       </Pressable>
       <Pressable onPress={onPress} accessibilityRole="button">
         <View style={styles.cardFooter}>
-          <Text style={styles.footerHint}>Apply on employer site</Text>
+          <Text style={styles.footerHint}>
+            {t(isConnected ? "jobsApplyEmployer" : "jobsApplySource")}
+          </Text>
           <View style={styles.footerCtaRow}>
-            <Text style={styles.cardCta}>Details & apply</Text>
+            <Text style={styles.cardCta}>{t("jobsDetails")}</Text>
             <Ionicons name="open-outline" size={18} color={colors.secondary} />
           </View>
         </View>
@@ -157,8 +229,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purpleMuted,
     borderColor: colors.purpleBorder,
   },
-  kindBadgeText: { fontSize: 10, fontFamily: fontFamily.semiBold, letterSpacing: 0.05 },
+  kindBadgeText: {
+    fontSize: 10,
+    fontFamily: fontFamily.semiBold,
+    letterSpacing: 0.05,
+  },
   kindBadgeTextCurated: { color: colors.purpleText },
+  kindBadgeConnected: { backgroundColor: "#ecfeff", borderColor: "#67e8f9" },
+  kindBadgeTextConnected: { color: colors.brandDeep },
   kindBadgeAgency: {
     backgroundColor: colors.surfaceMuted,
     borderColor: colors.border,
@@ -175,7 +253,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(245,158,11,0.35)",
   },
-  featuredBadgeText: { fontSize: 10, fontFamily: fontFamily.semiBold, color: colors.warningText },
+  featuredBadgeText: {
+    fontSize: 10,
+    fontFamily: fontFamily.semiBold,
+    color: colors.warningText,
+  },
   cardCompanyLine: {
     marginTop: 5,
     fontSize: 13,
@@ -197,7 +279,11 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   chipWrap: { marginTop: 10, flexDirection: "row", flexWrap: "wrap", gap: 5 },
-  listChip: { paddingVertical: 4, paddingHorizontal: 9, borderRadius: radii.pill },
+  listChip: {
+    paddingVertical: 4,
+    paddingHorizontal: 9,
+    borderRadius: radii.pill,
+  },
   listChipText: { fontSize: 11, fontFamily: fontFamily.semiBold },
   cardFooter: {
     marginTop: 12,
@@ -218,5 +304,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 4,
   },
-  cardCta: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.secondary },
+  cardCta: {
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: colors.secondary,
+  },
 });

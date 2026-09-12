@@ -1,13 +1,13 @@
 import * as Haptics from "expo-haptics";
-import { LinearGradient } from "expo-linear-gradient";
-import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, ViewStyle } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
-import { colors, fontFamily, gradient } from "@/lib/theme";
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withSpring } from "react-native-reanimated";
+import { colors, fontFamily, radii } from "@/lib/theme";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Props = {
   title: string;
+  tone?: "navy" | "cyan";
   onPress: () => void;
   disabled?: boolean;
   loading?: boolean;
@@ -22,10 +22,11 @@ function lightTap() {
   void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 }
 
-/** Primary CTA — teal → purple gradient matching web auth. */
-export function GshGradientPrimaryButton({ title, onPress, disabled, loading, containerStyle }: Props) {
+/** Primary CTA. The legacy name remains to avoid changing caller contracts. */
+export function GshGradientPrimaryButton({ title, onPress, disabled, loading, containerStyle, tone = "navy" }: Props) {
   const dim = disabled || loading;
   const scale = useSharedValue(1);
+  const reduceMotion = useReducedMotion();
 
   const animStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -33,11 +34,14 @@ export function GshGradientPrimaryButton({ title, onPress, disabled, loading, co
 
   return (
     <AnimatedPressable
+      accessibilityRole="button"
+      accessibilityLabel={title}
+      accessibilityState={{ disabled: Boolean(dim), busy: Boolean(loading) }}
       onPress={onPress}
       disabled={dim}
       onPressIn={() => {
-        if (dim) return;
-        scale.value = withSpring(0.97, spring);
+        if (dim || reduceMotion) return;
+        scale.value = withSpring(0.99, spring);
         lightTap();
       }}
       onPressOut={() => {
@@ -45,21 +49,23 @@ export function GshGradientPrimaryButton({ title, onPress, disabled, loading, co
       }}
       style={[styles.outer, containerStyle, animStyle, dim && styles.dimmed]}
     >
-      <LinearGradient colors={[...gradient.authCTA]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.grad}>
-        {loading ? <ActivityIndicator color={colors.white} /> : <Text style={styles.text}>{title}</Text>}
-      </LinearGradient>
+      <View style={[styles.fill, tone === "cyan" && {backgroundColor: colors.accent}]}>
+        {loading ? <ActivityIndicator color={tone === "cyan" ? colors.navy : colors.white} /> : <Text style={[styles.text, tone === "cyan" && {color: colors.navy}]}>{title}</Text>}
+      </View>
     </AnimatedPressable>
   );
 }
 
 const styles = StyleSheet.create({
-  outer: { borderRadius: 12, overflow: "hidden" },
+  outer: { borderRadius: radii.pill, overflow: "hidden" },
   dimmed: { opacity: 0.72 },
-  grad: {
-    paddingVertical: 16,
+  fill: {
+    minHeight: 52,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
     alignItems: "center",
     justifyContent: "center",
-    minHeight: 52,
+    backgroundColor: colors.navy,
   },
   text: { color: colors.white, fontSize: 17, fontFamily: fontFamily.semiBold },
 });

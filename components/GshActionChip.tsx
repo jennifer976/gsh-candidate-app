@@ -20,13 +20,13 @@ export function GshActionChip({
 
   return (
     <Pressable
-      style={({ pressed }) => [styles.chip, feedCardStyle(), pressed && styles.pressed]}
+      style={({ pressed }) => [feedCardStyle(), styles.chip, pressed && styles.pressed]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={showBadge ? `${label}, ${count}` : label}
     >
       <Ionicons name={icon} size={18} color={colors.brandDeep} />
-      <Text style={styles.label} numberOfLines={1}>
+      <Text style={styles.label} numberOfLines={2}>
         {label}
       </Text>
       {showBadge ? (
@@ -41,23 +41,30 @@ export function GshActionChip({
 const styles = StyleSheet.create({
   chip: {
     flex: 1,
+    minHeight: 48,
     minWidth: 0,
-    flexDirection: "row",
+    position: "relative",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     gap: 6,
     paddingVertical: 12,
-    paddingHorizontal: 10,
+    paddingHorizontal: 6,
     borderRadius: radii.lg,
+    borderWidth: 0,
+    backgroundColor: colors.surfaceMuted,
   },
   pressed: { opacity: 0.9, transform: [{ scale: 0.98 }] },
   label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.navy },
   badge: {
+    position: "absolute",
+    top: 6,
+    right: 6,
     minWidth: 20,
     height: 20,
     paddingHorizontal: 6,
     borderRadius: 10,
-    backgroundColor: colors.brand,
+    backgroundColor: colors.accent,
     alignItems: "center",
     justifyContent: "center",
   },

@@ -1,0 +1,97 @@
+{
+  "countryInputs": [
+    ["United Kingdom", "GB"],
+    ["uk", "GB"],
+    ["United States of America", "US"],
+    ["AE", "AE"],
+    ["South Korea", "KR"]
+  ],
+  "compatibilityBatchMaximum": 20,
+  "candidateRoutes": [
+    "mobility-profile.tsx",
+    "relocation-help.tsx",
+    "relocation-help/[id].tsx",
+    "agency-introductions.tsx",
+    "agency-introductions/[id].tsx",
+    "profile-extraction-review.tsx"
+  ],
+  "requiredApiPaths": [
+    "/compatibility/jobs/me/batch",
+    "/phase6/relocation-help/requests/mine",
+    "/phase6/relocation-help/requests/",
+    "/phase6/candidate/agency-introductions",
+    "/candidate-extraction/status",
+    "/candidate-extraction/drafts",
+    "/review"
+  ],
+  "extraction": {
+    "contractVersion": "candidate-extraction-2026-08-26.1",
+    "sourceKind": "resume",
+    "draftStatuses": ["completed", "reviewed"],
+    "uiStates": ["processing", "error", "expired", "provider-unavailable"],
+    "analyticsEvents": [
+      "candidate_extraction_review_opened",
+      "candidate_extraction_review_submitted",
+      "candidate_extraction_draft_discarded"
+    ],
+    "allowedFields": [
+      "desiredOccupations",
+      "skills",
+      "yearsOfExperience",
+      "qualifications",
+      "professionalRegistrations",
+      "workAuthorizations",
+      "currentResidenceCountry",
+      "targetCountries",
+      "employmentOptions",
+      "expectedMinSalary",
+      "expectedMaxSalary",
+      "expectedSalaryCurrency",
+      "expectedSalaryPeriod",
+      "workHistory",
+      "currentJobTitle",
+      "currentCompany"
+    ],
+    "suggestions": [
+      { "id": "suggestion-title", "field": "currentJobTitle", "value": "Engineer", "confidence": 0.94, "sourceSnippet": "Senior Engineer" },
+      { "id": "suggestion-skills", "field": "skills", "value": ["TypeScript"], "confidence": 0.88, "sourceSnippet": "TypeScript" }
+    ],
+    "reviewPayload": {
+      "acceptedSuggestionIds": ["suggestion-title"],
+      "rejectedSuggestionIds": ["suggestion-skills"]
+    }
+  },
+  "relocationDetail": {
+    "pathTemplate": "/phase6/relocation-help/requests/:id",
+    "requiredFields": ["_id", "requesterRole", "destinationCountry", "needCategories", "journeyStage", "timing", "contactConsent", "providerSharingConsent", "consentPolicyVersion", "consentCapturedAt", "status", "submittedAt", "createdAt", "updatedAt"],
+    "excludedFields": ["requesterUserId", "contactSnapshot", "retentionReviewAt", "purgeAfter"]
+  },
+  "deepLinks": [
+    ["/relocation-help/requests/507f1f77bcf86cd799439011", "native", "/relocation-help/$1"],
+    ["/candidate/profile/extraction-review", "native", "/profile-extraction-review"],
+    ["/auth/login", "native", "/login"],
+    ["/auth/register/candidate", "native", "/register"],
+    ["/auth/verify-otp", "native", "/verify"],
+    ["/candidate/job-alerts", "native", "/alerts"],
+    ["/candidate/job-matches", "native", "/alerts"],
+    ["/candidate/notifications", "native", "/notification-feed"],
+    ["/candidate/benefits", "native", "/relocation-perks"]
+  ],
+  "schemeAndHttpsDeepLinks": [
+    ["gsh-candidate://alerts", "/alerts", "/alerts"],
+    ["gsh-candidate://candidate/job-matches", "/candidate/job-matches", "/alerts"],
+    ["gsh-candidate://candidate/notifications", "/candidate/notifications", "/notification-feed"],
+    ["gsh-candidate://candidate/benefits", "/candidate/benefits", "/relocation-perks"],
+    ["https://www.globalsponsorhub.com/auth/login?returnTo=%2Falerts", "/auth/login", "/login"],
+    ["https://globalsponsorhub.com/candidate/job-alerts", "/candidate/job-alerts", "/alerts"]
+  ],
+  "matchCompatibility": {
+    "canonical": { "id": "match-new", "jobId": "job-new", "source": "saved_search", "read": false, "matchReasons": ["Matches location"] },
+    "legacy": { "_id": "match-old", "jobId": { "_id": "job-old", "title": "Legacy role" }, "source": "followed_employer", "read": true }
+  },
+  "benefitOfferRejections": [
+    { "case": "expired", "status": "active", "validUntil": "2020-01-01T00:00:00.000Z" },
+    { "case": "withdrawn", "status": "withdrawn", "validUntil": "2030-01-01T00:00:00.000Z" },
+    { "case": "unapproved-host", "status": "active", "destinationUrl": "https://unapproved.example/offer", "allowedDestinationHosts": ["approved.example"] }
+  ]
+}

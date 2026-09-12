@@ -1,3 +1,4 @@
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -24,6 +25,8 @@ import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { PartnerListItem } from "@/types/models";
 
 export default function PartnersScreen() {
+  const ac = useAccountCopy();
+
   const router = useRouter();
   const [q, setQ] = useState("");
   const [debounced, setDebounced] = useState("");
@@ -49,14 +52,21 @@ export default function PartnersScreen() {
     <View style={styles.headWrap}>
       <GshDarkFeedHeading
         pageLead
-        title="Partner directory"
-        subtitle="Visa, relocation, and legal specialists"
+        title={ac("Specialist directory")}
+        subtitle={ac(
+          "Find independent help with visas, relocation and legal matters.",
+        )}
       />
       <View style={[cardSurfaceStyle(false), styles.searchInner]}>
-        <Ionicons name="search" size={18} color={colors.placeholder} style={styles.searchIcon} />
+        <Ionicons
+          name="search"
+          size={18}
+          color={colors.placeholder}
+          style={styles.searchIcon}
+        />
         <TextInput
           style={styles.search}
-          placeholder="Search partners, categories…"
+          placeholder={ac("Search specialists and services")}
           placeholderTextColor={colors.placeholder}
           value={q}
           onChangeText={setQ}
@@ -79,25 +89,41 @@ export default function PartnersScreen() {
           <>
             {header}
             <View style={styles.errorWrap}>
-              <Ionicons name="cloud-offline-outline" size={44} color={colors.textMuted} />
-              <Text style={styles.errTitle}>Partners directory could not be loaded</Text>
-              <Text style={styles.errSub}>Check your connection and pull down or retry.</Text>
+              <Ionicons
+                name="cloud-offline-outline"
+                size={44}
+                color={colors.textMuted}
+              />
+              <Text style={styles.errTitle}>
+                {ac("The specialist directory could not be loaded.")}
+              </Text>
+              <Text style={styles.errSub}>{ac("Please try again.")}</Text>
               <Pressable
                 style={styles.retryBtn}
                 onPress={() => void query.refetch()}
                 accessibilityRole="button"
-                accessibilityLabel="Retry loading partners"
+                accessibilityLabel={ac("Try again")}
               >
-                <Text style={styles.retryBtnText}>Try again</Text>
+                <Text style={styles.retryBtnText}>{ac("Try again")}</Text>
               </Pressable>
             </View>
           </>
         ) : (
           <FlatList
             data={rows}
-            keyExtractor={(item: PartnerListItem) => String(item._id ?? item.userId ?? item.businessName)}
-            refreshControl={<RefreshControl refreshing={query.isFetching} onRefresh={() => query.refetch()} />}
-            contentContainerStyle={[styles.listPad, rows.length === 0 && styles.listPadEmpty]}
+            keyExtractor={(item: PartnerListItem) =>
+              String(item._id ?? item.userId ?? item.businessName)
+            }
+            refreshControl={
+              <RefreshControl
+                refreshing={query.isFetching}
+                onRefresh={() => query.refetch()}
+              />
+            }
+            contentContainerStyle={[
+              styles.listPad,
+              rows.length === 0 && styles.listPadEmpty,
+            ]}
             ListHeaderComponent={header}
             renderItem={({ item }) => (
               <Pressable
@@ -105,7 +131,7 @@ export default function PartnersScreen() {
                 onPress={() => item._id && router.push(`/partner/${item._id}`)}
                 disabled={!item._id}
                 accessibilityRole="button"
-                accessibilityLabel={`View ${item.businessName}`}
+                accessibilityLabel={`${ac("View specialist profile")}: ${item.businessName}`}
               >
                 <View style={styles.cardTop}>
                   <CompanyLogo
@@ -127,7 +153,9 @@ export default function PartnersScreen() {
                 {item.companyWebsite ? (
                   <Pressable
                     onPress={() => {
-                      const raw = item.companyWebsite.startsWith("http") ? item.companyWebsite : `https://${item.companyWebsite}`;
+                      const raw = item.companyWebsite.startsWith("http")
+                        ? item.companyWebsite
+                        : `https://${item.companyWebsite}`;
                       try {
                         openExternalUrlInApp(raw);
                       } catch {
@@ -136,15 +164,21 @@ export default function PartnersScreen() {
                     }}
                     accessibilityRole="link"
                   >
-                    <Text style={styles.link}>Company site</Text>
+                    <Text style={styles.link}>{ac("Company website")}</Text>
                   </Pressable>
                 ) : null}
-                {item._id ? <Text style={styles.link}>View partner profile</Text> : null}
+                {item._id ? (
+                  <Text style={styles.link}>
+                    {ac("View specialist profile")}
+                  </Text>
+                ) : null}
               </Pressable>
             )}
             ListEmptyComponent={
               <View style={[styles.emptyCard, cardSurfaceStyle(false)]}>
-                <Text style={styles.empty}>No partners match your search.</Text>
+                <Text style={styles.empty}>
+                  {ac("No specialists match your search.")}
+                </Text>
               </View>
             }
           />
@@ -186,24 +220,30 @@ const styles = StyleSheet.create({
   errTitle: {
     fontFamily: fontFamily.semiBold,
     fontSize: 17,
-    color: colors.white,
+    color: colors.navy,
     textAlign: "center",
   },
   errSub: {
     fontFamily: fontFamily.regular,
     fontSize: 14,
-    color: "rgba(255,255,255,0.55)",
+    color: colors.textMuted,
     textAlign: "center",
     lineHeight: 20,
   },
   retryBtn: {
+    minHeight: 48,
+    justifyContent: "center",
     marginTop: 8,
     paddingVertical: 12,
     paddingHorizontal: 22,
     borderRadius: radii.md,
     backgroundColor: colors.brand,
   },
-  retryBtnText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.white },
+  retryBtnText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    color: colors.white,
+  },
   listPad: { paddingHorizontal: 16, paddingBottom: 32 },
   listPadEmpty: { flexGrow: 1 },
   card: {
@@ -212,12 +252,33 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     borderRadius: radii.lg,
   },
-  cardTop: { flexDirection: "row", alignItems: "flex-start", gap: 12, marginBottom: 4 },
+  cardTop: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    marginBottom: 4,
+  },
   cardTopText: { flex: 1, minWidth: 0 },
   title: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy },
-  cat: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.accent },
-  desc: { marginTop: 8, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 20 },
-  link: { marginTop: 12, fontSize: 15, fontFamily: fontFamily.bold, color: colors.brand },
+  cat: {
+    marginTop: 4,
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+  },
+  desc: {
+    marginTop: 8,
+    fontSize: 14,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
+    lineHeight: 20,
+  },
+  link: {
+    marginTop: 12,
+    fontSize: 15,
+    fontFamily: fontFamily.bold,
+    color: colors.brand,
+  },
   emptyCard: {
     paddingVertical: 28,
     paddingHorizontal: 16,

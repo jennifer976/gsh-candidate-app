@@ -12,7 +12,7 @@ type Props = {
   inFeedGroup?: boolean;
 };
 
-/** Section heading on navy feed canvas — matches Jobs tab list headings. */
+/** Shared section heading. The legacy name remains for route compatibility. */
 export function GshDarkFeedHeading({
   title,
   subtitle,
@@ -22,13 +22,24 @@ export function GshDarkFeedHeading({
   inFeedGroup,
 }: Props) {
   return (
-    <View style={[styles.row, pageLead && styles.rowPageLead, inFeedGroup && styles.rowInFeedGroup]}>
+    <View
+      style={[
+        styles.row,
+        pageLead && styles.rowPageLead,
+        inFeedGroup && styles.rowInFeedGroup,
+      ]}
+    >
       <View style={styles.col}>
         <Text style={styles.title}>{title}</Text>
         {subtitle ? <Text style={styles.sub}>{subtitle}</Text> : null}
       </View>
       {actionLabel && onAction ? (
-        <Pressable onPress={onAction} hitSlop={10} accessibilityRole="button">
+        <Pressable
+          style={styles.actionButton}
+          onPress={onAction}
+          hitSlop={10}
+          accessibilityRole="button"
+        >
           <Text style={styles.action}>{actionLabel}</Text>
         </Pressable>
       ) : null}
@@ -56,16 +67,23 @@ const styles = StyleSheet.create({
   col: { flex: 1, minWidth: 0 },
   title: {
     fontSize: 19,
-    fontFamily: fontFamily.extraBold,
-    color: colors.white,
+    fontFamily: fontFamily.headingStrong,
+    color: colors.navy,
     letterSpacing: -0.4,
   },
   sub: {
     marginTop: 4,
     fontSize: 12,
     fontFamily: fontFamily.regular,
-    color: "rgba(255,255,255,0.5)",
+    color: colors.textMuted,
     lineHeight: 17,
   },
-  action: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.teal },
+  actionButton: { maxWidth: "40%", flexShrink: 1, minHeight: 44 },
+  action: {
+    minHeight: 44,
+    textAlignVertical: "center",
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+  },
 });

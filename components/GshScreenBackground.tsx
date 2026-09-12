@@ -20,5 +20,5 @@ export function GshScreenBackground({ children, style }: Props) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.surfaceLight },
+  root: { flex: 1, backgroundColor: colors.white },
 });

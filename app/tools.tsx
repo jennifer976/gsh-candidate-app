@@ -1,72 +1,52 @@
+import { useAppCopy } from "@/lib/i18n";
+import toolkitCopy from "@/data/candidateToolkitCopy.json";
 import { Ionicons } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
-import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { GshLinkRow, GshScreenIntro, GshSectionTitle } from "@/components/gsh-ui-kit";
+import {
+  GshLinkRow,
+  GshScreenIntro,
+  GshSectionTitle,
+} from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { fetchCandidateDashboard } from "@/lib/api-client";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
-import { cardSurfaceStyle, colors, fontFamily, gradient, radii } from "@/lib/theme";
+import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
-const TIPS = [
-  "Lead with measurable outcomes tied to impact.",
-  "Mirror sponsor-friendly keywords from target roles — naturally, not stuffed.",
-  "Add mobility context (visa needs, notice period, time zones) early.",
-  "Export your CV as PDF with selectable text.",
-  "Keep LinkedIn dates aligned with your CV.",
-];
 
 export default function ToolsScreen() {
   const router = useRouter();
-  const dash = useQuery({ queryKey: ["analytics", "candidate-dashboard"], queryFn: fetchCandidateDashboard });
-  const pct = dash.data?.profile.completionPercentage ?? null;
+  const { t, locale } = useAppCopy();
+  const copy = toolkitCopy[locale];
+  const TIPS = [copy.tip1, copy.tip2, copy.tip3, copy.tip4, copy.tip5];
 
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.pad}
+          showsVerticalScrollIndicator={false}
+        >
           <GshScreenIntro
-            eyebrow="Mobility & CV"
-            title="Career toolkit"
-            subtitle="Visa wizard and ATS match live here. Guides, directory, and reading are under Tools & resources."
+            eyebrow={copy.career.toLocaleLowerCase(locale)}
+            title={copy.title}
+            subtitle={copy.intro}
             style={{ marginBottom: 12 }}
           />
 
-          <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+          <View style={styles.accentBar} />
 
-          {pct != null ? (
-            <View style={[styles.scoreCard, cardSurfaceStyle(true)]}>
-              <Text style={styles.scoreLabel}>Profile strength</Text>
-              <Text style={styles.scoreVal}>{pct}%</Text>
-              <Pressable onPress={() => router.push("/(tabs)/profile")}>
-                <Text style={styles.link}>Update profile →</Text>
-              </Pressable>
-            </View>
-          ) : null}
-
-          <GshSectionTitle title="Visa & mobility" topSpacing={pct != null ? "md" : "sm"} />
-          <Pressable
-            style={styles.primaryBtnOuter}
-            onPress={() => router.push("/visa-wizard")}
-            accessibilityRole="button"
-            accessibilityLabel="Open visa wizard"
-          >
-            <LinearGradient colors={[...gradient.authCTA]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.primaryBtn}>
-              <View style={styles.primaryBtnRow}>
-                <Ionicons name="sparkles" size={22} color={colors.white} />
-                <View style={styles.primaryBtnTextCol}>
-                  <Text style={styles.primaryBtnText}>Visa wizard</Text>
-                  <Text style={styles.primarySub}>Interactive questionnaire in the app — sponsorship routes & next steps</Text>
-                </View>
-              </View>
-            </LinearGradient>
+          <Pressable onPress={() => router.push("/(tabs)/profile")} accessibilityRole="button" style={styles.scoreCard}>
+            <Text style={styles.scoreLabel}>{copy.profileHelp}</Text>
+            <Text style={styles.link}>{copy.openProfile}</Text>
           </Pressable>
 
-          <GshSectionTitle title="CV & applications" hint="Stand out to employers and ATS parsers." />
+          <GshSectionTitle
+            title={copy.cvApplications}
+            hint={copy.cvHelp}
+          />
 
-          <GshSectionTitle title="Quick tips" topSpacing="sm" />
+          <GshSectionTitle title={copy.quickTips} topSpacing="sm" />
           {TIPS.map((tip) => (
             <View key={tip} style={styles.tip}>
               <Text style={styles.bullet}>•</Text>
@@ -74,37 +54,40 @@ export default function ToolsScreen() {
             </View>
           ))}
 
-          <Pressable style={[styles.primaryBtnOuter, styles.atsBtn]} onPress={() => router.push("/ats-assistant")}>
-            <LinearGradient colors={[...gradient.authCTA]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.primaryBtn}>
-              <Text style={styles.primaryBtnText}>ATS match assistant</Text>
-              <Text style={styles.primarySub}>Paste your CV text & a job description</Text>
-            </LinearGradient>
+          <Pressable
+            style={[styles.primaryBtnOuter, styles.primaryBtn, styles.atsBtn]}
+            onPress={() => router.push("/ats-assistant")}
+          >
+            <Text style={styles.primaryBtnText}>{copy.ats}</Text>
+            <Text style={styles.primarySub}>
+              {copy.atsHelp}
+            </Text>
           </Pressable>
 
           <GshLinkRow
-            title="Guides hub"
-            subtitle="Country corridors, topics, and checklists"
+            title={copy.guides}
+            subtitle={copy.guidesHelp}
             icon="book-outline"
             accent="teal"
             onPress={() => router.push("/guides")}
           />
           <GshLinkRow
-            title="Company sponsor checker"
-            subtitle="Coming soon — sponsor-register lookup before applying"
+            title={copy.sponsor}
+            subtitle={copy.comingSoon}
             icon="shield-checkmark-outline"
             accent="teal"
             onPress={() => router.push("/visa-checker")}
           />
           <GshLinkRow
-            title="Relocation worksheets"
-            subtitle="Score destinations, budget your move, and prepare questions"
+            title={copy.worksheets}
+            subtitle={copy.worksheetsHelp}
             icon="clipboard-outline"
             accent="ocean"
             onPress={() => router.push("/relocation-worksheets")}
           />
           <GshLinkRow
-            title="Tools & resources"
-            subtitle="Blog, news, FAQs, legal, and more"
+            title={copy.resources}
+            subtitle={copy.resourcesHelp}
             icon="grid-outline"
             accent="purple"
             onPress={() => router.push("/tools-resources")}
@@ -118,7 +101,7 @@ export default function ToolsScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   pad: { ...stackScrollContentStyle, paddingBottom: 40 },
-  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
+  accentBar: { height: 3, backgroundColor: colors.teal, marginBottom: 18 },
   scoreCard: {
     borderRadius: radii.lg,
     padding: 16,
@@ -129,19 +112,56 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.textMuted,
   },
-  scoreVal: { fontSize: 36, fontFamily: fontFamily.extraBold, color: colors.accent, marginTop: 4 },
-  link: { marginTop: 10, color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 15 },
+  scoreVal: {
+    fontSize: 36,
+    fontFamily: fontFamily.extraBold,
+    color: colors.accent,
+    marginTop: 4,
+  },
+  link: {
+    marginTop: 10,
+    color: colors.brand,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+  },
   tip: { flexDirection: "row", gap: 8, marginBottom: 10, paddingRight: 8 },
-  bullet: { fontSize: 16, color: colors.accent, fontFamily: fontFamily.extraBold },
-  tipText: { flex: 1, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 20 },
-  primaryBtnOuter: { marginTop: 0, marginBottom: 4, borderRadius: radii.lg, overflow: "hidden" },
+  bullet: {
+    fontSize: 16,
+    color: colors.accent,
+    fontFamily: fontFamily.extraBold,
+  },
+  tipText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
+    lineHeight: 20,
+  },
+  primaryBtnOuter: {
+    minHeight: 52,
+    marginTop: 0,
+    marginBottom: 4,
+    borderRadius: radii.md,
+    overflow: "hidden",
+  },
   atsBtn: { marginTop: 14 },
   primaryBtn: {
-    borderRadius: radii.lg,
+    borderRadius: radii.md,
     padding: 16,
+    backgroundColor: colors.navy,
   },
   primaryBtnRow: { flexDirection: "row", alignItems: "center", gap: 14 },
   primaryBtnTextCol: { flex: 1 },
-  primaryBtnText: { color: colors.white, fontFamily: fontFamily.extraBold, fontSize: 17 },
-  primarySub: { color: "rgba(255,255,255,0.88)", fontSize: 13, marginTop: 6, fontFamily: fontFamily.regular, lineHeight: 18 },
+  primaryBtnText: {
+    color: colors.white,
+    fontFamily: fontFamily.extraBold,
+    fontSize: 17,
+  },
+  primarySub: {
+    color: "rgba(255,255,255,0.88)",
+    fontSize: 13,
+    marginTop: 6,
+    fontFamily: fontFamily.regular,
+    lineHeight: 18,
+  },
 });

@@ -26,7 +26,7 @@ export function navigateMarketingPath(router: Router, rawPath: string): void {
   }
 
   if (path === "/tools/visa-wizard") {
-    router.push("/visa-wizard");
+    router.push("/resources");
     return;
   }
   if (path === "/tools/visa-checker") {
@@ -46,8 +46,8 @@ export function navigateMarketingPath(router: Router, rawPath: string): void {
     return;
   }
 
-  if (path.startsWith("/jobs") || path.startsWith("/partners")) {
-    navigateGuideLink(router, path);
+  if (path.startsWith("/jobs") || path.startsWith("/partners") || path === "/specialists") {
+    navigateGuideLink(router, rawPath);
     return;
   }
 

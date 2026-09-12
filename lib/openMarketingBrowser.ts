@@ -1,3 +1,6 @@
+import { useAppLanguage } from "@/lib/i18n";
+import { getMarketingSiteUrl } from "@/lib/config";
+import { websiteUrlWithLanguage } from "@/lib/website-language";
 import * as Linking from "expo-linking";
 import { useInAppWebStore } from "@/lib/in-app-web-store";
 
@@ -14,7 +17,7 @@ export function openExternalUrlInApp(rawUrl: string): void {
   if (!/^https?:\/\//i.test(trimmed)) {
     throw new Error("Invalid URL");
   }
-  useInAppWebStore.getState().open(trimmed);
+  useInAppWebStore.getState().open(websiteUrlWithLanguage(trimmed, getMarketingSiteUrl(), useAppLanguage.getState().locale));
 }
 
 /** @deprecated Prefer `openExternalUrlInApp` — name kept for existing imports. */

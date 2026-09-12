@@ -1,3 +1,4 @@
+import { useAccountCopy as useInterfaceCopy } from "@/lib/i18n/useAccountCopy";
 import { useNavigation } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -14,6 +15,8 @@ function isLegalDocId(s: string): s is LegalDocId {
 }
 
 export default function LegalDocumentScreen() {
+ const interfaceCopy = useInterfaceCopy();
+
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
   const navigation = useNavigation();
@@ -35,7 +38,7 @@ export default function LegalDocumentScreen() {
             style={{ marginBottom: 12, paddingHorizontal: 8 }}
           />
           <Pressable onPress={() => router.back()} accessibilityRole="button">
-            <Text style={styles.link}>Go back</Text>
+            <Text style={styles.link}>{interfaceCopy("Go back")}</Text>
           </Pressable>
         </SafeAreaView>
       </GshScreenBackground>

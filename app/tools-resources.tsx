@@ -1,7 +1,8 @@
+import { useAppCopy } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import { useRouter } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshLinkRow, GshSectionTitle } from "@/components/gsh-ui-kit";
 import { GshDarkFeedHeading } from "@/components/GshDarkFeedHeading";
@@ -10,44 +11,44 @@ import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { useRelocationPerksNav } from "@/lib/use-relocation-perks-nav";
 import { fontFamily } from "@/lib/theme";
 
-type RowDef = { title: string; subtitle: string; path?: string; icon: ComponentProps<typeof Ionicons>["name"]; accent: "teal" | "purple" | "ocean" };
+type RowDef = {
+  title: string;
+  subtitle: string;
+  path?: string;
+  icon: ComponentProps<typeof Ionicons>["name"];
+  accent: "teal" | "purple" | "ocean";
+};
 
 /** Primary hub: career tools, guides, blog, legal — one screen for discoverability. */
 export default function ToolsAndResourcesScreen() {
+  const { t } = useAppCopy();
   const router = useRouter();
   const relocationPerksNav = useRelocationPerksNav();
 
   const resourceRows: RowDef[] = [
     {
-      title: "Blog",
-      subtitle: "Editorial articles from the team and partners",
+      title: t("resourcesBlog"),
+      subtitle: t("resourcesBlogHelp"),
       path: "blog",
       icon: "newspaper-outline",
       accent: "ocean",
     },
     {
-      title: "Immigration headlines",
-      subtitle: "RSS from trusted publishers — opens in browser",
+      title: t("resourcesNews"),
+      subtitle: t("resourcesNewsHelp"),
       path: "news",
       icon: "globe-outline",
       accent: "teal",
     },
     {
-      title: "Expert Insights",
-      subtitle: "Expert briefings, deep dives & pinned guides — in-app",
-      path: "expert-insights",
-      icon: "bulb-outline",
-      accent: "teal",
-    },
-    {
-      title: "FAQs",
-      subtitle: "Candidate help topics",
+      title: t("screenFAQs"),
+      subtitle: t("resourcesFaqHelp"),
       path: "faq",
       icon: "help-circle-outline",
       accent: "purple",
     },
     {
-      title: "Contact",
+      title: t("screenContact"),
       subtitle: "support@globalsponsorhub.com",
       path: "contact",
       icon: "mail-outline",
@@ -58,24 +59,27 @@ export default function ToolsAndResourcesScreen() {
   return (
     <GshScreenShell>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.pad}
+          showsVerticalScrollIndicator={false}
+        >
           <GshDarkFeedHeading
             pageLead
-            title="Tools & resources"
-            subtitle="One place for mobility tools, guides, and help — open a tool below when you need it."
+            title={t("resourcesTitle")}
+            subtitle={t("resourcesIntro")}
           />
 
-          <GshSectionTitle title="Mobility & career" topSpacing="sm" onDark />
+          <GshSectionTitle title={t("resourcesCareer")} topSpacing="sm" />
           <GshLinkRow
-            title="Career toolkit"
-            subtitle="Visa wizard, ATS match, CV tips, and profile strength"
+            title={t("resourcesToolkit")}
+            subtitle={t("resourcesToolkitHelp")}
             icon="library-outline"
             accent="purple"
             onPress={() => router.push("/tools")}
           />
           <GshLinkRow
-            title="Partner directory"
-            subtitle="Relocation, legal, and mobility specialists"
+            title={t("resourcesSpecialists")}
+            subtitle={t("resourcesSpecialistsHelp")}
             icon="people-outline"
             accent="purple"
             onPress={() => router.push("/partners")}
@@ -88,61 +92,61 @@ export default function ToolsAndResourcesScreen() {
             onPress={() => router.push("/relocation-perks")}
           />
           <GshLinkRow
-            title="Company directory"
-            subtitle="Search GSH employers (careers pages linked) and sponsor-register records"
+            title={t("resourcesCompanies")}
+            subtitle={t("resourcesCompaniesHelp")}
             icon="shield-checkmark-outline"
             accent="teal"
             onPress={() => router.push("/companies")}
           />
           <GshLinkRow
-            title="Guides hub"
-            subtitle="Country guides and relocation topics"
+            title={t("resourcesGuides")}
+            subtitle={t("resourcesGuidesHelp")}
             icon="map-outline"
             accent="purple"
             onPress={() => router.push("/guides")}
           />
           <GshLinkRow
-            title="Compare countries"
-            subtitle="Shortlist destinations before you commit"
+            title={t("resourcesCompare")}
+            subtitle={t("resourcesCompareHelp")}
             icon="git-compare-outline"
             accent="teal"
             onPress={() => router.push("/compare-countries")}
           />
           <GshLinkRow
-            title="Salary & currency converter"
-            subtitle="Compare headline pay across currencies"
+            title={t("resourcesSalary")}
+            subtitle={t("resourcesSalaryHelp")}
             icon="cash-outline"
             accent="teal"
             onPress={() => router.push("/currency-converter")}
           />
           <GshLinkRow
-            title="Relocation worksheets"
-            subtitle="Score countries, estimate costs, and prepare negotiation questions"
+            title={t("resourcesWorksheets")}
+            subtitle={t("resourcesWorksheetsHelp")}
             icon="clipboard-outline"
             accent="ocean"
             onPress={() => router.push("/relocation-worksheets")}
           />
 
-          <GshSectionTitle title="Jobs" onDark />
+          <GshSectionTitle title={t("jobs")} />
           <GshLinkRow
-            title="Curated roles"
-            subtitle="Agency and partner-curated roles — separate from All jobs"
+            title={t("screenCuratedroles")}
+            subtitle={t("resourcesExternalHelp")}
             icon="briefcase-outline"
             accent="ocean"
             onPress={() => router.push("/curated-listings")}
           />
 
-          <GshSectionTitle title="Reading & help" onDark />
+          <GshSectionTitle title={t("resourcesReading")} />
           <GshLinkRow
-            title="Practical resource hub"
-            subtitle="Checklists, templates, and your application tracker"
+            title={t("resourcesPractical")}
+            subtitle={t("resourcesPracticalHelp")}
             icon="document-text-outline"
             accent="teal"
             onPress={() => router.push("/resources")}
           />
           <GshLinkRow
-            title="Legal & policies"
-            subtitle="Privacy, terms, cookies, and acceptable use"
+            title={t("resourcesLegal")}
+            subtitle={t("resourcesLegalHelp")}
             icon="shield-checkmark-outline"
             accent="purple"
             onPress={() => router.push("/legal")}
@@ -158,10 +162,10 @@ export default function ToolsAndResourcesScreen() {
             />
           ))}
 
-          <GshSectionTitle title="This app" onDark />
+          <GshSectionTitle title={t("resourcesThisApp")} />
           <GshLinkRow
-            title="Feedback & support"
-            subtitle="Report bugs or suggest features"
+            title={t("resourcesFeedback")}
+            subtitle={t("resourcesFeedbackHelp")}
             icon="chatbox-ellipses-outline"
             accent="teal"
             onPress={() => router.push("/feedback")}

@@ -1,3 +1,5 @@
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
+import { useReducedMotion } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import { useCallback, useRef, useState } from "react";
@@ -31,20 +33,20 @@ const STEPS: Step[] = [
   {
     icon: "compass",
     iconBg: colors.brandSoft,
-    title: "Browse sponsored jobs",
-    body: "Search verified roles with visa and relocation support — on the Jobs tab or from Home.",
+    title: "Find international jobs",
+    body: "Explore jobs abroad and global remote roles. Check each job’s location, work rights and stated support.",
   },
   {
     icon: "bookmark",
-    iconBg: "rgba(97, 10, 144, 0.12)",
-    title: "Save roles",
-    body: "Bookmark jobs you like. Open Saved anytime from Home or your profile.",
+    iconBg: colors.surfaceMuted,
+    title: "Save interesting jobs",
+    body: "Keep interesting jobs in Saved so you can return to them.",
   },
   {
     icon: "paper-plane",
     iconBg: colors.tealDim,
-    title: "Track applications",
-    body: "Apply on GSH, then follow status and employer chats in Applied and Chats.",
+    title: "Follow your applications",
+    body: "Use Applications and Messages for jobs handled here. External applications continue on the external site.",
   },
 ];
 
@@ -54,9 +56,12 @@ type Props = {
 };
 
 export function CandidateOnboardingModal({ visible, onComplete }: Props) {
+  const ac = useAccountCopy();
+  const reduceMotion = useReducedMotion();
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList<Step>>(null);
   const [index, setIndex] = useState(0);
+  const [slideHeight, setSlideHeight] = useState(0);
 
   const onScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -75,10 +80,10 @@ export function CandidateOnboardingModal({ visible, onComplete }: Props) {
       return;
     }
     const next = index + 1;
-    listRef.current?.scrollToIndex({ index: next, animated: true });
+    listRef.current?.scrollToIndex({ index: next, animated: !reduceMotion });
     setIndex(next);
     void hapticLight();
-  }, [index, onComplete]);
+  }, [index, onComplete, reduceMotion]);
 
   const skip = useCallback(() => {
     void hapticLight();
@@ -88,14 +93,14 @@ export function CandidateOnboardingModal({ visible, onComplete }: Props) {
   const isLast = index === STEPS.length - 1;
 
   return (
-    <Modal visible={visible} animationType="fade" presentationStyle="fullScreen" onRequestClose={skip}>
+    <Modal visible={visible} animationType={reduceMotion ? "none" : "fade"} presentationStyle="fullScreen" onRequestClose={skip}>
       <View style={styles.root}>
         <GshNavyHero variant="full" style={styles.hero}>
           <SafeAreaView edges={["top"]} style={styles.safeTop}>
             <View style={styles.topBar}>
-              <Text style={styles.brandEyebrow}>Welcome to GSH</Text>
-              <Pressable onPress={skip} hitSlop={12} accessibilityRole="button" accessibilityLabel="Skip intro">
-                <Text style={styles.skip}>Skip</Text>
+              <Text style={styles.brandEyebrow}>{ac("Welcome to Global Sponsor Hub")}</Text>
+              <Pressable onPress={skip} hitSlop={12} accessibilityRole="button" accessibilityLabel={ac("Skip intro")}>
+                <Text style={styles.skip}>{ac("Skip")}</Text>
               </Pressable>
             </View>
           </SafeAreaView>
@@ -103,6 +108,9 @@ export function CandidateOnboardingModal({ visible, onComplete }: Props) {
 
         <FlatList
           ref={listRef}
+          style={styles.slider}
+          contentContainerStyle={styles.pages}
+          onLayout={(event) => setSlideHeight(event.nativeEvent.layout.height)}
           data={STEPS}
           keyExtractor={(item) => item.title}
           horizontal
@@ -112,13 +120,13 @@ export function CandidateOnboardingModal({ visible, onComplete }: Props) {
           onScrollToIndexFailed={() => undefined}
           getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
           renderItem={({ item }) => (
-            <View style={[styles.slide, { width }]}>
+            <View style={[styles.slide, { width, minHeight: slideHeight }]}>
               <View style={[styles.card, feedCardStyle()]}>
                 <View style={[styles.iconTile, { backgroundColor: item.iconBg }]}>
                   <Ionicons name={item.icon} size={36} color={colors.navy} />
                 </View>
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardBody}>{item.body}</Text>
+                <Text style={styles.cardTitle}>{ac(item.title)}</Text>
+                <Text style={styles.cardBody}>{ac(item.body)}</Text>
               </View>
             </View>
           )}
@@ -131,15 +139,11 @@ export function CandidateOnboardingModal({ visible, onComplete }: Props) {
             ))}
           </View>
           <GshGradientPrimaryButton
-            title={isLast ? "Get started" : "Next"}
+            title={ac(isLast ? "Get started" : "Next")}
             onPress={goNext}
             containerStyle={styles.cta}
           />
-          {isLast ? (
-            <Pressable onPress={skip} style={styles.secondarySkip} accessibilityRole="button">
-              <Text style={styles.secondarySkipText}>I'll explore on my own</Text>
-            </Pressable>
-          ) : null}
+
         </SafeAreaView>
       </View>
     </Modal>
@@ -147,24 +151,28 @@ export function CandidateOnboardingModal({ visible, onComplete }: Props) {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.navyDeep },
+  root: { flex: 1, backgroundColor: colors.white },
   hero: { paddingBottom: 8 },
   safeTop: { paddingHorizontal: 20 },
   topBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    gap: 12,
     paddingTop: 8,
     paddingBottom: 12,
   },
   brandEyebrow: {
     fontSize: 13,
     fontFamily: fontFamily.semiBold,
-    color: "rgba(255,255,255,0.55)",
+    color: colors.accent,
+    flex: 1,
     letterSpacing: 0.6,
-    textTransform: "uppercase",
+    textTransform: "lowercase",
   },
   skip: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.teal },
+  slider: { flex: 1 },
+  pages: { flexGrow: 1, alignItems: "stretch" },
   slide: { paddingHorizontal: 20, justifyContent: "center", paddingBottom: 12 },
   card: {
     paddingVertical: 32,
@@ -196,11 +204,9 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     maxWidth: 300,
   },
-  footer: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 12 },
+  footer: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 12, backgroundColor: colors.white },
   dots: { flexDirection: "row", justifyContent: "center", gap: 8, marginBottom: 16 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "rgba(255,255,255,0.2)" },
-  dotOn: { width: 22, backgroundColor: colors.teal },
+  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.borderStrong },
+  dotOn: { width: 22, backgroundColor: colors.navy },
   cta: { marginBottom: 8 },
-  secondarySkip: { alignItems: "center", paddingVertical: 10 },
-  secondarySkipText: { fontSize: 14, fontFamily: fontFamily.medium, color: "rgba(255,255,255,0.5)" },
 });

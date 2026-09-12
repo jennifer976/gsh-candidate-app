@@ -1,0 +1,524 @@
+{
+  "/relocating/remote-jobs-visa-requirements": {
+    "en": {
+      "path": "/relocating/remote-jobs-visa-requirements",
+      "h1": "Remote jobs and permission to work",
+      "metaTitle": "Remote jobs and permission to work",
+      "metaDescription": "Check a remote job’s permitted locations, contract, work rights and sponsorship before applying or moving.",
+      "intro": "A remote job lets you work away from an office. It does not automatically let you work from any country. Check where the employer can hire you and where you are allowed to work. If you already have the required work rights, you may not need a new visa.",
+      "sections": [
+        {
+          "id": "remote-1",
+          "h2": "Check the permitted locations",
+          "body": "“Remote” may mean one country, a region or several approved countries. A globally remote label does not settle every restriction. Read the full advert for residence requirements, time zones and travel expectations. Ask the employer to confirm that your current country is covered before you spend time on an application."
+        },
+        {
+          "id": "remote-2",
+          "h2": "Check who will employ or contract with you",
+          "body": "Ask whether you would be an employee or an independent contractor, and which organisation signs the contract. Some companies hire through a local company or an Employer of Record, which employs workers on another company’s behalf. This arrangement does not itself guarantee permission to work. Global Sponsor Hub does not provide Employer of Record services."
+        },
+        {
+          "id": "remote-3",
+          "h2": "Keep work rights, sponsorship and moving support separate",
+          "body": "A remote or contractor label is not a promise of visa sponsorship. A relocation package is not a work permit. Check whether this specific job offers sponsorship, requires existing work rights, or leaves support unspecified. Do not treat missing information as a yes. If you plan to work while visiting another country, check that country’s current rules before travelling."
+        },
+        {
+          "id": "remote-4",
+          "h2": "Ask before you apply or move",
+          "body": "Ask: “Can I do this job from my current country? Would I be an employee or contractor? Do I need existing work rights? Does this role offer visa or relocation support?” Get important terms in writing before accepting. Use the remote filter to find roles, then read each full listing and check unclear details with the employer."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Does a remote job always require a new visa?",
+          "answer": "No. It depends on where you will work and the rights you already have. Confirm the employer’s hiring locations as well as your own permission to work."
+        },
+        {
+          "question": "Does an independent contract include visa sponsorship?",
+          "answer": "Not by itself. Check the proposed contract and the relevant country’s rules. Do not assume a contractor role gives you permission to move or work there."
+        }
+      ],
+      "browseHref": "/jobs?workMode=remote",
+      "browseLabel": "Browse remote jobs",
+      "breadcrumbs": [
+        {
+          "name": "Guides",
+          "path": "/guides"
+        },
+        {
+          "name": "Remote jobs and permission to work",
+          "path": "/relocating/remote-jobs-visa-requirements"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "showPlatformCrossPanel": false,
+      "officialLinks": [
+        {
+          "href": "https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-visitor-permitted-activities",
+          "label": "UK visitor rules: permitted activities"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/relocating/remote-friendly-globally-remote-sponsor-friendly",
+          "label": "Compare remote and sponsorship labels"
+        }
+      ]
+    },
+    "fr": {
+      "path": "/relocating/remote-jobs-visa-requirements",
+      "h1": "Emplois à distance et droit de travailler",
+      "metaTitle": "Emplois à distance et droit de travailler",
+      "metaDescription": "Vérifiez les lieux autorisés, le contrat, le droit de travailler et le soutien au visa avant de postuler ou de déménager.",
+      "intro": "Un emploi à distance permet de travailler hors du bureau. Il ne permet pas automatiquement de travailler depuis n’importe quel pays. Vérifiez où l’employeur peut vous embaucher et où vous avez le droit de travailler. Si vous disposez déjà des droits nécessaires, un nouveau visa peut être inutile.",
+      "sections": [
+        {
+          "id": "remote-1",
+          "h2": "Vérifiez les lieux autorisés",
+          "body": "« À distance » peut désigner un pays, une région ou plusieurs pays autorisés. Une mention de télétravail mondial ne supprime pas toutes les restrictions. Lisez l’annonce complète : résidence, fuseaux horaires et déplacements. Faites confirmer que votre pays actuel est couvert avant de consacrer du temps à une candidature."
+        },
+        {
+          "id": "remote-2",
+          "h2": "Identifiez votre employeur ou client contractuel",
+          "body": "Demandez si vous serez salarié ou indépendant, et quelle organisation signera le contrat. Certaines entreprises passent par une société locale ou un Employer of Record, qui emploie des personnes pour le compte d’une autre entreprise. Ce montage ne garantit pas à lui seul le droit de travailler. Global Sponsor Hub ne fournit pas de services d’Employer of Record."
+        },
+        {
+          "id": "remote-3",
+          "h2": "Distinguez droit au travail, visa et aide au déménagement",
+          "body": "Une mention de télétravail ou de travail indépendant ne promet pas un soutien au visa. Une aide au déménagement n’est pas un permis de travail. Vérifiez si ce poste propose un soutien au visa, exige un droit au travail existant ou ne précise rien. Une information absente n’est pas un oui. Pour travailler pendant un séjour dans un autre pays, vérifiez ses règles actuelles avant de partir."
+        },
+        {
+          "id": "remote-4",
+          "h2": "Posez vos questions avant de postuler ou de déménager",
+          "body": "Demandez : « Puis-je exercer ce poste depuis mon pays actuel ? Serai-je salarié ou indépendant ? Dois-je déjà avoir le droit de travailler ? Ce poste prévoit-il une aide au visa ou au déménagement ? » Faites confirmer les conditions importantes par écrit avant d’accepter. Utilisez le filtre télétravail, puis lisez chaque annonce complète et clarifiez les points incertains avec l’employeur."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Un emploi à distance exige-t-il toujours un nouveau visa ?",
+          "answer": "Non. Cela dépend du lieu de travail et des droits que vous possédez déjà. Confirmez les pays où l’employeur recrute ainsi que votre propre droit de travailler."
+        },
+        {
+          "question": "Un contrat indépendant inclut-il un soutien au visa ?",
+          "answer": "Pas à lui seul. Vérifiez le contrat proposé et les règles du pays concerné. Ne supposez pas qu’un poste indépendant vous autorise à y déménager ou à y travailler."
+        }
+      ],
+      "browseHref": "/jobs?workMode=remote",
+      "browseLabel": "Voir les emplois à distance",
+      "breadcrumbs": [
+        {
+          "name": "Guides",
+          "path": "/guides"
+        },
+        {
+          "name": "Emplois à distance et droit de travailler",
+          "path": "/relocating/remote-jobs-visa-requirements"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "showPlatformCrossPanel": false,
+      "officialLinks": [
+        {
+          "href": "https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-visitor-permitted-activities",
+          "label": "Règles britanniques pour les visiteurs : activités autorisées"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/relocating/remote-friendly-globally-remote-sponsor-friendly",
+          "label": "Comparer les mentions de télétravail et de visa"
+        }
+      ]
+    },
+    "de": {
+      "path": "/relocating/remote-jobs-visa-requirements",
+      "h1": "Remote-Jobs und Arbeitserlaubnis",
+      "metaTitle": "Remote-Jobs und Arbeitserlaubnis",
+      "metaDescription": "Prüfe erlaubte Arbeitsorte, Vertrag, Arbeitsrecht und Visa-Unterstützung, bevor du dich bewirbst oder umziehst.",
+      "intro": "Ein Remote-Job ermöglicht Arbeit außerhalb des Büros. Er erlaubt nicht automatisch, aus jedem Land zu arbeiten. Prüfe, wo dich der Arbeitgeber einstellen kann und wo du arbeiten darfst. Wenn du bereits die nötigen Arbeitsrechte hast, brauchst du möglicherweise kein neues Visum.",
+      "sections": [
+        {
+          "id": "remote-1",
+          "h2": "Erlaubte Arbeitsorte prüfen",
+          "body": "„Remote“ kann ein Land, eine Region oder mehrere zugelassene Länder bedeuten. Auch ein weltweit ausgeschriebener Remote-Job kann Einschränkungen haben. Lies die vollständige Anzeige zu Wohnort, Zeitzonen und Reisen. Lass dir bestätigen, dass dein aktuelles Land abgedeckt ist, bevor du Zeit in die Bewerbung investierst."
+        },
+        {
+          "id": "remote-2",
+          "h2": "Arbeitgeber und Vertragsform klären",
+          "body": "Frage, ob du angestellt oder selbstständig tätig sein wirst und welche Organisation den Vertrag abschließt. Manche Unternehmen nutzen eine lokale Gesellschaft oder einen Employer of Record, der Beschäftigte im Auftrag eines anderen Unternehmens anstellt. Diese Lösung garantiert allein keine Arbeitserlaubnis. Global Sponsor Hub bietet keine Employer-of-Record-Dienste an."
+        },
+        {
+          "id": "remote-3",
+          "h2": "Arbeitsrecht, Visa-Unterstützung und Umzugshilfe unterscheiden",
+          "body": "Die Bezeichnung „remote“ oder „selbstständig“ verspricht keine Visa-Unterstützung. Ein Umzugspaket ist keine Arbeitserlaubnis. Prüfe, ob genau diese Stelle Visa-Unterstützung bietet, bestehende Arbeitsrechte verlangt oder keine Angabe macht. Fehlende Angaben sind kein Ja. Wenn du bei einem Auslandsbesuch arbeiten möchtest, prüfe vor der Reise die aktuellen Regeln des Landes."
+        },
+        {
+          "id": "remote-4",
+          "h2": "Vor Bewerbung oder Umzug nachfragen",
+          "body": "Frage: „Kann ich diese Arbeit aus meinem aktuellen Land ausüben? Wäre ich angestellt oder selbstständig? Brauche ich bereits Arbeitsrechte? Bietet diese Stelle Visa- oder Umzugshilfe?“ Lass wichtige Bedingungen vor der Zusage schriftlich bestätigen. Nutze den Remote-Filter, lies dann jede vollständige Anzeige und kläre offene Punkte mit dem Arbeitgeber."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Brauche ich für einen Remote-Job immer ein neues Visum?",
+          "answer": "Nein. Das hängt vom Arbeitsort und deinen bestehenden Rechten ab. Prüfe sowohl die Einstellungsländer des Arbeitgebers als auch deine eigene Arbeitserlaubnis."
+        },
+        {
+          "question": "Beinhaltet ein Auftrag als Selbstständiger Visa-Unterstützung?",
+          "answer": "Nicht von sich aus. Prüfe den angebotenen Vertrag und die Regeln des jeweiligen Landes. Ein Auftrag als Selbstständiger erlaubt nicht automatisch den Umzug oder die Arbeit dort."
+        }
+      ],
+      "browseHref": "/jobs?workMode=remote",
+      "browseLabel": "Remote-Jobs ansehen",
+      "breadcrumbs": [
+        {
+          "name": "Ratgeber",
+          "path": "/guides"
+        },
+        {
+          "name": "Remote-Jobs und Arbeitserlaubnis",
+          "path": "/relocating/remote-jobs-visa-requirements"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "showPlatformCrossPanel": false,
+      "officialLinks": [
+        {
+          "href": "https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-visitor-permitted-activities",
+          "label": "Britische Besucherregeln: erlaubte Tätigkeiten"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/relocating/remote-friendly-globally-remote-sponsor-friendly",
+          "label": "Remote- und Visa-Angaben vergleichen"
+        }
+      ]
+    },
+    "es": {
+      "path": "/relocating/remote-jobs-visa-requirements",
+      "h1": "Empleo remoto y permiso para trabajar",
+      "metaTitle": "Empleo remoto y permiso para trabajar",
+      "metaDescription": "Comprueba las ubicaciones permitidas, el contrato, el derecho a trabajar y el apoyo para el visado antes de solicitar un puesto o mudarte.",
+      "intro": "Un empleo remoto permite trabajar fuera de una oficina. No permite automáticamente trabajar desde cualquier país. Comprueba dónde puede contratarte la empresa y dónde tienes derecho a trabajar. Si ya tienes los permisos necesarios, quizá no necesites un nuevo visado.",
+      "sections": [
+        {
+          "id": "remote-1",
+          "h2": "Comprueba las ubicaciones permitidas",
+          "body": "«Remoto» puede referirse a un país, una región o varios países autorizados. La etiqueta de remoto global no elimina todas las restricciones. Lee el anuncio completo para conocer los requisitos de residencia, horarios y viajes. Pide que confirmen que tu país está incluido antes de dedicar tiempo a la solicitud."
+        },
+        {
+          "id": "remote-2",
+          "h2": "Comprueba quién te contratará",
+          "body": "Pregunta si trabajarías por cuenta ajena o como profesional independiente y qué entidad firmará el contrato. Algunas empresas contratan mediante una empresa local o un Employer of Record, que emplea personal en nombre de otra empresa. Esto no garantiza por sí solo el permiso para trabajar. Global Sponsor Hub no presta servicios de Employer of Record."
+        },
+        {
+          "id": "remote-3",
+          "h2": "Distingue permiso de trabajo, visado y ayuda para mudarte",
+          "body": "La etiqueta de remoto o autónomo no promete patrocinio de visado. Un paquete de traslado no es un permiso de trabajo. Comprueba si ese puesto ofrece patrocinio, exige un derecho a trabajar existente o no especifica el apoyo. La falta de información no significa que sí. Si quieres trabajar durante una visita a otro país, revisa sus normas vigentes antes de viajar."
+        },
+        {
+          "id": "remote-4",
+          "h2": "Pregunta antes de solicitar el puesto o mudarte",
+          "body": "Pregunta: «¿Puedo hacer este trabajo desde mi país actual? ¿Sería empleado o autónomo? ¿Necesito tener ya derecho a trabajar? ¿Este puesto ofrece ayuda con el visado o el traslado?». Pide las condiciones importantes por escrito antes de aceptar. Usa el filtro remoto, lee cada anuncio completo y aclara las dudas con la empresa."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "¿Un empleo remoto siempre exige un nuevo visado?",
+          "answer": "No. Depende de dónde trabajarás y de los derechos que ya tengas. Confirma tanto los países donde contrata la empresa como tu permiso para trabajar."
+        },
+        {
+          "question": "¿Un contrato como autónomo incluye patrocinio de visado?",
+          "answer": "No por sí solo. Comprueba el contrato propuesto y las normas del país correspondiente. No des por hecho que ese trabajo te permite mudarte o trabajar allí."
+        }
+      ],
+      "browseHref": "/jobs?workMode=remote",
+      "browseLabel": "Ver empleos remotos",
+      "breadcrumbs": [
+        {
+          "name": "Guías",
+          "path": "/guides"
+        },
+        {
+          "name": "Empleo remoto y permiso para trabajar",
+          "path": "/relocating/remote-jobs-visa-requirements"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "showPlatformCrossPanel": false,
+      "officialLinks": [
+        {
+          "href": "https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-visitor-permitted-activities",
+          "label": "Normas británicas para visitantes: actividades permitidas"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/relocating/remote-friendly-globally-remote-sponsor-friendly",
+          "label": "Comparar etiquetas de remoto y visado"
+        }
+      ]
+    },
+    "pt": {
+      "path": "/relocating/remote-jobs-visa-requirements",
+      "h1": "Trabalho remoto e autorização para trabalhar",
+      "metaTitle": "Trabalho remoto e autorização para trabalhar",
+      "metaDescription": "Verifique os locais permitidos, o contrato, o direito a trabalhar e o apoio ao visto antes de se candidatar ou mudar.",
+      "intro": "Um trabalho remoto permite trabalhar fora do escritório. Não permite automaticamente trabalhar a partir de qualquer país. Confirme onde a empresa o pode contratar e onde tem direito a trabalhar. Se já tiver os direitos necessários, poderá não precisar de um novo visto.",
+      "sections": [
+        {
+          "id": "remote-1",
+          "h2": "Verifique os locais permitidos",
+          "body": "«Remoto» pode significar um país, uma região ou vários países autorizados. A indicação de remoto global não elimina todas as restrições. Leia o anúncio completo para conhecer requisitos de residência, fusos horários e viagens. Peça confirmação de que o seu país está incluído antes de investir tempo na candidatura."
+        },
+        {
+          "id": "remote-2",
+          "h2": "Confirme quem o vai contratar",
+          "body": "Pergunte se será trabalhador por conta de outrem ou independente e que organização assina o contrato. Algumas empresas contratam através de uma empresa local ou de um Employer of Record, que emprega pessoas em nome de outra empresa. Esta solução não garante, por si só, autorização para trabalhar. A Global Sponsor Hub não presta serviços de Employer of Record."
+        },
+        {
+          "id": "remote-3",
+          "h2": "Distinga direito a trabalhar, visto e apoio à mudança",
+          "body": "A indicação de remoto ou independente não promete patrocínio de visto. Um pacote de mudança não é uma autorização de trabalho. Verifique se este posto oferece patrocínio, exige direito a trabalhar já existente ou não especifica o apoio. Informação em falta não significa sim. Se pretende trabalhar durante uma visita a outro país, consulte as regras atuais desse país antes de viajar."
+        },
+        {
+          "id": "remote-4",
+          "h2": "Pergunte antes de se candidatar ou mudar",
+          "body": "Pergunte: «Posso fazer este trabalho a partir do meu país atual? Seria empregado ou independente? Preciso de já ter direito a trabalhar? Este posto oferece apoio ao visto ou à mudança?» Peça as condições importantes por escrito antes de aceitar. Use o filtro remoto, leia cada anúncio completo e esclareça as dúvidas com a empresa."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Um trabalho remoto exige sempre um novo visto?",
+          "answer": "Não. Depende de onde vai trabalhar e dos direitos que já tem. Confirme os países onde a empresa contrata e a sua própria autorização para trabalhar."
+        },
+        {
+          "question": "Um contrato independente inclui patrocínio de visto?",
+          "answer": "Não por si só. Verifique o contrato proposto e as regras do país em questão. Não presuma que um trabalho independente lhe permite mudar ou trabalhar nesse país."
+        }
+      ],
+      "browseHref": "/jobs?workMode=remote",
+      "browseLabel": "Ver trabalhos remotos",
+      "breadcrumbs": [
+        {
+          "name": "Guias",
+          "path": "/guides"
+        },
+        {
+          "name": "Trabalho remoto e autorização para trabalhar",
+          "path": "/relocating/remote-jobs-visa-requirements"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "showPlatformCrossPanel": false,
+      "officialLinks": [
+        {
+          "href": "https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-visitor-permitted-activities",
+          "label": "Regras britânicas para visitantes: atividades permitidas"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/relocating/remote-friendly-globally-remote-sponsor-friendly",
+          "label": "Comparar indicações de remoto e visto"
+        }
+      ]
+    },
+    "it": {
+      "path": "/relocating/remote-jobs-visa-requirements",
+      "h1": "Lavoro da remoto e diritto al lavoro",
+      "metaTitle": "Lavoro da remoto e diritto al lavoro",
+      "metaDescription": "Verifica luoghi consentiti, contratto, diritto al lavoro e supporto per il visto prima di candidarti o trasferirti.",
+      "intro": "Un lavoro da remoto consente di lavorare fuori dall’ufficio. Non autorizza automaticamente a lavorare da qualsiasi paese. Verifica dove l’azienda può assumerti e dove puoi lavorare legalmente. Se hai già i diritti necessari, potresti non aver bisogno di un nuovo visto.",
+      "sections": [
+        {
+          "id": "remote-1",
+          "h2": "Verifica i luoghi consentiti",
+          "body": "«Da remoto» può indicare un paese, una regione o più paesi autorizzati. L’etichetta di lavoro remoto globale non elimina tutte le restrizioni. Leggi l’annuncio completo per residenza, fusi orari e trasferte. Chiedi conferma che il tuo paese sia incluso prima di dedicare tempo alla candidatura."
+        },
+        {
+          "id": "remote-2",
+          "h2": "Verifica chi ti assumerà o incaricherà",
+          "body": "Chiedi se sarai dipendente o lavoratore autonomo e quale organizzazione firmerà il contratto. Alcune aziende assumono tramite una società locale o un Employer of Record, che impiega persone per conto di un’altra azienda. Questa soluzione non garantisce di per sé il diritto al lavoro. Global Sponsor Hub non fornisce servizi di Employer of Record."
+        },
+        {
+          "id": "remote-3",
+          "h2": "Distingui diritto al lavoro, visto e supporto al trasferimento",
+          "body": "L’indicazione di lavoro remoto o autonomo non promette supporto per il visto. Un pacchetto di trasferimento non è un permesso di lavoro. Verifica se quel posto offre supporto per il visto, richiede diritti di lavoro già acquisiti o non specifica nulla. Un’informazione assente non equivale a un sì. Se vuoi lavorare mentre visiti un altro paese, controlla le sue regole aggiornate prima di partire."
+        },
+        {
+          "id": "remote-4",
+          "h2": "Chiedi prima di candidarti o trasferirti",
+          "body": "Chiedi: «Posso svolgere questo lavoro dal mio paese attuale? Sarei dipendente o autonomo? Devo già avere il diritto al lavoro? Il posto offre supporto per il visto o il trasferimento?» Fatti confermare per iscritto le condizioni importanti prima di accettare. Usa il filtro remoto, leggi ogni annuncio completo e chiarisci i dubbi con il datore di lavoro."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Un lavoro da remoto richiede sempre un nuovo visto?",
+          "answer": "No. Dipende da dove lavorerai e dai diritti che possiedi già. Verifica sia i paesi in cui l’azienda assume sia il tuo diritto al lavoro."
+        },
+        {
+          "question": "Un contratto autonomo include supporto per il visto?",
+          "answer": "Non di per sé. Controlla il contratto proposto e le regole del paese interessato. Non presumere che un incarico autonomo ti autorizzi a trasferirti o lavorare lì."
+        }
+      ],
+      "browseHref": "/jobs?workMode=remote",
+      "browseLabel": "Vedi lavori da remoto",
+      "breadcrumbs": [
+        {
+          "name": "Guide",
+          "path": "/guides"
+        },
+        {
+          "name": "Lavoro da remoto e diritto al lavoro",
+          "path": "/relocating/remote-jobs-visa-requirements"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "showPlatformCrossPanel": false,
+      "officialLinks": [
+        {
+          "href": "https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-visitor-permitted-activities",
+          "label": "Regole britanniche per visitatori: attività consentite"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/relocating/remote-friendly-globally-remote-sponsor-friendly",
+          "label": "Confronta indicazioni di lavoro remoto e visto"
+        }
+      ]
+    },
+    "nl": {
+      "path": "/relocating/remote-jobs-visa-requirements",
+      "h1": "Banen op afstand en toestemming om te werken",
+      "metaTitle": "Banen op afstand en toestemming om te werken",
+      "metaDescription": "Controleer toegestane werklocaties, contract, werkrechten en visumsponsoring voordat je solliciteert of verhuist.",
+      "intro": "Met een baan op afstand werk je buiten kantoor. Dat betekent niet automatisch dat je vanuit elk land mag werken. Controleer waar de werkgever je kan aannemen en waar je mag werken. Als je al de juiste werkrechten hebt, is een nieuw visum mogelijk niet nodig.",
+      "sections": [
+        {
+          "id": "remote-1",
+          "h2": "Controleer de toegestane locaties",
+          "body": "‘Op afstand’ kan één land, een regio of meerdere goedgekeurde landen betekenen. Een wereldwijd remote-label neemt niet alle beperkingen weg. Lees de hele vacature voor eisen aan woonplaats, tijdzones en reizen. Vraag of jouw huidige land is toegestaan voordat je tijd in een sollicitatie steekt."
+        },
+        {
+          "id": "remote-2",
+          "h2": "Controleer met wie je het contract sluit",
+          "body": "Vraag of je werknemer of zelfstandige wordt en welke organisatie het contract ondertekent. Sommige bedrijven gebruiken een lokaal bedrijf of een Employer of Record, die mensen namens een ander bedrijf in dienst neemt. Deze constructie geeft op zichzelf geen toestemming om te werken. Global Sponsor Hub biedt geen Employer of Record-diensten aan."
+        },
+        {
+          "id": "remote-3",
+          "h2": "Houd werkrechten, visumsponsoring en verhuishulp uit elkaar",
+          "body": "Het label remote of zelfstandig is geen belofte van visumsponsoring. Een verhuispakket is geen werkvergunning. Controleer of deze specifieke baan sponsoring biedt, bestaande werkrechten vereist of niets vermeldt. Ontbrekende informatie betekent niet ja. Wil je werken tijdens een bezoek aan een ander land, controleer dan voor vertrek de actuele regels van dat land."
+        },
+        {
+          "id": "remote-4",
+          "h2": "Vraag het voordat je solliciteert of verhuist",
+          "body": "Vraag: ‘Kan ik dit werk vanuit mijn huidige land doen? Word ik werknemer of zelfstandige? Moet ik al het recht hebben om te werken? Biedt deze baan visum- of verhuishulp?’ Laat belangrijke afspraken schriftelijk bevestigen voordat je accepteert. Gebruik het remote-filter, lees daarna elke volledige vacature en bespreek onduidelijkheden met de werkgever."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Is voor een baan op afstand altijd een nieuw visum nodig?",
+          "answer": "Nee. Dat hangt af van waar je werkt en welke rechten je al hebt. Controleer waar de werkgever aanneemt en of jij daar mag werken."
+        },
+        {
+          "question": "Omvat een overeenkomst als zelfstandige visumsponsoring?",
+          "answer": "Niet op zichzelf. Controleer het voorgestelde contract en de regels van het betreffende land. Neem niet aan dat zelfstandig werk je toestemming geeft om daarheen te verhuizen of er te werken."
+        }
+      ],
+      "browseHref": "/jobs?workMode=remote",
+      "browseLabel": "Bekijk banen op afstand",
+      "breadcrumbs": [
+        {
+          "name": "Gidsen",
+          "path": "/guides"
+        },
+        {
+          "name": "Banen op afstand en toestemming om te werken",
+          "path": "/relocating/remote-jobs-visa-requirements"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "showPlatformCrossPanel": false,
+      "officialLinks": [
+        {
+          "href": "https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-visitor-permitted-activities",
+          "label": "Britse bezoekersregels: toegestane activiteiten"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/relocating/remote-friendly-globally-remote-sponsor-friendly",
+          "label": "Vergelijk remote- en visumlabels"
+        }
+      ]
+    },
+    "pl": {
+      "path": "/relocating/remote-jobs-visa-requirements",
+      "h1": "Praca zdalna i prawo do pracy",
+      "metaTitle": "Praca zdalna i prawo do pracy",
+      "metaDescription": "Sprawdź dozwolone miejsca pracy, umowę, prawo do pracy i wsparcie wizowe przed aplikowaniem lub przeprowadzką.",
+      "intro": "Praca zdalna pozwala pracować poza biurem. Nie oznacza automatycznie, że możesz pracować z dowolnego kraju. Sprawdź, gdzie pracodawca może Cię zatrudnić i gdzie masz prawo pracować. Jeśli masz już wymagane uprawnienia, nowa wiza może nie być potrzebna.",
+      "sections": [
+        {
+          "id": "remote-1",
+          "h2": "Sprawdź dozwolone lokalizacje",
+          "body": "„Zdalnie” może oznaczać jeden kraj, region lub kilka zatwierdzonych krajów. Oznaczenie pracy zdalnej z całego świata nie usuwa wszystkich ograniczeń. Przeczytaj całe ogłoszenie: wymagania dotyczące zamieszkania, stref czasowych i podróży. Zanim poświęcisz czas na aplikację, poproś o potwierdzenie, że Twój kraj jest objęty ofertą."
+        },
+        {
+          "id": "remote-2",
+          "h2": "Sprawdź, z kim zawrzesz umowę",
+          "body": "Zapytaj, czy będziesz pracownikiem czy niezależnym wykonawcą i jaka organizacja podpisze umowę. Niektóre firmy zatrudniają przez lokalną spółkę lub Employer of Record, który zatrudnia ludzi w imieniu innej firmy. Taki model sam w sobie nie gwarantuje prawa do pracy. Global Sponsor Hub nie świadczy usług Employer of Record."
+        },
+        {
+          "id": "remote-3",
+          "h2": "Rozróżniaj prawo do pracy, wsparcie wizowe i pomoc w przeprowadzce",
+          "body": "Oznaczenie pracy zdalnej lub kontraktowej nie jest obietnicą wsparcia wizowego. Pakiet relokacyjny nie jest pozwoleniem na pracę. Sprawdź, czy dane stanowisko oferuje wsparcie wizowe, wymaga już posiadanego prawa do pracy czy nie podaje informacji. Brak informacji nie oznacza zgody. Jeśli chcesz pracować podczas wizyty w innym kraju, przed podróżą sprawdź jego aktualne zasady."
+        },
+        {
+          "id": "remote-4",
+          "h2": "Zapytaj przed aplikowaniem lub przeprowadzką",
+          "body": "Zapytaj: „Czy mogę wykonywać tę pracę z mojego obecnego kraju? Czy będę pracownikiem czy wykonawcą? Czy muszę już mieć prawo do pracy? Czy stanowisko zapewnia wsparcie wizowe lub relokacyjne?” Przed przyjęciem oferty uzyskaj ważne warunki na piśmie. Użyj filtra pracy zdalnej, przeczytaj całe ogłoszenie i wyjaśnij niejasności z pracodawcą."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Czy praca zdalna zawsze wymaga nowej wizy?",
+          "answer": "Nie. Zależy to od miejsca pracy i posiadanych już uprawnień. Potwierdź kraje zatrudnienia u pracodawcy oraz własne prawo do pracy."
+        },
+        {
+          "question": "Czy umowa z niezależnym wykonawcą obejmuje wsparcie wizowe?",
+          "answer": "Nie sam w sobie. Sprawdź proponowaną umowę i zasady danego kraju. Nie zakładaj, że taka praca daje prawo do przeprowadzki lub pracy w tym kraju."
+        }
+      ],
+      "browseHref": "/jobs?workMode=remote",
+      "browseLabel": "Przeglądaj pracę zdalną",
+      "breadcrumbs": [
+        {
+          "name": "Poradniki",
+          "path": "/guides"
+        },
+        {
+          "name": "Praca zdalna i prawo do pracy",
+          "path": "/relocating/remote-jobs-visa-requirements"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "showPlatformCrossPanel": false,
+      "officialLinks": [
+        {
+          "href": "https://www.gov.uk/guidance/immigration-rules/immigration-rules-appendix-visitor-permitted-activities",
+          "label": "Brytyjskie zasady dla odwiedzających: dozwolone czynności"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/relocating/remote-friendly-globally-remote-sponsor-friendly",
+          "label": "Porównaj oznaczenia pracy zdalnej i wsparcia wizowego"
+        }
+      ]
+    }
+  }
+}

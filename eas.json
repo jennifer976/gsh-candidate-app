@@ -8,12 +8,14 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
+        "GSH_APP_VARIANT": "staging",
         "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
       }
     },
     "preview": {
       "distribution": "internal",
       "env": {
+        "GSH_APP_VARIANT": "staging",
         "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
       }
     },

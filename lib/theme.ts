@@ -1,34 +1,27 @@
-/**
- * GSH Premium Theme
- * Dark-first design system — navy shells, glowing cards, teal/purple accents.
- * Matches the App Store showcase imagery and Jobie-style premium job app aesthetic.
- */
-import { Platform, TextStyle, ViewStyle } from "react-native";
+/** Calm, native-first candidate theme: navy, approved cyan, white and neutral greys. */
+import { TextStyle, ViewStyle } from "react-native";
 
 export const colors = {
   // Core brand
   navy: "#0d194e",
-  navyDeep: "#080f2e",
-  navyMid: "#111d5e",
-  teal: "#0ecdd1",
-  tealDim: "rgba(14,205,209,0.18)",
-  purple: "#610a90",
-  purpleBright: "#7c3aed",
+  navyDeep: "#0d194e",
+  navyMid: "#0d194e",
+  teal: "#42e0e3",
+  tealDim: "rgba(66,224,227,0.16)",
+  // Compatibility aliases. New UI must not create a purple visual lane.
+  purple: "#0d194e",
+  purpleBright: "#0d194e",
 
-  // Surface system — dark shells, light cards
-  /** Page/screen background — deep navy */
-  bgDark: "#080f2e",
-  /** Card surface on dark bg */
-  bgCard: "#111d5e",
-  /** Elevated card — slightly lighter */
-  bgCardElevated: "#162268",
-  /** Frosted overlay */
-  bgOverlay: "rgba(8,15,46,0.85)",
+  // Surface system
+  bgDark: "#0d194e",
+  bgCard: "#ffffff",
+  bgCardElevated: "#ffffff",
+  bgOverlay: "rgba(13,25,78,0.72)",
 
   // Light surface (forms, modals, input fields)
   background: "#ffffff",
-  surfaceMuted: "#f8fafc",
-  surfaceLight: "#f1f5f9",
+  surfaceMuted: "#f6f7f9",
+  surfaceLight: "#f8fafc",
 
   // Text — dark backgrounds
   textOnDark: "#ffffff",
@@ -36,7 +29,7 @@ export const colors = {
   textOnDarkDim: "rgba(255,255,255,0.38)",
 
   // Text — light backgrounds
-  textPrimary: "#0f172a",
+  textPrimary: "#0d194e",
   textSecondary: "#475569",
   textMarketing: "#334155",
   textMuted: "#64748b",
@@ -48,35 +41,33 @@ export const colors = {
   borderOnDark: "rgba(255,255,255,0.12)",
   borderOnDarkStrong: "rgba(255,255,255,0.22)",
 
-  // Semantic — brand is cyan (matches the network mark); purple is secondary (curated lane)
-  brand: "#0ecdd1",
-  brandDeep: "#0891a8",
-  brandSoft: "rgba(14,205,209,0.14)",
-  brandGlow: "rgba(14,205,209,0.35)",
-  /** Secondary accent — curated picks only */
-  secondary: "#610a90",
-  accent: "#0ecdd1",
+  // Navy carries actions; cyan is a controlled highlight.
+  brand: "#0d194e",
+  brandDeep: "#0d194e",
+  brandSoft: "rgba(66,224,227,0.16)",
+  brandGlow: "rgba(66,224,227,0.22)",
+  secondary: "#0d194e",
+  accent: "#42e0e3",
   error: "#b91c1c",
   white: "#ffffff",
 
-  // Chip palettes (unchanged — used in job chips)
-  purpleMuted: "#f5f3ff",
-  purpleBorder: "#e9d5ff",
-  purpleText: "#6b21a8",
-  purpleTextDark: "#581c87",
-  secondaryTintBg: "#ede9fe",
-  secondaryTintText: "#5b21b6",
+  // Legacy chip names resolve to the neutral/cyan system.
+  purpleMuted: "#f6f7f9",
+  purpleBorder: "#e2e8f0",
+  purpleText: "#0d194e",
+  purpleTextDark: "#0d194e",
+  secondaryTintBg: "rgba(66,224,227,0.14)",
+  secondaryTintText: "#0d194e",
   treeapp: "#75be00",
-  chipOnBg: "#610a90",
-  chipOnBorder: "#610a90",
-  unreadBorder: "rgba(14, 205, 209, 0.45)",
-  unreadBg: "rgba(14, 205, 209, 0.07)",
+  chipOnBg: "#0d194e",
+  chipOnBorder: "#0d194e",
+  unreadBorder: "rgba(66,224,227,0.72)",
+  unreadBg: "rgba(66,224,227,0.08)",
   warningBg: "#fffbeb",
   warningBorder: "#fde68a",
   warningText: "#92400e",
 
-  /** Canvas behind floating cards on light screens */
-  discoverCanvas: "#080f2e",
+  discoverCanvas: "#ffffff",
   foreground: "#171717",
 } as const;
 
@@ -86,81 +77,48 @@ export const fontFamily = {
   semiBold: "Inter_600SemiBold",
   bold: "Inter_700Bold",
   extraBold: "Inter_800ExtraBold",
+  heading: "Montserrat_700Bold",
+  headingStrong: "Montserrat_800ExtraBold",
+  headingMedium: "Montserrat_600SemiBold",
 } as const;
 
 export const radii = {
-  sm: 12,
-  md: 14,
-  lg: 16,
-  xl: 20,
-  xxl: 24,
-  feed: 18,
+  sm: 8,
+  md: 10,
+  lg: 20,
+  xl: 24,
+  xxl: 28,
+  feed: 20,
   pill: 999,
 } as const;
 
-/** Glowing card on dark background — the signature GSH premium look */
-export function darkCardStyle(glow?: "teal" | "purple" | "none"): ViewStyle {
-  const glowColor =
-    glow === "teal"
-      ? "rgba(14,205,209,0.25)"
-      : glow === "purple"
-      ? "rgba(97,10,144,0.3)"
-      : "rgba(255,255,255,0.06)";
-
-  const base: ViewStyle = {
-    backgroundColor: colors.bgCard,
-    borderRadius: radii.xl,
+/** Compatibility helper for legacy dark sections; intentionally has no glow/elevation. */
+export function darkCardStyle(_accent?: "teal" | "purple" | "none"): ViewStyle {
+  return {
+    backgroundColor: colors.navy,
+    borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: colors.borderOnDark,
   };
-  if (Platform.OS === "android") {
-    return { ...base, elevation: 8 };
-  }
-  return {
-    ...base,
-    shadowColor: glowColor,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 24,
-  };
 }
 
-/** White card on light background */
-export function cardSurfaceStyle(interactive?: boolean): ViewStyle {
-  const base: ViewStyle = {
+/** Flat native section on a light background. */
+export function cardSurfaceStyle(_interactive?: boolean): ViewStyle {
+  return {
     backgroundColor: colors.background,
     borderRadius: radii.lg,
     borderWidth: 1,
-    borderColor: "rgba(226, 232, 240, 0.92)",
-  };
-  if (Platform.OS === "android") {
-    return { ...base, elevation: interactive ? 5 : 3 };
-  }
-  return {
-    ...base,
-    shadowColor: interactive ? colors.purple : "#0f172a",
-    shadowOffset: { width: 0, height: interactive ? 5 : 2 },
-    shadowOpacity: interactive ? 0.14 : 0.07,
-    shadowRadius: interactive ? 16 : 12,
+    borderColor: colors.border,
   };
 }
 
-/** Feed card — white on the dark canvas */
+/** Flat feed section with a hairline boundary. */
 export function feedCardStyle(): ViewStyle {
-  const base: ViewStyle = {
+  return {
     backgroundColor: colors.background,
     borderRadius: radii.feed,
-    borderWidth: 0,
-  };
-  if (Platform.OS === "android") {
-    return { ...base, elevation: 4 };
-  }
-  return {
-    ...base,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
   };
 }
 
@@ -176,10 +134,10 @@ export function discoverSearchFieldStyle(): ViewStyle {
 }
 export function cardCuratedSurfaceStyle(interactive?: boolean): ViewStyle {
   return {
-    backgroundColor: colors.purpleMuted,
+    backgroundColor: colors.background,
     borderRadius: radii.md,
     borderWidth: 1,
-    borderColor: colors.purpleBorder,
+    borderColor: colors.border,
   };
 }
 
@@ -197,8 +155,8 @@ export const typography = {
     color: colors.textMuted,
   } satisfies TextStyle,
   screenTitle: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 24,
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 28,
     letterSpacing: -0.3,
     color: colors.textPrimary,
   } satisfies TextStyle,
@@ -209,24 +167,21 @@ export const typography = {
   } satisfies TextStyle,
 } as const;
 
-/** Hero gradient — deep navy to navyMid */
+/** Solid navy hero expressed in the existing gradient API. */
 export const heroGradient = {
-  colors: [colors.navyDeep, colors.navyMid] as const,
+  colors: [colors.navy, colors.navy] as const,
   start: { x: 0.2, y: 0 },
   end: { x: 0.8, y: 1 },
 };
 
-/** Teal→Purple CTA gradient */
+/** Compatibility tokens. Visuals remain solid navy or subtle cyan. */
 export const gradient = {
-  authCTA: ["#0ECDD1", "#610A90"] as const,
-  heroBg: [colors.navyDeep, "#1a0a3e"] as const,
-  cardAccent: ["rgba(14,205,209,0.15)", "rgba(97,10,144,0.15)"] as const,
-  /** Subtle cyan glow for hero edges / featured cards */
-  cyanGlow: ["rgba(14,205,209,0)", "rgba(14,205,209,0.22)"] as const,
-  /** Cyan wash behind employer card headers (very soft) */
-  employerHeader: ["rgba(14,205,209,0.10)", "rgba(14,205,209,0)"] as const,
-  /** Purple wash for curated card headers (very soft) */
-  curatedHeader: ["rgba(97,10,144,0.10)", "rgba(97,10,144,0)"] as const,
+  authCTA: [colors.navy, colors.navy] as const,
+  heroBg: [colors.navy, colors.navy] as const,
+  cardAccent: ["rgba(66,224,227,0.14)", "rgba(66,224,227,0.04)"] as const,
+  cyanGlow: ["rgba(66,224,227,0)", "rgba(66,224,227,0.10)"] as const,
+  employerHeader: ["rgba(66,224,227,0.10)", "rgba(66,224,227,0)"] as const,
+  curatedHeader: ["rgba(66,224,227,0.08)", "rgba(66,224,227,0)"] as const,
 };
 
 /** Vertical accent strip on the left edge of a card — signals lane (employer vs curated) */
@@ -251,7 +206,7 @@ export const accentStripCurated: ViewStyle = {
   top: 0,
   bottom: 0,
   left: 0,
-  backgroundColor: colors.purple,
+  backgroundColor: colors.teal,
 };
 
 /** Faint network watermark — drop the brand mark behind hero / empty states at low opacity */
@@ -263,11 +218,11 @@ export const networkWatermark: ViewStyle = {
 
 /** Dark nav header for inner screens */
 export const navHeader = {
-  headerStyle: { backgroundColor: colors.navyDeep },
+  headerStyle: { backgroundColor: colors.navy },
   headerTintColor: colors.white,
   headerTitleStyle: {
     color: colors.white,
-    fontFamily: fontFamily.bold,
+    fontFamily: fontFamily.heading,
     fontSize: 17,
   },
   headerShadowVisible: false,

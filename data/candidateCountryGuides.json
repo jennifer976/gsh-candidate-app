@@ -1,0 +1,933 @@
+{
+  "version": 1,
+  "updatedISO": "2026-09-11",
+  "guides": [
+    {
+      "slug": "uk-skilled-worker-and-sponsored-jobs",
+      "title": "Working in the UK: sponsorship and your next steps",
+      "countryLabel": "United Kingdom",
+      "iso2": "gb",
+      "flagEmoji": "🇬🇧",
+      "excerpt": "Check the job, salary, English requirements and moving costs before accepting a sponsored role.",
+      "metaDescription": "Check the job, salary, English requirements and moving costs before accepting a sponsored role.",
+      "updatedISO": "2026-09-11",
+      "openingHook": "Start with the employer’s offer and your own work rights. A sponsorship label helps you find relevant roles; it does not confirm that you qualify for a visa.",
+      "quickFacts": [
+        {
+          "label": "Main visa route",
+          "value": "Skilled Worker"
+        },
+        {
+          "label": "Min. salary (general)",
+          "value": "Higher of £41,700/year or the going rate; exceptions apply"
+        },
+        {
+          "label": "Employer requirement",
+          "value": "Approved sponsor and a qualifying job offer"
+        },
+        {
+          "label": "English",
+          "value": "Usually B2 for new applicants; exemptions and transition rules apply"
+        },
+        {
+          "label": "Family",
+          "value": "Check eligibility for each dependant"
+        },
+        {
+          "label": "Long-term plans",
+          "value": "Settlement has separate requirements"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Check the employer and the job",
+          "paragraphs": [
+            "The Skilled Worker route requires an eligible job offer from an approved sponsor. The employer supplies a Certificate of Sponsorship (CoS) reference for your application. A sponsor licence alone does not mean every vacancy is eligible or that the employer will sponsor you."
+          ],
+          "sources": [
+            "https://www.gov.uk/skilled-worker-visa"
+          ]
+        },
+        {
+          "heading": "Check the salary and occupation code",
+          "paragraphs": [
+            "The usual minimum is the higher of £41,700 per year and the occupation’s going rate. Different salary rules apply in defined cases, including some healthcare and education jobs. Ask for the occupation code and check the official requirements for your offer; a similar job title is not enough."
+          ],
+          "sources": [
+            "https://www.gov.uk/skilled-worker-visa/your-job"
+          ]
+        },
+        {
+          "heading": "Prepare proof of English",
+          "paragraphs": [
+            "New applicants generally need B2 English. Exemptions and rules for previous visa holders can change what you must provide. Check the accepted qualifications or tests before paying for a course, assessment or exam."
+          ],
+          "sources": [
+            "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+          ]
+        },
+        {
+          "heading": "Plan fees and family arrangements",
+          "paragraphs": [
+            "Agree who pays each cost before accepting. Budget for the application, any healthcare surcharge, documents and moving costs. Check each family member’s eligibility and costs separately: restrictions apply to some occupations and visa histories. Settlement is a separate application, not a guaranteed result of sponsorship."
+          ],
+          "sources": [
+            "https://www.gov.uk/skilled-worker-visa/how-much-it-costs",
+            "https://www.gov.uk/skilled-worker-visa/your-partner-and-children",
+            "https://www.gov.uk/skilled-worker-visa"
+          ]
+        },
+        {
+          "heading": "Changing jobs later",
+          "paragraphs": [
+            "Changing employer usually requires a visa update and a new CoS. A different job with the same employer needs an update if its occupation code changes. Check the official rules before starting the new role."
+          ],
+          "sources": [
+            "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+          ]
+        },
+        {
+          "heading": "Before you commit to the move",
+          "paragraphs": [
+            "Ask for written confirmation of sponsorship support, duties, salary, start-date flexibility and who handles the application. Read any repayment clauses and ask for unclear terms to be explained. Compare housing and travel costs with your expected take-home pay. Use Global Sponsor Hub to find jobs and independent specialists; viewing a profile does not send a request or establish eligibility."
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in the United Kingdom",
+          "href": "/jobs?location=United%20Kingdom"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ],
+      "officialSourceUrl": "https://www.gov.uk/skilled-worker-visa"
+    },
+    {
+      "slug": "ireland-employment-permits-job-search",
+      "title": "Working in Ireland: permits and your move",
+      "countryLabel": "Ireland",
+      "iso2": "ie",
+      "flagEmoji": "🇮🇪",
+      "updatedISO": "2026-09-11",
+      "officialSourceUrl": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/",
+      "excerpt": "Check the offer, your work rights and the steps before you travel.",
+      "metaDescription": "Check the offer, your work rights and the steps before you travel.",
+      "openingHook": "Check the offer, your work rights and the steps before you travel.",
+      "quickFacts": [
+        {
+          "label": "Start here",
+          "value": "Check the job and your work rights"
+        },
+        {
+          "label": "Employer support",
+          "value": "Confirm what is included in writing"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Start with your work rights",
+          "paragraphs": [
+            "Nationality and existing permission matter. Check whether you need an employment permit before arranging the move."
+          ],
+          "sources": [
+            "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+          ]
+        },
+        {
+          "heading": "Check the permit for this job",
+          "paragraphs": [
+            "Critical Skills requires an eligible role and a job offer lasting at least two years. General permits cover a broader range of eligible jobs."
+          ],
+          "sources": [
+            "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/",
+            "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+          ]
+        },
+        {
+          "heading": "Confirm pay and employer requirements",
+          "paragraphs": [
+            "Salary rules depend on the permit and circumstances. General permits usually require a labour market test; exceptions apply."
+          ],
+          "sources": [
+            "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/",
+            "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+          ]
+        },
+        {
+          "heading": "Arrange entry and registration",
+          "paragraphs": [
+            "An employment permit is not an entry visa or residence permission. Check which separate steps apply to you before travelling."
+          ],
+          "sources": [
+            "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+          ]
+        },
+        {
+          "heading": "Plan for anyone moving with you",
+          "paragraphs": [
+            "Family eligibility, waiting periods and work rights depend on the permission and family circumstances. Check each person’s position separately."
+          ],
+          "sources": [
+            "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+          ]
+        },
+        {
+          "heading": "Agree the practical details",
+          "paragraphs": [
+            "Get pay, location, hours and moving support in writing. Compare housing and travel costs. Browse specialists if you need practical help; viewing a profile does not send a request."
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in Ireland",
+          "href": "/jobs?location=Ireland"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ]
+    },
+    {
+      "slug": "germany-eu-blue-card-jobseekers",
+      "title": "Working in Germany: choose your route and plan the move",
+      "countryLabel": "Germany",
+      "iso2": "de",
+      "flagEmoji": "🇩🇪",
+      "updatedISO": "2026-09-11",
+      "officialSourceUrl": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+      "excerpt": "Check your work rights, the employer’s offer and any qualification requirements before committing to a move.",
+      "metaDescription": "Check your work rights, the employer’s offer and any qualification requirements before committing to a move.",
+      "openingHook": "Check your work rights, the employer’s offer and any qualification requirements before committing to a move.",
+      "quickFacts": [
+        {
+          "label": "Start here",
+          "value": "Check the job and your work rights"
+        },
+        {
+          "label": "Employer support",
+          "value": "Confirm what is included in writing"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Start with the right work route",
+          "paragraphs": [
+            "The EU Blue Card is one option. A skilled-worker permit may fit when its requirements match your qualification and offer."
+          ],
+          "sources": [
+            "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+          ]
+        },
+        {
+          "heading": "Check the Blue Card salary rules",
+          "paragraphs": [
+            "In 2026, the general gross annual threshold is €50,700. A €45,934.20 threshold applies in specified cases; other requirements still apply."
+          ],
+          "sources": [
+            "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card",
+            "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+          ]
+        },
+        {
+          "heading": "Check recognition and professional permission",
+          "paragraphs": [
+            "Regulated professions need the relevant recognition and permission to practise. Requirements for other jobs depend on the route and qualification."
+          ],
+          "sources": [
+            "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+          ]
+        },
+        {
+          "heading": "Looking before you have an offer",
+          "paragraphs": [
+            "The Opportunity Card has its own eligibility, funding and work limits. It is not unrestricted permission to take any full-time job."
+          ],
+          "sources": [
+            "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+          ]
+        },
+        {
+          "heading": "Plan family arrangements separately",
+          "paragraphs": [
+            "Family reunification depends on the residence permit and circumstances. Check the documents, timing and work rights for each family member."
+          ],
+          "sources": [
+            "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+          ]
+        },
+        {
+          "heading": "Agree the offer and arrival costs",
+          "paragraphs": [
+            "Confirm pay, working language and moving support in writing. Budget for housing, deposits, insurance and travel. Find independent practical help through the specialist directory."
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in Germany",
+          "href": "/jobs?location=Germany"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ]
+    },
+    {
+      "slug": "canada-work-permit-jobs",
+      "title": "Working in Canada: check your work permit and plan the move",
+      "countryLabel": "Canada",
+      "iso2": "ca",
+      "flagEmoji": "🇨🇦",
+      "updatedISO": "2026-09-11",
+      "officialSourceUrl": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html",
+      "excerpt": "Confirm the route for your job, check professional requirements and budget for the province where you will live.",
+      "metaDescription": "Confirm the route for your job, check professional requirements and budget for the province where you will live.",
+      "openingHook": "Confirm the route for your job, check professional requirements and budget for the province where you will live.",
+      "quickFacts": [
+        {
+          "label": "Start here",
+          "value": "Check the job and your work rights"
+        },
+        {
+          "label": "Employer support",
+          "value": "Confirm what is included in writing"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Start with your work rights",
+          "paragraphs": [
+            "An offer alone does not authorise work. An employer-specific permit limits where or for whom you can work. Open permits have separate eligibility rules and may also carry restrictions."
+          ],
+          "sources": [
+            "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html",
+            "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+          ]
+        },
+        {
+          "heading": "Confirm what the employer must provide",
+          "paragraphs": [
+            "Ask whether an LMIA is required or which exemption applies. Confirm the contract and supporting documents before applying. An LMIA-exempt role may still require employer steps and a work permit."
+          ],
+          "sources": [
+            "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html",
+            "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+          ]
+        },
+        {
+          "heading": "Keep permanent residence separate",
+          "paragraphs": [
+            "Express Entry is separate from a work permit. Since 25 March 2025, job offers earn no CRS points, but may still matter for some programme requirements."
+          ],
+          "sources": [
+            "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+          ]
+        },
+        {
+          "heading": "Check professional registration",
+          "paragraphs": [
+            "For a regulated profession, contact the regulator in your destination province or territory. An immigration credential assessment does not automatically grant professional recognition or a licence."
+          ],
+          "sources": [
+            "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top=",
+            "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+          ]
+        },
+        {
+          "heading": "Prepare your first weeks",
+          "paragraphs": [
+            "Arrange your Social Insurance Number and check provincial health coverage. Budget for housing, transport and any coverage gap; confirm who pays for required insurance before you travel."
+          ],
+          "sources": [
+            "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html",
+            "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+          ]
+        },
+        {
+          "heading": "Agree the practical details",
+          "paragraphs": [
+            "Get pay, hours, workplace and moving support in writing. Compare local costs with take-home pay. Browse specialists for practical help; opening a profile does not submit a request."
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in Canada",
+          "href": "/jobs?location=Canada"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ]
+    },
+    {
+      "slug": "australia-skilled-visa-jobs",
+      "title": "Working in Australia: check the role and plan your move",
+      "countryLabel": "Australia",
+      "iso2": "au",
+      "flagEmoji": "🇦🇺",
+      "updatedISO": "2026-09-11",
+      "officialSourceUrl": "https://immi.homeaffairs.gov.au/visas/working-in-australia",
+      "excerpt": "Confirm the visa route, employer support and your own requirements. Compare the full offer with the cost of living near the workplace.",
+      "metaDescription": "Confirm the visa route, employer support and your own requirements. Compare the full offer with the cost of living near the workplace.",
+      "openingHook": "Confirm the visa route, employer support and your own requirements. Compare the full offer with the cost of living near the workplace.",
+      "quickFacts": [
+        {
+          "label": "Start here",
+          "value": "Check the job and your work rights"
+        },
+        {
+          "label": "Employer support",
+          "value": "Confirm what is included in writing"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Confirm the employer-sponsored route",
+          "paragraphs": [
+            "The Skills in Demand visa (subclass 482) is temporary. Ask the employer which stream supports the role and whether they will submit the nomination. A job listing is not visa approval."
+          ],
+          "sources": [
+            "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa",
+            "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+          ]
+        },
+        {
+          "heading": "Check salary and occupation requirements",
+          "paragraphs": [
+            "Check the current salary threshold and occupation rules for the stream. Ask how the offer meets the applicable market salary requirement. Do not rely on an old threshold in a job advert."
+          ],
+          "sources": [
+            "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+          ]
+        },
+        {
+          "heading": "Check your skills evidence",
+          "paragraphs": [
+            "Check whether you need a skills assessment, English evidence or professional registration. These are different requirements. Confirm the responsible authority before paying for an assessment or making travel plans."
+          ],
+          "sources": [
+            "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+          ]
+        },
+        {
+          "heading": "Treat permanent residence as a separate application",
+          "paragraphs": [
+            "The Employer Nomination Scheme (subclass 186) has its own streams and conditions. Holding a temporary work visa does not guarantee permanent residence; confirm your route and the employer’s commitment separately."
+          ],
+          "sources": [
+            "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+          ]
+        },
+        {
+          "heading": "Arrange health cover",
+          "paragraphs": [
+            "Medicare eligibility depends on your circumstances. Do not assume that a temporary visa includes access. Check any private insurance requirement for you and each family member before travelling."
+          ],
+          "sources": [
+            "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+          ]
+        },
+        {
+          "heading": "Compare the full offer",
+          "paragraphs": [
+            "Ask whether the quoted salary includes superannuation. Plan tax setup, housing, commuting and moving costs. Get relocation support in writing, including any repayment terms if you leave the job."
+          ],
+          "sources": [
+            "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in Australia",
+          "href": "/jobs?location=Australia"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ]
+    },
+    {
+      "slug": "usa-work-visa-jobs",
+      "title": "Working in the US: check the route and the offer",
+      "countryLabel": "United States",
+      "iso2": "us",
+      "flagEmoji": "🇺🇸",
+      "updatedISO": "2026-09-11",
+      "officialSourceUrl": "https://www.uscis.gov/working-in-the-united-states",
+      "excerpt": "Start with your work rights and the employer’s specific commitment. Check timing, costs and the full offer before planning a move.",
+      "metaDescription": "Start with your work rights and the employer’s specific commitment. Check timing, costs and the full offer before planning a move.",
+      "openingHook": "Start with your work rights and the employer’s specific commitment. Check timing, costs and the full offer before planning a move.",
+      "quickFacts": [
+        {
+          "label": "Start here",
+          "value": "Check the job and your work rights"
+        },
+        {
+          "label": "Employer support",
+          "value": "Confirm what is included in writing"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Identify the right category",
+          "paragraphs": [
+            "H-1B, L and O categories serve different purposes and have different evidence requirements. Ask which category fits your role and circumstances; a similar job title does not establish eligibility."
+          ],
+          "sources": [
+            "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+          ]
+        },
+        {
+          "heading": "Confirm employer support",
+          "paragraphs": [
+            "For many temporary work categories, the employer must file a petition. Get the intended route, responsible contact and expected steps in writing before treating an offer as sponsorship support."
+          ],
+          "sources": [
+            "https://www.usa.gov/temporary-work-visa"
+          ]
+        },
+        {
+          "heading": "Check pay, fees and timing",
+          "paragraphs": [
+            "Ask how the offer meets any applicable wage rules. Confirm current filing requirements, selection rules and fees with the employer’s adviser. Do not rely on old adverts or assume a start date."
+          ],
+          "sources": [
+            "https://www.dol.gov/agencies/whd/immigration/h1b"
+          ]
+        },
+        {
+          "heading": "Confirm permission before starting",
+          "paragraphs": [
+            "Petition approval, a visa and admission are separate steps. Check what applies if you are already in the US. Confirm your authorised work and start date before beginning the job."
+          ],
+          "sources": [
+            "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+          ]
+        },
+        {
+          "heading": "Review permanent residence separately",
+          "paragraphs": [
+            "Employment-based permanent residence has its own categories and visa availability rules. A temporary job or approved petition does not by itself make you a permanent resident."
+          ],
+          "sources": [
+            "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+          ]
+        },
+        {
+          "heading": "Compare benefits and living costs",
+          "paragraphs": [
+            "Check when health insurance starts, family coverage and your share of costs. Compare leave, retirement contributions, housing and transport. Get moving support and any repayment terms in writing."
+          ],
+          "sources": [
+            "https://www.healthcare.gov/have-job-based-coverage/"
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in the United States",
+          "href": "/jobs?location=United%20States"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ]
+    },
+    {
+      "slug": "uae-work-visa-jobs",
+      "title": "Working in the UAE: check the offer and the paperwork",
+      "countryLabel": "United Arab Emirates",
+      "iso2": "ae",
+      "flagEmoji": "🇦🇪",
+      "updatedISO": "2026-09-11",
+      "officialSourceUrl": "https://u.ae/en/information-and-services/jobs",
+      "excerpt": "Confirm the employer, contract, work permission and residence steps. Compare the full package and plan separately for anyone moving with you.",
+      "metaDescription": "Confirm the employer, contract, work permission and residence steps. Compare the full package and plan separately for anyone moving with you.",
+      "openingHook": "Confirm the employer, contract, work permission and residence steps. Compare the full package and plan separately for anyone moving with you.",
+      "quickFacts": [
+        {
+          "label": "Start here",
+          "value": "Check the job and your work rights"
+        },
+        {
+          "label": "Employer support",
+          "value": "Confirm what is included in writing"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Verify the offer",
+          "paragraphs": [
+            "Check the offer through the relevant official channel. Confirm whether MoHRE or a free-zone authority handles the job. Compare the final contract with the offer before signing."
+          ],
+          "sources": [
+            "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+          ]
+        },
+        {
+          "heading": "Check work permission before starting",
+          "paragraphs": [
+            "A visit or tourist visa does not allow work. Ask the employer to confirm your work permit, residence process and lawful start date before you begin."
+          ],
+          "sources": [
+            "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+          ]
+        },
+        {
+          "heading": "Know which costs belong to the employer",
+          "paragraphs": [
+            "Official worker guidance places recruitment and employment residence-processing costs on the employer. Question requests to pay these charges yourself and verify them with the responsible authority before sending money."
+          ],
+          "sources": [
+            "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+          ]
+        },
+        {
+          "heading": "Check self-sponsored options separately",
+          "paragraphs": [
+            "Green Residence has separate categories and evidence requirements. Do not assume that residence status alone permits every type of work; confirm the work permission needed for your employment or freelance activity."
+          ],
+          "sources": [
+            "https://icp.gov.ae/en/services/uae-green-residency/",
+            "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+          ]
+        },
+        {
+          "heading": "Plan family residence and health cover",
+          "paragraphs": [
+            "Check each family member’s residence requirements and insurance. Employer and sponsor duties differ by emirate and situation. Confirm who is covered, when cover begins and who pays."
+          ],
+          "sources": [
+            "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance",
+            "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+          ]
+        },
+        {
+          "heading": "Compare the complete package",
+          "paragraphs": [
+            "Separate basic pay from housing, flights, insurance and school allowances. Check rent payment dates, deposits and commuting costs. Get support, probation and notice terms in writing before you accept."
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in the UAE",
+          "href": "/jobs?location=UAE"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ]
+    },
+    {
+      "slug": "singapore-employment-pass-jobs",
+      "title": "Working in Singapore: check the pass and the offer",
+      "countryLabel": "Singapore",
+      "iso2": "sg",
+      "flagEmoji": "🇸🇬",
+      "updatedISO": "2026-09-11",
+      "officialSourceUrl": "https://www.mom.gov.sg/passes-and-permits/employment-pass",
+      "excerpt": "Confirm the pass your employer proposes, the salary requirements and the steps before you can start. Plan family and living costs separately.",
+      "metaDescription": "Confirm the pass your employer proposes, the salary requirements and the steps before you can start. Plan family and living costs separately.",
+      "openingHook": "Confirm the pass your employer proposes, the salary requirements and the steps before you can start. Plan family and living costs separately.",
+      "quickFacts": [
+        {
+          "label": "Start here",
+          "value": "Check the job and your work rights"
+        },
+        {
+          "label": "Employer support",
+          "value": "Confirm what is included in writing"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Confirm the employer’s application",
+          "paragraphs": [
+            "An Employment Pass application is submitted by the employer or an appointed employment agent. Confirm who will apply, the documents needed and which role the application covers."
+          ],
+          "sources": [
+            "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+          ]
+        },
+        {
+          "heading": "Check salary and COMPASS separately",
+          "paragraphs": [
+            "Employment Pass applicants must meet the qualifying salary and, unless exempt, pass COMPASS. Salary requirements depend on age, sector and relevant dates. The lowest published figure is not everyone’s threshold."
+          ],
+          "sources": [
+            "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+          ]
+        },
+        {
+          "heading": "Treat S Pass as a different route",
+          "paragraphs": [
+            "S Pass has its own salary rules and employer quota and levy requirements. Ask the employer to check these before offering this route; it is not an automatic alternative to Employment Pass."
+          ],
+          "sources": [
+            "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+          ]
+        },
+        {
+          "heading": "Check the step that allows you to start",
+          "paragraphs": [
+            "For Employment Pass, the notification letter after pass issuance allows work while you await the card. Do not treat an in-principle approval as the same document; confirm your start with the employer."
+          ],
+          "sources": [
+            "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+          ]
+        },
+        {
+          "heading": "Check family and partner work rights",
+          "paragraphs": [
+            "Family passes have separate eligibility rules. A Dependant’s Pass does not automatically allow employment. Check the work pass or other permission required for your partner’s intended activity."
+          ],
+          "sources": [
+            "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility",
+            "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+          ]
+        },
+        {
+          "heading": "Plan your monthly budget",
+          "paragraphs": [
+            "Compare rent, transport, healthcare and school costs with your take-home pay. Ask what the employer pays and when benefits start. Get any moving allowance and repayment terms in writing."
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in Singapore",
+          "href": "/jobs?location=Singapore"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ]
+    },
+    {
+      "slug": "netherlands-highly-skilled-migrant-jobs",
+      "title": "Working in the Netherlands: check the offer and plan your move",
+      "countryLabel": "Netherlands",
+      "iso2": "nl",
+      "flagEmoji": "🇳🇱",
+      "updatedISO": "2026-09-11",
+      "officialSourceUrl": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+      "excerpt": "Check the employer, the work route and the salary rules before accepting an offer. Plan housing and arrival costs separately.",
+      "metaDescription": "Check the employer, the work route and the salary rules before accepting an offer. Plan housing and arrival costs separately.",
+      "openingHook": "Check the employer, the work route and the salary rules before accepting an offer. Plan housing and arrival costs separately.",
+      "quickFacts": [
+        {
+          "label": "Start here",
+          "value": "Check the job and your work rights"
+        },
+        {
+          "label": "Employer support",
+          "value": "Confirm what is included in writing"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Check the recognised sponsor",
+          "paragraphs": [
+            "For the Highly Skilled Migrant route, your employer must be recognised by the IND and apply for your permit. Check the public register and confirm support for your specific role."
+          ],
+          "sources": [
+            "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+            "https://ind.nl/en/public-register-recognised-sponsors"
+          ]
+        },
+        {
+          "heading": "Compare the correct salary figure",
+          "paragraphs": [
+            "In 2026, the initial Highly Skilled Migrant thresholds are €5,942 gross per month from age 30 and €4,357 below age 30, excluding holiday allowance. The €3,122 reduced threshold has separate eligibility rules. Renewals and employer changes need their own check."
+          ],
+          "sources": [
+            "https://ind.nl/en/required-amounts-income-requirements"
+          ]
+        },
+        {
+          "heading": "Consider the EU Blue Card separately",
+          "paragraphs": [
+            "The EU Blue Card has its own qualification or experience, contract and income requirements. Unlike the Highly Skilled Migrant route, it does not require the employer to be an IND-recognised sponsor."
+          ],
+          "sources": [
+            "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+          ]
+        },
+        {
+          "heading": "Keep tax relief separate from work permission",
+          "paragraphs": [
+            "The expat scheme, often called the 30% facility, is not automatic and does not grant work rights. You and your employer must meet the tax authority’s conditions and apply. Do not base your budget on unconfirmed tax relief."
+          ],
+          "sources": [
+            "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+          ]
+        },
+        {
+          "heading": "Prepare for arrival",
+          "paragraphs": [
+            "Check the registration process for your length of stay, the documents needed for a BSN and your health insurance duties. Arrange housing you can afford and confirm that you can register at the address."
+          ],
+          "sources": [
+            "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+          ]
+        },
+        {
+          "heading": "Get the practical offer in writing",
+          "paragraphs": [
+            "Confirm the working language, start date, holiday allowance, relocation support and who handles each application. You can find independent specialists for practical help before or after an offer."
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in the Netherlands",
+          "href": "/jobs?location=Netherlands"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ]
+    },
+    {
+      "slug": "new-zealand-accredited-employer-jobs",
+      "title": "Working in New Zealand: check the job and visa",
+      "countryLabel": "New Zealand",
+      "iso2": "nz",
+      "flagEmoji": "🇳🇿",
+      "updatedISO": "2026-09-11",
+      "officialSourceUrl": "https://www.immigration.govt.nz/visas/accredited-employer-work-visa/",
+      "excerpt": "Start with the employer, the role and the conditions that apply to you.",
+      "metaDescription": "Start with the employer, the role and the conditions that apply to you.",
+      "openingHook": "Start with the employer, the role and the conditions that apply to you.",
+      "quickFacts": [
+        {
+          "label": "Start here",
+          "value": "Check the job and your work rights"
+        },
+        {
+          "label": "Employer support",
+          "value": "Confirm what is included in writing"
+        }
+      ],
+      "sections": [
+        {
+          "heading": "Check the employer and job offer",
+          "paragraphs": [
+            "An AEWV needs an accredited employer and an approved job check. Accreditation alone does not approve your visa."
+          ],
+          "sources": [
+            "https://www.immigration.govt.nz/visas/accredited-employer-work-visa/"
+          ]
+        },
+        {
+          "heading": "Check your evidence",
+          "paragraphs": [
+            "Check the current experience, qualification, English and professional registration requirements for your role. A similar job title is not proof."
+          ],
+          "sources": [
+            "https://www.immigration.govt.nz/visas/accredited-employer-work-visa/"
+          ]
+        },
+        {
+          "heading": "Read the work conditions",
+          "paragraphs": [
+            "Confirm pay, hours and location in writing. Check your visa conditions before starting work or changing employer. Do not pay for a job offer."
+          ],
+          "sources": [
+            "https://www.immigration.govt.nz/visas/accredited-employer-work-visa/",
+            "https://www.immigration.govt.nz/visit/checking-or-changing-the-conditions-of-your-visitor-visa-or-nzeta/working-remotely-in-new-zealand-on-a-visitor-visa/"
+          ]
+        },
+        {
+          "heading": "Check residence separately",
+          "paragraphs": [
+            "Green List Tier 1 and Tier 2 have different residence routes. Check the listed role, qualifications, registration, pay and any required work period. An AEWV does not grant residence automatically."
+          ],
+          "sources": [
+            "https://www.immigration.govt.nz/live/resident-visas-to-live-in-new-zealand/skilled-residence-pathways-in-new-zealand/green-list-pathway-to-residence/"
+          ]
+        },
+        {
+          "heading": "Check each family member’s options",
+          "paragraphs": [
+            "Family visa options depend on your job, earnings and circumstances. Your partner and children need their own visas. Check your partner’s work rights rather than assuming they can work."
+          ],
+          "sources": [
+            "https://www.immigration.govt.nz/process-to-apply/once-you-have-a-visa/bringing-family-to-new-zealand/bringing-family-if-you-have-a-work-visa/bringing-family-if-you-have-an-accredited-employer-work-visa-aewv/"
+          ]
+        },
+        {
+          "heading": "Plan the practical move",
+          "paragraphs": [
+            "Compare housing and travel costs near the workplace. Ask what the employer will pay for. Keep a budget for temporary accommodation and trips home."
+          ]
+        }
+      ],
+      "partnerLinks": [
+        {
+          "label": "Search jobs in New Zealand",
+          "href": "/jobs?location=New%20Zealand"
+        },
+        {
+          "label": "Browse independent specialists",
+          "href": "/specialists"
+        },
+        {
+          "label": "Relocation perks",
+          "href": "/relocation-perks"
+        }
+      ]
+    }
+  ]
+}

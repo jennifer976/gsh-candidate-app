@@ -24,7 +24,7 @@ export function mobilityChipStyle(label: string): {
   }
   if (visa) {
     return {
-      wrap: { ...border, backgroundColor: "rgba(14, 205, 209, 0.08)", borderColor: "rgba(14, 205, 209, 0.35)" },
+      wrap: { ...border, backgroundColor: colors.brandSoft, borderColor: colors.teal },
       text: { color: colors.navy },
     };
   }

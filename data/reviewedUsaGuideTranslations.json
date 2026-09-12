@@ -1,0 +1,738 @@
+{
+  "en": {
+    "slug": "usa-work-visa-jobs",
+    "title": "Working in the US: check the route and the offer",
+    "countryLabel": "United States",
+    "iso2": "us",
+    "flagEmoji": "🇺🇸",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.uscis.gov/working-in-the-united-states",
+    "excerpt": "Start with your work rights and the employer’s specific commitment. Check timing, costs and the full offer before planning a move.",
+    "metaDescription": "Start with your work rights and the employer’s specific commitment. Check timing, costs and the full offer before planning a move.",
+    "openingHook": "Start with your work rights and the employer’s specific commitment. Check timing, costs and the full offer before planning a move.",
+    "quickFacts": [
+      {
+        "label": "Start here",
+        "value": "Check the job and your work rights"
+      },
+      {
+        "label": "Employer support",
+        "value": "Confirm what is included in writing"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Identify the right category",
+        "paragraphs": [
+          "H-1B, L and O categories serve different purposes and have different evidence requirements. Ask which category fits your role and circumstances; a similar job title does not establish eligibility."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+        ]
+      },
+      {
+        "heading": "Confirm employer support",
+        "paragraphs": [
+          "For many temporary work categories, the employer must file a petition. Get the intended route, responsible contact and expected steps in writing before treating an offer as sponsorship support."
+        ],
+        "sources": [
+          "https://www.usa.gov/temporary-work-visa"
+        ]
+      },
+      {
+        "heading": "Check pay, fees and timing",
+        "paragraphs": [
+          "Ask how the offer meets any applicable wage rules. Confirm current filing requirements, selection rules and fees with the employer’s adviser. Do not rely on old adverts or assume a start date."
+        ],
+        "sources": [
+          "https://www.dol.gov/agencies/whd/immigration/h1b"
+        ]
+      },
+      {
+        "heading": "Confirm permission before starting",
+        "paragraphs": [
+          "Petition approval, a visa and admission are separate steps. Check what applies if you are already in the US. Confirm your authorised work and start date before beginning the job."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+        ]
+      },
+      {
+        "heading": "Review permanent residence separately",
+        "paragraphs": [
+          "Employment-based permanent residence has its own categories and visa availability rules. A temporary job or approved petition does not by itself make you a permanent resident."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+        ]
+      },
+      {
+        "heading": "Compare benefits and living costs",
+        "paragraphs": [
+          "Check when health insurance starts, family coverage and your share of costs. Compare leave, retirement contributions, housing and transport. Get moving support and any repayment terms in writing."
+        ],
+        "sources": [
+          "https://www.healthcare.gov/have-job-based-coverage/"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Search jobs in the United States",
+        "href": "/jobs?location=United%20States"
+      },
+      {
+        "label": "Browse independent specialists",
+        "href": "/specialists"
+      },
+      {
+        "label": "Relocation perks",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "fr": {
+    "slug": "usa-work-visa-jobs",
+    "title": "Travailler aux États-Unis : vérifier la voie et l’offre",
+    "countryLabel": "États-Unis",
+    "iso2": "us",
+    "flagEmoji": "🇺🇸",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.uscis.gov/working-in-the-united-states",
+    "excerpt": "Commencez par votre droit au travail et l’engagement précis de l’employeur. Vérifiez délais, coûts et offre complète avant de préparer le départ.",
+    "metaDescription": "Commencez par votre droit au travail et l’engagement précis de l’employeur. Vérifiez délais, coûts et offre complète avant de préparer le départ.",
+    "openingHook": "Commencez par votre droit au travail et l’engagement précis de l’employeur. Vérifiez délais, coûts et offre complète avant de préparer le départ.",
+    "quickFacts": [
+      {
+        "label": "Pour commencer",
+        "value": "Vérifiez le poste et votre droit de travailler"
+      },
+      {
+        "label": "Aide de l’employeur",
+        "value": "Faites confirmer par écrit ce qui est inclus"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Identifiez la bonne catégorie",
+        "paragraphs": [
+          "Les catégories H-1B, L et O ont des objectifs et justificatifs différents. Demandez laquelle convient au poste et à votre situation ; un intitulé similaire ne prouve pas l’admissibilité."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+        ]
+      },
+      {
+        "heading": "Confirmez l’aide de l’employeur",
+        "paragraphs": [
+          "Pour de nombreuses catégories temporaires, l’employeur doit déposer une pétition. Obtenez par écrit la voie, le contact et les étapes prévues avant de considérer l’offre comme un soutien au visa."
+        ],
+        "sources": [
+          "https://www.usa.gov/temporary-work-visa"
+        ]
+      },
+      {
+        "heading": "Vérifiez salaire, frais et délais",
+        "paragraphs": [
+          "Demandez comment l’offre respecte les règles salariales applicables. Confirmez démarches, sélection et frais actuels avec le conseil de l’employeur. Ne vous fiez pas à d’anciennes annonces ni à une date supposée."
+        ],
+        "sources": [
+          "https://www.dol.gov/agencies/whd/immigration/h1b"
+        ]
+      },
+      {
+        "heading": "Confirmez l’autorisation avant de commencer",
+        "paragraphs": [
+          "L’accord sur la pétition, le visa et l’admission sont distincts. Vérifiez les règles si vous êtes déjà aux États-Unis. Confirmez le travail autorisé et sa date avant de commencer."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+        ]
+      },
+      {
+        "heading": "Examinez la résidence permanente séparément",
+        "paragraphs": [
+          "La résidence permanente par l’emploi a ses propres catégories et règles de disponibilité. Un emploi temporaire ou une pétition approuvée ne donne pas, à lui seul, ce statut."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+        ]
+      },
+      {
+        "heading": "Comparez avantages et coût de la vie",
+        "paragraphs": [
+          "Vérifiez début de l’assurance santé, couverture familiale et frais à votre charge. Comparez congés, retraite, logement et transport. Obtenez par écrit aide au déménagement et éventuel remboursement."
+        ],
+        "sources": [
+          "https://www.healthcare.gov/have-job-based-coverage/"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Rechercher un emploi : États-Unis",
+        "href": "/jobs?location=United%20States"
+      },
+      {
+        "label": "Consulter les spécialistes indépendants",
+        "href": "/specialists"
+      },
+      {
+        "label": "Avantages pour le déménagement",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "de": {
+    "slug": "usa-work-visa-jobs",
+    "title": "Arbeiten in den USA: Weg und Angebot prüfen",
+    "countryLabel": "Vereinigte Staaten",
+    "iso2": "us",
+    "flagEmoji": "🇺🇸",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.uscis.gov/working-in-the-united-states",
+    "excerpt": "Prüfe deine Arbeitsberechtigung und die konkrete Arbeitgeberzusage. Kläre Zeitplan, Kosten und das gesamte Angebot vor dem Umzug.",
+    "metaDescription": "Prüfe deine Arbeitsberechtigung und die konkrete Arbeitgeberzusage. Kläre Zeitplan, Kosten und das gesamte Angebot vor dem Umzug.",
+    "openingHook": "Prüfe deine Arbeitsberechtigung und die konkrete Arbeitgeberzusage. Kläre Zeitplan, Kosten und das gesamte Angebot vor dem Umzug.",
+    "quickFacts": [
+      {
+        "label": "Hier beginnen",
+        "value": "Prüfe die Stelle und dein Recht zu arbeiten"
+      },
+      {
+        "label": "Hilfe des Arbeitgebers",
+        "value": "Lass dir schriftlich bestätigen, was enthalten ist"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Finde die passende Kategorie",
+        "paragraphs": [
+          "H-1B, L und O dienen unterschiedlichen Zwecken und benötigen unterschiedliche Nachweise. Frage, welche Kategorie zu Stelle und Situation passt; ein ähnlicher Jobtitel belegt keine Berechtigung."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+        ]
+      },
+      {
+        "heading": "Kläre die Arbeitgeberunterstützung",
+        "paragraphs": [
+          "Bei vielen befristeten Arbeitskategorien muss der Arbeitgeber eine Petition einreichen. Lass Weg, Kontaktperson und Schritte schriftlich bestätigen, bevor du eine Visumunterstützung annimmst."
+        ],
+        "sources": [
+          "https://www.usa.gov/temporary-work-visa"
+        ]
+      },
+      {
+        "heading": "Prüfe Gehalt, Gebühren und Zeitplan",
+        "paragraphs": [
+          "Frage nach den geltenden Lohnregeln. Kläre aktuelle Anträge, Auswahlregeln und Gebühren mit der Beratung des Arbeitgebers. Verlasse dich nicht auf alte Anzeigen oder einen angenommenen Starttermin."
+        ],
+        "sources": [
+          "https://www.dol.gov/agencies/whd/immigration/h1b"
+        ]
+      },
+      {
+        "heading": "Kläre die Berechtigung vor Arbeitsbeginn",
+        "paragraphs": [
+          "Petitionsgenehmigung, Visum und Einreise sind getrennte Schritte. Prüfe die Regeln, wenn du schon in den USA bist. Kläre Arbeitsberechtigung und Startdatum vor Arbeitsbeginn."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+        ]
+      },
+      {
+        "heading": "Prüfe Daueraufenthalt gesondert",
+        "paragraphs": [
+          "Arbeitsbezogener Daueraufenthalt hat eigene Kategorien und Verfügbarkeitsregeln. Eine befristete Stelle oder genehmigte Petition allein macht dich nicht zum Daueraufenthaltsberechtigten."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+        ]
+      },
+      {
+        "heading": "Vergleiche Leistungen und Lebenshaltungskosten",
+        "paragraphs": [
+          "Prüfe Versicherungsbeginn, Familienschutz und Eigenkosten. Vergleiche Urlaub, Altersvorsorge, Wohnung und Verkehr. Lass Umzugshilfe und mögliche Rückzahlung schriftlich bestätigen."
+        ],
+        "sources": [
+          "https://www.healthcare.gov/have-job-based-coverage/"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Stellen suchen: Vereinigte Staaten",
+        "href": "/jobs?location=United%20States"
+      },
+      {
+        "label": "Unabhängige Spezialisten finden",
+        "href": "/specialists"
+      },
+      {
+        "label": "Angebote für deinen Umzug",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "es": {
+    "slug": "usa-work-visa-jobs",
+    "title": "Trabajar en Estados Unidos: revisa la vía y la oferta",
+    "countryLabel": "Estados Unidos",
+    "iso2": "us",
+    "flagEmoji": "🇺🇸",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.uscis.gov/working-in-the-united-states",
+    "excerpt": "Empieza por tu derecho a trabajar y el compromiso concreto de la empresa. Revisa plazos, costes y oferta completa antes de mudarte.",
+    "metaDescription": "Empieza por tu derecho a trabajar y el compromiso concreto de la empresa. Revisa plazos, costes y oferta completa antes de mudarte.",
+    "openingHook": "Empieza por tu derecho a trabajar y el compromiso concreto de la empresa. Revisa plazos, costes y oferta completa antes de mudarte.",
+    "quickFacts": [
+      {
+        "label": "Empieza aquí",
+        "value": "Comprueba el puesto y tu derecho a trabajar"
+      },
+      {
+        "label": "Ayuda del empleador",
+        "value": "Confirma por escrito lo que incluye"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Identifica la categoría adecuada",
+        "paragraphs": [
+          "Las categorías H-1B, L y O tienen fines y pruebas distintos. Pregunta cuál corresponde a tu puesto y situación; un título similar no demuestra elegibilidad."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+        ]
+      },
+      {
+        "heading": "Confirma el apoyo de la empresa",
+        "paragraphs": [
+          "En muchas categorías temporales, la empresa debe presentar una petición. Obtén por escrito la vía, el contacto y los pasos antes de considerar la oferta un apoyo al visado."
+        ],
+        "sources": [
+          "https://www.usa.gov/temporary-work-visa"
+        ]
+      },
+      {
+        "heading": "Revisa sueldo, tasas y plazos",
+        "paragraphs": [
+          "Pregunta cómo cumple la oferta las reglas salariales aplicables. Confirma requisitos, selección y tasas actuales con el asesor empresarial. No te fíes de anuncios antiguos ni des por hecha una fecha."
+        ],
+        "sources": [
+          "https://www.dol.gov/agencies/whd/immigration/h1b"
+        ]
+      },
+      {
+        "heading": "Confirma el permiso antes de empezar",
+        "paragraphs": [
+          "La aprobación de la petición, el visado y la admisión son pasos distintos. Revisa tu caso si ya estás en EE. UU. Confirma trabajo autorizado y fecha antes de empezar."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+        ]
+      },
+      {
+        "heading": "Revisa la residencia permanente por separado",
+        "paragraphs": [
+          "La residencia permanente por empleo tiene categorías y reglas de disponibilidad propias. Un trabajo temporal o petición aprobada no te convierte por sí solo en residente permanente."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+        ]
+      },
+      {
+        "heading": "Compara prestaciones y coste de vida",
+        "paragraphs": [
+          "Revisa inicio del seguro, cobertura familiar y tu parte de los costes. Compara vacaciones, jubilación, vivienda y transporte. Obtén por escrito ayudas de mudanza y posibles devoluciones."
+        ],
+        "sources": [
+          "https://www.healthcare.gov/have-job-based-coverage/"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Buscar empleo: Estados Unidos",
+        "href": "/jobs?location=United%20States"
+      },
+      {
+        "label": "Buscar especialistas independientes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Ventajas para tu mudanza",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pt": {
+    "slug": "usa-work-visa-jobs",
+    "title": "Trabalhar nos EUA: verifique a via e a oferta",
+    "countryLabel": "Estados Unidos",
+    "iso2": "us",
+    "flagEmoji": "🇺🇸",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.uscis.gov/working-in-the-united-states",
+    "excerpt": "Comece pelo direito a trabalhar e o compromisso concreto do empregador. Verifique prazos, custos e oferta completa antes de mudar.",
+    "metaDescription": "Comece pelo direito a trabalhar e o compromisso concreto do empregador. Verifique prazos, custos e oferta completa antes de mudar.",
+    "openingHook": "Comece pelo direito a trabalhar e o compromisso concreto do empregador. Verifique prazos, custos e oferta completa antes de mudar.",
+    "quickFacts": [
+      {
+        "label": "Comece aqui",
+        "value": "Verifique o emprego e o seu direito a trabalhar"
+      },
+      {
+        "label": "Apoio do empregador",
+        "value": "Confirme por escrito o que está incluído"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Identifique a categoria certa",
+        "paragraphs": [
+          "As categorias H-1B, L e O têm fins e provas diferentes. Pergunte qual se adequa ao emprego e à sua situação; um título semelhante não comprova elegibilidade."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+        ]
+      },
+      {
+        "heading": "Confirme o apoio do empregador",
+        "paragraphs": [
+          "Em muitas categorias temporárias, o empregador apresenta uma petição. Obtenha por escrito a via, o contacto e os passos antes de considerar a oferta apoio ao visto."
+        ],
+        "sources": [
+          "https://www.usa.gov/temporary-work-visa"
+        ]
+      },
+      {
+        "heading": "Verifique salário, taxas e prazos",
+        "paragraphs": [
+          "Pergunte como a oferta cumpre as regras salariais aplicáveis. Confirme requisitos, seleção e taxas atuais com o consultor do empregador. Não confie em anúncios antigos nem presuma uma data."
+        ],
+        "sources": [
+          "https://www.dol.gov/agencies/whd/immigration/h1b"
+        ]
+      },
+      {
+        "heading": "Confirme a autorização antes de começar",
+        "paragraphs": [
+          "A aprovação da petição, o visto e a admissão são passos distintos. Verifique o seu caso se já está nos EUA. Confirme o trabalho autorizado e a data antes de começar."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+        ]
+      },
+      {
+        "heading": "Reveja a residência permanente separadamente",
+        "paragraphs": [
+          "A residência permanente por emprego tem categorias e regras de disponibilidade próprias. Um trabalho temporário ou petição aprovada não o torna, por si só, residente permanente."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+        ]
+      },
+      {
+        "heading": "Compare benefícios e custo de vida",
+        "paragraphs": [
+          "Verifique início do seguro, cobertura familiar e a sua parte dos custos. Compare férias, reforma, alojamento e transporte. Obtenha apoio à mudança e eventuais reembolsos por escrito."
+        ],
+        "sources": [
+          "https://www.healthcare.gov/have-job-based-coverage/"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Procurar emprego: Estados Unidos",
+        "href": "/jobs?location=United%20States"
+      },
+      {
+        "label": "Procurar especialistas independentes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantagens para a mudança",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "it": {
+    "slug": "usa-work-visa-jobs",
+    "title": "Lavorare negli Stati Uniti: verifica percorso e offerta",
+    "countryLabel": "Stati Uniti",
+    "iso2": "us",
+    "flagEmoji": "🇺🇸",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.uscis.gov/working-in-the-united-states",
+    "excerpt": "Parti dal diritto al lavoro e dall’impegno concreto del datore. Verifica tempi, costi e offerta completa prima del trasferimento.",
+    "metaDescription": "Parti dal diritto al lavoro e dall’impegno concreto del datore. Verifica tempi, costi e offerta completa prima del trasferimento.",
+    "openingHook": "Parti dal diritto al lavoro e dall’impegno concreto del datore. Verifica tempi, costi e offerta completa prima del trasferimento.",
+    "quickFacts": [
+      {
+        "label": "Inizia qui",
+        "value": "Verifica il lavoro e il tuo diritto a lavorare"
+      },
+      {
+        "label": "Aiuto del datore di lavoro",
+        "value": "Fai confermare per iscritto cosa è incluso"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Individua la categoria corretta",
+        "paragraphs": [
+          "Le categorie H-1B, L e O hanno scopi e prove diversi. Chiedi quale si adatta a ruolo e situazione; un titolo simile non dimostra l’idoneità."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+        ]
+      },
+      {
+        "heading": "Conferma il sostegno del datore",
+        "paragraphs": [
+          "Per molte categorie temporanee il datore deve presentare una petizione. Ottieni per iscritto percorso, referente e passaggi prima di considerare l’offerta un sostegno al visto."
+        ],
+        "sources": [
+          "https://www.usa.gov/temporary-work-visa"
+        ]
+      },
+      {
+        "heading": "Verifica retribuzione, costi e tempi",
+        "paragraphs": [
+          "Chiedi come l’offerta rispetta le regole salariali applicabili. Conferma requisiti, selezione e costi attuali con il consulente del datore. Non affidarti a vecchi annunci o date presunte."
+        ],
+        "sources": [
+          "https://www.dol.gov/agencies/whd/immigration/h1b"
+        ]
+      },
+      {
+        "heading": "Conferma l’autorizzazione prima di iniziare",
+        "paragraphs": [
+          "Approvazione della petizione, visto e ammissione sono passaggi distinti. Verifica il tuo caso se sei già negli USA. Conferma lavoro autorizzato e data prima di iniziare."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+        ]
+      },
+      {
+        "heading": "Valuta la residenza permanente separatamente",
+        "paragraphs": [
+          "La residenza permanente per lavoro ha categorie e regole di disponibilità proprie. Un lavoro temporaneo o una petizione approvata non ti rende, da solo, residente permanente."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+        ]
+      },
+      {
+        "heading": "Confronta benefici e costo della vita",
+        "paragraphs": [
+          "Verifica inizio dell’assicurazione, copertura familiare e costi a tuo carico. Confronta ferie, pensione, alloggio e trasporti. Ottieni per iscritto aiuti al trasferimento ed eventuali restituzioni."
+        ],
+        "sources": [
+          "https://www.healthcare.gov/have-job-based-coverage/"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Cerca lavoro: Stati Uniti",
+        "href": "/jobs?location=United%20States"
+      },
+      {
+        "label": "Trova specialisti indipendenti",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantaggi per il trasferimento",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "nl": {
+    "slug": "usa-work-visa-jobs",
+    "title": "Werken in de VS: controleer de route en het aanbod",
+    "countryLabel": "Verenigde Staten",
+    "iso2": "us",
+    "flagEmoji": "🇺🇸",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.uscis.gov/working-in-the-united-states",
+    "excerpt": "Begin met je werkrecht en de concrete toezegging van de werkgever. Controleer timing, kosten en het hele aanbod vóór je verhuist.",
+    "metaDescription": "Begin met je werkrecht en de concrete toezegging van de werkgever. Controleer timing, kosten en het hele aanbod vóór je verhuist.",
+    "openingHook": "Begin met je werkrecht en de concrete toezegging van de werkgever. Controleer timing, kosten en het hele aanbod vóór je verhuist.",
+    "quickFacts": [
+      {
+        "label": "Begin hier",
+        "value": "Controleer de baan en je recht om te werken"
+      },
+      {
+        "label": "Hulp van de werkgever",
+        "value": "Laat schriftelijk bevestigen wat is inbegrepen"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Bepaal de juiste categorie",
+        "paragraphs": [
+          "De categorieën H-1B, L en O hebben andere doelen en bewijseisen. Vraag welke past bij jouw baan en situatie; een vergelijkbare functietitel bewijst geen toelating."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+        ]
+      },
+      {
+        "heading": "Bevestig werkgeverssteun",
+        "paragraphs": [
+          "Bij veel tijdelijke werkcategorieën moet de werkgever een verzoekschrift indienen. Leg route, contactpersoon en stappen vast voordat je het aanbod als visumsteun beschouwt."
+        ],
+        "sources": [
+          "https://www.usa.gov/temporary-work-visa"
+        ]
+      },
+      {
+        "heading": "Controleer loon, kosten en timing",
+        "paragraphs": [
+          "Vraag hoe het aanbod aan geldende loonregels voldoet. Bevestig actuele aanvragen, selectieregels en kosten met de adviseur van de werkgever. Vertrouw niet op oude vacatures of een veronderstelde startdatum."
+        ],
+        "sources": [
+          "https://www.dol.gov/agencies/whd/immigration/h1b"
+        ]
+      },
+      {
+        "heading": "Bevestig toestemming vóór je begint",
+        "paragraphs": [
+          "Goedkeuring van een verzoekschrift, een visum en toelating zijn aparte stappen. Controleer je situatie als je al in de VS bent. Bevestig werkrecht en startdatum vóór je begint."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+        ]
+      },
+      {
+        "heading": "Beoordeel permanent verblijf apart",
+        "paragraphs": [
+          "Permanent verblijf op basis van werk kent eigen categorieën en beschikbaarheidsregels. Een tijdelijke baan of goedgekeurd verzoekschrift maakt je op zichzelf geen permanent ingezetene."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+        ]
+      },
+      {
+        "heading": "Vergelijk arbeidsvoorwaarden en leefkosten",
+        "paragraphs": [
+          "Controleer de start van zorgverzekering, gezinsdekking en eigen kosten. Vergelijk verlof, pensioen, wonen en vervoer. Leg verhuishulp en eventuele terugbetaling schriftelijk vast."
+        ],
+        "sources": [
+          "https://www.healthcare.gov/have-job-based-coverage/"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Werk zoeken: Verenigde Staten",
+        "href": "/jobs?location=United%20States"
+      },
+      {
+        "label": "Onafhankelijke specialisten zoeken",
+        "href": "/specialists"
+      },
+      {
+        "label": "Voordelen voor je verhuizing",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pl": {
+    "slug": "usa-work-visa-jobs",
+    "title": "Praca w USA: sprawdź ścieżkę i ofertę",
+    "countryLabel": "Stany Zjednoczone",
+    "iso2": "us",
+    "flagEmoji": "🇺🇸",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://www.uscis.gov/working-in-the-united-states",
+    "excerpt": "Zacznij od prawa do pracy i konkretnego zobowiązania pracodawcy. Sprawdź terminy, koszty i całą ofertę przed przeprowadzką.",
+    "metaDescription": "Zacznij od prawa do pracy i konkretnego zobowiązania pracodawcy. Sprawdź terminy, koszty i całą ofertę przed przeprowadzką.",
+    "openingHook": "Zacznij od prawa do pracy i konkretnego zobowiązania pracodawcy. Sprawdź terminy, koszty i całą ofertę przed przeprowadzką.",
+    "quickFacts": [
+      {
+        "label": "Zacznij tutaj",
+        "value": "Sprawdź ofertę i swoje prawo do pracy"
+      },
+      {
+        "label": "Pomoc pracodawcy",
+        "value": "Uzyskaj pisemne potwierdzenie zakresu pomocy"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Ustal właściwą kategorię",
+        "paragraphs": [
+          "Kategorie H-1B, L i O mają różne cele i wymagane dowody. Zapytaj, która pasuje do stanowiska i sytuacji; podobna nazwa zawodu nie potwierdza uprawnień."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+        ]
+      },
+      {
+        "heading": "Potwierdź wsparcie pracodawcy",
+        "paragraphs": [
+          "W wielu kategoriach czasowych pracodawca musi złożyć petycję. Uzyskaj na piśmie ścieżkę, osobę kontaktową i etapy przed uznaniem oferty za wsparcie wizowe."
+        ],
+        "sources": [
+          "https://www.usa.gov/temporary-work-visa"
+        ]
+      },
+      {
+        "heading": "Sprawdź płacę, opłaty i terminy",
+        "paragraphs": [
+          "Zapytaj, jak oferta spełnia właściwe zasady płacowe. Potwierdź aktualne wymogi, nabór i opłaty z doradcą pracodawcy. Nie polegaj na starych ogłoszeniach ani domniemanej dacie rozpoczęcia."
+        ],
+        "sources": [
+          "https://www.dol.gov/agencies/whd/immigration/h1b"
+        ]
+      },
+      {
+        "heading": "Potwierdź uprawnienia przed rozpoczęciem",
+        "paragraphs": [
+          "Zatwierdzenie petycji, wiza i zgoda na wjazd to odrębne etapy. Sprawdź zasady, jeśli już jesteś w USA. Potwierdź dozwoloną pracę i datę przed rozpoczęciem."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+        ]
+      },
+      {
+        "heading": "Osobno sprawdź pobyt stały",
+        "paragraphs": [
+          "Pobyt stały na podstawie zatrudnienia ma własne kategorie i zasady dostępności wiz. Czasowa praca ani zatwierdzona petycja nie dają same w sobie stałego pobytu."
+        ],
+        "sources": [
+          "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+        ]
+      },
+      {
+        "heading": "Porównaj świadczenia i koszty życia",
+        "paragraphs": [
+          "Sprawdź początek ubezpieczenia, ochronę rodziny i własne koszty. Porównaj urlop, emeryturę, mieszkanie i transport. Uzyskaj wsparcie przeprowadzki i zasady zwrotów na piśmie."
+        ],
+        "sources": [
+          "https://www.healthcare.gov/have-job-based-coverage/"
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Szukaj pracy: Stany Zjednoczone",
+        "href": "/jobs?location=United%20States"
+      },
+      {
+        "label": "Znajdź niezależnych specjalistów",
+        "href": "/specialists"
+      },
+      {
+        "label": "Oferty na czas przeprowadzki",
+        "href": "/relocation-perks"
+      }
+    ]
+  }
+}

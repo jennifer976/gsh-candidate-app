@@ -1,7 +1,17 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { AppLanguageSetting } from "@/components/AppLanguageSetting";
+import { useAuthCopy } from "@/lib/i18n/useAuthCopy";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useMemo, useState } from "react";
-import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
@@ -9,11 +19,17 @@ import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { verifyOtpRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
+import { persistCandidateReturnIntent } from "@/lib/candidate-return-intent";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function VerifyScreen() {
+  const ac = useAuthCopy();
+  const [feedback, setFeedback] = useState<Parameters<typeof ac>[0] | null>(null);
   const router = useRouter();
-  const params = useLocalSearchParams<{ userId?: string | string[] }>();
+  const params = useLocalSearchParams<{
+    userId?: string | string[];
+    returnTo?: string | string[];
+  }>();
   const userIdParam = useMemo(() => {
     const raw = params.userId;
     if (Array.isArray(raw)) return raw[0] ?? "";
@@ -23,11 +39,20 @@ export default function VerifyScreen() {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const returnTo = Array.isArray(params.returnTo)
+      ? params.returnTo[0]
+      : params.returnTo;
+    if (returnTo) void persistCandidateReturnIntent(returnTo);
+  }, [params.returnTo]);
+
   async function onSubmit() {
+    if (loading) return;
+    setFeedback(null);
     const uid = String(userIdParam || "").trim();
     const c = code.trim();
-    if (!uid || !c) {
-      Alert.alert("Missing code", "Enter the verification code from your email.");
+    if (!uid || !/^\d{6}$/.test(c)) {
+      setFeedback('Enter the 6-digit code from your email.');
       return;
     }
     setLoading(true);
@@ -36,9 +61,7 @@ export default function VerifyScreen() {
       setAuth(data.token, data.user);
       router.replace("/(tabs)/home");
     } catch (err: unknown) {
-      const msg =
-        err && typeof err === "object" && "message" in err ? String((err as { message: string }).message) : "Verification failed";
-      Alert.alert("Could not verify", msg);
+      setFeedback("That code could not be verified. Check it and try again.");
     } finally {
       setLoading(false);
     }
@@ -48,18 +71,32 @@ export default function VerifyScreen() {
     return (
       <GshScreenBackground>
         <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-          <ScrollView contentContainerStyle={styles.scrollMiss} keyboardShouldPersistTaps="handled">
+          <ScrollView
+            contentContainerStyle={styles.scrollMiss}
+            keyboardShouldPersistTaps="handled"
+          >
+            <AppLanguageSetting />
             <GshScreenIntro
               eyebrow="Global Sponsor Hub"
-              title="Verify email"
-              subtitle="This link is missing your account reference. Go back to sign up, or sign in if you already verified."
+              title={ac("Verify email")}
+              subtitle={ac(
+                "This link is incomplete. Return to sign up, or sign in if you already verified.",
+              )}
               style={{ marginBottom: 20 }}
             />
-            <Pressable style={styles.missBtn} onPress={() => router.replace("/register")} accessibilityRole="button">
-              <Text style={styles.missBtnText}>Create account</Text>
+            <Pressable
+              style={styles.missBtn}
+              onPress={() => router.replace("/register")}
+              accessibilityRole="button"
+            >
+              <Text style={styles.missBtnText}>{ac("Create account")}</Text>
             </Pressable>
-            <Pressable style={styles.missLink} onPress={() => router.replace("/login")} accessibilityRole="button">
-              <Text style={styles.missLinkText}>Sign in instead</Text>
+            <Pressable
+              style={styles.missLink}
+              onPress={() => router.replace("/login")}
+              accessibilityRole="button"
+            >
+              <Text style={styles.missLinkText}>{ac("Sign in instead")}</Text>
             </Pressable>
           </ScrollView>
         </SafeAreaView>
@@ -70,29 +107,46 @@ export default function VerifyScreen() {
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
-          <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={styles.flex}
+        >
+          <ScrollView
+            contentContainerStyle={styles.scroll}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <AppLanguageSetting />
             <GshScreenIntro
               eyebrow="Global Sponsor Hub"
-              title="Verify email"
-              subtitle="Enter the code we emailed you to activate your candidate account."
+              title={ac("Verify email")}
+              subtitle={ac(
+                "Enter the code we emailed you to activate your candidate account.",
+              )}
               style={{ marginBottom: 16 }}
             />
 
-            <LinearGradient colors={[colors.teal, colors.brand]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.accentBar} />
+            <View style={styles.accentBar} />
 
             <View style={[cardSurfaceStyle(false), styles.card]}>
-              <Text style={styles.label}>Verification code</Text>
+              <Text style={styles.label}>{ac("Verification code")}</Text>
               <TextInput
                 style={styles.input}
                 autoCapitalize="characters"
                 placeholder="123456"
                 placeholderTextColor={colors.placeholder}
+                accessibilityLabel={ac("Verification code")}
+                editable={!loading}
                 value={code}
                 onChangeText={setCode}
               />
 
-              <GshGradientPrimaryButton title="Verify & continue" onPress={onSubmit} loading={loading} />
+              {feedback && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={{ color: "#9f1239", backgroundColor: "#fff1f2", borderRadius: 12, padding: 12, marginBottom: 12, fontFamily: fontFamily.regular, lineHeight: 22 }}>{ac(feedback)}</Text>}
+              <GshGradientPrimaryButton
+                title={ac("Verify & continue")}
+                onPress={onSubmit}
+                loading={loading}
+              />
             </View>
 
             <LegalConsentFooterRow />
@@ -106,15 +160,30 @@ export default function VerifyScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   flex: { flex: 1 },
-  scroll: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 16, paddingBottom: 32 },
-  scrollMiss: { flexGrow: 1, paddingHorizontal: 24, paddingVertical: 28, justifyContent: "center" },
-  accentBar: { height: 4, borderRadius: 2, marginBottom: 18 },
+  scroll: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 32,
+  },
+  scrollMiss: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingVertical: 28,
+    justifyContent: "center",
+  },
+  accentBar: { height: 3, backgroundColor: colors.teal, marginBottom: 18 },
   card: {
     padding: 20,
     borderRadius: radii.lg,
     backgroundColor: colors.background,
   },
-  label: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary, marginBottom: 8 },
+  label: {
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
   input: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -136,7 +205,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brand,
     alignItems: "center",
   },
-  missBtnText: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.white },
+  missBtnText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 16,
+    color: colors.white,
+  },
   missLink: { marginTop: 20, alignItems: "center" },
-  missLinkText: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.brand },
+  missLinkText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    color: colors.brand,
+  },
 });

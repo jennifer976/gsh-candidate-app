@@ -1,0 +1,858 @@
+{
+  "en": {
+    "slug": "uk-skilled-worker-and-sponsored-jobs",
+    "title": "Working in the UK: sponsorship and your next steps",
+    "countryLabel": "United Kingdom",
+    "iso2": "gb",
+    "flagEmoji": "🇬🇧",
+    "excerpt": "Check the job, salary, English requirements and moving costs before accepting a sponsored role.",
+    "metaDescription": "Check the job, salary, English requirements and moving costs before accepting a sponsored role.",
+    "updatedISO": "2026-09-11",
+    "openingHook": "Start with the employer’s offer and your own work rights. A sponsorship label helps you find relevant roles; it does not confirm that you qualify for a visa.",
+    "quickFacts": [
+      {
+        "label": "Main visa route",
+        "value": "Skilled Worker"
+      },
+      {
+        "label": "Min. salary (general)",
+        "value": "Higher of £41,700/year or the going rate; exceptions apply"
+      },
+      {
+        "label": "Employer requirement",
+        "value": "Approved sponsor and a qualifying job offer"
+      },
+      {
+        "label": "English",
+        "value": "Usually B2 for new applicants; exemptions and transition rules apply"
+      },
+      {
+        "label": "Family",
+        "value": "Check eligibility for each dependant"
+      },
+      {
+        "label": "Long-term plans",
+        "value": "Settlement has separate requirements"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Check the employer and the job",
+        "paragraphs": [
+          "The Skilled Worker route requires an eligible job offer from an approved sponsor. The employer supplies a Certificate of Sponsorship (CoS) reference for your application. A sponsor licence alone does not mean every vacancy is eligible or that the employer will sponsor you."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Check the salary and occupation code",
+        "paragraphs": [
+          "The usual minimum is the higher of £41,700 per year and the occupation’s going rate. Different salary rules apply in defined cases, including some healthcare and education jobs. Ask for the occupation code and check the official requirements for your offer; a similar job title is not enough."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/your-job"
+        ]
+      },
+      {
+        "heading": "Prepare proof of English",
+        "paragraphs": [
+          "New applicants generally need B2 English. Exemptions and rules for previous visa holders can change what you must provide. Check the accepted qualifications or tests before paying for a course, assessment or exam."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+        ]
+      },
+      {
+        "heading": "Plan fees and family arrangements",
+        "paragraphs": [
+          "Agree who pays each cost before accepting. Budget for the application, any healthcare surcharge, documents and moving costs. Check each family member’s eligibility and costs separately: restrictions apply to some occupations and visa histories. Settlement is a separate application, not a guaranteed result of sponsorship."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/how-much-it-costs",
+          "https://www.gov.uk/skilled-worker-visa/your-partner-and-children",
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Changing jobs later",
+        "paragraphs": [
+          "Changing employer usually requires a visa update and a new CoS. A different job with the same employer needs an update if its occupation code changes. Check the official rules before starting the new role."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+        ]
+      },
+      {
+        "heading": "Before you commit to the move",
+        "paragraphs": [
+          "Ask for written confirmation of sponsorship support, duties, salary, start-date flexibility and who handles the application. Read any repayment clauses and ask for unclear terms to be explained. Compare housing and travel costs with your expected take-home pay. Use Global Sponsor Hub to find jobs and independent specialists; viewing a profile does not send a request or establish eligibility."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Search jobs in the United Kingdom",
+        "href": "/jobs?location=United%20Kingdom"
+      },
+      {
+        "label": "Browse independent specialists",
+        "href": "/specialists"
+      },
+      {
+        "label": "Relocation perks",
+        "href": "/relocation-perks"
+      }
+    ],
+    "officialSourceUrl": "https://www.gov.uk/skilled-worker-visa"
+  },
+  "fr": {
+    "slug": "uk-skilled-worker-and-sponsored-jobs",
+    "title": "Travailler au Royaume-Uni : parrainage et prochaines étapes",
+    "countryLabel": "Royaume-Uni",
+    "iso2": "gb",
+    "flagEmoji": "🇬🇧",
+    "excerpt": "Vérifiez le poste, le salaire, les exigences d’anglais et les frais de déménagement avant d’accepter un poste parrainé.",
+    "metaDescription": "Vérifiez le poste, le salaire, les exigences d’anglais et les frais de déménagement avant d’accepter un poste parrainé.",
+    "updatedISO": "2026-09-11",
+    "openingHook": "Commencez par l’offre de l’employeur et votre droit au travail. Une mention de parrainage aide à trouver des postes pertinents ; elle ne confirme pas votre admissibilité à un visa.",
+    "quickFacts": [
+      {
+        "label": "Visa principal",
+        "value": "Skilled Worker"
+      },
+      {
+        "label": "Salaire minimum général",
+        "value": "Le plus élevé entre 41 700 £/an et le taux du métier ; exceptions possibles"
+      },
+      {
+        "label": "Exigence pour l’employeur",
+        "value": "Sponsor agréé et offre d’emploi admissible"
+      },
+      {
+        "label": "Anglais",
+        "value": "Généralement B2 pour les nouveaux demandeurs ; exemptions et règles transitoires"
+      },
+      {
+        "label": "Famille",
+        "value": "Vérifiez l’admissibilité de chaque personne à charge"
+      },
+      {
+        "label": "Projets à long terme",
+        "value": "L’installation permanente a ses propres conditions"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Vérifier l’employeur et le poste",
+        "paragraphs": [
+          "La voie Skilled Worker exige une offre admissible d’un sponsor agréé. L’employeur fournit une référence de Certificate of Sponsorship (CoS) pour votre demande. Une licence ne signifie pas que tous ses postes sont admissibles ou qu’il vous parrainera."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Vérifier le salaire et le code du métier",
+        "paragraphs": [
+          "Le minimum habituel est le plus élevé entre 41 700 £ par an et le taux du métier. D’autres règles s’appliquent dans certains cas, notamment pour des postes de santé et d’enseignement. Demandez le code du métier et vérifiez les exigences officielles de votre offre ; un intitulé similaire ne suffit pas."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/your-job"
+        ]
+      },
+      {
+        "heading": "Préparer la preuve d’anglais",
+        "paragraphs": [
+          "Les nouveaux demandeurs ont généralement besoin du niveau B2. Les exemptions et les règles pour les anciens titulaires de visa peuvent modifier les justificatifs nécessaires. Vérifiez les diplômes ou tests acceptés avant de payer un cours, une évaluation ou un examen."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+        ]
+      },
+      {
+        "heading": "Prévoir les frais et la venue de la famille",
+        "paragraphs": [
+          "Convenez du paiement de chaque frais avant d’accepter. Prévoyez la demande, l’éventuelle surtaxe de santé, les documents et le déménagement. Vérifiez séparément l’admissibilité et les frais de chaque proche : certaines professions et situations antérieures de visa sont soumises à des restrictions. L’installation permanente exige une demande distincte ; le parrainage ne la garantit pas."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/how-much-it-costs",
+          "https://www.gov.uk/skilled-worker-visa/your-partner-and-children",
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Changer de poste ensuite",
+        "paragraphs": [
+          "Changer d’employeur exige généralement une mise à jour du visa et un nouveau CoS. Un autre poste chez le même employeur nécessite une mise à jour si le code du métier change. Consultez les règles officielles avant de commencer."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+        ]
+      },
+      {
+        "heading": "Avant de vous engager",
+        "paragraphs": [
+          "Demandez une confirmation écrite du parrainage, des missions, du salaire, de la souplesse de la date de début et du responsable de la demande. Lisez les clauses de remboursement et faites expliquer les termes flous. Comparez logement et transport à votre revenu net prévu. Global Sponsor Hub aide à trouver des emplois et spécialistes indépendants ; consulter un profil n’envoie pas de demande et ne confirme pas l’admissibilité."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Rechercher un emploi : Royaume-Uni",
+        "href": "/jobs?location=United%20Kingdom"
+      },
+      {
+        "label": "Consulter les spécialistes indépendants",
+        "href": "/specialists"
+      },
+      {
+        "label": "Avantages pour le déménagement",
+        "href": "/relocation-perks"
+      }
+    ],
+    "officialSourceUrl": "https://www.gov.uk/skilled-worker-visa"
+  },
+  "de": {
+    "slug": "uk-skilled-worker-and-sponsored-jobs",
+    "title": "Arbeiten im Vereinigten Königreich: Sponsoring und nächste Schritte",
+    "countryLabel": "Vereinigtes Königreich",
+    "iso2": "gb",
+    "flagEmoji": "🇬🇧",
+    "excerpt": "Prüfen Sie Stelle, Gehalt, Englischkenntnisse und Umzugskosten, bevor Sie eine gesponserte Stelle annehmen.",
+    "metaDescription": "Prüfen Sie Stelle, Gehalt, Englischkenntnisse und Umzugskosten, bevor Sie eine gesponserte Stelle annehmen.",
+    "updatedISO": "2026-09-11",
+    "openingHook": "Beginnen Sie mit dem Angebot des Arbeitgebers und Ihrem Arbeitsrecht. Ein Sponsoring-Hinweis hilft bei der Stellensuche, bestätigt aber keinen Visumanspruch.",
+    "quickFacts": [
+      {
+        "label": "Hauptvisumroute",
+        "value": "Skilled Worker"
+      },
+      {
+        "label": "Allgemeine Gehaltsuntergrenze",
+        "value": "Der höhere Betrag aus 41.700 £/Jahr und dem berufsspezifischen Satz; Ausnahmen möglich"
+      },
+      {
+        "label": "Anforderung an den Arbeitgeber",
+        "value": "Zugelassener Sponsor und qualifizierendes Stellenangebot"
+      },
+      {
+        "label": "Englisch",
+        "value": "Für neue Anträge meist B2; Ausnahmen und Übergangsregeln gelten"
+      },
+      {
+        "label": "Familie",
+        "value": "Berechtigung jedes Angehörigen prüfen"
+      },
+      {
+        "label": "Langfristige Pläne",
+        "value": "Daueraufenthalt hat eigene Voraussetzungen"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Arbeitgeber und Stelle prüfen",
+        "paragraphs": [
+          "Die Skilled-Worker-Route erfordert ein geeignetes Stellenangebot eines zugelassenen Sponsors. Der Arbeitgeber stellt eine Certificate-of-Sponsorship-Referenz (CoS) für den Antrag bereit. Eine Sponsor-Lizenz bedeutet nicht, dass jede Stelle geeignet ist oder der Arbeitgeber Sie sponsern wird."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Gehalt und Berufscode prüfen",
+        "paragraphs": [
+          "Üblicherweise gilt der höhere Betrag aus 41.700 £ pro Jahr und dem berufsspezifischen Gehaltssatz. In bestimmten Fällen gelten andere Regeln, etwa für einige Gesundheits- und Bildungsberufe. Fragen Sie nach dem Berufscode und prüfen Sie die offiziellen Anforderungen für Ihr Angebot; ein ähnlicher Titel reicht nicht."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/your-job"
+        ]
+      },
+      {
+        "heading": "Englischnachweis vorbereiten",
+        "paragraphs": [
+          "Neue Antragsteller benötigen in der Regel Englisch auf B2-Niveau. Ausnahmen und Regeln für frühere Visuminhaber können die erforderlichen Nachweise ändern. Prüfen Sie anerkannte Abschlüsse oder Tests, bevor Sie einen Kurs, eine Bewertung oder Prüfung bezahlen."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+        ]
+      },
+      {
+        "heading": "Gebühren und Familienumzug planen",
+        "paragraphs": [
+          "Klären Sie vor der Zusage, wer welche Kosten trägt. Planen Sie Antrag, mögliche Gesundheitsabgabe, Unterlagen und Umzug ein. Prüfen Sie Voraussetzungen und Kosten jedes Angehörigen gesondert: Für bestimmte Berufe und frühere Visumverläufe gelten Einschränkungen. Daueraufenthalt erfordert einen eigenen Antrag und ist durch Sponsoring nicht garantiert."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/how-much-it-costs",
+          "https://www.gov.uk/skilled-worker-visa/your-partner-and-children",
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Späterer Stellenwechsel",
+        "paragraphs": [
+          "Ein Arbeitgeberwechsel erfordert in der Regel eine Visumaktualisierung und ein neues CoS. Eine andere Stelle beim gleichen Arbeitgeber erfordert eine Aktualisierung, wenn sich der Berufscode ändert. Prüfen Sie die offiziellen Regeln vor Arbeitsbeginn."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+        ]
+      },
+      {
+        "heading": "Vor der Umzugsentscheidung",
+        "paragraphs": [
+          "Lassen Sie Sponsoring, Aufgaben, Gehalt, Spielraum beim Startdatum und Zuständigkeit für den Antrag schriftlich bestätigen. Lesen Sie Rückzahlungsklauseln und lassen Sie Unklares erklären. Vergleichen Sie Wohn- und Fahrtkosten mit dem erwarteten Nettogehalt. Global Sponsor Hub hilft bei der Suche nach Jobs und unabhängigen Fachleuten. Ein Profilaufruf sendet keine Anfrage und bestätigt keine Berechtigung."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Stellen suchen: Vereinigtes Königreich",
+        "href": "/jobs?location=United%20Kingdom"
+      },
+      {
+        "label": "Unabhängige Spezialisten finden",
+        "href": "/specialists"
+      },
+      {
+        "label": "Angebote für deinen Umzug",
+        "href": "/relocation-perks"
+      }
+    ],
+    "officialSourceUrl": "https://www.gov.uk/skilled-worker-visa"
+  },
+  "es": {
+    "slug": "uk-skilled-worker-and-sponsored-jobs",
+    "title": "Trabajar en el Reino Unido: patrocinio y próximos pasos",
+    "countryLabel": "Reino Unido",
+    "iso2": "gb",
+    "flagEmoji": "🇬🇧",
+    "excerpt": "Comprueba el puesto, salario, requisitos de inglés y costes de mudanza antes de aceptar un empleo patrocinado.",
+    "metaDescription": "Comprueba el puesto, salario, requisitos de inglés y costes de mudanza antes de aceptar un empleo patrocinado.",
+    "updatedISO": "2026-09-11",
+    "openingHook": "Empieza por la oferta del empleador y tu derecho a trabajar. Una etiqueta de patrocinio ayuda a encontrar puestos relevantes; no confirma que puedas obtener un visado.",
+    "quickFacts": [
+      {
+        "label": "Visado principal",
+        "value": "Skilled Worker"
+      },
+      {
+        "label": "Salario mínimo general",
+        "value": "El mayor entre 41.700 £/año y la tarifa del puesto; hay excepciones"
+      },
+      {
+        "label": "Requisito del empleador",
+        "value": "Patrocinador aprobado y oferta elegible"
+      },
+      {
+        "label": "Inglés",
+        "value": "Normalmente B2 para nuevos solicitantes; hay exenciones y normas transitorias"
+      },
+      {
+        "label": "Familia",
+        "value": "Comprueba la elegibilidad de cada familiar dependiente"
+      },
+      {
+        "label": "Planes a largo plazo",
+        "value": "La residencia permanente tiene requisitos propios"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Comprueba el empleador y el puesto",
+        "paragraphs": [
+          "La vía Skilled Worker exige una oferta elegible de un patrocinador aprobado. El empleador facilita una referencia de Certificate of Sponsorship (CoS) para tu solicitud. Tener licencia no significa que todas sus vacantes sean elegibles ni que vaya a patrocinarte."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Comprueba el salario y el código profesional",
+        "paragraphs": [
+          "El mínimo habitual es el mayor entre 41.700 £ al año y la tarifa del puesto. En casos definidos se aplican otras reglas, incluidos ciertos empleos sanitarios y educativos. Pide el código profesional y comprueba los requisitos oficiales de la oferta; un título parecido no basta."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/your-job"
+        ]
+      },
+      {
+        "heading": "Prepara la prueba de inglés",
+        "paragraphs": [
+          "Los nuevos solicitantes suelen necesitar inglés B2. Las exenciones y normas para anteriores titulares pueden cambiar los documentos exigidos. Comprueba las titulaciones o pruebas aceptadas antes de pagar un curso, evaluación o examen."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+        ]
+      },
+      {
+        "heading": "Planifica gastos y asuntos familiares",
+        "paragraphs": [
+          "Acuerda quién paga cada coste antes de aceptar. Presupuesta la solicitud, el posible recargo sanitario, documentos y mudanza. Revisa por separado la elegibilidad y los costes de cada familiar: existen restricciones para ciertas profesiones y antecedentes de visado. La residencia permanente requiere otra solicitud y no está garantizada por el patrocinio."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/how-much-it-costs",
+          "https://www.gov.uk/skilled-worker-visa/your-partner-and-children",
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Cambiar de empleo después",
+        "paragraphs": [
+          "Cambiar de empleador suele requerir actualizar el visado y obtener un nuevo CoS. Otro puesto con el mismo empleador requiere actualización si cambia el código profesional. Consulta las normas oficiales antes de empezar."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+        ]
+      },
+      {
+        "heading": "Antes de comprometerte con la mudanza",
+        "paragraphs": [
+          "Pide confirmación escrita del patrocinio, funciones, salario, flexibilidad de inicio y quién gestiona la solicitud. Lee las cláusulas de devolución y pide que aclaren los términos confusos. Compara vivienda y transporte con tu sueldo neto previsto. Global Sponsor Hub ayuda a encontrar empleos y especialistas independientes; ver un perfil no envía una solicitud ni confirma la elegibilidad."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Buscar empleo: Reino Unido",
+        "href": "/jobs?location=United%20Kingdom"
+      },
+      {
+        "label": "Buscar especialistas independientes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Ventajas para tu mudanza",
+        "href": "/relocation-perks"
+      }
+    ],
+    "officialSourceUrl": "https://www.gov.uk/skilled-worker-visa"
+  },
+  "pt": {
+    "slug": "uk-skilled-worker-and-sponsored-jobs",
+    "title": "Trabalhar no Reino Unido: patrocínio e próximos passos",
+    "countryLabel": "Reino Unido",
+    "iso2": "gb",
+    "flagEmoji": "🇬🇧",
+    "excerpt": "Verifique a função, o salário, os requisitos de inglês e os custos da mudança antes de aceitar uma vaga patrocinada.",
+    "metaDescription": "Verifique a função, o salário, os requisitos de inglês e os custos da mudança antes de aceitar uma vaga patrocinada.",
+    "updatedISO": "2026-09-11",
+    "openingHook": "Comece pela oferta do empregador e pelo seu direito a trabalhar. Uma indicação de patrocínio ajuda a encontrar vagas relevantes; não confirma a elegibilidade para um visto.",
+    "quickFacts": [
+      {
+        "label": "Via de visto principal",
+        "value": "Skilled Worker"
+      },
+      {
+        "label": "Salário mínimo geral",
+        "value": "O maior entre 41 700 £/ano e a remuneração da profissão; há exceções"
+      },
+      {
+        "label": "Requisito do empregador",
+        "value": "Patrocinador aprovado e oferta elegível"
+      },
+      {
+        "label": "Inglês",
+        "value": "Geralmente B2 para novos candidatos; há isenções e regras transitórias"
+      },
+      {
+        "label": "Família",
+        "value": "Verifique a elegibilidade de cada dependente"
+      },
+      {
+        "label": "Planos a longo prazo",
+        "value": "A residência permanente tem requisitos próprios"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Verifique o empregador e a função",
+        "paragraphs": [
+          "A via Skilled Worker exige uma oferta elegível de um patrocinador aprovado. O empregador fornece uma referência de Certificate of Sponsorship (CoS) para o pedido. A licença não significa que todas as vagas sejam elegíveis ou que o empregador o vá patrocinar."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Verifique o salário e o código da profissão",
+        "paragraphs": [
+          "O mínimo habitual é o maior entre 41 700 £ por ano e a remuneração da profissão. Existem regras diferentes em casos definidos, incluindo certas funções de saúde e educação. Peça o código da profissão e consulte os requisitos oficiais da oferta; um título semelhante não basta."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/your-job"
+        ]
+      },
+      {
+        "heading": "Prepare o comprovativo de inglês",
+        "paragraphs": [
+          "Os novos candidatos precisam geralmente de inglês B2. As isenções e regras para anteriores titulares podem alterar os comprovativos necessários. Confirme as qualificações ou testes aceites antes de pagar um curso, avaliação ou exame."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+        ]
+      },
+      {
+        "heading": "Planeie taxas e questões familiares",
+        "paragraphs": [
+          "Acorde quem paga cada custo antes de aceitar. Inclua o pedido, eventual sobretaxa de saúde, documentos e mudança no orçamento. Verifique separadamente a elegibilidade e os custos de cada familiar: há restrições para certas profissões e históricos de visto. A residência permanente exige outro pedido e não é garantida pelo patrocínio."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/how-much-it-costs",
+          "https://www.gov.uk/skilled-worker-visa/your-partner-and-children",
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Mudar de emprego depois",
+        "paragraphs": [
+          "Mudar de empregador exige geralmente atualizar o visto e obter um novo CoS. Outra função no mesmo empregador exige atualização se mudar o código profissional. Consulte as regras oficiais antes de começar."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+        ]
+      },
+      {
+        "heading": "Antes de se comprometer com a mudança",
+        "paragraphs": [
+          "Peça confirmação escrita do patrocínio, funções, salário, flexibilidade da data de início e responsável pelo pedido. Leia as cláusulas de reembolso e peça esclarecimentos sobre termos pouco claros. Compare habitação e transportes com o salário líquido esperado. O Global Sponsor Hub ajuda a encontrar empregos e especialistas independentes; ver um perfil não envia um pedido nem confirma elegibilidade."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Procurar emprego: Reino Unido",
+        "href": "/jobs?location=United%20Kingdom"
+      },
+      {
+        "label": "Procurar especialistas independentes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantagens para a mudança",
+        "href": "/relocation-perks"
+      }
+    ],
+    "officialSourceUrl": "https://www.gov.uk/skilled-worker-visa"
+  },
+  "it": {
+    "slug": "uk-skilled-worker-and-sponsored-jobs",
+    "title": "Lavorare nel Regno Unito: sponsorizzazione e prossimi passi",
+    "countryLabel": "Regno Unito",
+    "iso2": "gb",
+    "flagEmoji": "🇬🇧",
+    "excerpt": "Controlla ruolo, stipendio, requisiti di inglese e costi del trasferimento prima di accettare un lavoro sponsorizzato.",
+    "metaDescription": "Controlla ruolo, stipendio, requisiti di inglese e costi del trasferimento prima di accettare un lavoro sponsorizzato.",
+    "updatedISO": "2026-09-11",
+    "openingHook": "Parti dall’offerta del datore di lavoro e dal tuo diritto a lavorare. Un’indicazione di sponsorizzazione aiuta a trovare offerte pertinenti, ma non conferma l’idoneità al visto.",
+    "quickFacts": [
+      {
+        "label": "Visto principale",
+        "value": "Skilled Worker"
+      },
+      {
+        "label": "Salario minimo generale",
+        "value": "Il maggiore tra 41.700 £/anno e la tariffa del ruolo; si applicano eccezioni"
+      },
+      {
+        "label": "Requisito del datore di lavoro",
+        "value": "Sponsor autorizzato e offerta idonea"
+      },
+      {
+        "label": "Inglese",
+        "value": "Di norma B2 per nuove domande; sono previste esenzioni e regole transitorie"
+      },
+      {
+        "label": "Famiglia",
+        "value": "Verifica l’idoneità di ogni familiare a carico"
+      },
+      {
+        "label": "Piani a lungo termine",
+        "value": "La residenza permanente ha requisiti separati"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Controlla datore di lavoro e ruolo",
+        "paragraphs": [
+          "La via Skilled Worker richiede un’offerta idonea da uno sponsor autorizzato. Il datore fornisce un riferimento Certificate of Sponsorship (CoS) per la domanda. La licenza non significa che tutte le offerte siano idonee o che il datore ti sponsorizzerà."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Controlla stipendio e codice professionale",
+        "paragraphs": [
+          "Il minimo abituale è il maggiore tra 41.700 £ annue e la tariffa del ruolo. In casi specifici si applicano regole diverse, anche per alcuni lavori sanitari e scolastici. Chiedi il codice professionale e verifica i requisiti ufficiali dell’offerta; un titolo simile non basta."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/your-job"
+        ]
+      },
+      {
+        "heading": "Prepara la prova di inglese",
+        "paragraphs": [
+          "I nuovi richiedenti devono generalmente dimostrare inglese B2. Esenzioni e regole per precedenti titolari di visto possono cambiare i documenti richiesti. Verifica titoli o test accettati prima di pagare un corso, una valutazione o un esame."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+        ]
+      },
+      {
+        "heading": "Pianifica spese e trasferimento della famiglia",
+        "paragraphs": [
+          "Concorda chi paga ogni costo prima di accettare. Prevedi domanda, eventuale supplemento sanitario, documenti e trasferimento. Verifica separatamente idoneità e costi di ogni familiare: alcune professioni e precedenti situazioni di visto hanno restrizioni. La residenza permanente richiede una domanda separata e non è garantita dalla sponsorizzazione."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/how-much-it-costs",
+          "https://www.gov.uk/skilled-worker-visa/your-partner-and-children",
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Cambiare lavoro in seguito",
+        "paragraphs": [
+          "Cambiare datore richiede generalmente un aggiornamento del visto e un nuovo CoS. Un ruolo diverso con lo stesso datore richiede un aggiornamento se cambia il codice professionale. Controlla le regole ufficiali prima di iniziare."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+        ]
+      },
+      {
+        "heading": "Prima di impegnarti nel trasferimento",
+        "paragraphs": [
+          "Chiedi conferma scritta di sponsorizzazione, mansioni, stipendio, flessibilità della data iniziale e responsabile della domanda. Leggi le clausole di rimborso e chiedi chiarimenti sui termini poco chiari. Confronta alloggio e trasporti con lo stipendio netto previsto. Global Sponsor Hub aiuta a trovare lavori e specialisti indipendenti; visualizzare un profilo non invia richieste né conferma l’idoneità."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Cerca lavoro: Regno Unito",
+        "href": "/jobs?location=United%20Kingdom"
+      },
+      {
+        "label": "Trova specialisti indipendenti",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantaggi per il trasferimento",
+        "href": "/relocation-perks"
+      }
+    ],
+    "officialSourceUrl": "https://www.gov.uk/skilled-worker-visa"
+  },
+  "nl": {
+    "slug": "uk-skilled-worker-and-sponsored-jobs",
+    "title": "Werken in het Verenigd Koninkrijk: sponsoring en volgende stappen",
+    "countryLabel": "Verenigd Koninkrijk",
+    "iso2": "gb",
+    "flagEmoji": "🇬🇧",
+    "excerpt": "Controleer de functie, het salaris, de Engelse taaleisen en verhuiskosten voordat je een gesponsorde baan accepteert.",
+    "metaDescription": "Controleer de functie, het salaris, de Engelse taaleisen en verhuiskosten voordat je een gesponsorde baan accepteert.",
+    "updatedISO": "2026-09-11",
+    "openingHook": "Begin bij het aanbod van de werkgever en je recht om te werken. Een sponsoringslabel helpt je relevante banen te vinden, maar bevestigt niet dat je voor een visum in aanmerking komt.",
+    "quickFacts": [
+      {
+        "label": "Belangrijkste visumroute",
+        "value": "Skilled Worker"
+      },
+      {
+        "label": "Algemeen minimumsalaris",
+        "value": "Het hoogste van £41.700/jaar en het tarief voor de functie; uitzonderingen gelden"
+      },
+      {
+        "label": "Eis aan de werkgever",
+        "value": "Erkende sponsor en geschikte baanaanbieding"
+      },
+      {
+        "label": "Engels",
+        "value": "Meestal B2 voor nieuwe aanvragers; vrijstellingen en overgangsregels gelden"
+      },
+      {
+        "label": "Gezin",
+        "value": "Controleer de voorwaarden voor elk gezinslid"
+      },
+      {
+        "label": "Langetermijnplannen",
+        "value": "Permanent verblijf heeft aparte voorwaarden"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Controleer de werkgever en de baan",
+        "paragraphs": [
+          "De Skilled Worker-route vereist een geschikte baanaanbieding van een erkende sponsor. De werkgever geeft een Certificate of Sponsorship-referentie (CoS) voor je aanvraag. Een sponsorlicentie betekent niet dat elke vacature geschikt is of dat de werkgever jou zal sponsoren."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Controleer salaris en beroepscode",
+        "paragraphs": [
+          "Het gebruikelijke minimum is het hoogste van £41.700 per jaar en het tarief voor het beroep. In bepaalde gevallen gelden andere regels, onder meer voor sommige zorg- en onderwijsbanen. Vraag om de beroepscode en controleer de officiële eisen voor je aanbod; een vergelijkbare functietitel is niet genoeg."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/your-job"
+        ]
+      },
+      {
+        "heading": "Bereid je bewijs van Engels voor",
+        "paragraphs": [
+          "Nieuwe aanvragers hebben doorgaans Engels op B2-niveau nodig. Vrijstellingen en regels voor eerdere visumhouders kunnen het vereiste bewijs veranderen. Controleer erkende diploma’s of tests voordat je voor een cursus, beoordeling of examen betaalt."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+        ]
+      },
+      {
+        "heading": "Plan kosten en gezinszaken",
+        "paragraphs": [
+          "Spreek af wie elke kostenpost betaalt voordat je accepteert. Begroot de aanvraag, eventuele zorgtoeslag, documenten en verhuizing. Controleer voorwaarden en kosten voor elk gezinslid apart: voor sommige beroepen en eerdere visumsituaties gelden beperkingen. Permanent verblijf vereist een aparte aanvraag en volgt niet gegarandeerd uit sponsoring."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/how-much-it-costs",
+          "https://www.gov.uk/skilled-worker-visa/your-partner-and-children",
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Later van baan veranderen",
+        "paragraphs": [
+          "Van werkgever veranderen vereist meestal een visumupdate en een nieuw CoS. Een andere functie bij dezelfde werkgever vereist een update als de beroepscode verandert. Controleer de officiële regels voordat je begint."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+        ]
+      },
+      {
+        "heading": "Voordat je besluit te verhuizen",
+        "paragraphs": [
+          "Vraag schriftelijke bevestiging van sponsoring, taken, salaris, flexibiliteit van de startdatum en wie de aanvraag verzorgt. Lees terugbetalingsclausules en laat onduidelijke voorwaarden uitleggen. Vergelijk woon- en reiskosten met je verwachte nettoloon. Global Sponsor Hub helpt je banen en onafhankelijke specialisten te vinden; een profiel bekijken verstuurt geen aanvraag en bevestigt geen geschiktheid."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Werk zoeken: Verenigd Koninkrijk",
+        "href": "/jobs?location=United%20Kingdom"
+      },
+      {
+        "label": "Onafhankelijke specialisten zoeken",
+        "href": "/specialists"
+      },
+      {
+        "label": "Voordelen voor je verhuizing",
+        "href": "/relocation-perks"
+      }
+    ],
+    "officialSourceUrl": "https://www.gov.uk/skilled-worker-visa"
+  },
+  "pl": {
+    "slug": "uk-skilled-worker-and-sponsored-jobs",
+    "title": "Praca w Wielkiej Brytanii: sponsorowanie i kolejne kroki",
+    "countryLabel": "Wielka Brytania",
+    "iso2": "gb",
+    "flagEmoji": "🇬🇧",
+    "excerpt": "Sprawdź stanowisko, wynagrodzenie, wymagania językowe i koszty przeprowadzki przed przyjęciem sponsorowanej oferty.",
+    "metaDescription": "Sprawdź stanowisko, wynagrodzenie, wymagania językowe i koszty przeprowadzki przed przyjęciem sponsorowanej oferty.",
+    "updatedISO": "2026-09-11",
+    "openingHook": "Zacznij od oferty pracodawcy i swojego prawa do pracy. Oznaczenie sponsorowania pomaga znaleźć odpowiednie oferty, ale nie potwierdza prawa do wizy.",
+    "quickFacts": [
+      {
+        "label": "Główna ścieżka wizowa",
+        "value": "Skilled Worker"
+      },
+      {
+        "label": "Ogólny próg wynagrodzenia",
+        "value": "Wyższa z kwot: 41 700 £/rok lub stawka dla zawodu; istnieją wyjątki"
+      },
+      {
+        "label": "Wymóg wobec pracodawcy",
+        "value": "Zatwierdzony sponsor i kwalifikująca się oferta"
+      },
+      {
+        "label": "Angielski",
+        "value": "Zwykle B2 dla nowych wnioskodawców; obowiązują wyjątki i przepisy przejściowe"
+      },
+      {
+        "label": "Rodzina",
+        "value": "Sprawdź warunki dla każdego członka rodziny"
+      },
+      {
+        "label": "Plany długoterminowe",
+        "value": "Osiedlenie ma odrębne wymagania"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Sprawdź pracodawcę i stanowisko",
+        "paragraphs": [
+          "Ścieżka Skilled Worker wymaga kwalifikującej się oferty od zatwierdzonego sponsora. Pracodawca przekazuje numer Certificate of Sponsorship (CoS) do wniosku. Licencja nie oznacza, że każda oferta się kwalifikuje ani że pracodawca będzie Cię sponsorować."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Sprawdź wynagrodzenie i kod zawodu",
+        "paragraphs": [
+          "Zwykłe minimum to wyższa z kwot: 41 700 £ rocznie lub stawka dla zawodu. W określonych przypadkach obowiązują inne zasady, także dla niektórych stanowisk w ochronie zdrowia i edukacji. Poproś o kod zawodu i sprawdź oficjalne wymagania dla oferty; podobna nazwa stanowiska nie wystarcza."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/your-job"
+        ]
+      },
+      {
+        "heading": "Przygotuj potwierdzenie znajomości angielskiego",
+        "paragraphs": [
+          "Nowi wnioskodawcy zwykle potrzebują angielskiego B2. Wyjątki i zasady dla wcześniejszych posiadaczy wiz mogą zmieniać wymagane dokumenty. Sprawdź uznawane kwalifikacje lub testy przed opłaceniem kursu, oceny lub egzaminu."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+        ]
+      },
+      {
+        "heading": "Zaplanuj opłaty i sprawy rodzinne",
+        "paragraphs": [
+          "Uzgodnij, kto płaci za każdy koszt, zanim przyjmiesz ofertę. Uwzględnij wniosek, ewentualną opłatę zdrowotną, dokumenty i przeprowadzkę. Osobno sprawdź warunki i koszty każdego członka rodziny: niektóre zawody i wcześniejsze sytuacje wizowe podlegają ograniczeniom. Osiedlenie wymaga osobnego wniosku i nie jest gwarantowane przez sponsorowanie."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/how-much-it-costs",
+          "https://www.gov.uk/skilled-worker-visa/your-partner-and-children",
+          "https://www.gov.uk/skilled-worker-visa"
+        ]
+      },
+      {
+        "heading": "Późniejsza zmiana pracy",
+        "paragraphs": [
+          "Zmiana pracodawcy zwykle wymaga aktualizacji wizy i nowego CoS. Inne stanowisko u tego samego pracodawcy wymaga aktualizacji, jeśli zmienia się kod zawodu. Sprawdź oficjalne zasady przed rozpoczęciem pracy."
+        ],
+        "sources": [
+          "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+        ]
+      },
+      {
+        "heading": "Zanim zdecydujesz się na przeprowadzkę",
+        "paragraphs": [
+          "Poproś o pisemne potwierdzenie sponsorowania, obowiązków, wynagrodzenia, elastyczności daty rozpoczęcia i osoby odpowiedzialnej za wniosek. Przeczytaj klauzule zwrotu kosztów i poproś o wyjaśnienie niejasności. Porównaj koszty mieszkania i podróży z oczekiwaną pensją netto. Global Sponsor Hub pomaga znaleźć pracę i niezależnych specjalistów; przeglądanie profilu nie wysyła zgłoszenia ani nie potwierdza uprawnień."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Szukaj pracy: Wielka Brytania",
+        "href": "/jobs?location=United%20Kingdom"
+      },
+      {
+        "label": "Znajdź niezależnych specjalistów",
+        "href": "/specialists"
+      },
+      {
+        "label": "Oferty na czas przeprowadzki",
+        "href": "/relocation-perks"
+      }
+    ],
+    "officialSourceUrl": "https://www.gov.uk/skilled-worker-visa"
+  }
+}

@@ -6,9 +6,9 @@ import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
 const TILE_ACCENTS = {
-  teal: { bg: colors.brandSoft, icon: colors.brandDeep },
-  purple: { bg: "rgba(97, 10, 144, 0.1)", icon: colors.purple },
-  ocean: { bg: "rgba(14, 116, 144, 0.1)", icon: "#0e7490" },
+  teal: { bg: colors.brandSoft, icon: colors.navy },
+  purple: { bg: colors.surfaceMuted, icon: colors.navy },
+  ocean: { bg: colors.surfaceMuted, icon: colors.navy },
 } as const;
 
 export function GshToolTile({
@@ -31,7 +31,7 @@ export function GshToolTile({
       accessibilityLabel={label}
     >
       <View style={[styles.iconWrap, { backgroundColor: pal.bg }]}>
-        <Ionicons name={icon} size={24} color={pal.icon} />
+        <Ionicons name={icon} size={20} color={pal.icon} />
       </View>
       <Text style={styles.label} numberOfLines={2}>
         {label}
@@ -43,6 +43,7 @@ export function GshToolTile({
 const styles = StyleSheet.create({
   tile: {
     flex: 1,
+    minHeight: 88,
     minWidth: "46%",
     maxWidth: "50%",
     paddingVertical: 16,
@@ -53,9 +54,9 @@ const styles = StyleSheet.create({
   },
   pressed: { opacity: 0.92 },
   iconWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: radii.md,
+    width: 36,
+    height: 36,
+    borderRadius: radii.pill,
     alignItems: "center",
     justifyContent: "center",
   },

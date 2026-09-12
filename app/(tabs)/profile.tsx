@@ -1,3 +1,5 @@
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
+import { useAppLanguage } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as DocumentPicker from "expo-document-picker";
@@ -18,12 +20,12 @@ import {
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
+import { CandidateReadinessSummary } from "@/components/CandidateReadinessSummary";
 import { GshLinkRow } from "@/components/gsh-ui-kit";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { GshTabHeroHeader } from "@/components/GshTabHeroHeader";
 import { GshToolTile } from "@/components/GshToolTile";
-import { fetchOwnProfile, updateProfile, uploadFileFromUri } from "@/lib/api-client";
-import { presentApiError } from "@/lib/api-error";
+import { fetchOwnProfile, recordCandidateJourneyStart, updateProfile, uploadFileFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
 import { getCandidateCompletionBreakdown } from "@/lib/profile-completion";
@@ -68,11 +70,15 @@ function mergeCandidateExtras(profile: Record<string, unknown> | undefined, user
   if (!((typeof p.currentCompany === "string") ? p.currentCompany.trim() : "")) body.currentCompany = "Not specified";
 }
 
-function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
+function SectionCard({ title, children, initiallyOpen = false }: { title: string; children: React.ReactNode; initiallyOpen?: boolean }) {
+  const [open, setOpen] = useState(initiallyOpen);
   return (
     <View style={[styles.sectionCard, feedCardStyle()]}>
-      <Text style={styles.sectionCardTitle}>{title}</Text>
-      {children}
+      <Pressable onPress={() => setOpen(value => !value)} accessibilityRole="button" accessibilityState={{ expanded: open }} accessibilityLabel={title} style={{ minHeight: 48, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <Text style={[styles.sectionCardTitle, { flex: 1, marginBottom: 0, textTransform: "none", fontFamily: fontFamily.heading, color: colors.navy, fontSize: 16 }]}>{title}</Text>
+        <Ionicons name={open ? "chevron-up" : "chevron-down"} size={20} color={colors.accent} />
+      </Pressable>
+      <View style={{ display: open ? "flex" : "none", paddingTop: 16 }}>{children}</View>
     </View>
   );
 }
@@ -95,6 +101,7 @@ function ChoiceChips({
   value: string;
   onChange: (next: string) => void;
 }) {
+  const ac = useAccountCopy();
   return (
     <View style={[styles.chipGrid, styles.choiceChipGrid]}>
       {options.map((option) => {
@@ -108,7 +115,7 @@ function ChoiceChips({
             accessibilityState={{ checked: selected }}
           >
             {selected ? <Ionicons name="checkmark" size={13} color={colors.white} style={{ marginRight: 4 }} /> : null}
-            <Text style={[styles.prefChipText, selected && styles.prefChipTextOn]}>{option}</Text>
+            <Text style={[styles.prefChipText, selected && styles.prefChipTextOn]}>{ac(option)}</Text>
           </Pressable>
         );
       })}
@@ -117,16 +124,21 @@ function ChoiceChips({
 }
 
 const STATIC_MORE_TOOLS_LINKS = [
-  { title: "Guides hub", subtitle: "Country guides", icon: "map-outline" as const, accent: "purple" as const, href: "/guides" },
+  { title: "Work and move preferences", subtitle: "Choose who can find and contact you", icon: "earth-outline" as const, accent: "teal" as const, href: "/mobility-profile" },
+  { title: "Relocation help", subtitle: "Request and manage support", icon: "navigate-outline" as const, accent: "ocean" as const, href: "/relocation-help" },
+  { title: "Agency introductions", subtitle: "Review consent requests", icon: "people-circle-outline" as const, accent: "purple" as const, href: "/agency-introductions" },
+  { title: "Country guides", subtitle: "Country guides", icon: "map-outline" as const, accent: "purple" as const, href: "/guides" },
   { title: "Job alerts", subtitle: "Match preferences", icon: "flash-outline" as const, accent: "ocean" as const, href: "/alerts" },
-  { title: "Tools & resources", subtitle: "Blog, FAQs, contact", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },
-  { title: "Saved roles", subtitle: "Bookmarked jobs", icon: "bookmark-outline" as const, accent: "teal" as const, href: "/saved" },
-  { title: "Offers & codes", subtitle: "Partner discount codes", icon: "gift-outline" as const, accent: "purple" as const, href: "/offers" },
+  { title: "Tools and resources", subtitle: "Blog, FAQs and contact", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },
+  { title: "Saved roles", subtitle: "Open saved jobs", icon: "bookmark-outline" as const, accent: "teal" as const, href: "/saved" },
+  { title: "Partner offers and codes", subtitle: "Partner discount codes", icon: "gift-outline" as const, accent: "purple" as const, href: "/offers" },
   { title: "Notifications", subtitle: "Account updates", icon: "notifications-outline" as const, accent: "teal" as const, href: "/notification-feed" },
   { title: "Feedback", subtitle: "Report an issue", icon: "chatbox-ellipses-outline" as const, accent: "ocean" as const, href: "/feedback" },
 ] as const;
 
 export default function ProfileScreen() {
+ const ac = useAccountCopy();
+ const locale = useAppLanguage(s => s.locale);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
@@ -135,6 +147,7 @@ export default function ProfileScreen() {
   const user = useAuthStore((s) => s.user);
   const scrollRef = useRef<ScrollView>(null);
   const formSectionY = useRef(0);
+  const contentSectionY = useRef(0);
 
   const profileQuery = useQuery({ queryKey: ["profile", "me"], queryFn: fetchOwnProfile });
 
@@ -144,6 +157,9 @@ export default function ProfileScreen() {
       STATIC_MORE_TOOLS_LINKS[1],
       STATIC_MORE_TOOLS_LINKS[2],
       STATIC_MORE_TOOLS_LINKS[3],
+      STATIC_MORE_TOOLS_LINKS[4],
+      STATIC_MORE_TOOLS_LINKS[5],
+      STATIC_MORE_TOOLS_LINKS[6],
       {
         title: relocationPerksNav.title,
         subtitle: relocationPerksNav.subtitle,
@@ -151,9 +167,9 @@ export default function ProfileScreen() {
         accent: "teal" as const,
         href: "/relocation-perks" as const,
       },
-      STATIC_MORE_TOOLS_LINKS[4],
-      STATIC_MORE_TOOLS_LINKS[5],
-      STATIC_MORE_TOOLS_LINKS[6],
+      STATIC_MORE_TOOLS_LINKS[7],
+      STATIC_MORE_TOOLS_LINKS[8],
+      STATIC_MORE_TOOLS_LINKS[9],
     ],
     [relocationPerksNav.title, relocationPerksNav.subtitle]
   );
@@ -231,13 +247,13 @@ export default function ProfileScreen() {
 
   const saveMut = useMutation({
     mutationFn: () => {
-      if (skills.length === 0) return Promise.reject(new Error("Select at least one skill."));
-      if (jobPreferences.length === 0) return Promise.reject(new Error("Select at least one job preference."));
+      if (skills.length === 0) return Promise.reject(new Error("PROFILE_INPUT_0"));
+      if (jobPreferences.length === 0) return Promise.reject(new Error("PROFILE_INPUT_1"));
       if ((workTitle.trim() && !workCompany.trim()) || (!workTitle.trim() && workCompany.trim())) {
-        return Promise.reject(new Error("Add both a role title and company for work experience."));
+        return Promise.reject(new Error("PROFILE_INPUT_2"));
       }
       if ((educationDegree.trim() && !educationSchool.trim()) || (!educationDegree.trim() && educationSchool.trim())) {
-        return Promise.reject(new Error("Add both a qualification and institution."));
+        return Promise.reject(new Error("PROFILE_INPUT_3"));
       }
 
       const profile = profileQuery.data ?? {};
@@ -246,7 +262,7 @@ export default function ProfileScreen() {
       const existingEducationHistory = Array.isArray(profile.educationHistory) ? profile.educationHistory : [];
       const parsedYears = yearsOfExperience.trim() === "" ? undefined : Number(yearsOfExperience);
       if (parsedYears !== undefined && (!Number.isFinite(parsedYears) || parsedYears < 0 || parsedYears > 50)) {
-        return Promise.reject(new Error("Years of experience must be between 0 and 50."));
+        return Promise.reject(new Error("PROFILE_INPUT_4"));
       }
 
       const body: Record<string, unknown> = {
@@ -289,9 +305,12 @@ export default function ProfileScreen() {
         qc.invalidateQueries({ queryKey: ["profile", "me"] }),
         qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] }),
       ]);
-      Alert.alert("Profile saved", "Your completion score and profile details are now up to date.");
+      Alert.alert(ac("Profile saved"), ac("Your profile details have been saved."));
     },
-    onError: (e: unknown) => Alert.alert("Could not save", e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "Try again."),
+    onError: (e: unknown) => {
+ const localErrors: Record<string,string> = {"PROFILE_INPUT_0": ac("Select at least one skill."), "PROFILE_INPUT_1": ac("Select at least one work preference."), "PROFILE_INPUT_2": ac("Add both a role title and company for work experience."), "PROFILE_INPUT_3": ac("Add both a qualification and institution."), "PROFILE_INPUT_4": ac("Years of experience must be between 0 and 50.")};
+ Alert.alert(ac("Could not save"), ac(e instanceof Error && localErrors[e.message] ? localErrors[e.message] : "Could not save settings. Try again."));
+ },
   });
 
   const cvMut = useMutation({
@@ -309,15 +328,15 @@ export default function ProfileScreen() {
         qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] }),
       ]);
     },
-    onError: (e: unknown) => { const msg = e instanceof Error && e.message === "cancel" ? null : String(e && typeof e === "object" && "message" in e ? (e as { message: string }).message : "Upload failed"); if (msg) Alert.alert("Upload failed", msg); },
+    onError: (e: unknown) => { if (e instanceof Error && e.message === "cancel") return; Alert.alert(ac("Upload failed"), ac("Your file could not be uploaded. Try again.")); },
   });
 
   const p = profileQuery.data;
-  const profileErrCopy = profileQuery.isError ? presentApiError(profileQuery.error) : null;
+  const profileErrCopy = profileQuery.isError;
   const completion = typeof p?.profileCompletion === "number" ? p.profileCompletion : null;
-  const completionBreakdown = getCandidateCompletionBreakdown(p);
+  const completionBreakdown = getCandidateCompletionBreakdown(p, locale);
   const resumeUrl = typeof p?.resume === "string" ? p.resume : "";
-  const displayName = [firstName, lastName].filter(Boolean).join(" ") || user?.email || "Your profile";
+  const displayName = [firstName, lastName].filter(Boolean).join(" ") || user?.email || ac("Your profile");
   const initials = [firstName.charAt(0), lastName.charAt(0)].filter(Boolean).join("").toUpperCase() || "?";
 
   function logout() {
@@ -344,89 +363,37 @@ export default function ProfileScreen() {
     <GshScreenShell constrainTabletWidth>
       <ScrollView
         ref={scrollRef}
+        style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <GshTabHeroHeader paddingTop={Math.max(insets.top, 12)} tagline="Your account">
+        <GshTabHeroHeader paddingTop={Math.max(insets.top, 12)} tagline={ac("Account settings")}>
           <View style={styles.heroIdentity}>
-            <View style={[styles.avatarRing, !profileReady && styles.avatarRingIncomplete]}>
-              <View style={styles.avatarInner}>
-                <Text style={styles.profileAvatarText}>{initials}</Text>
-              </View>
+            <View style={styles.avatarRing}><View style={styles.avatarInner}><Text style={styles.profileAvatarText}>{initials}</Text></View></View>
+            <View style={{flex: 1, minWidth: 0}}>
+              <Text style={styles.profileName}>{displayName}</Text>
+              <Text style={styles.profileEmail}>{user?.email ?? ""}</Text>
             </View>
-            <Text style={styles.profileName}>{displayName}</Text>
-            <Text style={styles.profileEmail}>{user?.email ?? ""}</Text>
-            {completion != null ? (
-              <Text style={styles.completionShort}>
-                {profileReady ? "Profile complete" : `${completionPct}% complete`}
-              </Text>
-            ) : null}
-            {!profileReady ? (
-              <GshGradientPrimaryButton
-                title="Complete profile"
-                onPress={() => scrollRef.current?.scrollTo({ y: formSectionY.current, animated: true })}
-                containerStyle={styles.completeCta}
-              />
-            ) : null}
           </View>
+          <GshGradientPrimaryButton title={ac("Edit profile")} tone="cyan" onPress={() => scrollRef.current?.scrollTo({y: contentSectionY.current + formSectionY.current, animated: true})} containerStyle={styles.completeCta} />
         </GshTabHeroHeader>
 
-        <View style={styles.content}>
-          <View style={styles.tileGrid}>
-            <View style={styles.tileRow}>
-              <GshToolTile label="Browse jobs" icon="compass-outline" accent="teal" onPress={() => router.push("/(tabs)/jobs")} />
-              <GshToolTile label="Directory" icon="people-outline" accent="purple" onPress={() => router.push("/partners")} />
-            </View>
-            <View style={styles.tileRow}>
-              <GshToolTile label="Visa wizard" icon="sparkles-outline" accent="teal" onPress={() => router.push("/visa-wizard")} />
-              <GshToolTile label="ATS check" icon="document-text-outline" accent="ocean" onPress={() => router.push("/ats-assistant")} />
-            </View>
-            <View style={styles.tileRow}>
-              <GshToolTile label="Settings" icon="settings-outline" accent="ocean" onPress={() => router.push("/settings")} />
-              <Pressable
-                style={[styles.moreTile, feedCardStyle()]}
-                onPress={() => setMoreToolsOpen((v) => !v)}
-                accessibilityRole="button"
-                accessibilityState={{ expanded: moreToolsOpen }}
-              >
-                <View style={[styles.moreTileIcon, { backgroundColor: colors.surfaceMuted }]}>
-                  <Ionicons name={moreToolsOpen ? "chevron-up" : "grid-outline"} size={24} color={colors.navy} />
-                </View>
-                <Text style={styles.moreTileLabel}>{moreToolsOpen ? "Hide extras" : "More tools"}</Text>
-              </Pressable>
-            </View>
-          </View>
-
-          {moreToolsOpen ? (
-            <View style={styles.moreToolsList}>
-              {moreToolsLinks.map((row) => (
-                <GshLinkRow
-                  key={row.href}
-                  title={row.title}
-                  subtitle={row.subtitle}
-                  icon={row.icon}
-                  accent={row.accent}
-                  onPress={() => router.push(row.href)}
-                />
-              ))}
-            </View>
-          ) : null}
-
+        <View style={styles.content} onLayout={event => {contentSectionY.current = event.nativeEvent.layout.y;}}>
           {profileErrCopy ? (
             <View style={styles.errorBanner}>
               <Ionicons name="warning-outline" size={18} color="#b45309" />
               <Text style={styles.errorText}>
-                {profileErrCopy.title}. {profileErrCopy.subtitle}
+                {ac("Your profile details could not be loaded.")}
               </Text>
             </View>
           ) : null}
 
+          <CandidateReadinessSummary profile={p} accountEmail={user?.email} />
+
           {completionBreakdown.missing.length > 0 ? (
-            <SectionCard title="Required to reach 100%">
-              <Text style={styles.completionHelp}>
-                Optional details such as a photo, LinkedIn profile, portfolio, salary expectations and languages do not affect completion.
-              </Text>
+            <SectionCard title={ac("Details to review")}>
+              <Text style={styles.completionHelp}>{ac("These details help with applications and your job search. Add only information that is correct.")}</Text>
               <View style={styles.missingList}>
                 {completionBreakdown.missing.map((item) => (
                   <View key={item.path} style={styles.missingRow}>
@@ -444,23 +411,23 @@ export default function ProfileScreen() {
               formSectionY.current = e.nativeEvent.layout.y;
             }}
           >
-          <SectionCard title="Basic info">
-            <FieldLabel label="First name" />
-            <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder="First name" placeholderTextColor={colors.placeholder} />
-            <FieldLabel label="Last name" />
-            <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder="Last name" placeholderTextColor={colors.placeholder} />
-            <FieldLabel label="Phone" />
-            <TextInput style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} placeholder="Phone number" placeholderTextColor={colors.placeholder} keyboardType="phone-pad" />
-            <FieldLabel label="Location" />
-            <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder="City / country" placeholderTextColor={colors.placeholder} />
-            <FieldLabel label="Nationality / citizenship" hint="Used to understand relevant mobility routes" />
-            <TextInput style={[styles.input, { marginBottom: 0 }]} value={nationality} onChangeText={setNationality} placeholder="e.g. Nigerian, French" placeholderTextColor={colors.placeholder} />
+          <SectionCard title={ac("Basic info")} initiallyOpen>
+            <FieldLabel label={ac("First name")} />
+            <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder={ac("First name")} placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Last name")} />
+            <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder={ac("Last name")} placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Phone number")} />
+            <TextInput style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} placeholder={ac("Phone number")} placeholderTextColor={colors.placeholder} keyboardType="phone-pad" />
+            <FieldLabel label={ac("Location")} />
+            <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder={ac("City and country")} placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Citizenship")} hint={ac("Used to understand relevant mobility options.")} />
+            <TextInput style={[styles.input, { marginBottom: 0 }]} value={nationality} onChangeText={setNationality} placeholder={ac("Citizenship")} placeholderTextColor={colors.placeholder} />
           </SectionCard>
 
-          <SectionCard title="Professional details">
-            <FieldLabel label="Current or most recent role" />
-            <TextInput style={styles.input} value={currentJobTitle} onChangeText={setCurrentJobTitle} placeholder="e.g. Senior Software Engineer" placeholderTextColor={colors.placeholder} />
-            <FieldLabel label="Years of experience" />
+          <SectionCard title={ac("Professional details")}>
+            <FieldLabel label={ac("Current or most recent role")} />
+            <TextInput style={styles.input} value={currentJobTitle} onChangeText={setCurrentJobTitle} placeholder={ac("Role title")} placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Years of experience")} />
             <TextInput
               style={styles.input}
               value={yearsOfExperience}
@@ -469,51 +436,51 @@ export default function ProfileScreen() {
               placeholderTextColor={colors.placeholder}
               keyboardType="number-pad"
             />
-            <FieldLabel label="Primary industry" />
-            <TextInput style={[styles.input, { marginBottom: 0 }]} value={primaryIndustry} onChangeText={setPrimaryIndustry} placeholder="e.g. Technology, Healthcare" placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Primary industry")} />
+            <TextInput style={[styles.input, { marginBottom: 0 }]} value={primaryIndustry} onChangeText={setPrimaryIndustry} placeholder={ac("Primary industry")} placeholderTextColor={colors.placeholder} />
           </SectionCard>
 
-          <SectionCard title="Mobility readiness">
-            <FieldLabel label="Sponsorship status" />
+          <SectionCard title={ac("Mobility readiness")}>
+            <FieldLabel label={ac("Sponsorship status")} />
             <ChoiceChips options={SPONSORSHIP_OPTIONS} value={sponsorshipStatus} onChange={setSponsorshipStatus} />
-            <FieldLabel label="Notice period" />
+            <FieldLabel label={ac("Notice period")} />
             <ChoiceChips options={NOTICE_OPTIONS} value={noticePeriod} onChange={setNoticePeriod} />
-            <FieldLabel label="Job-search intent" />
+            <FieldLabel label={ac("Job-search intent")} />
             <ChoiceChips options={SEARCH_INTENT_OPTIONS} value={jobSearchIntent} onChange={setJobSearchIntent} />
-            <FieldLabel label="Relocation readiness" />
+            <FieldLabel label={ac("Relocation readiness")} />
             <ChoiceChips options={RELOCATION_OPTIONS} value={relocationReadiness} onChange={setRelocationReadiness} />
-            <FieldLabel label="Target country or countries" hint="Separate multiple countries with commas" />
+            <FieldLabel label={ac("Target countries")} hint={ac("Separate countries with commas.")} />
             <TextInput
               style={[styles.input, { marginBottom: 0 }]}
               value={targetCountries}
               onChangeText={setTargetCountries}
-              placeholder="e.g. Germany, Netherlands, Canada"
+              placeholder={ac("Target countries")}
               placeholderTextColor={colors.placeholder}
             />
           </SectionCard>
 
-          <SectionCard title="Career evidence">
-            <FieldLabel label="Career summary" hint="A short overview of your experience and target role" />
+          <SectionCard title={ac("Career evidence")}>
+            <FieldLabel label={ac("Career summary")} hint={ac("Summarise your experience, strengths and next role.")} />
             <TextInput
               style={[styles.input, styles.multilineInput]}
               value={careerSummary}
               onChangeText={setCareerSummary}
-              placeholder="Summarise your experience, strengths and next role"
+              placeholder={ac("Summarise your experience, strengths and next role.")}
               placeholderTextColor={colors.placeholder}
               multiline
               textAlignVertical="top"
             />
-            <FieldLabel label="Most recent work experience" />
-            <TextInput style={styles.input} value={workTitle} onChangeText={setWorkTitle} placeholder="Role title" placeholderTextColor={colors.placeholder} />
-            <TextInput style={styles.input} value={workCompany} onChangeText={setWorkCompany} placeholder="Company" placeholderTextColor={colors.placeholder} />
-            <FieldLabel label="Education / qualification" />
-            <TextInput style={styles.input} value={educationDegree} onChangeText={setEducationDegree} placeholder="Degree, trade or professional qualification" placeholderTextColor={colors.placeholder} />
-            <TextInput style={[styles.input, { marginBottom: 0 }]} value={educationSchool} onChangeText={setEducationSchool} placeholder="Institution or awarding body" placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Most recent work experience")} />
+            <TextInput style={styles.input} value={workTitle} onChangeText={setWorkTitle} placeholder={ac("Role title")} placeholderTextColor={colors.placeholder} />
+            <TextInput style={styles.input} value={workCompany} onChangeText={setWorkCompany} placeholder={ac("Company")} placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Education and qualifications")} />
+            <TextInput style={styles.input} value={educationDegree} onChangeText={setEducationDegree} placeholder={ac("Degree, trade or professional qualification")} placeholderTextColor={colors.placeholder} />
+            <TextInput style={[styles.input, { marginBottom: 0 }]} value={educationSchool} onChangeText={setEducationSchool} placeholder={ac("Institution or awarding body")} placeholderTextColor={colors.placeholder} />
           </SectionCard>
 
           {/* Online presence */}
-          <SectionCard title="Online presence">
-            <FieldLabel label="LinkedIn URL" />
+          <SectionCard title={ac("Online presence")}>
+            <FieldLabel label={ac("LinkedIn URL")} />
             <TextInput
               style={[styles.input, { marginBottom: 0 }]}
               value={linkedin}
@@ -526,15 +493,15 @@ export default function ProfileScreen() {
           </SectionCard>
 
           {/* Work preferences */}
-          <SectionCard title="Work preferences">
-            <FieldLabel label="How you want to work" />
+          <SectionCard title={ac("Work preferences")}>
+            <FieldLabel label={ac("How you want to work")} />
             <View style={styles.chipGrid}>
               {JOB_PREFERENCE_OPTIONS.map((pref) => {
                 const on = jobPreferences.includes(pref);
                 return (
                   <Pressable key={pref} onPress={() => toggleJobPreference(pref)} style={[styles.prefChip, on && styles.prefChipOn]}>
                     {on && <Ionicons name="checkmark" size={13} color={colors.white} style={{ marginRight: 4 }} />}
-                    <Text style={[styles.prefChipText, on && styles.prefChipTextOn]}>{pref}</Text>
+                    <Text style={[styles.prefChipText, on && styles.prefChipTextOn]}>{ac(pref)}</Text>
                   </Pressable>
                 );
               })}
@@ -542,12 +509,12 @@ export default function ProfileScreen() {
           </SectionCard>
 
           {/* Skills */}
-          <SectionCard title="Skills">
+          <SectionCard title={ac("Skills")}>
             <View style={styles.skillsTopRow}>
-              <Text style={styles.skillsCount}>{skills.length} selected{skills.length >= MAX_SKILLS ? " · max" : ""}</Text>
+              <Text style={styles.skillsCount}>{ac("Selected: {count}", {count: skills.length})} / {MAX_SKILLS}</Text>
               <Pressable style={styles.addSkillBtn} onPress={() => { setSkillSearch(""); setSkillModalOpen(true); }}>
                 <Ionicons name="add" size={16} color={colors.white} />
-                <Text style={styles.addSkillBtnText}>Add skills</Text>
+                <Text style={styles.addSkillBtnText}>{ac("Add skills")}</Text>
               </Pressable>
             </View>
             {skills.length > 0 ? (
@@ -560,19 +527,19 @@ export default function ProfileScreen() {
                 ))}
               </View>
             ) : (
-              <Text style={styles.emptySkillsHint}>Tap "Add skills" — at least one is required to apply.</Text>
+              <Text style={styles.emptySkillsHint}>{ac("Use Add skills to select at least one skill for your application.")}</Text>
             )}
           </SectionCard>
 
           {/* CV */}
-          <SectionCard title="CV / resume">
+          <SectionCard title={ac("CV or résumé")}>
             <View style={styles.cvRow}>
               <View style={[styles.cvIconTile, resumeUrl ? styles.cvIconTileHas : {}]}>
                 <Ionicons name={resumeUrl ? "document-text" : "document-text-outline"} size={22} color={resumeUrl ? colors.brand : colors.textMuted} />
               </View>
               <View style={styles.cvTextCol}>
-                <Text style={styles.cvStatus}>{resumeUrl ? "CV on file" : "No CV uploaded yet"}</Text>
-                <Text style={styles.cvHint}>{resumeUrl ? "Tap below to replace" : "Upload PDF or Word"}</Text>
+                <Text style={styles.cvStatus}>{resumeUrl ? ac("CV on file") : ac("No CV uploaded yet")}</Text>
+                <Text style={styles.cvHint}>{resumeUrl ? ac("Tap below to replace") : ac("Upload PDF or Word")}</Text>
               </View>
             </View>
             <Pressable
@@ -585,31 +552,89 @@ export default function ProfileScreen() {
               ) : (
                 <>
                   <Ionicons name="cloud-upload-outline" size={18} color={colors.brand} />
-                  <Text style={styles.uploadBtnText}>{resumeUrl ? "Replace CV" : "Upload CV"}</Text>
+                  <Text style={styles.uploadBtnText}>{resumeUrl ? ac("Replace CV") : ac("Upload CV")}</Text>
                 </>
               )}
             </Pressable>
           </SectionCard>
 
-          {/* Save button */}
-          <GshGradientPrimaryButton title="Save profile" onPress={() => saveMut.mutate()} loading={saveMut.isPending} containerStyle={{ marginBottom: 12, marginTop: 8 }} />
+          <SectionCard title={ac("Resources and settings")}>
+          <View style={styles.tileGrid}>
+            <View style={styles.tileRow}>
+              <GshToolTile label={ac("Browse jobs")} icon="compass-outline" accent="teal" onPress={() => router.push("/(tabs)/jobs")} />
+              <GshToolTile label={ac("Specialists")} icon="people-outline" accent="purple" onPress={() => router.push("/partners")} />
+            </View>
+            <View style={styles.tileRow}>
+              <GshToolTile label={ac("CV and job comparison")} icon="document-text-outline" accent="ocean" onPress={() => router.push("/ats-assistant")} />
+            </View>
+            <View style={styles.tileRow}>
+              <GshToolTile label={ac("Settings")} icon="settings-outline" accent="ocean" onPress={() => router.push("/settings")} />
+              <Pressable
+                style={[styles.moreTile, feedCardStyle()]}
+                onPress={() => setMoreToolsOpen((v) => !v)}
+                accessibilityRole="button"
+                accessibilityState={{ expanded: moreToolsOpen }}
+              >
+                <View style={[styles.moreTileIcon, { backgroundColor: colors.surfaceMuted }]}>
+                  <Ionicons name={moreToolsOpen ? "chevron-up" : "grid-outline"} size={24} color={colors.navy} />
+                </View>
+                <Text style={styles.moreTileLabel}>{moreToolsOpen ? ac("Hide extras") : ac("More tools")}</Text>
+              </Pressable>
+            </View>
+          </View>
+
+          {moreToolsOpen ? (
+            <View style={styles.moreToolsList}>
+              {moreToolsLinks.map((row) => (
+                <GshLinkRow
+                  key={row.href}
+                  title={ac(row.title)}
+                  subtitle={ac(row.subtitle)}
+                  icon={row.icon}
+                  accent={row.accent}
+                  onPress={() => {
+                    if (row.href === "/mobility-profile") void recordCandidateJourneyStart("global_mobility_profile_started");
+                    if (row.href === "/relocation-help") void recordCandidateJourneyStart("relocation_help_started");
+                    router.push(row.href);
+                  }}
+                />
+              ))}
+            </View>
+          ) : null}
+
+          </SectionCard>
 
           {/* Sign out */}
           <Pressable style={styles.signOutBtn} onPress={logout}>
             <Ionicons name="log-out-outline" size={18} color={colors.error} />
-            <Text style={styles.signOutText}>Sign out</Text>
+            <Text style={styles.signOutText}>{ac("Sign out")}</Text>
           </Pressable>
           </View>
         </View>
       </ScrollView>
 
+      <View style={[styles.saveBar, { paddingBottom: Math.max(insets.bottom, 8) }]}>
+        <View style={styles.saveBarCopy}>
+          <Text style={styles.saveBarTitle}>{ac("Profile changes")}</Text>
+          <Text style={[styles.saveBarStatus, saveMut.isError && styles.saveBarError]}>
+            {saveMut.isError ? ac("Save failed. Try again when ready.") : ac("Keep your profile up to date for job comparisons.")}
+          </Text>
+        </View>
+        <GshGradientPrimaryButton
+          title={saveMut.isError ? ac("Save profile") : ac("Save profile")}
+          onPress={() => saveMut.mutate()}
+          loading={saveMut.isPending}
+          containerStyle={styles.saveBarButton}
+        />
+      </View>
+
       {/* Skill picker modal */}
-      <Modal visible={skillModalOpen} animationType="slide" onRequestClose={closeSkillModal}>
+      <Modal visible={skillModalOpen} animationType="slide" presentationStyle="pageSheet" onRequestClose={closeSkillModal}>
         <SafeAreaView style={styles.modalSafe} edges={["top"]}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Select skills</Text>
+            <Text style={styles.modalTitle}>{ac("Select skills")}</Text>
             <Pressable onPress={closeSkillModal} hitSlop={12}>
-              <Text style={styles.modalDone}>Done</Text>
+              <Text style={styles.modalDone}>{ac("Done")}</Text>
             </Pressable>
           </View>
           <View style={styles.modalSearch}>
@@ -618,7 +643,7 @@ export default function ProfileScreen() {
               style={styles.modalSearchInput}
               value={skillSearch}
               onChangeText={setSkillSearch}
-              placeholder="Search skills…"
+              placeholder={ac("Search skills…")}
               autoCapitalize="none"
               autoCorrect={false}
               placeholderTextColor={colors.placeholder}
@@ -637,7 +662,7 @@ export default function ProfileScreen() {
                 </Pressable>
               );
             }}
-            ListEmptyComponent={<Text style={styles.emptySkillsHint}>No matches.</Text>}
+            ListEmptyComponent={<Text style={styles.emptySkillsHint}>{ac("No matches.")}</Text>}
           />
         </SafeAreaView>
       </Modal>
@@ -647,13 +672,14 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   loadingWrap: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
-  scrollContent: { paddingBottom: 40 },
-  heroIdentity: { alignItems: "center", paddingBottom: 4 },
+  scroll: { flex: 1 },
+  scrollContent: { paddingBottom: 24 },
+  heroIdentity: { flexDirection: "row", gap: 14, alignItems: "center", paddingBottom: 4 },
   avatarRing: {
-    width: 80,
-    height: 80,
+    width: 58,
+    height: 58,
     borderRadius: 40,
-    borderWidth: 3,
+    borderWidth: 1,
     borderColor: colors.teal,
     alignItems: "center",
     justifyContent: "center",
@@ -661,15 +687,15 @@ const styles = StyleSheet.create({
   },
   avatarRingIncomplete: { borderColor: "rgba(255,255,255,0.35)" },
   avatarInner: {
-    width: 68,
-    height: 68,
+    width: 50,
+    height: 50,
     borderRadius: 34,
     backgroundColor: "rgba(255,255,255,0.15)",
     alignItems: "center",
     justifyContent: "center",
   },
   profileAvatarText: { fontSize: 26, fontFamily: fontFamily.extraBold, color: colors.white },
-  profileName: { fontSize: 22, fontFamily: fontFamily.extraBold, color: colors.white, letterSpacing: -0.4 },
+  profileName: { fontSize: 26, fontFamily: fontFamily.headingStrong, color: colors.white, letterSpacing: -0.4 },
   profileEmail: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: "rgba(255,255,255,0.65)" },
   completionShort: {
     marginTop: 8,
@@ -677,12 +703,13 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: "rgba(255,255,255,0.75)",
   },
-  completeCta: { marginTop: 14, alignSelf: "stretch", width: "100%", maxWidth: 280 },
+  completeCta: { marginTop: 14, alignSelf: "flex-start", minWidth: 150 },
   content: { paddingHorizontal: 16, paddingTop: 16, gap: 14 },
   tileGrid: { gap: 10, marginBottom: 4 },
   tileRow: { flexDirection: "row", gap: 10 },
   moreTile: {
     flex: 1,
+    minHeight: 112,
     minWidth: "46%",
     maxWidth: "50%",
     paddingVertical: 16,
@@ -744,12 +771,13 @@ const styles = StyleSheet.create({
   fieldLabel: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
   fieldHint: { fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted, marginTop: 2 },
   input: {
+    minHeight: 52,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 13 : 10,
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: fontFamily.regular,
     color: colors.textPrimary,
     backgroundColor: "#fafbfc",
@@ -781,6 +809,7 @@ const styles = StyleSheet.create({
   skillsTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 },
   skillsCount: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
   addSkillBtn: {
+    minHeight: 44,
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
@@ -809,6 +838,7 @@ const styles = StyleSheet.create({
   cvStatus: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
   cvHint: { marginTop: 3, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 17 },
   uploadBtn: {
+    minHeight: 48,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -824,6 +854,7 @@ const styles = StyleSheet.create({
 
   // Sign out
   signOutBtn: {
+    minHeight: 48,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -835,6 +866,21 @@ const styles = StyleSheet.create({
     borderColor: "rgba(185, 28, 28, 0.2)",
   },
   signOutText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.error },
+  saveBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    backgroundColor: colors.white,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+  },
+  saveBarCopy: { flex: 1, minWidth: 0 },
+  saveBarTitle: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy },
+  saveBarStatus: { marginTop: 2, fontSize: 11, lineHeight: 15, fontFamily: fontFamily.regular, color: colors.textMuted },
+  saveBarError: { color: colors.error },
+  saveBarButton: { minWidth: 138 },
 
   // Modal
   modalSafe: { flex: 1, backgroundColor: colors.white },
@@ -842,7 +888,7 @@ const styles = StyleSheet.create({
   modalTitle: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy },
   modalDone: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.brand },
   modalSearch: { flexDirection: "row", alignItems: "center", gap: 10, margin: 12, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 10, backgroundColor: colors.surfaceMuted, borderWidth: 1, borderColor: colors.border },
-  modalSearchInput: { flex: 1, fontSize: 15, fontFamily: fontFamily.regular, color: colors.textPrimary },
+  modalSearchInput: { flex: 1, minHeight: 44, fontSize: 16, fontFamily: fontFamily.regular, color: colors.textPrimary },
   skillRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 14, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   skillRowOn: { backgroundColor: `${colors.brand}08` },
   skillRowText: { flex: 1, fontSize: 15, fontFamily: fontFamily.regular, color: colors.textPrimary },

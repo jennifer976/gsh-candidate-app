@@ -1,50 +1,123 @@
+import { appCopy, type AppLanguage } from "./i18n/catalog";
+
 export const CANDIDATE_COMPLETION_FIELDS = [
-  { path: "firstName", label: "First name" },
-  { path: "lastName", label: "Last name" },
-  { path: "email", label: "Email" },
-  { path: "location", label: "Current location" },
-  { path: "nationality", label: "Nationality / citizenship" },
-  { path: "currentJobTitle", label: "Current or most recent role" },
-  { path: "yearsOfExperience", label: "Years of experience" },
-  { path: "skills", label: "Skills" },
-  { path: "industryExperience.primary", label: "Primary industry" },
-  { path: "jobPreferences", label: "Job preferences" },
-  { path: "resume", label: "CV / resume" },
-  { path: "sponsorshipStatus", label: "Sponsorship status" },
-  { path: "noticePeriod", label: "Notice period" },
-  { path: "jobSearchIntent", label: "Job-search intent" },
-  { path: "relocationReadiness", label: "Relocation readiness" },
-  { path: "targetCountries", label: "Target country or countries" },
-  { path: "careerSummary", label: "Career summary" },
-  { path: "workHistory", label: "Work experience" },
-  { path: "educationHistory", label: "Education / qualifications" },
+  { path: "firstName", label: "First name", message: "fieldFirstName" },
+  { path: "lastName", label: "Last name", message: "fieldLastName" },
+  { path: "email", label: "Contact email", message: "fieldEmail" },
+  {
+    path: "currentResidenceCountry",
+    label: "Current location",
+    message: "fieldLocation",
+  },
+  { path: "desiredOccupations", label: "Work you want", message: "fieldWork" },
+  { path: "skills", label: "Skills", message: "fieldSkills" },
+  {
+    path: "yearsOfExperience",
+    label: "Years of experience",
+    message: "fieldExperience",
+  },
+  {
+    path: "availability",
+    label: "Availability or notice period",
+    message: "fieldAvailability",
+  },
+  {
+    path: "sponsorshipStatus",
+    label: "Sponsorship needs",
+    message: "fieldSponsorship",
+  },
+  {
+    path: "targetCountries",
+    label: "Destinations or remote preference",
+    message: "fieldDestinations",
+  },
+  {
+    path: "relocationReadiness",
+    label: "Relocation preference",
+    message: "fieldRelocation",
+  },
 ] as const;
+const text = (value: unknown) =>
+  typeof value === "string" && Boolean(value.trim());
+const list = (value: unknown) =>
+  Array.isArray(value) &&
+  value.some((item) => (typeof item === "string" ? text(item) : item != null));
 
-function readPath(source: Record<string, unknown>, path: string): unknown {
-  return path.split(".").reduce<unknown>((value, key) => {
-    if (value == null || typeof value !== "object") return undefined;
-    return (value as Record<string, unknown>)[key];
-  }, source);
-}
-
-function isFilled(value: unknown): boolean {
-  if (value == null) return false;
-  if (typeof value === "string") return value.trim().length > 0;
-  if (typeof value === "number") return Number.isFinite(value);
-  if (Array.isArray(value)) return value.length > 0;
-  return Boolean(value);
-}
-
-export function getCandidateCompletionBreakdown(profile: Record<string, unknown> | undefined) {
-  const source = profile ?? {};
-  const items = CANDIDATE_COMPLETION_FIELDS.map((field) => ({
-    ...field,
-    filled: isFilled(readPath(source, field.path)),
-  }));
-  const completed = items.filter((item) => item.filled).length;
-
+/** Missing profile information, not a hiring score or a visa assessment. Prefer the server's current checks. */
+export function getCandidateCompletionBreakdown(
+  profile: Record<string, unknown> | undefined,
+  locale: AppLanguage = "en",
+) {
+  const p = profile ?? {};
+  const server = p.profileReadiness as
+    | { items?: Array<{ key: string; label: string; complete: boolean }> }
+    | undefined;
+  const remote =
+    ["remote", "remote or hybrid"].includes(
+      String(p.remoteWorkPreference || "")
+        .trim()
+        .toLowerCase(),
+    ) ||
+    String(p.relocationReadiness || "").toLowerCase() === "remote-first only" ||
+    (Array.isArray(p.employmentOptions) &&
+      p.employmentOptions.some((value) =>
+        ["remote_domestic", "remote_cross_border"].includes(String(value)),
+      ));
+  const checks: Record<string, boolean> = {
+    firstName: text(p.firstName),
+    lastName: text(p.lastName),
+    email:
+      text(p.email) ||
+      text((p.userId as { email?: unknown } | undefined)?.email),
+    currentResidenceCountry:
+      text(p.currentResidenceCountry) || text(p.location),
+    desiredOccupations:
+      text(p.currentJobTitle) ||
+      (Array.isArray(p.desiredOccupations) &&
+        p.desiredOccupations.some((role) => text(role?.label))),
+    skills: list(p.skills),
+    yearsOfExperience:
+      typeof p.yearsOfExperience === "number" &&
+      Number.isFinite(p.yearsOfExperience) &&
+      p.yearsOfExperience >= 0,
+    availability: text(p.availability) || text(p.noticePeriod),
+    sponsorshipStatus:
+      text(p.sponsorshipStatus) ||
+      typeof p.requiresVisaSponsorship === "boolean" ||
+      list(p.workAuthorizations),
+    targetCountries: list(p.targetCountries) || remote,
+    relocationReadiness:
+      text(p.relocationReadiness) || typeof p.willingToRelocate === "boolean",
+  };
+  const items =
+    server?.items?.length &&
+    server.items.every(
+      (item) =>
+        typeof item?.key === "string" &&
+        typeof item.label === "string" &&
+        typeof item.complete === "boolean",
+    )
+      ? server.items.map((item) => {
+          const field = CANDIDATE_COMPLETION_FIELDS.find(
+            (field) => field.path === item.key,
+          );
+          return {
+            path: item.key,
+            label: field ? appCopy(locale, field.message) : item.label,
+            filled: item.complete,
+          };
+        })
+      : CANDIDATE_COMPLETION_FIELDS.map((field) => ({
+          path: field.path,
+          label: appCopy(locale, field.message),
+          filled: checks[field.path],
+        }));
   return {
-    percent: Math.round((completed / items.length) * 100),
+    percent: items.length
+      ? Math.round(
+          (items.filter((item) => item.filled).length / items.length) * 100,
+        )
+      : 0,
     missing: items.filter((item) => !item.filled),
   };
 }

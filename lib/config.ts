@@ -13,7 +13,7 @@ export function getApiOrigin(): string {
     typeof process.env.EXPO_PUBLIC_API_URL === "string"
       ? process.env.EXPO_PUBLIC_API_URL
       : undefined;
-  return normalizeApiOrigin(extra?.apiUrl ?? fromEnv);
+  return normalizeApiOrigin(fromEnv ?? extra?.apiUrl);
 }
 
 export function getApiV1BaseUrl(): string {
@@ -25,7 +25,7 @@ export function getMarketingSiteUrl(): string {
   const extra = Constants.expoConfig?.extra as { siteUrl?: string } | undefined;
   const env =
     typeof process.env.EXPO_PUBLIC_SITE_URL === "string" ? process.env.EXPO_PUBLIC_SITE_URL.trim() : "";
-  return (extra?.siteUrl || env || "https://www.globalsponsorhub.com").replace(/\/+$/, "");
+  return (env || extra?.siteUrl || "https://www.globalsponsorhub.com").replace(/\/+$/, "");
 }
 
 /**

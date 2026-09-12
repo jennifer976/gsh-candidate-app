@@ -6,6 +6,11 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const manifestPath = join(root, "data", "public-route-parity.json");
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 const errors = [];
+const frontendRoots = [
+  process.env.GSH_FRONTEND_ROOT?.trim(),
+  resolve(root, "..", "frontend"),
+  resolve(root, "..", "global_sponsor_hub-fe"),
+].filter(Boolean);
 
 if (!manifest.source?.endsWith("/sitemap.xml")) errors.push("manifest source must be the public sitemap");
 if (!Array.isArray(manifest.routes) || manifest.routes.length === 0) errors.push("route inventory is empty");
@@ -62,8 +67,10 @@ for (const [path, mode, target] of samples) {
 
 // When the website is checked out beside the app, require every maintained
 // static sitemap path to have an explicit native or fallback policy.
-const webSitemap = resolve(root, "..", "global_sponsor_hub-fe", "src", "app", "sitemap.ts");
-if (existsSync(webSitemap)) {
+const webSitemap = frontendRoots
+  .map((candidateRoot) => join(candidateRoot, "src", "app", "sitemap.ts"))
+  .find((candidate) => existsSync(candidate));
+if (webSitemap) {
   const sitemapSource = readFileSync(webSitemap, "utf8");
   const staticBlock = sitemapSource.match(/const STATIC_PATHS = \[([\s\S]*?)\] as const;/)?.[1] ?? "";
   const staticPaths = [...staticBlock.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
@@ -79,4 +86,9 @@ if (errors.length) {
 
 const native = manifest.routes.filter((row) => row.mode.startsWith("native")).length;
 const fallback = manifest.routes.filter((row) => row.mode === "fallback").length;
-console.log(`Route parity valid: ${native} native mappings, ${fallback} exact first-party fallback groups.`);
+const websiteCheck = webSitemap
+  ? `website sitemap checked at ${webSitemap}`
+  : "website sitemap unavailable; cross-repository check skipped";
+console.log(
+  `Route parity valid: ${native} native mappings, ${fallback} exact first-party fallback groups; ${websiteCheck}.`,
+);

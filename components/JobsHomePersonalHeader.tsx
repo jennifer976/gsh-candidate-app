@@ -1,3 +1,4 @@
+import { useAccountCopy as useInterfaceCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { cardSurfaceStyle, colors, discoverFeedCardStyle, fontFamily, radii } from "@/lib/theme";
@@ -62,6 +63,8 @@ export function JobsHomePersonalHeader({
   focusLine,
   feedVisual,
 }: Props) {
+ const interfaceCopy = useInterfaceCopy();
+
   const trimmed = firstName?.trim();
   const greeting = trimmed ? `Hello, ${trimmed}` : "Hello";
 
@@ -111,9 +114,9 @@ export function JobsHomePersonalHeader({
         </View>
       ) : stats ? (
         <View style={[styles.statsRow, compact && styles.statsRowCompact]}>
-          <MiniStat label="Applications" value={stats.applied} onPress={onApplied} dense={compact} />
-          <MiniStat label="Saved" value={stats.saved} onPress={onSaved} dense={compact} />
-          <MiniStat label="Interviews" value={stats.interviews} onPress={onDashboard} dense={compact} />
+          <MiniStat label={interfaceCopy("Applications")} value={stats.applied} onPress={onApplied} dense={compact} />
+          <MiniStat label={interfaceCopy("Saved")} value={stats.saved} onPress={onSaved} dense={compact} />
+          <MiniStat label={interfaceCopy("Interviews")} value={stats.interviews} onPress={onDashboard} dense={compact} />
         </View>
       ) : (
         <Pressable onPress={onDashboard} style={[styles.statsFallback, compact && styles.statsFallbackCompact]} accessibilityRole="button">

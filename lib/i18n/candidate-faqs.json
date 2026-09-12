@@ -1,0 +1,570 @@
+{
+  "en": {
+    "title": "Candidate FAQs",
+    "eyebrow": "help",
+    "intro": "Find answers about jobs, hiring, accounts and specialist requests.",
+    "groups": [
+      {
+        "id": "general",
+        "title": "General",
+        "items": [
+          {
+            "q": "What is Global Sponsor Hub?",
+            "a": "Find international jobs, hire across borders and request independent help with moving. Candidates use the platform free. We do not recruit for you, provide EOR services or decide visa eligibility."
+          },
+          {
+            "q": "How do I contact support?",
+            "a": "Use the Contact page for account, billing or platform problems. Include your account email and a short description. You can also email support@globalsponsorhub.com."
+          },
+          {
+            "q": "How do I delete my account?",
+            "a": "Open Settings and follow the account deletion steps. If you cannot sign in, contact support from your registered email. Read the Account deletion page for details about retained records."
+          },
+          {
+            "q": "Is there a candidate app?",
+            "a": "The candidate app uses the same account as the website. Follow published download links on the Jobs page when available. Employers, agencies and specialists use the website."
+          },
+          {
+            "q": "How do I update my profile?",
+            "a": "Sign in and open Profile in your dashboard. Candidates can update their CV there and set discovery and messaging choices in Settings."
+          },
+          {
+            "q": "What is the tree planting initiative?",
+            "a": "Our About page explains the Treeapp initiative and displays the available impact information. Check that page for the current figures."
+          }
+        ]
+      },
+      {
+        "id": "candidate",
+        "title": "Candidates",
+        "items": [
+          {
+            "q": "Is candidate access free?",
+            "a": "Yes. Creating a profile, exploring roles, and applying on Global Sponsor Hub are completely free. We don't charge candidates—employers and specialists cover the platform costs."
+          },
+          {
+            "q": "Do I need a credit card?",
+            "a": "No. You only need an email address to create your free account. There are no hidden fees, no trials, and no payment details required for candidates."
+          },
+          {
+            "q": "Who can find my profile?",
+            "a": "Choose whether employers, agencies, both or neither can find you. Set messaging permission separately for each group. Applications share details with the organisation receiving them; external sites have their own privacy rules."
+          },
+          {
+            "q": "How do I get started?",
+            "a": "Create an account, verify your email and complete your profile. Search jobs and check each application route. You can track applications submitted on Global Sponsor Hub in your dashboard."
+          },
+          {
+            "q": "What do the job-source labels mean?",
+            "a": "A direct role with on-platform applications lets you apply here. Agency and external roles take you to the employer, recruiter or source website. Global Sponsor Hub does not receive applications submitted on those websites."
+          },
+          {
+            "q": "Do mobility badges guarantee visa approval?",
+            "a": "No. Sponsorship, visa, sponsor-licence and relocation badges are employer- or source-provided unless a specific platform check is stated. Confirm support and eligibility with the employer and official sources."
+          },
+          {
+            "q": "How do I request a specialist?",
+            "a": "Browse the specialist directory, then sign up or log in. Create and manage requests in your dashboard. You can make more than one request. Before submitting, check which details you agree to share. Viewing a profile does not send a request."
+          }
+        ]
+      }
+    ]
+  },
+  "fr": {
+    "title": "FAQ pour les candidats",
+    "eyebrow": "aide",
+    "intro": "Trouvez des réponses sur l’emploi, le recrutement, les comptes et les demandes aux spécialistes.",
+    "groups": [
+      {
+        "id": "general",
+        "title": "Général",
+        "items": [
+          {
+            "q": "Qu’est-ce que Global Sponsor Hub ?",
+            "a": "Trouvez un emploi international, recrutez à l’étranger et demandez une aide indépendante pour déménager. L’accès est gratuit pour les candidats. Nous ne recrutons pas à votre place, ne fournissons pas de services EOR et ne décidons pas de l’éligibilité aux visas."
+          },
+          {
+            "q": "Comment contacter l’assistance ?",
+            "a": "Utilisez la page Contact pour les problèmes de compte, de facturation ou de plateforme. Indiquez l’e-mail du compte et décrivez brièvement le problème. Vous pouvez aussi écrire à support@globalsponsorhub.com."
+          },
+          {
+            "q": "Comment supprimer mon compte ?",
+            "a": "Ouvrez les paramètres et suivez les étapes de suppression. Si vous ne pouvez pas vous connecter, contactez l’assistance depuis votre adresse enregistrée. La page de suppression du compte explique les données conservées."
+          },
+          {
+            "q": "Existe-t-il une application pour les candidats ?",
+            "a": "L’application utilise le même compte que le site. Suivez les liens de téléchargement de la page Emplois lorsqu’ils sont disponibles. Les employeurs, agences et spécialistes utilisent le site."
+          },
+          {
+            "q": "Comment modifier mon profil ?",
+            "a": "Connectez-vous et ouvrez Profil dans le tableau de bord. Les candidats peuvent y modifier leur CV et régler leur visibilité et leurs autorisations de messages dans les paramètres."
+          },
+          {
+            "q": "En quoi consiste l’initiative de plantation d’arbres ?",
+            "a": "Notre page À propos présente l’initiative Treeapp et les informations disponibles sur son impact. Consultez-la pour connaître les chiffres actuels."
+          }
+        ]
+      },
+      {
+        "id": "candidate",
+        "title": "Candidats",
+        "items": [
+          {
+            "q": "L’accès candidat est-il gratuit ?",
+            "a": "Yes. Profiles, search, applications on hub listings, and the partner directory are free. We charge employers and partners—not candidates."
+          },
+          {
+            "q": "Ai-je besoin d’une carte bancaire ?",
+            "a": "No. Email + password is enough to start."
+          },
+          {
+            "q": "Qui peut trouver mon profil ?",
+            "a": "Choisissez si les employeurs, les agences, les deux ou aucun peuvent vous trouver. Autorisez les messages séparément pour chaque groupe. Une candidature partage vos informations avec son destinataire ; les sites externes appliquent leurs propres règles de confidentialité."
+          },
+          {
+            "q": "Comment commencer ?",
+            "a": "Créez un compte, vérifiez votre e-mail et complétez votre profil. Recherchez des offres et vérifiez où postuler. Votre tableau de bord suit les candidatures envoyées sur Global Sponsor Hub."
+          },
+          {
+            "q": "What is the difference between a direct role and a curated external link?",
+            "a": "Direct roles are posted here—you apply and track on Global Sponsor Hub. External picks are hand-maintained links to careers sites elsewhere; cards say who owns the application before you leave."
+          },
+          {
+            "q": "Les mentions de mobilité garantissent-elles un visa ?",
+            "a": "Non. Les informations sur le parrainage, les visas et la relocation proviennent de l’employeur ou de la source, sauf si une vérification de la plateforme est précisée. Vérifiez l’aide proposée auprès de l’employeur et les conditions auprès des sources officielles."
+          },
+          {
+            "q": "Comment demander l’aide d’un spécialiste ?",
+            "a": "Parcourez l’annuaire des spécialistes, puis inscrivez-vous ou connectez-vous. Créez et gérez vos demandes dans le tableau de bord. Vous pouvez faire plusieurs demandes. Avant l’envoi, vérifiez les informations que vous acceptez de partager. Consulter un profil n’envoie aucune demande."
+          }
+        ]
+      }
+    ]
+  },
+  "de": {
+    "title": "Häufig gestellte Fragen für Kandidaten",
+    "eyebrow": "hilfe",
+    "intro": "Antworten zu Jobs, Einstellung, Konten und Anfragen an Fachleute.",
+    "groups": [
+      {
+        "id": "general",
+        "title": "Allgemein",
+        "items": [
+          {
+            "q": "Was ist Global Sponsor Hub?",
+            "a": "Finden Sie internationale Jobs, stellen Sie grenzüberschreitend ein und fragen Sie unabhängige Umzugshilfe an. Bewerber nutzen die Plattform kostenlos. Wir vermitteln kein Personal, bieten keine EOR-Dienste an und entscheiden nicht über Visa."
+          },
+          {
+            "q": "Wie kontaktiere ich den Support?",
+            "a": "Nutzen Sie die Kontaktseite bei Konto-, Abrechnungs- oder Plattformproblemen. Nennen Sie Ihre Konto-E-Mail und beschreiben Sie das Problem kurz. Sie können auch an support@globalsponsorhub.com schreiben."
+          },
+          {
+            "q": "Wie lösche ich mein Konto?",
+            "a": "Öffnen Sie die Einstellungen und folgen Sie den Schritten zur Kontolöschung. Ohne Anmeldezugriff kontaktieren Sie den Support von Ihrer registrierten E-Mail-Adresse aus. Die Seite zur Kontolöschung erklärt die Aufbewahrung von Daten."
+          },
+          {
+            "q": "Gibt es eine App für Bewerber?",
+            "a": "Die App verwendet dasselbe Konto wie die Website. Nutzen Sie veröffentlichte Downloadlinks auf der Jobs-Seite, sobald verfügbar. Arbeitgeber, Agenturen und Fachleute nutzen die Website."
+          },
+          {
+            "q": "Wie aktualisiere ich mein Profil?",
+            "a": "Melden Sie sich an und öffnen Sie Profil im Dashboard. Bewerber können dort ihren Lebenslauf ändern und in den Einstellungen Sichtbarkeit und Nachrichtenfreigaben festlegen."
+          },
+          {
+            "q": "Was ist die Baumpflanzinitiative?",
+            "a": "Unsere Über-uns-Seite erklärt die Treeapp-Initiative und zeigt verfügbare Angaben zur Wirkung. Dort finden Sie die aktuellen Zahlen."
+          }
+        ]
+      },
+      {
+        "id": "candidate",
+        "title": "Bewerber",
+        "items": [
+          {
+            "q": "Ist der Zugang für Bewerber kostenlos?",
+            "a": "Yes. Profiles, search, applications on hub listings, and the partner directory are free. We charge employers and partners—not candidates."
+          },
+          {
+            "q": "Brauche ich eine Kreditkarte?",
+            "a": "No. Email + password is enough to start."
+          },
+          {
+            "q": "Wer kann mein Profil finden?",
+            "a": "Wählen Sie, ob Arbeitgeber, Agenturen, beide oder niemand Sie finden dürfen. Legen Sie die Nachrichtenerlaubnis für jede Gruppe getrennt fest. Bewerbungen teilen Ihre Angaben mit dem Empfänger; externe Websites haben eigene Datenschutzregeln."
+          },
+          {
+            "q": "Wie fange ich an?",
+            "a": "Erstellen Sie ein Konto, bestätigen Sie Ihre E-Mail und vervollständigen Sie Ihr Profil. Suchen Sie Jobs und prüfen Sie den jeweiligen Bewerbungsweg. Bewerbungen über Global Sponsor Hub können Sie im Dashboard verfolgen."
+          },
+          {
+            "q": "What is the difference between a direct role and a curated external link?",
+            "a": "Direct roles are posted here—you apply and track on Global Sponsor Hub. External picks are hand-maintained links to careers sites elsewhere; cards say who owns the application before you leave."
+          },
+          {
+            "q": "Garantieren die Mobilitätsangaben ein Visum?",
+            "a": "Nein. Angaben zur Visaunterstützung, zu Visa, Sponsorlizenzen und zum Umzug stammen vom Arbeitgeber oder der Quelle, sofern keine Prüfung durch die Plattform angegeben ist. Klären Sie die Unterstützung mit dem Arbeitgeber und prüfen Sie die Voraussetzungen bei offiziellen Stellen."
+          },
+          {
+            "q": "Wie frage ich Hilfe bei einer Fachperson an?",
+            "a": "Durchsuche das Fachleuteverzeichnis und registriere dich oder melde dich an. Erstelle und verwalte Anfragen im Dashboard. Du kannst mehrere Anfragen stellen. Prüfe vor dem Absenden, welche Angaben du freigibst. Das Ansehen eines Profils sendet keine Anfrage."
+          }
+        ]
+      }
+    ]
+  },
+  "es": {
+    "title": "Preguntas frecuentes de candidatos",
+    "eyebrow": "ayuda",
+    "intro": "Respuestas sobre empleo, contratación, cuentas y solicitudes a especialistas.",
+    "groups": [
+      {
+        "id": "general",
+        "title": "General",
+        "items": [
+          {
+            "q": "¿Qué es Global Sponsor Hub?",
+            "a": "Encuentra empleo internacional, contrata en otros países y solicita ayuda independiente para mudarte. El acceso es gratuito para candidatos. No reclutamos por ti, no ofrecemos servicios EOR ni decidimos la elegibilidad de visados."
+          },
+          {
+            "q": "¿Cómo contacto con soporte?",
+            "a": "Usa la página Contacto para problemas de cuenta, facturación o plataforma. Incluye tu correo de cuenta y una breve descripción. También puedes escribir a support@globalsponsorhub.com."
+          },
+          {
+            "q": "¿Cómo elimino mi cuenta?",
+            "a": "Abre Configuración y sigue los pasos para eliminar la cuenta. Si no puedes iniciar sesión, contacta con soporte desde tu correo registrado. La página de eliminación de cuenta explica qué datos se conservan."
+          },
+          {
+            "q": "¿Hay una app para candidatos?",
+            "a": "La app usa la misma cuenta que el sitio web. Sigue los enlaces de descarga publicados en la página de empleo cuando estén disponibles. Empresas, agencias y especialistas usan el sitio web."
+          },
+          {
+            "q": "¿Cómo actualizo mi perfil?",
+            "a": "Inicia sesión y abre Perfil en tu panel. Los candidatos pueden actualizar allí su CV y elegir su visibilidad y permisos de mensajes en Configuración."
+          },
+          {
+            "q": "¿Qué es la iniciativa de plantación de árboles?",
+            "a": "La página Sobre nosotros explica la iniciativa Treeapp y muestra la información disponible sobre su impacto. Consulta allí las cifras actuales."
+          }
+        ]
+      },
+      {
+        "id": "candidate",
+        "title": "Candidatos",
+        "items": [
+          {
+            "q": "¿El acceso para candidatos es gratuito?",
+            "a": "Yes. Profiles, search, applications on hub listings, and the partner directory are free. We charge employers and partners—not candidates."
+          },
+          {
+            "q": "¿Necesito una tarjeta de crédito?",
+            "a": "No. Email + password is enough to start."
+          },
+          {
+            "q": "¿Quién puede encontrar mi perfil?",
+            "a": "Elige si pueden encontrarte empresas, agencias, ambas o ninguna. Configura por separado los mensajes de cada grupo. Al solicitar un empleo, compartes tus datos con quien recibe la solicitud; los sitios externos tienen sus propias normas de privacidad."
+          },
+          {
+            "q": "¿Cómo empiezo?",
+            "a": "Crea una cuenta, verifica tu correo y completa tu perfil. Busca ofertas y comprueba dónde postular. Puedes seguir en tu panel las candidaturas enviadas en Global Sponsor Hub."
+          },
+          {
+            "q": "What is the difference between a direct role and a curated external link?",
+            "a": "Direct roles are posted here—you apply and track on Global Sponsor Hub. External picks are hand-maintained links to careers sites elsewhere; cards say who owns the application before you leave."
+          },
+          {
+            "q": "¿Las etiquetas de movilidad garantizan un visado?",
+            "a": "No. La información sobre patrocinio, visados, licencias y ayuda para la mudanza procede del empleador o de la fuente, salvo que se indique una verificación de la plataforma. Confirme la ayuda con el empleador y los requisitos con fuentes oficiales."
+          },
+          {
+            "q": "¿Cómo solicito ayuda de un especialista?",
+            "a": "Explora el directorio de especialistas y regístrate o inicia sesión. Crea y gestiona solicitudes en tu panel. Puedes hacer más de una solicitud. Antes de enviarla, revisa qué datos aceptas compartir. Ver un perfil no envía ninguna solicitud."
+          }
+        ]
+      }
+    ]
+  },
+  "pt": {
+    "title": "FAQs para Candidatos",
+    "eyebrow": "ajuda",
+    "intro": "Respostas sobre emprego, contratação, contas e pedidos a especialistas.",
+    "groups": [
+      {
+        "id": "general",
+        "title": "Geral",
+        "items": [
+          {
+            "q": "O que é a Global Sponsor Hub?",
+            "a": "Encontre emprego internacional, contrate noutros países e peça ajuda independente para a mudança. O acesso é gratuito para candidatos. Não recrutamos por si, não prestamos serviços EOR nem decidimos a elegibilidade para vistos."
+          },
+          {
+            "q": "Como contacto o apoio?",
+            "a": "Use a página Contacto para problemas de conta, faturação ou plataforma. Inclua o e-mail da conta e uma breve descrição. Também pode escrever para support@globalsponsorhub.com."
+          },
+          {
+            "q": "Como elimino a minha conta?",
+            "a": "Abra as definições e siga os passos de eliminação. Se não conseguir iniciar sessão, contacte o apoio a partir do e-mail registado. A página de eliminação da conta explica os dados conservados."
+          },
+          {
+            "q": "Existe uma aplicação para candidatos?",
+            "a": "A aplicação usa a mesma conta do site. Use os links de transferência publicados na página de emprego quando estiverem disponíveis. Empregadores, agências e especialistas usam o site."
+          },
+          {
+            "q": "Como atualizo o meu perfil?",
+            "a": "Inicie sessão e abra Perfil no painel. Os candidatos podem atualizar o CV aí e definir a visibilidade e as permissões de mensagens nas definições."
+          },
+          {
+            "q": "O que é a iniciativa de plantação de árvores?",
+            "a": "A página Sobre nós explica a iniciativa Treeapp e mostra as informações disponíveis sobre o impacto. Consulte essa página para ver os números atuais."
+          }
+        ]
+      },
+      {
+        "id": "candidate",
+        "title": "Candidatos",
+        "items": [
+          {
+            "q": "O acesso para candidatos é gratuito?",
+            "a": "Yes. Profiles, search, applications on hub listings, and the partner directory are free. We charge employers and partners—not candidates."
+          },
+          {
+            "q": "Preciso de cartão de crédito?",
+            "a": "No. Email + password is enough to start."
+          },
+          {
+            "q": "Quem pode encontrar o meu perfil?",
+            "a": "Escolha se empresas, agências, ambas ou nenhuma podem encontrar o seu perfil. Defina separadamente as mensagens de cada grupo. As candidaturas partilham dados com o destinatário; os sites externos têm regras de privacidade próprias."
+          },
+          {
+            "q": "Como começo?",
+            "a": "Crie uma conta, confirme o e-mail e complete o perfil. Pesquise ofertas e verifique onde se candidatar. Pode acompanhar no painel as candidaturas enviadas na Global Sponsor Hub."
+          },
+          {
+            "q": "What is the difference between a direct role and a curated external link?",
+            "a": "Direct roles are posted here—you apply and track on Global Sponsor Hub. External picks are hand-maintained links to careers sites elsewhere; cards say who owns the application before you leave."
+          },
+          {
+            "q": "As indicações de mobilidade garantem um visto?",
+            "a": "Não. As informações sobre patrocínio, vistos, licenças e apoio à mudança são fornecidas pelo empregador ou pela fonte, salvo indicação de uma verificação pela plataforma. Confirme o apoio com o empregador e os requisitos nas fontes oficiais."
+          },
+          {
+            "q": "Como peço ajuda a um especialista?",
+            "a": "Explore o diretório de especialistas e registe-se ou inicie sessão. Crie e gira pedidos no painel. Pode fazer mais de um pedido. Antes de enviar, confirme os dados que aceita partilhar. Ver um perfil não envia um pedido."
+          }
+        ]
+      }
+    ]
+  },
+  "it": {
+    "title": "FAQ per i candidati",
+    "eyebrow": "aiuto",
+    "intro": "Risposte su lavoro, assunzioni, account e richieste agli specialisti.",
+    "groups": [
+      {
+        "id": "general",
+        "title": "Generale",
+        "items": [
+          {
+            "q": "Che cos’è Global Sponsor Hub?",
+            "a": "Trova lavoro internazionale, assumi oltre confine e richiedi aiuto indipendente per trasferirti. L’accesso è gratuito per i candidati. Non selezioniamo personale per te, non forniamo servizi EOR e non decidiamo l’idoneità ai visti."
+          },
+          {
+            "q": "Come contatto l’assistenza?",
+            "a": "Usa la pagina Contatti per problemi di account, fatturazione o piattaforma. Includi l’e-mail dell’account e una breve descrizione. Puoi anche scrivere a support@globalsponsorhub.com."
+          },
+          {
+            "q": "Come elimino il mio account?",
+            "a": "Apri Impostazioni e segui i passaggi di eliminazione. Se non riesci ad accedere, contatta l’assistenza dall’e-mail registrata. La pagina di eliminazione dell’account spiega quali dati vengono conservati."
+          },
+          {
+            "q": "Esiste un’app per candidati?",
+            "a": "L’app usa lo stesso account del sito. Segui i link di download pubblicati nella pagina Lavoro quando disponibili. Aziende, agenzie e specialisti usano il sito web."
+          },
+          {
+            "q": "Come aggiorno il mio profilo?",
+            "a": "Accedi e apri Profilo nella dashboard. I candidati possono aggiornare lì il CV e scegliere visibilità e permessi per i messaggi in Impostazioni."
+          },
+          {
+            "q": "Che cos’è l’iniziativa di piantumazione degli alberi?",
+            "a": "La pagina Chi siamo spiega l’iniziativa Treeapp e mostra le informazioni disponibili sull’impatto. Consultala per i dati aggiornati."
+          }
+        ]
+      },
+      {
+        "id": "candidate",
+        "title": "Candidati",
+        "items": [
+          {
+            "q": "L’accesso per candidati è gratuito?",
+            "a": "Yes. Profiles, search, applications on hub listings, and the partner directory are free. We charge employers and partners—not candidates."
+          },
+          {
+            "q": "Serve una carta di credito?",
+            "a": "No. Email + password is enough to start."
+          },
+          {
+            "q": "Chi può trovare il mio profilo?",
+            "a": "Scegli se possono trovarti datori di lavoro, agenzie, entrambi o nessuno. Imposta separatamente il consenso ai messaggi per ogni gruppo. Le candidature condividono i dati con il destinatario; i siti esterni hanno regole sulla privacy proprie."
+          },
+          {
+            "q": "Come inizio?",
+            "a": "Crea un account, verifica l’e-mail e completa il profilo. Cerca offerte e controlla dove candidarti. Nella dashboard puoi seguire le candidature inviate su Global Sponsor Hub."
+          },
+          {
+            "q": "What is the difference between a direct role and a curated external link?",
+            "a": "Direct roles are posted here—you apply and track on Global Sponsor Hub. External picks are hand-maintained links to careers sites elsewhere; cards say who owns the application before you leave."
+          },
+          {
+            "q": "Le indicazioni sulla mobilità garantiscono un visto?",
+            "a": "No. Le informazioni su sponsorizzazione, visti, licenze e aiuto al trasferimento provengono dal datore di lavoro o dalla fonte, salvo che sia indicata una verifica della piattaforma. Conferma l’aiuto con il datore di lavoro e controlla i requisiti sulle fonti ufficiali."
+          },
+          {
+            "q": "Come richiedo l’aiuto di uno specialista?",
+            "a": "Esplora l’elenco degli specialisti, poi registrati o accedi. Crea e gestisci le richieste nella dashboard. Puoi inviare più richieste. Prima dell’invio, controlla quali dati accetti di condividere. Visualizzare un profilo non invia una richiesta."
+          }
+        ]
+      }
+    ]
+  },
+  "nl": {
+    "title": "Veelgestelde vragen voor kandidaten",
+    "eyebrow": "hulp",
+    "intro": "Antwoorden over werk, werving, accounts en aanvragen bij specialisten.",
+    "groups": [
+      {
+        "id": "general",
+        "title": "Algemeen",
+        "items": [
+          {
+            "q": "Wat is Global Sponsor Hub?",
+            "a": "Vind internationaal werk, werf over de grens en vraag onafhankelijke verhuishulp aan. Kandidaten gebruiken het platform gratis. We werven niet namens jou, bieden geen EOR-diensten en beslissen niet over visa."
+          },
+          {
+            "q": "Hoe neem ik contact op met support?",
+            "a": "Gebruik de contactpagina voor problemen met je account, facturering of het platform. Vermeld je accountmailadres en beschrijf het probleem kort. Je kunt ook mailen naar support@globalsponsorhub.com."
+          },
+          {
+            "q": "Hoe verwijder ik mijn account?",
+            "a": "Open Instellingen en volg de stappen voor accountverwijdering. Kun je niet inloggen, neem dan contact op vanaf je geregistreerde e-mailadres. De pagina over accountverwijdering legt uit welke gegevens bewaard blijven."
+          },
+          {
+            "q": "Is er een app voor kandidaten?",
+            "a": "De app gebruikt hetzelfde account als de website. Gebruik gepubliceerde downloadlinks op de vacaturepagina zodra beschikbaar. Werkgevers, bureaus en specialisten gebruiken de website."
+          },
+          {
+            "q": "Hoe werk ik mijn profiel bij?",
+            "a": "Log in en open Profiel in je dashboard. Kandidaten kunnen daar hun cv bijwerken en in Instellingen hun vindbaarheid en berichttoestemming kiezen."
+          },
+          {
+            "q": "Wat is het bomenplantinitiatief?",
+            "a": "Onze Over-ons-pagina legt het Treeapp-initiatief uit en toont beschikbare informatie over de impact. Bekijk die pagina voor de actuele cijfers."
+          }
+        ]
+      },
+      {
+        "id": "candidate",
+        "title": "Kandidaten",
+        "items": [
+          {
+            "q": "Is toegang voor kandidaten gratis?",
+            "a": "Yes. Profiles, search, applications on hub listings, and the partner directory are free. We charge employers and partners—not candidates."
+          },
+          {
+            "q": "Heb ik een creditcard nodig?",
+            "a": "No. Email + password is enough to start."
+          },
+          {
+            "q": "Wie kan mijn profiel vinden?",
+            "a": "Kies of werkgevers, bureaus, beide of geen van beide je mogen vinden. Stel berichten per groep apart in. Bij sollicitaties deel je gegevens met de ontvanger; externe websites hebben eigen privacyregels."
+          },
+          {
+            "q": "Hoe begin ik?",
+            "a": "Maak een account, bevestig je e-mail en vul je profiel in. Zoek vacatures en controleer waar je moet solliciteren. Sollicitaties via Global Sponsor Hub kun je volgen in je dashboard."
+          },
+          {
+            "q": "What is the difference between a direct role and a curated external link?",
+            "a": "Direct roles are posted here—you apply and track on Global Sponsor Hub. External picks are hand-maintained links to careers sites elsewhere; cards say who owns the application before you leave."
+          },
+          {
+            "q": "Garanderen de mobiliteitslabels een visum?",
+            "a": "Nee. Informatie over sponsoring, visa, sponsorlicenties en verhuishulp komt van de werkgever of bron, tenzij een controle door het platform wordt vermeld. Bevestig de hulp bij de werkgever en controleer de voorwaarden bij officiële bronnen."
+          },
+          {
+            "q": "Hoe vraag ik hulp aan een specialist?",
+            "a": "Bekijk de specialistengids en maak een account of log in. Maak en beheer aanvragen in je dashboard. Je kunt meer dan één aanvraag doen. Controleer vóór het versturen welke gegevens je wilt delen. Een profiel bekijken verstuurt geen aanvraag."
+          }
+        ]
+      }
+    ]
+  },
+  "pl": {
+    "title": "FAQ dla kandydatów",
+    "eyebrow": "pomoc",
+    "intro": "Odpowiedzi o pracy, rekrutacji, kontach i prośbach do specjalistów.",
+    "groups": [
+      {
+        "id": "general",
+        "title": "Ogólne",
+        "items": [
+          {
+            "q": "Czym jest Global Sponsor Hub?",
+            "a": "Znajdź pracę za granicą, rekrutuj międzynarodowo i poproś o niezależną pomoc w przeprowadzce. Kandydaci korzystają bezpłatnie. Nie rekrutujemy za Ciebie, nie świadczymy usług EOR i nie decydujemy o uprawnieniach wizowych."
+          },
+          {
+            "q": "Jak skontaktować się z pomocą?",
+            "a": "Użyj strony Kontakt w sprawach konta, rozliczeń lub platformy. Podaj e-mail konta i krótki opis problemu. Możesz też napisać na support@globalsponsorhub.com."
+          },
+          {
+            "q": "Jak usunąć konto?",
+            "a": "Otwórz Ustawienia i wykonaj kroki usuwania konta. Jeśli nie możesz się zalogować, napisz do pomocy z zarejestrowanego adresu. Strona usuwania konta wyjaśnia, jakie dane są zachowywane."
+          },
+          {
+            "q": "Czy jest aplikacja dla kandydatów?",
+            "a": "Aplikacja korzysta z tego samego konta co strona. Użyj opublikowanych linków do pobrania na stronie ofert pracy, gdy będą dostępne. Pracodawcy, agencje i specjaliści korzystają ze strony internetowej."
+          },
+          {
+            "q": "Jak zaktualizować profil?",
+            "a": "Zaloguj się i otwórz Profil w panelu. Kandydaci mogą tam zaktualizować CV, a w Ustawieniach wybrać widoczność i zgodę na wiadomości."
+          },
+          {
+            "q": "Na czym polega inicjatywa sadzenia drzew?",
+            "a": "Strona O nas opisuje inicjatywę Treeapp i pokazuje dostępne informacje o jej efektach. Sprawdź tam aktualne dane."
+          }
+        ]
+      },
+      {
+        "id": "candidate",
+        "title": "Kandydaci",
+        "items": [
+          {
+            "q": "Czy dostęp dla kandydatów jest bezpłatny?",
+            "a": "Yes. Profiles, search, applications on hub listings, and the partner directory are free. We charge employers and partners—not candidates."
+          },
+          {
+            "q": "Czy potrzebuję karty kredytowej?",
+            "a": "No. Email + password is enough to start."
+          },
+          {
+            "q": "Kto może znaleźć mój profil?",
+            "a": "Wybierz, czy mogą Cię znaleźć pracodawcy, agencje, obie grupy czy żadna. Ustaw zgodę na wiadomości osobno dla każdej grupy. Aplikacja udostępnia dane jej odbiorcy; zewnętrzne strony mają własne zasady prywatności."
+          },
+          {
+            "q": "Jak zacząć?",
+            "a": "Utwórz konto, potwierdź e-mail i uzupełnij profil. Szukaj ofert i sprawdzaj sposób aplikowania. Zgłoszenia wysłane przez Global Sponsor Hub możesz śledzić w panelu."
+          },
+          {
+            "q": "What is the difference between a direct role and a curated external link?",
+            "a": "Direct roles are posted here—you apply and track on Global Sponsor Hub. External picks are hand-maintained links to careers sites elsewhere; cards say who owns the application before you leave."
+          },
+          {
+            "q": "Czy oznaczenia dotyczące mobilności gwarantują wizę?",
+            "a": "Nie. Informacje o sponsorowaniu, wizach, licencjach i pomocy w przeprowadzce pochodzą od pracodawcy lub ze źródła, chyba że wskazano weryfikację przez platformę. Potwierdź pomoc u pracodawcy i sprawdź wymagania w oficjalnych źródłach."
+          },
+          {
+            "q": "Jak poprosić o pomoc specjalistę?",
+            "a": "Przejrzyj katalog specjalistów, a następnie zarejestruj się lub zaloguj. Twórz prośby i zarządzaj nimi w panelu. Możesz wysłać więcej niż jedną prośbę. Przed wysłaniem sprawdź, jakie dane zgadzasz się udostępnić. Samo obejrzenie profilu nie wysyła prośby."
+          }
+        ]
+      }
+    ]
+  }
+}

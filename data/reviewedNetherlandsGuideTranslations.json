@@ -1,0 +1,722 @@
+{
+  "en": {
+    "slug": "netherlands-highly-skilled-migrant-jobs",
+    "title": "Working in the Netherlands: check the offer and plan your move",
+    "countryLabel": "Netherlands",
+    "iso2": "nl",
+    "flagEmoji": "🇳🇱",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+    "excerpt": "Check the employer, the work route and the salary rules before accepting an offer. Plan housing and arrival costs separately.",
+    "metaDescription": "Check the employer, the work route and the salary rules before accepting an offer. Plan housing and arrival costs separately.",
+    "openingHook": "Check the employer, the work route and the salary rules before accepting an offer. Plan housing and arrival costs separately.",
+    "quickFacts": [
+      {
+        "label": "Start here",
+        "value": "Check the job and your work rights"
+      },
+      {
+        "label": "Employer support",
+        "value": "Confirm what is included in writing"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Check the recognised sponsor",
+        "paragraphs": [
+          "For the Highly Skilled Migrant route, your employer must be recognised by the IND and apply for your permit. Check the public register and confirm support for your specific role."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+          "https://ind.nl/en/public-register-recognised-sponsors"
+        ]
+      },
+      {
+        "heading": "Compare the correct salary figure",
+        "paragraphs": [
+          "In 2026, the initial Highly Skilled Migrant thresholds are €5,942 gross per month from age 30 and €4,357 below age 30, excluding holiday allowance. The €3,122 reduced threshold has separate eligibility rules. Renewals and employer changes need their own check."
+        ],
+        "sources": [
+          "https://ind.nl/en/required-amounts-income-requirements"
+        ]
+      },
+      {
+        "heading": "Consider the EU Blue Card separately",
+        "paragraphs": [
+          "The EU Blue Card has its own qualification or experience, contract and income requirements. Unlike the Highly Skilled Migrant route, it does not require the employer to be an IND-recognised sponsor."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+        ]
+      },
+      {
+        "heading": "Keep tax relief separate from work permission",
+        "paragraphs": [
+          "The expat scheme, often called the 30% facility, is not automatic and does not grant work rights. You and your employer must meet the tax authority’s conditions and apply. Do not base your budget on unconfirmed tax relief."
+        ],
+        "sources": [
+          "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+        ]
+      },
+      {
+        "heading": "Prepare for arrival",
+        "paragraphs": [
+          "Check the registration process for your length of stay, the documents needed for a BSN and your health insurance duties. Arrange housing you can afford and confirm that you can register at the address."
+        ],
+        "sources": [
+          "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+        ]
+      },
+      {
+        "heading": "Get the practical offer in writing",
+        "paragraphs": [
+          "Confirm the working language, start date, holiday allowance, relocation support and who handles each application. You can find independent specialists for practical help before or after an offer."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Search jobs in the Netherlands",
+        "href": "/jobs?location=Netherlands"
+      },
+      {
+        "label": "Browse independent specialists",
+        "href": "/specialists"
+      },
+      {
+        "label": "Relocation perks",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "fr": {
+    "slug": "netherlands-highly-skilled-migrant-jobs",
+    "title": "Travailler aux Pays-Bas : vérifier l’offre et préparer son installation",
+    "countryLabel": "Pays-Bas",
+    "iso2": "nl",
+    "flagEmoji": "🇳🇱",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+    "excerpt": "Vérifiez l’employeur, le titre de travail et les règles salariales avant d’accepter. Prévoyez séparément le logement et les frais d’installation.",
+    "metaDescription": "Vérifiez l’employeur, le titre de travail et les règles salariales avant d’accepter. Prévoyez séparément le logement et les frais d’installation.",
+    "openingHook": "Vérifiez l’employeur, le titre de travail et les règles salariales avant d’accepter. Prévoyez séparément le logement et les frais d’installation.",
+    "quickFacts": [
+      {
+        "label": "Pour commencer",
+        "value": "Vérifiez le poste et votre droit de travailler"
+      },
+      {
+        "label": "Aide de l’employeur",
+        "value": "Faites confirmer par écrit ce qui est inclus"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Vérifiez le sponsor reconnu",
+        "paragraphs": [
+          "Pour le titre de migrant hautement qualifié, l’employeur doit être reconnu par l’IND et déposer votre demande. Consultez le registre public et confirmez le soutien prévu pour votre poste."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+          "https://ind.nl/en/public-register-recognised-sponsors"
+        ]
+      },
+      {
+        "heading": "Comparez le bon montant salarial",
+        "paragraphs": [
+          "En 2026, les seuils initiaux sont de 5 942 € brut par mois à partir de 30 ans et 4 357 € avant 30 ans, hors pécule de vacances. Le seuil réduit de 3 122 € a ses propres critères. Vérifiez aussi les règles de renouvellement ou de changement d’employeur."
+        ],
+        "sources": [
+          "https://ind.nl/en/required-amounts-income-requirements"
+        ]
+      },
+      {
+        "heading": "Examinez séparément la carte bleue européenne",
+        "paragraphs": [
+          "La carte bleue européenne a ses propres critères de qualification ou d’expérience, de contrat et de revenu. Contrairement au titre de migrant hautement qualifié, elle n’exige pas un employeur reconnu comme sponsor par l’IND."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+        ]
+      },
+      {
+        "heading": "Distinguez avantage fiscal et droit au travail",
+        "paragraphs": [
+          "Le régime des expatriés, souvent appelé régime des 30 %, n’est pas automatique et ne donne pas le droit de travailler. Vous et l’employeur devez remplir les conditions fiscales et faire une demande. Ne basez pas votre budget sur un avantage non confirmé."
+        ],
+        "sources": [
+          "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+        ]
+      },
+      {
+        "heading": "Préparez votre arrivée",
+        "paragraphs": [
+          "Vérifiez l’enregistrement selon la durée du séjour, les documents pour obtenir un BSN et vos obligations d’assurance maladie. Trouvez un logement adapté à votre budget et confirmez que l’adresse permet l’enregistrement."
+        ],
+        "sources": [
+          "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+        ]
+      },
+      {
+        "heading": "Faites confirmer l’offre pratique par écrit",
+        "paragraphs": [
+          "Confirmez la langue de travail, la date de début, le pécule de vacances, l’aide au déménagement et le responsable de chaque demande. Des spécialistes indépendants peuvent vous aider avant ou après une offre."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Rechercher un emploi : Pays-Bas",
+        "href": "/jobs?location=Netherlands"
+      },
+      {
+        "label": "Consulter les spécialistes indépendants",
+        "href": "/specialists"
+      },
+      {
+        "label": "Avantages pour le déménagement",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "de": {
+    "slug": "netherlands-highly-skilled-migrant-jobs",
+    "title": "Arbeiten in den Niederlanden: Angebot prüfen und Umzug planen",
+    "countryLabel": "Niederlande",
+    "iso2": "nl",
+    "flagEmoji": "🇳🇱",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+    "excerpt": "Prüfe Arbeitgeber, Aufenthaltstitel und Gehaltsregeln, bevor du zusagst. Plane Wohnung und Ankunftskosten gesondert.",
+    "metaDescription": "Prüfe Arbeitgeber, Aufenthaltstitel und Gehaltsregeln, bevor du zusagst. Plane Wohnung und Ankunftskosten gesondert.",
+    "openingHook": "Prüfe Arbeitgeber, Aufenthaltstitel und Gehaltsregeln, bevor du zusagst. Plane Wohnung und Ankunftskosten gesondert.",
+    "quickFacts": [
+      {
+        "label": "Hier beginnen",
+        "value": "Prüfe die Stelle und dein Recht zu arbeiten"
+      },
+      {
+        "label": "Hilfe des Arbeitgebers",
+        "value": "Lass dir schriftlich bestätigen, was enthalten ist"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Prüfe den anerkannten Sponsor",
+        "paragraphs": [
+          "Für die Kennismigrant-Regelung muss dein Arbeitgeber vom IND anerkannt sein und den Antrag stellen. Prüfe das öffentliche Register und die Unterstützung für deine konkrete Stelle."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+          "https://ind.nl/en/public-register-recognised-sponsors"
+        ]
+      },
+      {
+        "heading": "Vergleiche die passende Gehaltsgrenze",
+        "paragraphs": [
+          "2026 gelten beim ersten Antrag monatlich 5.942 € brutto ab 30 Jahren und 4.357 € unter 30, ohne Urlaubszulage. Für die ermäßigte Grenze von 3.122 € gelten eigene Voraussetzungen. Prüfe Verlängerungen und Arbeitgeberwechsel gesondert."
+        ],
+        "sources": [
+          "https://ind.nl/en/required-amounts-income-requirements"
+        ]
+      },
+      {
+        "heading": "Prüfe die Blaue Karte EU gesondert",
+        "paragraphs": [
+          "Die Blaue Karte EU hat eigene Anforderungen an Qualifikation oder Erfahrung, Vertrag und Einkommen. Anders als bei der Kennismigrant-Regelung muss der Arbeitgeber kein vom IND anerkannter Sponsor sein."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+        ]
+      },
+      {
+        "heading": "Trenne Steuervergünstigung und Arbeitsberechtigung",
+        "paragraphs": [
+          "Die Expat-Regelung, oft 30-%-Regelung genannt, gilt nicht automatisch und erteilt keine Arbeitsberechtigung. Du und dein Arbeitgeber müssen die steuerlichen Voraussetzungen erfüllen und einen Antrag stellen. Plane nicht mit unbestätigten Steuervorteilen."
+        ],
+        "sources": [
+          "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+        ]
+      },
+      {
+        "heading": "Bereite die Ankunft vor",
+        "paragraphs": [
+          "Prüfe die Anmeldung für deine Aufenthaltsdauer, die Unterlagen für eine BSN und deine Krankenversicherungspflichten. Suche eine bezahlbare Wohnung und kläre, ob du dich dort anmelden kannst."
+        ],
+        "sources": [
+          "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+        ]
+      },
+      {
+        "heading": "Lass dir die praktischen Zusagen schriftlich geben",
+        "paragraphs": [
+          "Kläre Arbeitssprache, Startdatum, Urlaubszulage, Umzugshilfe und Zuständigkeit für jeden Antrag. Unabhängige Fachleute können vor oder nach einem Angebot praktisch helfen."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Stellen suchen: Niederlande",
+        "href": "/jobs?location=Netherlands"
+      },
+      {
+        "label": "Unabhängige Spezialisten finden",
+        "href": "/specialists"
+      },
+      {
+        "label": "Angebote für deinen Umzug",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "es": {
+    "slug": "netherlands-highly-skilled-migrant-jobs",
+    "title": "Trabajar en los Países Bajos: revisa la oferta y prepara la mudanza",
+    "countryLabel": "Países Bajos",
+    "iso2": "nl",
+    "flagEmoji": "🇳🇱",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+    "excerpt": "Comprueba la empresa, la vía de trabajo y las reglas salariales antes de aceptar. Planifica aparte el alojamiento y los gastos de llegada.",
+    "metaDescription": "Comprueba la empresa, la vía de trabajo y las reglas salariales antes de aceptar. Planifica aparte el alojamiento y los gastos de llegada.",
+    "openingHook": "Comprueba la empresa, la vía de trabajo y las reglas salariales antes de aceptar. Planifica aparte el alojamiento y los gastos de llegada.",
+    "quickFacts": [
+      {
+        "label": "Empieza aquí",
+        "value": "Comprueba el puesto y tu derecho a trabajar"
+      },
+      {
+        "label": "Ayuda del empleador",
+        "value": "Confirma por escrito lo que incluye"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Comprueba el patrocinador reconocido",
+        "paragraphs": [
+          "Para la vía de migrante altamente cualificado, la empresa debe estar reconocida por el IND y solicitar tu permiso. Consulta el registro público y confirma el apoyo para tu puesto concreto."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+          "https://ind.nl/en/public-register-recognised-sponsors"
+        ]
+      },
+      {
+        "heading": "Compara la cifra salarial correcta",
+        "paragraphs": [
+          "En 2026, los umbrales iniciales son 5.942 € brutos al mes desde los 30 años y 4.357 € para menores de 30, sin paga de vacaciones. El umbral reducido de 3.122 € tiene requisitos propios. Revisa aparte renovaciones y cambios de empresa."
+        ],
+        "sources": [
+          "https://ind.nl/en/required-amounts-income-requirements"
+        ]
+      },
+      {
+        "heading": "Valora por separado la Tarjeta Azul de la UE",
+        "paragraphs": [
+          "La Tarjeta Azul de la UE tiene requisitos propios de cualificación o experiencia, contrato e ingresos. A diferencia de la vía de migrante altamente cualificado, no exige que la empresa sea un patrocinador reconocido por el IND."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+        ]
+      },
+      {
+        "heading": "Separa la ventaja fiscal del permiso de trabajo",
+        "paragraphs": [
+          "El régimen para expatriados, conocido como régimen del 30 %, no es automático ni concede derecho a trabajar. Tú y la empresa debéis cumplir las condiciones fiscales y solicitarlo. No bases tu presupuesto en una ventaja sin confirmar."
+        ],
+        "sources": [
+          "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+        ]
+      },
+      {
+        "heading": "Prepara tu llegada",
+        "paragraphs": [
+          "Comprueba el registro según la duración de la estancia, los documentos para el BSN y tus obligaciones de seguro médico. Busca una vivienda asequible y confirma que puedes registrarte en esa dirección."
+        ],
+        "sources": [
+          "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+        ]
+      },
+      {
+        "heading": "Pide las condiciones prácticas por escrito",
+        "paragraphs": [
+          "Confirma el idioma de trabajo, la fecha de inicio, la paga de vacaciones, el apoyo a la mudanza y quién tramita cada solicitud. Puedes encontrar especialistas independientes antes o después de una oferta."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Buscar empleo: Países Bajos",
+        "href": "/jobs?location=Netherlands"
+      },
+      {
+        "label": "Buscar especialistas independientes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Ventajas para tu mudanza",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pt": {
+    "slug": "netherlands-highly-skilled-migrant-jobs",
+    "title": "Trabalhar nos Países Baixos: verifique a oferta e prepare a mudança",
+    "countryLabel": "Países Baixos",
+    "iso2": "nl",
+    "flagEmoji": "🇳🇱",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+    "excerpt": "Verifique o empregador, a via de trabalho e as regras salariais antes de aceitar. Planeie à parte o alojamento e os custos de chegada.",
+    "metaDescription": "Verifique o empregador, a via de trabalho e as regras salariais antes de aceitar. Planeie à parte o alojamento e os custos de chegada.",
+    "openingHook": "Verifique o empregador, a via de trabalho e as regras salariais antes de aceitar. Planeie à parte o alojamento e os custos de chegada.",
+    "quickFacts": [
+      {
+        "label": "Comece aqui",
+        "value": "Verifique o emprego e o seu direito a trabalhar"
+      },
+      {
+        "label": "Apoio do empregador",
+        "value": "Confirme por escrito o que está incluído"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Verifique o patrocinador reconhecido",
+        "paragraphs": [
+          "Na via de migrante altamente qualificado, o empregador deve ser reconhecido pelo IND e pedir a sua autorização. Consulte o registo público e confirme o apoio para o seu emprego."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+          "https://ind.nl/en/public-register-recognised-sponsors"
+        ]
+      },
+      {
+        "heading": "Compare o valor salarial correto",
+        "paragraphs": [
+          "Em 2026, os limiares iniciais são 5.942 € brutos mensais a partir dos 30 anos e 4.357 € abaixo dos 30, sem subsídio de férias. O limiar reduzido de 3.122 € tem requisitos próprios. Verifique separadamente renovações e mudanças de empregador."
+        ],
+        "sources": [
+          "https://ind.nl/en/required-amounts-income-requirements"
+        ]
+      },
+      {
+        "heading": "Avalie separadamente o Cartão Azul UE",
+        "paragraphs": [
+          "O Cartão Azul UE tem requisitos próprios de qualificação ou experiência, contrato e rendimento. Ao contrário da via de migrante altamente qualificado, não exige que o empregador seja patrocinador reconhecido pelo IND."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+        ]
+      },
+      {
+        "heading": "Separe o benefício fiscal da autorização de trabalho",
+        "paragraphs": [
+          "O regime de expatriados, conhecido como regime dos 30%, não é automático nem dá direito a trabalhar. Tem de cumprir as condições fiscais com o empregador e apresentar um pedido. Não baseie o orçamento num benefício não confirmado."
+        ],
+        "sources": [
+          "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+        ]
+      },
+      {
+        "heading": "Prepare a chegada",
+        "paragraphs": [
+          "Verifique o registo para a duração da estadia, os documentos para o BSN e as obrigações de seguro de saúde. Procure alojamento dentro do orçamento e confirme que pode registar-se na morada."
+        ],
+        "sources": [
+          "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+        ]
+      },
+      {
+        "heading": "Peça as condições práticas por escrito",
+        "paragraphs": [
+          "Confirme o idioma de trabalho, a data de início, o subsídio de férias, o apoio à mudança e quem trata de cada pedido. Pode encontrar especialistas independentes antes ou depois de uma oferta."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Procurar emprego: Países Baixos",
+        "href": "/jobs?location=Netherlands"
+      },
+      {
+        "label": "Procurar especialistas independentes",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantagens para a mudança",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "it": {
+    "slug": "netherlands-highly-skilled-migrant-jobs",
+    "title": "Lavorare nei Paesi Bassi: verifica l’offerta e prepara il trasferimento",
+    "countryLabel": "Paesi Bassi",
+    "iso2": "nl",
+    "flagEmoji": "🇳🇱",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+    "excerpt": "Verifica datore di lavoro, percorso di lavoro e regole retributive prima di accettare. Pianifica separatamente alloggio e costi di arrivo.",
+    "metaDescription": "Verifica datore di lavoro, percorso di lavoro e regole retributive prima di accettare. Pianifica separatamente alloggio e costi di arrivo.",
+    "openingHook": "Verifica datore di lavoro, percorso di lavoro e regole retributive prima di accettare. Pianifica separatamente alloggio e costi di arrivo.",
+    "quickFacts": [
+      {
+        "label": "Inizia qui",
+        "value": "Verifica il lavoro e il tuo diritto a lavorare"
+      },
+      {
+        "label": "Aiuto del datore di lavoro",
+        "value": "Fai confermare per iscritto cosa è incluso"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Verifica lo sponsor riconosciuto",
+        "paragraphs": [
+          "Per il percorso per migranti altamente qualificati, il datore deve essere riconosciuto dall’IND e richiedere il permesso. Controlla il registro pubblico e il supporto per il tuo ruolo."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+          "https://ind.nl/en/public-register-recognised-sponsors"
+        ]
+      },
+      {
+        "heading": "Confronta la soglia retributiva corretta",
+        "paragraphs": [
+          "Nel 2026, le soglie iniziali sono 5.942 € lordi al mese dai 30 anni e 4.357 € sotto i 30, esclusa l’indennità di ferie. La soglia ridotta di 3.122 € ha requisiti specifici. Verifica separatamente rinnovi e cambi di datore."
+        ],
+        "sources": [
+          "https://ind.nl/en/required-amounts-income-requirements"
+        ]
+      },
+      {
+        "heading": "Valuta separatamente la Carta blu UE",
+        "paragraphs": [
+          "La Carta blu UE ha requisiti propri su qualifiche o esperienza, contratto e reddito. A differenza del percorso per migranti altamente qualificati, non richiede uno sponsor riconosciuto dall’IND."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+        ]
+      },
+      {
+        "heading": "Distingui agevolazione fiscale e permesso di lavoro",
+        "paragraphs": [
+          "Il regime per espatriati, spesso chiamato regime del 30%, non è automatico e non dà diritto al lavoro. Tu e il datore dovete soddisfare le condizioni fiscali e fare domanda. Non basare il budget su un’agevolazione non confermata."
+        ],
+        "sources": [
+          "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+        ]
+      },
+      {
+        "heading": "Prepara l’arrivo",
+        "paragraphs": [
+          "Verifica registrazione in base alla durata del soggiorno, documenti per il BSN e obblighi di assicurazione sanitaria. Cerca un alloggio sostenibile e conferma che puoi registrarti all’indirizzo."
+        ],
+        "sources": [
+          "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+        ]
+      },
+      {
+        "heading": "Chiedi le condizioni pratiche per iscritto",
+        "paragraphs": [
+          "Conferma lingua di lavoro, data di inizio, indennità di ferie, supporto al trasferimento e chi gestisce ogni domanda. Puoi trovare specialisti indipendenti prima o dopo un’offerta."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Cerca lavoro: Paesi Bassi",
+        "href": "/jobs?location=Netherlands"
+      },
+      {
+        "label": "Trova specialisti indipendenti",
+        "href": "/specialists"
+      },
+      {
+        "label": "Vantaggi per il trasferimento",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "nl": {
+    "slug": "netherlands-highly-skilled-migrant-jobs",
+    "title": "Werken in Nederland: controleer het aanbod en plan je verhuizing",
+    "countryLabel": "Nederland",
+    "iso2": "nl",
+    "flagEmoji": "🇳🇱",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+    "excerpt": "Controleer de werkgever, verblijfsroute en salarisregels voordat je toezegt. Plan huisvesting en aankomstkosten apart.",
+    "metaDescription": "Controleer de werkgever, verblijfsroute en salarisregels voordat je toezegt. Plan huisvesting en aankomstkosten apart.",
+    "openingHook": "Controleer de werkgever, verblijfsroute en salarisregels voordat je toezegt. Plan huisvesting en aankomstkosten apart.",
+    "quickFacts": [
+      {
+        "label": "Begin hier",
+        "value": "Controleer de baan en je recht om te werken"
+      },
+      {
+        "label": "Hulp van de werkgever",
+        "value": "Laat schriftelijk bevestigen wat is inbegrepen"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Controleer de erkende referent",
+        "paragraphs": [
+          "Voor de kennismigrantenregeling moet je werkgever door de IND zijn erkend en je vergunning aanvragen. Controleer het openbare register en de ondersteuning voor jouw functie."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+          "https://ind.nl/en/public-register-recognised-sponsors"
+        ]
+      },
+      {
+        "heading": "Vergelijk het juiste salarisbedrag",
+        "paragraphs": [
+          "In 2026 zijn de normen bij een eerste aanvraag €5.942 bruto per maand vanaf 30 jaar en €4.357 onder 30 jaar, zonder vakantiegeld. Voor het verlaagde bedrag van €3.122 gelden aparte voorwaarden. Controleer verlengingen en werkgeverswissels afzonderlijk."
+        ],
+        "sources": [
+          "https://ind.nl/en/required-amounts-income-requirements"
+        ]
+      },
+      {
+        "heading": "Bekijk de Europese blauwe kaart apart",
+        "paragraphs": [
+          "De Europese blauwe kaart heeft eigen eisen voor opleiding of ervaring, contract en inkomen. Anders dan bij de kennismigrantenregeling hoeft de werkgever geen door de IND erkende referent te zijn."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+        ]
+      },
+      {
+        "heading": "Houd belastingvoordeel en werkrecht apart",
+        "paragraphs": [
+          "De expatregeling, vaak de 30%-regeling genoemd, geldt niet automatisch en geeft geen werkrecht. Jij en je werkgever moeten aan de belastingvoorwaarden voldoen en een aanvraag doen. Reken niet op onbevestigd belastingvoordeel."
+        ],
+        "sources": [
+          "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+        ]
+      },
+      {
+        "heading": "Bereid je aankomst voor",
+        "paragraphs": [
+          "Controleer de inschrijving voor jouw verblijfsduur, de documenten voor een BSN en je zorgverzekeringsplicht. Zoek betaalbare woonruimte en bevestig dat inschrijving op het adres mogelijk is."
+        ],
+        "sources": [
+          "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+        ]
+      },
+      {
+        "heading": "Laat praktische afspraken vastleggen",
+        "paragraphs": [
+          "Bevestig werktaal, startdatum, vakantiegeld, verhuishulp en wie elke aanvraag regelt. Je kunt voor of na een aanbod onafhankelijke specialisten vinden voor praktische hulp."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Werk zoeken: Nederland",
+        "href": "/jobs?location=Netherlands"
+      },
+      {
+        "label": "Onafhankelijke specialisten zoeken",
+        "href": "/specialists"
+      },
+      {
+        "label": "Voordelen voor je verhuizing",
+        "href": "/relocation-perks"
+      }
+    ]
+  },
+  "pl": {
+    "slug": "netherlands-highly-skilled-migrant-jobs",
+    "title": "Praca w Holandii: sprawdź ofertę i zaplanuj przeprowadzkę",
+    "countryLabel": "Holandia",
+    "iso2": "nl",
+    "flagEmoji": "🇳🇱",
+    "updatedISO": "2026-09-11",
+    "officialSourceUrl": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+    "excerpt": "Przed przyjęciem oferty sprawdź pracodawcę, ścieżkę pobytu i zasady wynagrodzenia. Osobno zaplanuj mieszkanie i koszty przyjazdu.",
+    "metaDescription": "Przed przyjęciem oferty sprawdź pracodawcę, ścieżkę pobytu i zasady wynagrodzenia. Osobno zaplanuj mieszkanie i koszty przyjazdu.",
+    "openingHook": "Przed przyjęciem oferty sprawdź pracodawcę, ścieżkę pobytu i zasady wynagrodzenia. Osobno zaplanuj mieszkanie i koszty przyjazdu.",
+    "quickFacts": [
+      {
+        "label": "Zacznij tutaj",
+        "value": "Sprawdź ofertę i swoje prawo do pracy"
+      },
+      {
+        "label": "Pomoc pracodawcy",
+        "value": "Uzyskaj pisemne potwierdzenie zakresu pomocy"
+      }
+    ],
+    "sections": [
+      {
+        "heading": "Sprawdź uznanego sponsora",
+        "paragraphs": [
+          "W ścieżce dla wysoko wykwalifikowanych migrantów pracodawca musi być uznany przez IND i złożyć wniosek o zezwolenie. Sprawdź rejestr publiczny i wsparcie dla konkretnego stanowiska."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/highly-skilled-migrant",
+          "https://ind.nl/en/public-register-recognised-sponsors"
+        ]
+      },
+      {
+        "heading": "Porównaj właściwą kwotę wynagrodzenia",
+        "paragraphs": [
+          "W 2026 r. początkowe progi wynoszą 5942 € brutto miesięcznie od 30. roku życia i 4357 € poniżej 30 lat, bez dodatku urlopowego. Obniżony próg 3122 € ma osobne warunki. Oddzielnie sprawdź przedłużenia i zmiany pracodawcy."
+        ],
+        "sources": [
+          "https://ind.nl/en/required-amounts-income-requirements"
+        ]
+      },
+      {
+        "heading": "Osobno rozważ Niebieską Kartę UE",
+        "paragraphs": [
+          "Niebieska Karta UE ma własne wymagania dotyczące kwalifikacji lub doświadczenia, umowy i dochodów. W odróżnieniu od ścieżki dla wysoko wykwalifikowanych migrantów pracodawca nie musi być sponsorem uznanym przez IND."
+        ],
+        "sources": [
+          "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+        ]
+      },
+      {
+        "heading": "Oddziel ulgę podatkową od prawa do pracy",
+        "paragraphs": [
+          "Ulga dla ekspatów, często nazywana ulgą 30%, nie jest automatyczna i nie daje prawa do pracy. Ty i pracodawca musicie spełnić warunki podatkowe i złożyć wniosek. Nie opieraj budżetu na niepotwierdzonej uldze."
+        ],
+        "sources": [
+          "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+        ]
+      },
+      {
+        "heading": "Przygotuj się do przyjazdu",
+        "paragraphs": [
+          "Sprawdź zasady rejestracji dla długości pobytu, dokumenty potrzebne do BSN i obowiązki ubezpieczenia zdrowotnego. Znajdź mieszkanie w swoim budżecie i potwierdź możliwość rejestracji pod tym adresem."
+        ],
+        "sources": [
+          "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+        ]
+      },
+      {
+        "heading": "Poproś o praktyczne warunki na piśmie",
+        "paragraphs": [
+          "Potwierdź język pracy, datę rozpoczęcia, dodatek urlopowy, pomoc w przeprowadzce i osobę odpowiedzialną za każdy wniosek. Niezależnych specjalistów możesz znaleźć przed otrzymaniem oferty lub później."
+        ]
+      }
+    ],
+    "partnerLinks": [
+      {
+        "label": "Szukaj pracy: Holandia",
+        "href": "/jobs?location=Netherlands"
+      },
+      {
+        "label": "Znajdź niezależnych specjalistów",
+        "href": "/specialists"
+      },
+      {
+        "label": "Oferty na czas przeprowadzki",
+        "href": "/relocation-perks"
+      }
+    ]
+  }
+}
