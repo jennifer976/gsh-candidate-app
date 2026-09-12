@@ -535,7 +535,7 @@ export default function JobsTabScreen() {
                   ? t("jobsSearchConnected")
                   : t("jobsSearchExternal")
             }
-            placeholderTextColor="rgba(255,255,255,0.72)"
+            placeholderTextColor={colors.placeholder}
             value={q}
             onChangeText={setQ}
             autoCapitalize="none"
@@ -553,7 +553,7 @@ export default function JobsTabScreen() {
               <Ionicons
                 name="close-circle"
                 size={20}
-                color="rgba(255,255,255,0.45)"
+                color={colors.textMuted}
               />
             </Pressable>
           ) : null}
@@ -567,7 +567,7 @@ export default function JobsTabScreen() {
             <Ionicons
               name="options-outline"
               size={18}
-              color="rgba(255,255,255,0.8)"
+              color={colors.navy}
             />
             <Text style={styles.heroFilterLabel}>{t("jobsFilter")}</Text>
           </Pressable>
@@ -672,6 +672,7 @@ export default function JobsTabScreen() {
                   <Text style={styles.compatibilityOrderTitle}>
                     {t("jobsSort")}
                   </Text>
+                  {/* no roles are hidden */}
                 </View>
               </Pressable>
               <Pressable
@@ -967,10 +968,10 @@ const styles = StyleSheet.create({
   heroSearch: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.12)",
+    backgroundColor: colors.white,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.18)",
+    borderColor: colors.border,
     paddingHorizontal: 12,
     paddingVertical: 2,
   },
@@ -982,7 +983,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     fontFamily: fontFamily.regular,
-    color: colors.white,
+    color: colors.navy,
   },
   heroFilterBtn: {
     minHeight: 44,
@@ -992,12 +993,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: radii.pill,
-    backgroundColor: "rgba(255,255,255,0.12)",
+    backgroundColor: colors.surfaceMuted,
   },
   heroFilterLabel: {
     fontSize: 13,
     fontFamily: fontFamily.semiBold,
-    color: "rgba(255,255,255,0.8)",
+    color: colors.navy,
   },
 
   feedControls: {

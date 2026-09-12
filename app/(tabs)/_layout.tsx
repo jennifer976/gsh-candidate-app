@@ -129,13 +129,13 @@ export default function TabsLayout() {
   const tabBarPaddingTop = 8;
   const tabIconRowHeight = 54;
 
-  const darkHeader = {
-    headerStyle: { backgroundColor: colors.navyDeep },
-    headerTintColor: colors.white,
+  const lightHeader = {
+    headerStyle: { backgroundColor: colors.white },
+    headerTintColor: colors.navy,
     headerTitleStyle: {
-      fontFamily: fontFamily.bold,
+      fontFamily: fontFamily.heading,
       fontSize: 17,
-      color: colors.white,
+      color: colors.navy,
     },
     headerShadowVisible: false,
   };
@@ -207,7 +207,7 @@ export default function TabsLayout() {
           options={{
             title: t("applications"),
             headerShown: true,
-            ...darkHeader,
+            ...lightHeader,
             tabBarLabel: t("applications"),
             tabBarIcon: ({ color, focused }) => (
               <TabGlyph
@@ -224,7 +224,7 @@ export default function TabsLayout() {
           options={{
             title: t("messages"),
             headerShown: true,
-            ...darkHeader,
+            ...lightHeader,
             tabBarLabel: t("messages"),
             tabBarBadge: unreadMessages || undefined,
             tabBarIcon: ({ color, focused }) => (

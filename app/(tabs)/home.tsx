@@ -21,7 +21,6 @@ import { GshDarkFeedHeading } from "@/components/GshDarkFeedHeading";
 import { GshTabHeroHeader } from "@/components/GshTabHeroHeader";
 import { GshActionChip } from "@/components/GshActionChip";
 import { GshEmptyState } from "@/components/GshEmptyState";
-import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { GshLinkRow } from "@/components/gsh-ui-kit";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import {
@@ -35,18 +34,6 @@ import { hapticLight } from "@/lib/haptics";
 import { FEED_ITEM_GAP, FEED_SECTION_GAP } from "@/lib/screen-layout";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
-const FEATURE_TOOLS = [
-  {
-    label: "screenPartners",
-    icon: "people-outline" as const,
-    href: "/partners",
-  },
-  {
-    label: "screenATSassistant",
-    icon: "document-text-outline" as const,
-    href: "/ats-assistant",
-  },
-] as const;
 import type {
   DashboardChartPoint,
   ExternalJobListingPublic,
@@ -204,6 +191,9 @@ export default function HomeScreen() {
     typeof (profileQuery.data as { firstName?: unknown }).firstName === "string"
       ? String((profileQuery.data as { firstName: string }).firstName)
       : "";
+  const discoveryOn =
+    (profileQuery.data as { employerDiscoveryConsent?: { enabled?: unknown } } | undefined)
+      ?.employerDiscoveryConsent?.enabled === true;
 
   const onRefresh = useCallback(() => {
     void q.refetch();
@@ -317,20 +307,36 @@ export default function HomeScreen() {
       >
         <GshTabHeroHeader
           paddingTop={Math.max(insets.top, 20) + 8}
-          tagline="find · hire · move"
+          tagline={t("homeTagline")}
         >
           <Text style={styles.heroTitle}>{greeting}</Text>
         </GshTabHeroHeader>
 
         <View style={styles.actionBand}>
-          <GshGradientPrimaryButton
-            title={t("homeFind")}
+          <Pressable
+            style={styles.pathCard}
             onPress={() => {
               void hapticLight();
               router.push("/(tabs)/jobs");
             }}
-            containerStyle={styles.primaryCta}
-          />
+            accessibilityRole="button"
+          >
+            <Text style={styles.pathEyebrow}>{t("homeFind")}</Text>
+            <Text style={styles.pathTitle}>{t("homeFind")}</Text>
+            <Text style={styles.pathBody}>{t("homeFindLead")}</Text>
+          </Pressable>
+          <Pressable
+            style={styles.pathCard}
+            onPress={() => {
+              void hapticLight();
+              router.push("/relocation-help");
+            }}
+            accessibilityRole="button"
+          >
+            <Text style={styles.pathEyebrow}>{t("homeHelp")}</Text>
+            <Text style={styles.pathTitle}>{t("screenRelocationhelp")}</Text>
+            <Text style={styles.pathBody}>{t("homeMoveLead")}</Text>
+          </Pressable>
           <View style={styles.chipRow}>
             <GshActionChip
               label={t("saved")}
@@ -351,26 +357,49 @@ export default function HomeScreen() {
               onPress={() => router.push("/(tabs)/messages")}
             />
           </View>
-          <Text style={styles.featuresLabel}>{t("homeHelp")}</Text>
-          <View style={styles.featureRow}>
-            {FEATURE_TOOLS.map((tool) => (
-              <Pressable
-                key={tool.label}
-                style={styles.featureChip}
-                onPress={() => {
-                  void hapticLight();
-                  router.push(tool.href);
-                }}
-                accessibilityRole="button"
-              >
-                <Ionicons name={tool.icon} size={17} color={colors.brandDeep} />
-                <Text style={styles.featureChipText}>{t(tool.label)}</Text>
-              </Pressable>
-            ))}
-          </View>
         </View>
 
         <View style={styles.bodyPad}>
+          <GshLinkRow
+            title={t("resourcesGuides")}
+            subtitle={t("resourcesGuidesHelp")}
+            icon="map-outline"
+            accent="purple"
+            onPress={() => router.push("/guides")}
+          />
+          <GshLinkRow
+            title={t("resourcesBlog")}
+            subtitle={t("resourcesBlogHelp")}
+            icon="newspaper-outline"
+            accent="ocean"
+            onPress={() => router.push("/blog")}
+          />
+          <GshLinkRow
+            title={t("resourcesSpecialists")}
+            subtitle={t("resourcesSpecialistsHelp")}
+            icon="people-outline"
+            accent="purple"
+            onPress={() => router.push("/partners")}
+          />
+
+          {!discoveryOn ? (
+            <Pressable
+              style={[styles.profileNudge, feedCardStyle()]}
+              onPress={() => router.push("/mobility-profile")}
+              accessibilityRole="button"
+            >
+              <View style={styles.profileNudgeLeft}>
+                <Text style={styles.profileNudgeTitle}>
+                  {t("homeMatchingNudge")}
+                </Text>
+                <Text style={styles.profileNudgeSub}>
+                  {t("homeMatchingNudgeHelp")}
+                </Text>
+              </View>
+              <Ionicons name="arrow-forward" size={22} color={colors.navy} />
+            </Pressable>
+          ) : null}
+
           {missing.length > 0 ? (
             <Pressable
               style={[styles.profileNudge, feedCardStyle()]}
@@ -390,7 +419,7 @@ export default function HomeScreen() {
                   })}
                 </Text>
               </View>
-              <Ionicons name="arrow-forward" size={22} color={colors.accent} />
+              <Ionicons name="arrow-forward" size={22} color={colors.navy} />
             </Pressable>
           ) : null}
 
@@ -578,9 +607,37 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 26,
     fontFamily: fontFamily.headingStrong,
-    color: colors.white,
+    color: colors.navy,
     letterSpacing: -0.5,
     marginBottom: 6,
+  },
+  pathCard: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: radii.lg,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.border,
+    gap: 6,
+  },
+  pathEyebrow: {
+    fontSize: 11,
+    fontFamily: fontFamily.semiBold,
+    color: colors.accent,
+    letterSpacing: 0.8,
+    textTransform: "lowercase",
+  },
+  pathTitle: {
+    fontSize: 20,
+    fontFamily: fontFamily.heading,
+    color: colors.navy,
+    letterSpacing: -0.3,
+  },
+  pathBody: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
   },
   actionBand: {
     backgroundColor: colors.white,

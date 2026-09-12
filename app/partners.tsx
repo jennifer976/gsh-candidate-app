@@ -54,7 +54,7 @@ export default function PartnersScreen() {
         pageLead
         title={ac("Specialist directory")}
         subtitle={ac(
-          "Find independent help with visas, relocation and legal matters.",
+          "Independent visa, housing and relocation help. Listing is free for them. You request — they pay only if they accept. We do not run the move.",
         )}
       />
       <View style={[cardSurfaceStyle(false), styles.searchInner]}>

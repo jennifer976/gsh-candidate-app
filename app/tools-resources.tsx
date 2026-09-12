@@ -71,12 +71,28 @@ export default function ToolsAndResourcesScreen() {
 
           <GshSectionTitle title={t("resourcesCareer")} topSpacing="sm" />
           <GshLinkRow
+            title={t("homeFind")}
+            subtitle={t("jobsDirectDesc")}
+            icon="briefcase-outline"
+            accent="purple"
+            onPress={() => router.push("/(tabs)/jobs")}
+          />
+          <GshLinkRow
+            title={t("resourcesCompanies")}
+            subtitle={t("resourcesCompaniesHelp")}
+            icon="shield-checkmark-outline"
+            accent="teal"
+            onPress={() => router.push("/companies")}
+          />
+          <GshLinkRow
             title={t("resourcesToolkit")}
             subtitle={t("resourcesToolkitHelp")}
             icon="library-outline"
             accent="purple"
             onPress={() => router.push("/tools")}
           />
+
+          <GshSectionTitle title={t("resourcesMove")} />
           <GshLinkRow
             title={t("resourcesSpecialists")}
             subtitle={t("resourcesSpecialistsHelp")}
@@ -90,13 +106,6 @@ export default function ToolsAndResourcesScreen() {
             icon="airplane-outline"
             accent="teal"
             onPress={() => router.push("/relocation-perks")}
-          />
-          <GshLinkRow
-            title={t("resourcesCompanies")}
-            subtitle={t("resourcesCompaniesHelp")}
-            icon="shield-checkmark-outline"
-            accent="teal"
-            onPress={() => router.push("/companies")}
           />
           <GshLinkRow
             title={t("resourcesGuides")}

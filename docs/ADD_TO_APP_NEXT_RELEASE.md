@@ -17,6 +17,7 @@
 
 | Priority | Item | Web status (today) | App work needed | Notes |
 |----------|------|--------------------|-----------------|-------|
+| P0 | **Find → Move copy** | Live on www | In this worktree: home is find · move (not hire); jobs tabs Direct / External / Agency listed; specialists sit under Move. Include in next binary. | Candidates stay free. No GSH acronym. |
 | P0 | **Company sponsor checker** | Coming soon (`/tools/visa-checker`) | Already **Coming soon** in app (`5e1c73c`). Next release: turn **live** when register coverage is ready (restore search UI; keep naming “Company sponsor checker”, not Visa Wizard). | Do not launch live until you say so. |
 | P1 | **Grow Your Network** | Coming soon (`/grow-your-network`) | First-party in-app-browser row is present in Resources. Keep the destination labelled Coming soon until web community threads exist. | No native community directory until usage proves value. |
 | P2 | Parity pass after web launch | — | When web removes Coming soon for the above, **same day** update app copy/UI or ship follow-up build. | Avoid another “live on web, unfinished in app” gap. |
@@ -61,6 +62,7 @@ Implemented in the isolated Phase 7 mobile worktree; this status does not mean a
 
 | App version / commit | Date | What shipped |
 |----------------------|------|--------------|
+| `1.0.2` (this worktree) | 2026-09-12 | Find → Move home, Direct / External / Agency listed jobs, matching nudge, blog/guides/specialists on Home, light candidate chrome. |
 | `1.0.1` / `30941a9` | 2026-07 | Visual review: All jobs / Curated roles, Filter while searching, chart colours, FAQ/tools/a11y polish. |
 | `5e1c73c` (include in next Play upload) | 2026-07-21 | Company sponsor checker gated as **Coming soon**; labels clarified vs Visa Wizard. |
 

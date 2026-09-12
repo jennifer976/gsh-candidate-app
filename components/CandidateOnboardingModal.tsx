@@ -33,20 +33,20 @@ const STEPS: Step[] = [
   {
     icon: "compass",
     iconBg: colors.brandSoft,
-    title: "Find international jobs",
-    body: "Explore jobs abroad and global remote roles. Check each job’s location, work rights and stated support.",
+    title: "Find work",
+    body: "Browse direct, external and agency-listed jobs. Each listing shows the mobility offer the employer stated.",
   },
   {
-    icon: "bookmark",
-    iconBg: colors.surfaceMuted,
-    title: "Save interesting jobs",
-    body: "Keep interesting jobs in Saved so you can return to them.",
-  },
-  {
-    icon: "paper-plane",
+    icon: "people",
     iconBg: colors.tealDim,
-    title: "Follow your applications",
-    body: "Use Applications and Messages for jobs handled here. External applications continue on the external site.",
+    title: "Be found — if you want",
+    body: "Fill in your profile. Employers and agencies can find you only if you turn that on under Who can find and contact you?",
+  },
+  {
+    icon: "airplane",
+    iconBg: colors.surfaceMuted,
+    title: "Plan the move",
+    body: "Need visa, housing or relocation help? Request an independent specialist. You stay free. We do not run the move.",
   },
 ];
 
