@@ -14,6 +14,10 @@ export function getJobEmployerLabel(
   job: Job,
   locale: AppLanguage = "en",
 ): string {
+  const hiringBrand =
+    typeof job.hiringBrand === "string" ? job.hiringBrand.trim() : "";
+  if (hiringBrand) return hiringBrand;
+
   const direct =
     typeof job.companyName === "string" ? job.companyName.trim() : "";
   if (direct) return direct;

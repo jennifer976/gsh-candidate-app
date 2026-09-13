@@ -34,25 +34,18 @@ export default function ToolsAndResourcesScreen() {
       accent: "ocean",
     },
     {
-      title: t("resourcesNews"),
-      subtitle: t("resourcesNewsHelp"),
-      path: "news",
-      icon: "globe-outline",
-      accent: "teal",
-    },
-    {
       title: t("screenFAQs"),
       subtitle: t("resourcesFaqHelp"),
       path: "faq",
       icon: "help-circle-outline",
-      accent: "purple",
+      accent: "teal",
     },
     {
       title: t("screenContact"),
       subtitle: "support@globalsponsorhub.com",
       path: "contact",
       icon: "mail-outline",
-      accent: "purple",
+      accent: "teal",
     },
   ];
 
@@ -74,7 +67,7 @@ export default function ToolsAndResourcesScreen() {
             title={t("homeFind")}
             subtitle={t("jobsDirectDesc")}
             icon="briefcase-outline"
-            accent="purple"
+            accent="teal"
             onPress={() => router.push("/(tabs)/jobs")}
           />
           <GshLinkRow
@@ -88,7 +81,7 @@ export default function ToolsAndResourcesScreen() {
             title={t("resourcesToolkit")}
             subtitle={t("resourcesToolkitHelp")}
             icon="library-outline"
-            accent="purple"
+            accent="teal"
             onPress={() => router.push("/tools")}
           />
 
@@ -97,7 +90,7 @@ export default function ToolsAndResourcesScreen() {
             title={t("resourcesSpecialists")}
             subtitle={t("resourcesSpecialistsHelp")}
             icon="people-outline"
-            accent="purple"
+            accent="teal"
             onPress={() => router.push("/partners")}
           />
           <GshLinkRow
@@ -111,7 +104,7 @@ export default function ToolsAndResourcesScreen() {
             title={t("resourcesGuides")}
             subtitle={t("resourcesGuidesHelp")}
             icon="map-outline"
-            accent="purple"
+            accent="teal"
             onPress={() => router.push("/guides")}
           />
           <GshLinkRow
@@ -157,7 +150,7 @@ export default function ToolsAndResourcesScreen() {
             title={t("resourcesLegal")}
             subtitle={t("resourcesLegalHelp")}
             icon="shield-checkmark-outline"
-            accent="purple"
+            accent="teal"
             onPress={() => router.push("/legal")}
           />
           {resourceRows.map((item) => (

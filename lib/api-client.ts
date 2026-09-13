@@ -813,6 +813,38 @@ export async function fetchMyJobsCompatibilityBatch(jobIds: string[]) {
   });
 }
 
+export type ApplyInvite = {
+  _id: string;
+  listingKind: "direct" | "external";
+  jobTitle: string;
+  companyName?: string;
+  applyUrl?: string;
+  message?: string;
+  status: "pending" | "accepted" | "declined";
+  createdAt: string;
+};
+
+export async function fetchMyApplyInvites() {
+  return apiFetchJson<{ data: ApplyInvite[] }>("/apply-invites/mine");
+}
+
+export async function fetchApplyInvite(id: string) {
+  const list = await fetchMyApplyInvites();
+  const invite = list.data.find((item) => item._id === id);
+  if (!invite) {
+    const error = Object.assign(new Error("Invite not found"), { status: 404 }) as ApiError;
+    throw error;
+  }
+  return { data: invite };
+}
+
+export async function respondToApplyInvite(id: string, status: "accepted" | "declined") {
+  return apiFetchJson<{ data: ApplyInvite }>(`/apply-invites/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+}
+
 // —— Candidate Phase 6 actions ——
 
 export async function fetchMyRelocationHelpRequests() {

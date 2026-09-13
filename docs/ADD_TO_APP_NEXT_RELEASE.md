@@ -52,7 +52,7 @@ Implemented in the isolated Phase 7 mobile worktree; this status does not mean a
 
 - Native Grow Your Network screens (only after in-app browser proves demand).
 - Push notifications polish (applications / messages and production Phase 6 payload verification).
-- Expert Insights Home section (beyond tools link) when catalogue grows.
+- Native Grow Your Network screens remain later; Expert Insights and Visa Wizard stay retired.
 - Offline / poor-network messaging on job feed and apply.
 - See also: `docs/FUTURE_CONSIDERATIONS.md` (broader backlog).
 

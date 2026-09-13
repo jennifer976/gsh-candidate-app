@@ -44,5 +44,5 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   dark: { backgroundColor: colors.navy },
-  light: { backgroundColor: colors.white },
+  light: { backgroundColor: colors.pale },
 });

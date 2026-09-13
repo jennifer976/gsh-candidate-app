@@ -682,7 +682,7 @@ export default function MobilityProfileScreen() {
             accessibilityRole="button"
             style={styles.linkButton}
           >
-            <Text style={styles.linkText}>{ac("Fill details from my PDF CV")}</Text>
+            <Text style={styles.linkText}>{ac("CV suggestions — coming soon")}</Text>
           </Pressable>
         </ScrollView>
         <View style={styles.saveBar}>

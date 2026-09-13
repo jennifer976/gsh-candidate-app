@@ -1,13 +1,14 @@
-/** Calm, native-first candidate theme: navy, approved cyan, white and neutral greys. */
+/** GSH 2.0 candidate theme: navy, approved teal, pale canvas. */
 import { TextStyle, ViewStyle } from "react-native";
 
 export const colors = {
-  // Core brand
+  // Core brand — matches design-direction / live marketing site
   navy: "#0d194e",
-  navyDeep: "#0d194e",
+  navyDeep: "#070d2c",
   navyMid: "#0d194e",
-  teal: "#42e0e3",
-  tealDim: "rgba(66,224,227,0.16)",
+  teal: "#00a8b2",
+  tealOnNavy: "#6fdde3",
+  tealDim: "rgba(0,168,178,0.16)",
   // Compatibility aliases. New UI must not create a purple visual lane.
   purple: "#0d194e",
   purpleBright: "#0d194e",
@@ -20,8 +21,10 @@ export const colors = {
 
   // Light surface (forms, modals, input fields)
   background: "#ffffff",
-  surfaceMuted: "#f6f7f9",
-  surfaceLight: "#f8fafc",
+  pale: "#f2fafb",
+  pale2: "#eef3f8",
+  surfaceMuted: "#e6f6f7",
+  surfaceLight: "#f2fafb",
 
   // Text — dark backgrounds
   textOnDark: "#ffffff",
@@ -44,10 +47,10 @@ export const colors = {
   // Navy carries actions; cyan is a controlled highlight.
   brand: "#0d194e",
   brandDeep: "#0d194e",
-  brandSoft: "rgba(66,224,227,0.16)",
-  brandGlow: "rgba(66,224,227,0.22)",
+  brandSoft: "rgba(0,168,178,0.16)",
+  brandGlow: "rgba(0,168,178,0.22)",
   secondary: "#0d194e",
-  accent: "#42e0e3",
+  accent: "#00a8b2",
   error: "#b91c1c",
   white: "#ffffff",
 
@@ -56,13 +59,13 @@ export const colors = {
   purpleBorder: "#e2e8f0",
   purpleText: "#0d194e",
   purpleTextDark: "#0d194e",
-  secondaryTintBg: "rgba(66,224,227,0.14)",
+  secondaryTintBg: "rgba(0,168,178,0.14)",
   secondaryTintText: "#0d194e",
   treeapp: "#75be00",
   chipOnBg: "#0d194e",
   chipOnBorder: "#0d194e",
-  unreadBorder: "rgba(66,224,227,0.72)",
-  unreadBg: "rgba(66,224,227,0.08)",
+  unreadBorder: "rgba(0,168,178,0.72)",
+  unreadBg: "rgba(0,168,178,0.08)",
   warningBg: "#fffbeb",
   warningBorder: "#fde68a",
   warningText: "#92400e",
@@ -178,10 +181,10 @@ export const heroGradient = {
 export const gradient = {
   authCTA: [colors.navy, colors.navy] as const,
   heroBg: [colors.navy, colors.navy] as const,
-  cardAccent: ["rgba(66,224,227,0.14)", "rgba(66,224,227,0.04)"] as const,
-  cyanGlow: ["rgba(66,224,227,0)", "rgba(66,224,227,0.10)"] as const,
-  employerHeader: ["rgba(66,224,227,0.10)", "rgba(66,224,227,0)"] as const,
-  curatedHeader: ["rgba(66,224,227,0.08)", "rgba(66,224,227,0)"] as const,
+  cardAccent: ["rgba(0,168,178,0.14)", "rgba(0,168,178,0.04)"] as const,
+  cyanGlow: ["rgba(0,168,178,0)", "rgba(0,168,178,0.10)"] as const,
+  employerHeader: ["rgba(0,168,178,0.10)", "rgba(0,168,178,0)"] as const,
+  curatedHeader: ["rgba(0,168,178,0.08)", "rgba(0,168,178,0)"] as const,
 };
 
 /** Vertical accent strip on the left edge of a card — signals lane (employer vs curated) */

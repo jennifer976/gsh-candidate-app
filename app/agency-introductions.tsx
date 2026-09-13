@@ -1,41 +1,38 @@
-import { useIntroductionLabels } from "@/lib/i18n/useIntroductionLabels";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useQuery } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { fetchCandidateAgencyIntroductions } from "@/lib/api-client";
+import { fetchMyApplyInvites } from "@/lib/api-client";
 import { colors, fontFamily, navHeader, radii } from "@/lib/theme";
 
-
-
 export default function AgencyIntroductionsScreen() {
-  const { ac, country, status, experience } = useIntroductionLabels();
+  const ac = useAccountCopy();
   const router = useRouter();
-  const query = useQuery({ queryKey: ["phase6", "candidate-introductions"], queryFn: () => fetchCandidateAgencyIntroductions() });
+  const query = useQuery({ queryKey: ["apply-invites", "mine"], queryFn: fetchMyApplyInvites });
   return (
     <SafeAreaView style={styles.safe} edges={["bottom"]}>
-      <Stack.Screen options={{ title: ac("Agency introductions"), ...navHeader }} />
+      <Stack.Screen options={{ title: ac("Invites to apply"), ...navHeader }} />
       <ScrollView
         contentContainerStyle={styles.content}
         refreshControl={<RefreshControl refreshing={query.isRefetching} onRefresh={() => void query.refetch()} tintColor={colors.brand} />}
       >
         <View style={styles.intro}>
-          <Text style={styles.title}>{ac("Agency introductions")}</Text>
-          <Text style={styles.copy}>{ac("Review a proposed introduction before accepting. Your agency visibility settings still apply.")}</Text>
+          <Text style={styles.title}>{ac("Invites to apply")}</Text>
+          <Text style={styles.copy}>{ac("Employers and agencies can ask you to apply for a specific role. Accepting does not submit an application for you.")}</Text>
         </View>
         {query.isLoading ? <ActivityIndicator color={colors.brand} /> : query.isError ? (
-          <Pressable accessibilityRole="button" style={styles.error} onPress={() => void query.refetch()}><Text style={styles.errorText}>{ac("Could not load introductions. Tap to retry.")}</Text></Pressable>
+          <Pressable accessibilityRole="button" style={styles.error} onPress={() => void query.refetch()}><Text style={styles.errorText}>{ac("Could not load invites. Tap to retry.")}</Text></Pressable>
         ) : (query.data?.data ?? []).length === 0 ? (
-          <Text style={styles.empty}>{ac("No agency introductions right now.")}</Text>
+          <Text style={styles.empty}>{ac("No invites right now.")}</Text>
         ) : (query.data?.data ?? []).map((item) => (
-          <Pressable key={item.id} style={styles.card} onPress={() => router.push(`/agency-introductions/${item.id}`)} accessibilityRole="button">
+          <Pressable key={item._id} style={styles.card} onPress={() => router.push(`/agency-introductions/${item._id}`)} accessibilityRole="button">
             <View style={styles.row}>
-              <Text style={styles.agency}>{item.agency.name}</Text>
-              <Text style={styles.status}>{status(item.status)}</Text>
+              <Text style={styles.agency}>{item.companyName || ac("Employer")}</Text>
+              <Text style={styles.status}>{item.status}</Text>
             </View>
-            <Text style={styles.role}>{item.request.title}</Text>
-            <Text style={styles.meta}>{country(item.request.destinationCountry)} · {experience(item.request.experienceBand)}</Text>
-            <Text style={styles.view}>{ac("Review introduction")} →</Text>
+            <Text style={styles.role}>{item.jobTitle}</Text>
+            <Text style={styles.view}>{ac("Review invite")} →</Text>
           </Pressable>
         ))}
       </ScrollView>
@@ -54,7 +51,6 @@ const styles = StyleSheet.create({
   agency: { flex: 1, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
   status: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy, flexShrink: 1, textAlign: "right" },
   role: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy },
-  meta: { fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
   view: { marginTop: 5, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
   empty: { padding: 32, textAlign: "center", color: colors.textMuted, fontFamily: fontFamily.regular },
   error: { padding: 16, borderRadius: radii.md, backgroundColor: "#fef2f2" },

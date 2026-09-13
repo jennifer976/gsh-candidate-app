@@ -3,8 +3,8 @@
  * it does not load the marketing site for candidate flows.
  */
 export const MARKETING_PATHS = {
-  visaWizard: "/resources",
-  visaChecker: "/tools/visa-checker",
+  visaWizard: "/plan-the-move",
+  visaChecker: "/companies",
   currencyConverter: "/tools/currency-converter",
   relocationWorksheets: "/tools/relocation-worksheets",
   compareCountries: "/compare-countries",

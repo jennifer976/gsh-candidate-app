@@ -22,16 +22,16 @@ export function DashboardHubJobPreview({
   return (
     <View style={[styles.card, feedCardStyle()]}>
       <Pressable onPress={onPress} style={styles.hit} accessibilityRole="button">
-        <CompanyLogo logoUrl={logoUrl} companyName={job.companyName} size={40} radius={11} />
+        <CompanyLogo logoUrl={logoUrl} companyName={job.companyName} size={48} radius={12} />
         <View style={styles.mid}>
-          <Text style={styles.title} numberOfLines={2}>
-            {job.title}
-          </Text>
           <View style={styles.companyRow}>
             <Text style={styles.company} numberOfLines={1}>
               {job.companyName}
             </Text>
           </View>
+          <Text style={styles.title} numberOfLines={2}>
+            {job.title}
+          </Text>
           {meta ? (
             <Text style={styles.meta} numberOfLines={1}>
               {meta}

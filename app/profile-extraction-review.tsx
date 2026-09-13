@@ -399,7 +399,7 @@ export default function ProfileExtractionReviewScreen() {
       <StateCard
         title={ac("CV suggestions unavailable")}
         copy={ac(
-          "This service is not available right now. No CV has been sent for analysis.",
+          "Extraction provider unavailable. This service is not available right now. No CV has been sent for analysis.",
         )}
         action={ac("Try again")}
         onPress={() => capability.refetch()}
@@ -463,7 +463,7 @@ export default function ProfileExtractionReviewScreen() {
           </Text>
           <Text style={styles.copy}>
             {ac(
-              "This does not verify your qualifications or right to work. It does not decide visa eligibility or change your sharing permissions.",
+              "Suggestions are self-attested only. This does not verify your qualifications or right to work. It does not decide immigration eligibility or change your sharing permissions.",
             )}
           </Text>
           <Text style={styles.copy}>
@@ -516,7 +516,7 @@ export default function ProfileExtractionReviewScreen() {
         </Pressable>
         {start.isPending ? (
           <Text style={styles.processing}>
-            {ac("Reading your PDF. Keep this screen open.")}
+            {ac("Processing your candidate-owned PDF. Keep this screen open.")}
           </Text>
         ) : null}
       </>

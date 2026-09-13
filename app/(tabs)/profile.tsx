@@ -125,8 +125,8 @@ function ChoiceChips({
 
 const STATIC_MORE_TOOLS_LINKS = [
   { title: "Work and move preferences", subtitle: "Choose who can find and contact you", icon: "earth-outline" as const, accent: "teal" as const, href: "/mobility-profile" },
-  { title: "Relocation help", subtitle: "Request and manage support", icon: "navigate-outline" as const, accent: "ocean" as const, href: "/relocation-help" },
-  { title: "Agency introductions", subtitle: "Review consent requests", icon: "people-circle-outline" as const, accent: "purple" as const, href: "/agency-introductions" },
+  { title: "Plan the move", subtitle: "Guides, worksheets and partners", icon: "navigate-outline" as const, accent: "ocean" as const, href: "/relocation-help" },
+  { title: "Invites to apply", subtitle: "Review employer and agency invites", icon: "people-circle-outline" as const, accent: "purple" as const, href: "/agency-introductions" },
   { title: "Country guides", subtitle: "Country guides", icon: "map-outline" as const, accent: "purple" as const, href: "/guides" },
   { title: "Job alerts", subtitle: "Match preferences", icon: "flash-outline" as const, accent: "ocean" as const, href: "/alerts" },
   { title: "Tools and resources", subtitle: "Blog, FAQs and contact", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },

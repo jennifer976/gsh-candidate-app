@@ -125,13 +125,10 @@ function HubJobCard({
         <CompanyLogo
           logoUrl={logoUrl}
           companyName={employer}
-          size={40}
-          radius={11}
+          size={48}
+          radius={12}
         />
         <View style={styles.cardMid}>
-          <Text style={styles.cardTitle} numberOfLines={2}>
-            {job.title}
-          </Text>
           <View style={styles.cardCompanyRow}>
             <Text style={styles.cardCompanyLine} numberOfLines={1}>
               {employer}
@@ -154,6 +151,9 @@ function HubJobCard({
               </View>
             ) : null}
           </View>
+          <Text style={styles.cardTitle} numberOfLines={2}>
+            {job.title}
+          </Text>
           {meta ? (
             <View style={styles.cardMetaRow}>
               <Ionicons
@@ -1163,6 +1163,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.bold,
     color: colors.navy,
     letterSpacing: -0.2,
+    marginTop: 3,
     marginBottom: 2,
     lineHeight: 20,
   },

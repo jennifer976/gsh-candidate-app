@@ -38,9 +38,9 @@
     { "pattern": "^/blog/?$", "mode": "native", "target": "/blog" },
     { "pattern": "^/blog/feed\\.xml/?$", "mode": "fallback" },
     { "pattern": "^/blog/([^/]+)/?$", "mode": "native", "target": "/blog/$1" },
-    { "pattern": "^/expert-insights/?$", "mode": "native", "target": "/expert-insights" },
-    { "pattern": "^/expert-insights/experts/([^/]+)/?$", "mode": "native", "target": "/expert-insights/experts/$1" },
-    { "pattern": "^/expert-insights/([^/]+)/?$", "mode": "native", "target": "/expert-insights/$1" },
+    { "pattern": "^/expert-insights/?$", "mode": "native", "target": "/resources" },
+    { "pattern": "^/expert-insights/experts/([^/]+)/?$", "mode": "native", "target": "/resources" },
+    { "pattern": "^/expert-insights/([^/]+)/?$", "mode": "native", "target": "/resources" },
     { "pattern": "^/guides/?$", "mode": "native", "target": "/guides" },
     { "pattern": "^/guides/country/([^/]+)/?$", "mode": "native", "target": "/guides/country/$1" },
     { "pattern": "^/guides/.+", "mode": "fallback" },
@@ -48,7 +48,8 @@
     { "pattern": "^/faqs?/?$", "mode": "native", "target": "/faq" },
     { "pattern": "^/contact/?$", "mode": "native", "target": "/contact" },
     { "pattern": "^/compare-countries/?$", "mode": "native", "target": "/compare-countries" },
-    { "pattern": "^/tools/visa-wizard/?$", "mode": "native", "target": "/visa-wizard" },
+    { "pattern": "^/plan-the-move/?$", "mode": "native", "target": "/relocation-help" },
+    { "pattern": "^/tools/visa-wizard/?$", "mode": "native", "target": "/relocation-help" },
     { "pattern": "^/tools/visa-checker/?$", "mode": "native", "target": "/companies" },
     { "pattern": "^/tools/currency-converter/?$", "mode": "native", "target": "/currency-converter" },
     { "pattern": "^/tools/relocation-worksheets/?$", "mode": "native", "target": "/relocation-worksheets" },
@@ -63,6 +64,6 @@
     { "pattern": "^/matching-explained/?$", "mode": "fallback" },
     { "pattern": "^/(?:employer-talent-access-terms|provider-lead-terms|affiliate-terms|payment-terms)/?$", "mode": "fallback" },
     { "pattern": "^/(?:relocating|countries|seo|trust)(?:/.*)?$", "mode": "fallback" },
-    { "pattern": "^/(?:about|candidates|employers|partners|pricing|agencies|agencies-recruiters|how-it-works|account-deletion)(?:/.*)?$", "mode": "fallback" }
+    { "pattern": "^/(?:about|candidates|employers|partners|pricing|agencies|agencies-recruiters|how-it-works|account-deletion|discussions)(?:/.*)?$", "mode": "fallback" }
   ]
 }

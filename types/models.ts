@@ -58,6 +58,7 @@ export interface Job {
   title: string;
   status?: "active" | "closed" | "de-activate" | "draft" | "pending_employer_approval" | string;
   companyName?: string;
+  hiringBrand?: string;
   companyLogo?: string;
   locationCountry?: string;
   locationCity?: string;

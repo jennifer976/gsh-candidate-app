@@ -3,10 +3,9 @@ import { useAppCopy } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback } from "react";
 import {
   ActivityIndicator,
-  InteractionManager,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -15,17 +14,15 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { DashboardHubJobPreview } from "@/components/DashboardHubJobPreview";
-import { GshDarkFeedHeading } from "@/components/GshDarkFeedHeading";
+import { GshScreenShell } from "@/components/GshScreenShell";
 import { GshTabHeroHeader } from "@/components/GshTabHeroHeader";
-import { GshActionChip } from "@/components/GshActionChip";
 import { GshEmptyState } from "@/components/GshEmptyState";
 import { GshLinkRow } from "@/components/gsh-ui-kit";
-import { GshScreenShell } from "@/components/GshScreenShell";
 import {
   fetchCandidateDashboard,
   fetchConversations,
+  fetchJobMatches,
   fetchOwnProfile,
 } from "@/lib/api-client";
 import { presentApiError } from "@/lib/api-error";
@@ -34,122 +31,28 @@ import { hapticLight } from "@/lib/haptics";
 import { FEED_ITEM_GAP, FEED_SECTION_GAP } from "@/lib/screen-layout";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
-import type {
-  DashboardChartPoint,
-  ExternalJobListingPublic,
-} from "@/types/models";
-
-function shortMonth(label: string, locale: string): string {
-  const monthIndex = [
-    "jan",
-    "feb",
-    "mar",
-    "apr",
-    "may",
-    "jun",
-    "jul",
-    "aug",
-    "sep",
-    "oct",
-    "nov",
-    "dec",
-  ].indexOf(label.trim().slice(0, 3).toLowerCase());
-  if (monthIndex >= 0)
-    return new Intl.DateTimeFormat(locale, {
-      month: "short",
-      timeZone: "UTC",
-    }).format(new Date(Date.UTC(2000, monthIndex, 15)));
-  const t = label.trim();
-  if (t.length <= 4) return t;
-  const parts = t.split(/[\s/-]/);
-  const first = parts[0] ?? t;
-  return first.length > 4 ? first.slice(0, 3) : first;
-}
-
-function ApplicationsTrendChart({ rows }: { rows: DashboardChartPoint[] }) {
-  const { t, locale } = useAppCopy();
-  const totals = useMemo(
-    () => rows.map((r) => r.applications + r.interviews + r.responses),
-    [rows],
-  );
-  const maxTotal = Math.max(1, ...totals);
-  const trackH = 120;
-
+function Metric({
+  label,
+  value,
+  hint,
+  onPress,
+}: {
+  label: string;
+  value: string | number;
+  hint: string;
+  onPress: () => void;
+}) {
   return (
-    <View style={[styles.trendCard, feedCardStyle()]}>
-      <View style={styles.trendHead}>
-        <Text style={styles.trendTitle}>{t("activity")}</Text>
-        <Text style={styles.trendSub}>
-          {t("homeMonths", { count: rows.length })}
-        </Text>
-      </View>
-      <View style={styles.legendRow}>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: colors.teal }]} />
-          <Text style={styles.legendText}>{t("homeApplied")}</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View
-            style={[styles.legendDot, { backgroundColor: colors.purple }]}
-          />
-          <Text style={styles.legendText}>{t("homeInterviews")}</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View
-            style={[styles.legendDot, { backgroundColor: colors.borderStrong }]}
-          />
-          <Text style={styles.legendText}>{t("homeResponses")}</Text>
-        </View>
-      </View>
-      <View style={styles.trendBarsRow}>
-        {rows.map((row) => {
-          const total = row.applications + row.interviews + row.responses;
-          const colH =
-            total === 0 ? 4 : Math.max(14, (total / maxTotal) * trackH);
-          const hResp = total ? (row.responses / total) * colH : 0;
-          const hInt = total ? (row.interviews / total) * colH : 0;
-          const hApp = total ? (row.applications / total) * colH : 0;
-          return (
-            <View key={row.month} style={styles.trendCol}>
-              <View style={[styles.trendTrack, { height: trackH }]}>
-                <View style={[styles.trendStack, { height: colH }]}>
-                  {hResp > 0 ? (
-                    <View
-                      style={[
-                        styles.trendSeg,
-                        { height: hResp, backgroundColor: colors.borderStrong },
-                      ]}
-                    />
-                  ) : null}
-                  {hInt > 0 ? (
-                    <View
-                      style={[
-                        styles.trendSeg,
-                        { height: hInt, backgroundColor: colors.purple },
-                      ]}
-                    />
-                  ) : null}
-                  {hApp > 0 ? (
-                    <View
-                      style={[
-                        styles.trendSeg,
-                        { height: hApp, backgroundColor: colors.teal },
-                      ]}
-                    />
-                  ) : null}
-                </View>
-              </View>
-              <Text style={styles.trendMonth} numberOfLines={1}>
-                {shortMonth(row.month, locale)}
-              </Text>
-              <Text style={styles.trendMicro} numberOfLines={1}>
-                {total}
-              </Text>
-            </View>
-          );
-        })}
-      </View>
-    </View>
+    <Pressable
+      style={styles.metric}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${label}: ${value}`}
+    >
+      <Text style={styles.metricLabel}>{label}</Text>
+      <Text style={styles.metricValue}>{value}</Text>
+      <Text style={styles.metricHint}>{hint}</Text>
+    </Pressable>
   );
 }
 
@@ -157,19 +60,6 @@ export default function HomeScreen() {
   const { t, locale } = useAppCopy();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [activityOpen, setActivityOpen] = useState(false);
-  const [activityReady, setActivityReady] = useState(false);
-
-  useEffect(() => {
-    if (!activityOpen) {
-      setActivityReady(false);
-      return;
-    }
-    const task = InteractionManager.runAfterInteractions(() =>
-      setActivityReady(true),
-    );
-    return () => task.cancel();
-  }, [activityOpen]);
 
   const q = useQuery({
     queryKey: ["analytics", "candidate-dashboard"],
@@ -185,6 +75,11 @@ export default function HomeScreen() {
     queryFn: fetchConversations,
     staleTime: 60_000,
   });
+  const matchesQuery = useQuery({
+    queryKey: ["candidate", "job-matches", "home"],
+    queryFn: () => fetchJobMatches({ unread: true, limit: 1 }),
+    staleTime: 30_000,
+  });
 
   const firstName =
     profileQuery.data &&
@@ -198,7 +93,8 @@ export default function HomeScreen() {
   const onRefresh = useCallback(() => {
     void q.refetch();
     void profileQuery.refetch();
-  }, [q, profileQuery]);
+    void matchesQuery.refetch();
+  }, [q, profileQuery, matchesQuery]);
 
   if (q.isLoading && !q.data) {
     return (
@@ -236,7 +132,7 @@ export default function HomeScreen() {
             style={styles.errorAnnounce}
           >
             <Ionicons
-              name="stats-chart-outline"
+              name="briefcase-outline"
               size={48}
               color={colors.teal}
               importantForAccessibility="no"
@@ -244,9 +140,6 @@ export default function HomeScreen() {
             <Text style={styles.errorTitle}>{errCopy.title}</Text>
             <Text style={styles.errorSub}>{errCopy.subtitle}</Text>
           </View>
-          <View
-            style={[styles.errorAccent, { backgroundColor: colors.brand }]}
-          />
           <Pressable
             style={styles.retryBtn}
             onPress={() => void q.refetch()}
@@ -265,31 +158,42 @@ export default function HomeScreen() {
   const missing = profileQuery.data
     ? getCandidateCompletionBreakdown(profileQuery.data, locale).missing
     : [];
-  const chartSlice = (d.chartData ?? []).slice(-6);
-  const recentSlice = (d.recentApplications ?? []).slice(0, 8);
+  const recentSlice = (d.recentApplications ?? []).slice(0, 5);
   const savedJobRows = (d.savedJobs ?? []).filter(
     (job): job is NonNullable<typeof job> =>
       Boolean(job && typeof job === "object" && job._id),
   );
   const savedCount = savedJobRows.length;
-
   const greeting = firstName
     ? t("homeGreetingName", { name: firstName })
     : t("homeGreeting");
   const chatCount = conversationsQuery.data?.length ?? 0;
-  const chartHasData = chartSlice.some(
-    (r) => r.applications + r.interviews + r.responses > 0,
-  );
   const latestJobCount = (d.latestJobs ?? []).length;
-  const curatedCount = d.latestCuratedExternal?.length ?? 0;
-  const hasActivity =
-    chartHasData ||
-    savedCount > 0 ||
-    recentSlice.length > 0 ||
-    latestJobCount > 0 ||
-    curatedCount > 0;
+  const unreadMatches = matchesQuery.data?.unreadCount ?? 0;
+  const appliedCount = d.stats.totalApplied ?? 0;
   const isNewUser =
-    d.stats.totalApplied === 0 && savedCount === 0 && !hasActivity;
+    appliedCount === 0 && savedCount === 0 && latestJobCount === 0;
+
+  const next =
+    unreadMatches > 0
+      ? {
+          title: t("homeMatches"),
+          href: "/alerts" as const,
+        }
+      : missing.length > 0
+        ? {
+            title: t("homeProfileStep"),
+            href: "/(tabs)/profile" as const,
+          }
+        : !discoveryOn
+          ? {
+              title: t("homeMatchingNudge"),
+              href: "/mobility-profile" as const,
+            }
+          : {
+              title: t("homeBrowse"),
+              href: "/(tabs)/jobs" as const,
+            };
 
   return (
     <GshScreenShell constrainTabletWidth>
@@ -303,125 +207,54 @@ export default function HomeScreen() {
           />
         }
         showsVerticalScrollIndicator={false}
-        nestedScrollEnabled
       >
         <GshTabHeroHeader
           paddingTop={Math.max(insets.top, 20) + 8}
           tagline={t("homeTagline")}
         >
           <Text style={styles.heroTitle}>{greeting}</Text>
+          <Text style={styles.heroLead}>{t("homeLead")}</Text>
         </GshTabHeroHeader>
 
-        <View style={styles.actionBand}>
+        <View style={styles.bodyPad}>
           <Pressable
-            style={styles.pathCard}
+            style={styles.nextCard}
             onPress={() => {
               void hapticLight();
-              router.push("/(tabs)/jobs");
+              router.push(next.href);
             }}
             accessibilityRole="button"
           >
-            <Text style={styles.pathEyebrow}>{t("homeFind")}</Text>
-            <Text style={styles.pathTitle}>{t("homeFind")}</Text>
-            <Text style={styles.pathBody}>{t("homeFindLead")}</Text>
+            <View style={styles.nextRule} />
+            <Text style={styles.nextEyebrow}>{t("homeNextStep")}</Text>
+            <Text style={styles.nextTitle}>{next.title}</Text>
+            <Text style={styles.nextBody}>{t("homePickUp")}</Text>
+            <View style={styles.nextCta}>
+              <Text style={styles.nextCtaText}>{t("homeContinue")}</Text>
+              <Ionicons name="arrow-forward" size={16} color={colors.navy} />
+            </View>
           </Pressable>
-          <Pressable
-            style={styles.pathCard}
-            onPress={() => {
-              void hapticLight();
-              router.push("/relocation-help");
-            }}
-            accessibilityRole="button"
-          >
-            <Text style={styles.pathEyebrow}>{t("homeHelp")}</Text>
-            <Text style={styles.pathTitle}>{t("screenRelocationhelp")}</Text>
-            <Text style={styles.pathBody}>{t("homeMoveLead")}</Text>
-          </Pressable>
-          <View style={styles.chipRow}>
-            <GshActionChip
+
+          <View style={styles.metrics}>
+            <Metric
+              label={t("homeMatches")}
+              value={matchesQuery.isError ? "—" : unreadMatches}
+              hint={t("homeSeeAll")}
+              onPress={() => router.push("/alerts")}
+            />
+            <Metric
               label={t("saved")}
-              icon="bookmark-outline"
-              count={savedCount}
+              value={savedCount}
+              hint={t("homeSeeAll")}
               onPress={() => router.push("/saved")}
             />
-            <GshActionChip
+            <Metric
               label={t("applications")}
-              icon="paper-plane-outline"
-              count={d.stats.totalApplied}
+              value={appliedCount}
+              hint={t("homeOpen")}
               onPress={() => router.push("/(tabs)/applications")}
             />
-            <GshActionChip
-              label={t("messages")}
-              icon="chatbubbles-outline"
-              count={chatCount}
-              onPress={() => router.push("/(tabs)/messages")}
-            />
           </View>
-        </View>
-
-        <View style={styles.bodyPad}>
-          <GshLinkRow
-            title={t("resourcesGuides")}
-            subtitle={t("resourcesGuidesHelp")}
-            icon="map-outline"
-            accent="purple"
-            onPress={() => router.push("/guides")}
-          />
-          <GshLinkRow
-            title={t("resourcesBlog")}
-            subtitle={t("resourcesBlogHelp")}
-            icon="newspaper-outline"
-            accent="ocean"
-            onPress={() => router.push("/blog")}
-          />
-          <GshLinkRow
-            title={t("resourcesSpecialists")}
-            subtitle={t("resourcesSpecialistsHelp")}
-            icon="people-outline"
-            accent="purple"
-            onPress={() => router.push("/partners")}
-          />
-
-          {!discoveryOn ? (
-            <Pressable
-              style={[styles.profileNudge, feedCardStyle()]}
-              onPress={() => router.push("/mobility-profile")}
-              accessibilityRole="button"
-            >
-              <View style={styles.profileNudgeLeft}>
-                <Text style={styles.profileNudgeTitle}>
-                  {t("homeMatchingNudge")}
-                </Text>
-                <Text style={styles.profileNudgeSub}>
-                  {t("homeMatchingNudgeHelp")}
-                </Text>
-              </View>
-              <Ionicons name="arrow-forward" size={22} color={colors.navy} />
-            </Pressable>
-          ) : null}
-
-          {missing.length > 0 ? (
-            <Pressable
-              style={[styles.profileNudge, feedCardStyle()]}
-              onPress={() => router.push("/(tabs)/profile")}
-              accessibilityRole="button"
-            >
-              <View style={styles.profileNudgeLeft}>
-                <Text style={styles.profileNudgeTitle}>
-                  {t("homeProfileStep")}
-                </Text>
-                <Text style={styles.profileNudgeSub}>
-                  {t("homeMissing", {
-                    fields: missing
-                      .slice(0, 2)
-                      .map((item) => item.label)
-                      .join(t("listAnd")),
-                  })}
-                </Text>
-              </View>
-              <Ionicons name="arrow-forward" size={22} color={colors.navy} />
-            </Pressable>
-          ) : null}
 
           {isNewUser ? (
             <GshEmptyState
@@ -432,162 +265,108 @@ export default function HomeScreen() {
             />
           ) : null}
 
-          {hasActivity ? (
-            <Pressable
-              style={[styles.activityToggle, feedCardStyle()]}
-              onPress={() => {
-                void hapticLight();
-                setActivityOpen((v) => !v);
-              }}
-              accessibilityRole="button"
-              accessibilityState={{ expanded: activityOpen }}
-            >
-              <View style={styles.activityToggleText}>
-                <Text style={styles.activityToggleTitle}>
-                  {t("homeActivity")}
-                </Text>
-                <Text style={styles.activityToggleSub}>
-                  {hasActivity ? t("homeActivityHelp") : t("homeNothing")}
-                </Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionEyebrow}>{t("homeFind")}</Text>
+            <Text style={styles.sectionTitle}>{t("homeNew")}</Text>
+            {latestJobCount > 0 ? (
+              <View style={styles.feedCardStack}>
+                {(d.latestJobs ?? []).slice(0, 3).map((job) => (
+                  <DashboardHubJobPreview
+                    key={job._id}
+                    job={job}
+                    onPress={() => router.push(`/job/${job._id}`)}
+                  />
+                ))}
               </View>
-              <Ionicons
-                name={activityOpen ? "chevron-up" : "chevron-down"}
-                size={22}
-                color={colors.accent}
-              />
+            ) : (
+              <Text style={styles.sectionHint}>{t("homeFindLead")}</Text>
+            )}
+            <Pressable
+              style={styles.textLink}
+              onPress={() => router.push("/(tabs)/jobs")}
+              accessibilityRole="button"
+            >
+              <Text style={styles.textLinkLabel}>{t("homeBrowseAll")}</Text>
+              <Ionicons name="arrow-forward" size={16} color={colors.navy} />
             </Pressable>
-          ) : null}
+          </View>
 
-          {activityOpen && hasActivity && !activityReady ? (
-            <View style={styles.activityLoading}>
-              <ActivityIndicator
-                color={colors.brand}
-                accessibilityLabel={t("homeActivityLoading")}
-              />
+          {recentSlice.length > 0 ? (
+            <View style={styles.section}>
+              <Text style={styles.sectionEyebrow}>{t("applications")}</Text>
+              <Text style={styles.sectionTitle}>{t("homeRecent")}</Text>
+              <View style={styles.feedCardStack}>
+                {recentSlice.map((a, i) => (
+                  <View
+                    key={`${a.jobTitle}-${i}`}
+                    style={[styles.appRow, feedCardStyle()]}
+                  >
+                    <View style={styles.appText}>
+                      <Text style={styles.listTitle} numberOfLines={2}>
+                        {a.jobTitle}
+                      </Text>
+                      <Text style={styles.listSub} numberOfLines={2}>
+                        {a.companyName} ·{" "}
+                        <Text style={styles.statusEm}>
+                          {applicationStatusLabel(a.status, locale)}
+                        </Text>
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+              <Pressable
+                style={styles.textLink}
+                onPress={() => router.push("/(tabs)/applications")}
+                accessibilityRole="button"
+              >
+                <Text style={styles.textLinkLabel}>{t("homeOpen")}</Text>
+                <Ionicons name="arrow-forward" size={16} color={colors.navy} />
+              </Pressable>
             </View>
           ) : null}
 
-          {activityOpen && hasActivity && activityReady ? (
-            <View style={styles.activityPanel}>
-              {chartHasData ? (
-                <View style={styles.activitySection}>
-                  <GshDarkFeedHeading inFeedGroup title={t("homeTrend")} />
-                  <ApplicationsTrendChart rows={chartSlice} />
-                </View>
-              ) : null}
-
-              {savedCount > 0 ? (
-                <View style={styles.activitySection}>
-                  <GshDarkFeedHeading
-                    inFeedGroup
-                    title={t("screenSavedroles")}
-                    actionLabel={t("homeSeeAll")}
-                    onAction={() => router.push("/saved")}
-                  />
-                  <View style={styles.savedGrid}>
-                    {savedJobRows.slice(0, 6).map((job) => (
-                      <Pressable
-                        key={job._id}
-                        style={[styles.savedCard, feedCardStyle()]}
-                        onPress={() => router.push(`/job/${job._id}`)}
-                        accessibilityRole="button"
-                      >
-                        <Text style={styles.savedTitle} numberOfLines={2}>
-                          {job.title}
-                        </Text>
-                        <Text style={styles.savedSub} numberOfLines={1}>
-                          {job.companyName}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </View>
-                </View>
-              ) : null}
-
-              {latestJobCount > 0 ? (
-                <View style={styles.activitySection}>
-                  <GshDarkFeedHeading
-                    inFeedGroup
-                    title={t("homeNew")}
-                    actionLabel={t("homeBrowseAll")}
-                    onAction={() => router.push("/(tabs)/jobs")}
-                  />
-                  <View style={styles.feedCardStack}>
-                    {(d.latestJobs ?? []).slice(0, 4).map((job) => (
-                      <DashboardHubJobPreview
-                        key={job._id}
-                        job={job}
-                        onPress={() => router.push(`/job/${job._id}`)}
-                      />
-                    ))}
-                  </View>
-                </View>
-              ) : null}
-
-              {curatedCount > 0 ? (
-                <View style={styles.activitySection}>
-                  <GshDarkFeedHeading
-                    inFeedGroup
-                    title={t("screenCuratedroles")}
-                    actionLabel={t("homeSeeAll")}
-                    onAction={() => router.push("/curated-listings")}
-                  />
-                  <View style={styles.feedCardStack}>
-                    {d.latestCuratedExternal!.slice(0, 3).map((job) => (
-                      <CuratedExternalJobCard
-                        key={job._id}
-                        job={job as ExternalJobListingPublic}
-                        onPress={() => router.push(`/external-job/${job._id}`)}
-                      />
-                    ))}
-                  </View>
-                </View>
-              ) : null}
-
-              {recentSlice.length > 0 ? (
-                <View style={styles.activitySection}>
-                  <GshDarkFeedHeading
-                    inFeedGroup
-                    title={t("homeRecent")}
-                    actionLabel={t("homeOpen")}
-                    onAction={() => router.push("/(tabs)/applications")}
-                  />
-                  <View style={styles.feedCardStack}>
-                    {recentSlice.slice(0, 5).map((a, i) => (
-                      <View
-                        key={`${a.jobTitle}-${i}`}
-                        style={[styles.timelineRow, feedCardStyle()]}
-                      >
-                        <View style={styles.timelineRail}>
-                          <View style={styles.timelineDot} />
-                          {i < Math.min(recentSlice.length, 5) - 1 ? (
-                            <View style={styles.timelineLine} />
-                          ) : null}
-                        </View>
-                        <View style={styles.timelineContent}>
-                          <Text style={styles.listTitle} numberOfLines={2}>
-                            {a.jobTitle}
-                          </Text>
-                          <Text style={styles.listSub} numberOfLines={2}>
-                            {a.companyName} ·{" "}
-                            <Text style={styles.statusEm}>
-                              {applicationStatusLabel(a.status, locale)}
-                            </Text>
-                          </Text>
-                        </View>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-              ) : null}
-            </View>
+          {chatCount > 0 ? (
+            <GshLinkRow
+              title={t("messages")}
+              subtitle={t("homePickUp")}
+              icon="chatbubbles-outline"
+              accent="teal"
+              onPress={() => router.push("/(tabs)/messages")}
+            />
           ) : null}
 
+          <View style={styles.section}>
+            <Text style={styles.sectionEyebrow}>{t("homeHelp")}</Text>
+            <Text style={styles.sectionTitle}>{t("screenRelocationhelp")}</Text>
+            <Text style={styles.sectionHint}>{t("homeMoveLead")}</Text>
+          </View>
+          <GshLinkRow
+            title={t("screenRelocationhelp")}
+            subtitle={t("homeMoveLead")}
+            icon="airplane-outline"
+            accent="teal"
+            onPress={() => router.push("/relocation-help")}
+          />
+          <GshLinkRow
+            title={t("resourcesSpecialists")}
+            subtitle={t("resourcesSpecialistsHelp")}
+            icon="people-outline"
+            accent="teal"
+            onPress={() => router.push("/partners")}
+          />
+          <GshLinkRow
+            title={t("resourcesGuides")}
+            subtitle={t("resourcesGuidesHelp")}
+            icon="map-outline"
+            accent="teal"
+            onPress={() => router.push("/guides")}
+          />
           <GshLinkRow
             title={t("homeTools")}
             subtitle={t("homeToolsHelp")}
-            icon="layers-outline"
-            accent="purple"
+            icon="library-outline"
+            accent="teal"
             onPress={() => router.push("/tools-resources")}
           />
         </View>
@@ -602,146 +381,160 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: FEED_SECTION_GAP,
     paddingBottom: 4,
-    gap: FEED_SECTION_GAP,
+    gap: 14,
   },
   heroTitle: {
-    fontSize: 26,
+    fontSize: 32,
+    lineHeight: 36,
     fontFamily: fontFamily.headingStrong,
     color: colors.navy,
-    letterSpacing: -0.5,
-    marginBottom: 6,
+    letterSpacing: -0.8,
+    marginBottom: 10,
   },
-  pathCard: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+  heroLead: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
+    maxWidth: 420,
+  },
+  nextCard: {
+    backgroundColor: colors.navy,
     borderRadius: radii.lg,
+    paddingVertical: 22,
+    paddingHorizontal: 22,
+    overflow: "hidden",
+  },
+  nextRule: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
+    backgroundColor: colors.tealOnNavy,
+  },
+  nextEyebrow: {
+    fontSize: 11,
+    fontFamily: fontFamily.bold,
+    color: colors.tealOnNavy,
+    letterSpacing: 1.6,
+    textTransform: "uppercase",
+  },
+  nextTitle: {
+    marginTop: 10,
+    fontSize: 22,
+    lineHeight: 26,
+    fontFamily: fontFamily.heading,
+    color: colors.white,
+    letterSpacing: -0.4,
+  },
+  nextBody: {
+    marginTop: 8,
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: fontFamily.regular,
+    color: "rgba(255,255,255,0.65)",
+  },
+  nextCta: {
+    marginTop: 18,
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: colors.teal,
+    borderRadius: radii.pill,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+  },
+  nextCtaText: {
+    fontSize: 14,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+  },
+  metrics: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  metric: {
+    flex: 1,
+    minHeight: 88,
     backgroundColor: colors.white,
+    borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: colors.border,
-    gap: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
   },
-  pathEyebrow: {
+  metricLabel: {
     fontSize: 11,
     fontFamily: fontFamily.semiBold,
-    color: colors.accent,
-    letterSpacing: 0.8,
-    textTransform: "lowercase",
+    color: colors.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
   },
-  pathTitle: {
-    fontSize: 20,
+  metricValue: {
+    marginTop: 6,
+    fontSize: 22,
+    fontFamily: fontFamily.headingStrong,
+    color: colors.navy,
+    letterSpacing: -0.4,
+  },
+  metricHint: {
+    marginTop: 4,
+    fontSize: 11,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
+  },
+  section: { paddingTop: 8, gap: 6 },
+  sectionEyebrow: {
+    fontSize: 11,
+    fontFamily: fontFamily.bold,
+    color: colors.teal,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  sectionTitle: {
+    fontSize: 22,
     fontFamily: fontFamily.heading,
     color: colors.navy,
-    letterSpacing: -0.3,
+    letterSpacing: -0.4,
   },
-  pathBody: {
+  sectionHint: {
     fontSize: 14,
     lineHeight: 20,
     fontFamily: fontFamily.regular,
     color: colors.textSecondary,
   },
-  actionBand: {
-    backgroundColor: colors.white,
-    paddingHorizontal: 16,
-    paddingTop: 18,
-    paddingBottom: 18,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    gap: 14,
-  },
-  primaryCta: { marginBottom: 0 },
-  chipRow: { flexDirection: "row", gap: 8 },
-  featuresLabel: {
-    fontSize: 11,
-    fontFamily: fontFamily.semiBold,
-    color: colors.accent,
-    letterSpacing: 0.5,
-    textTransform: "lowercase",
-    marginTop: 2,
-  },
-  featureRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  featureChip: {
-    minHeight: 44,
-    width: "48%",
-    flexGrow: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 6,
-    borderRadius: radii.pill,
-    backgroundColor: colors.surfaceMuted,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  featureChipText: {
-    fontSize: 11,
-    fontFamily: fontFamily.semiBold,
-    color: colors.navy,
-  },
-  profileNudge: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-    gap: 12,
-  },
-  profileNudgeLeft: { flex: 1, minWidth: 0 },
-  profileNudgeTitle: {
+  feedCardStack: { gap: FEED_ITEM_GAP, marginTop: 8 },
+  appRow: { paddingVertical: 14, paddingHorizontal: 14 },
+  appText: { minWidth: 0 },
+  listTitle: {
     fontSize: 15,
     fontFamily: fontFamily.bold,
     color: colors.navy,
+    letterSpacing: -0.2,
   },
-  profileNudgeSub: {
-    marginTop: 4,
-    fontSize: 13,
+  listSub: {
+    fontSize: 14,
     fontFamily: fontFamily.regular,
     color: colors.textMuted,
+    marginTop: 6,
+    lineHeight: 20,
   },
-  profileNudgeRing: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 3,
-    borderColor: colors.brand,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.brandSoft,
-  },
-  profileNudgePct: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.brandDeep,
-  },
-  activityToggle: {
+  statusEm: { fontFamily: fontFamily.semiBold, color: colors.textSecondary },
+  textLink: {
+    marginTop: 6,
+    minHeight: 44,
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
-    gap: 12,
+    gap: 6,
   },
-  activityToggleText: { flex: 1, minWidth: 0 },
-  activityToggleTitle: {
-    fontSize: 16,
+  textLinkLabel: {
+    fontSize: 14,
     fontFamily: fontFamily.bold,
     color: colors.navy,
-  },
-  activityToggleSub: {
-    marginTop: 4,
-    fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-  },
-  activityLoading: { paddingVertical: 24, alignItems: "center" },
-  activityPanel: { gap: FEED_SECTION_GAP },
-  activitySection: { gap: FEED_ITEM_GAP },
-  feedCardStack: { gap: FEED_ITEM_GAP },
-  savedGrid: { flexDirection: "row", flexWrap: "wrap", gap: FEED_ITEM_GAP },
-  savedCard: { width: "48%", minWidth: 140, flexGrow: 1, padding: 14 },
-  savedTitle: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.navy },
-  savedSub: {
-    marginTop: 4,
-    fontSize: 12,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
+    textDecorationLine: "underline",
+    textDecorationColor: colors.teal,
   },
   center: {
     flex: 1,
@@ -772,14 +565,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 22,
   },
-  errorAccent: {
-    width: "100%",
-    maxWidth: 280,
-    height: 4,
-    borderRadius: 2,
-    marginTop: 4,
-    marginBottom: 4,
-  },
   loadingHint: {
     fontFamily: fontFamily.medium,
     fontSize: 15,
@@ -789,7 +574,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingVertical: 14,
     paddingHorizontal: 24,
-    borderRadius: radii.md,
+    borderRadius: radii.pill,
     backgroundColor: colors.brand,
   },
   retryText: {
@@ -797,101 +582,4 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.white,
   },
-  trendCard: {
-    padding: 16,
-    borderRadius: radii.lg,
-  },
-  trendHead: { marginBottom: 12 },
-  trendTitle: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.navy },
-  trendSub: {
-    marginTop: 4,
-    fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-  },
-  legendRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 14,
-    marginBottom: 14,
-  },
-  legendItem: { flexDirection: "row", alignItems: "center", gap: 6 },
-  legendDot: { width: 8, height: 8, borderRadius: 4 },
-  legendText: {
-    fontSize: 12,
-    fontFamily: fontFamily.medium,
-    color: colors.textSecondary,
-  },
-  trendBarsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    paddingHorizontal: 4,
-  },
-  trendCol: { alignItems: "center", width: 36 },
-  trendTrack: { justifyContent: "flex-end", alignItems: "center", width: 32 },
-  trendStack: {
-    width: 28,
-    borderRadius: radii.sm,
-    overflow: "hidden",
-    justifyContent: "flex-end",
-    flexDirection: "column-reverse",
-  },
-  trendSeg: { width: "100%" },
-  trendMonth: {
-    marginTop: 10,
-    fontSize: 11,
-    fontFamily: fontFamily.semiBold,
-    color: colors.textSecondary,
-    maxWidth: 40,
-    textAlign: "center",
-  },
-  trendMicro: {
-    marginTop: 2,
-    fontSize: 10,
-    fontFamily: fontFamily.medium,
-    color: colors.textMuted,
-  },
-  listTitle: {
-    flex: 1,
-    fontSize: 15,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-    letterSpacing: -0.2,
-  },
-  listSub: {
-    fontSize: 14,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-    marginTop: 6,
-    lineHeight: 20,
-  },
-  timelineRow: {
-    flexDirection: "row",
-    borderRadius: radii.lg,
-    paddingVertical: 14,
-    paddingHorizontal: 14,
-    gap: 12,
-    alignItems: "stretch",
-  },
-  timelineRail: { width: 18, alignItems: "center", alignSelf: "stretch" },
-  timelineDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: colors.brand,
-    borderWidth: 2,
-    borderColor: colors.white,
-    marginTop: 4,
-  },
-  timelineLine: {
-    flex: 1,
-    width: 2,
-    marginTop: 4,
-    minHeight: 28,
-    backgroundColor: colors.border,
-    borderRadius: 1,
-  },
-  timelineContent: { flex: 1, minWidth: 0 },
-  statusEm: { fontFamily: fontFamily.semiBold, color: colors.textSecondary },
 });

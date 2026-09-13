@@ -25,12 +25,12 @@ export function navigateMarketingPath(router: Router, rawPath: string): void {
     return;
   }
 
-  if (path === "/tools/visa-wizard") {
-    router.push("/resources");
+  if (path === "/tools/visa-wizard" || path === "/plan-the-move") {
+    router.push("/relocation-help");
     return;
   }
   if (path === "/tools/visa-checker") {
-    router.push("/visa-checker");
+    router.push("/companies");
     return;
   }
   if (path === "/tools/currency-converter") {

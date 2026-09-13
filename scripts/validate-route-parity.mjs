@@ -8,8 +8,8 @@ const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 const errors = [];
 const frontendRoots = [
   process.env.GSH_FRONTEND_ROOT?.trim(),
-  resolve(root, "..", "frontend"),
   resolve(root, "..", "global_sponsor_hub-fe"),
+  resolve(root, "..", "frontend"),
 ].filter(Boolean);
 
 if (!manifest.source?.endsWith("/sitemap.xml")) errors.push("manifest source must be the public sitemap");
