@@ -12,9 +12,20 @@ function toApiUploadUrl(pathname: string, search = ""): string {
   return `${getApiOrigin()}${path}${search}`;
 }
 
+function shouldProxyEmployerLogoHost(hostname: string): boolean {
+  const host = hostname.toLowerCase();
+  return (
+    host === "crustdata-media.s3.us-east-2.amazonaws.com" ||
+    host === "crustdata-media.s3.amazonaws.com" ||
+    host.endsWith(".crustdata-media.s3.us-east-2.amazonaws.com") ||
+    host.endsWith(".crustdata-media.s3.amazonaws.com")
+  );
+}
+
 /**
  * Turn API upload paths (`/uploads/...`) into absolute URLs for React Native Image.
  * Rewrites stale marketing-site or localhost hosts to the configured API origin.
+ * Proxies Crustdata logos through the marketing site (wrong upstream MIME breaks RN Image).
  */
 export function resolveUploadAssetUrl(url?: string | null): string {
   if (!url?.trim()) return "";
@@ -27,6 +38,10 @@ export function resolveUploadAssetUrl(url?: string | null): string {
       const uploadPath = uploadsPathname(parsed.pathname);
       if (uploadPath) {
         return toApiUploadUrl(uploadPath, parsed.search);
+      }
+      if (shouldProxyEmployerLogoHost(parsed.hostname)) {
+        const site = getMarketingSiteUrl().replace(/\/$/, "");
+        return `${site}/api/employer-logo?url=${encodeURIComponent(parsed.toString())}`;
       }
     } catch {
       return raw;
