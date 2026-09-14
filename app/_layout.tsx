@@ -250,10 +250,6 @@ export default function RootLayout() {
           />
           <Stack.Screen name="faq" options={{ title: t("screenFAQs") }} />
           <Stack.Screen
-            name="expert-insights"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
             name="currency-converter"
             options={{ title: t("screenCurrencyconverter") }}
           />

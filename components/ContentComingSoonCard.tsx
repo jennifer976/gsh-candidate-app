@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
-export type ContentFeatureId = "blog" | "expert-insights";
+export type ContentFeatureId = "blog";
 
 /** User-facing placeholder while Supabase content is not wired or the catalogue is empty. */
 export function ContentComingSoonCard({
@@ -24,9 +24,7 @@ export function ContentComingSoonCard({
         {notConfigured ? t("articlesUnavailable") : t("articlesEmpty")}
       </Text>
       <Text style={styles.body}>
-        {notConfigured
-          ? t("articlesUnavailableHelp")
-          : t(feature === "blog" ? "articlesEmptyHelp" : "articlesResources")}
+        {notConfigured ? t("articlesUnavailableHelp") : t("articlesEmptyHelp")}
       </Text>
     </View>
   );

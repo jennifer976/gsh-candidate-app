@@ -30,7 +30,6 @@
     { "pattern": "^/relocation-help/requests/([a-f0-9]{24})/?$", "mode": "native", "target": "/relocation-help/$1" },
     { "pattern": "^/candidate/agency-introductions/?$", "mode": "native", "target": "/agency-introductions" },
     { "pattern": "^/candidate/agency-introductions/([a-f0-9]{24})/?$", "mode": "native", "target": "/agency-introductions/$1" },
-    { "pattern": "^/grow-your-network/?$", "mode": "fallback" },
     { "pattern": "^/companies/?$", "mode": "native", "target": "/companies" },
     { "pattern": "^/companies/([^/]+)/?$", "mode": "native", "target": "/company/$1" },
     { "pattern": "^/partners/directory/?$", "mode": "native", "target": "/partners" },
@@ -38,9 +37,6 @@
     { "pattern": "^/blog/?$", "mode": "native", "target": "/blog" },
     { "pattern": "^/blog/feed\\.xml/?$", "mode": "fallback" },
     { "pattern": "^/blog/([^/]+)/?$", "mode": "native", "target": "/blog/$1" },
-    { "pattern": "^/expert-insights/?$", "mode": "native", "target": "/resources" },
-    { "pattern": "^/expert-insights/experts/([^/]+)/?$", "mode": "native", "target": "/resources" },
-    { "pattern": "^/expert-insights/([^/]+)/?$", "mode": "native", "target": "/resources" },
     { "pattern": "^/guides/?$", "mode": "native", "target": "/guides" },
     { "pattern": "^/guides/country/([^/]+)/?$", "mode": "native", "target": "/guides/country/$1" },
     { "pattern": "^/guides/.+", "mode": "fallback" },
@@ -64,6 +60,7 @@
     { "pattern": "^/matching-explained/?$", "mode": "fallback" },
     { "pattern": "^/(?:employer-talent-access-terms|provider-lead-terms|affiliate-terms|payment-terms)/?$", "mode": "fallback" },
     { "pattern": "^/(?:relocating|countries|seo|trust)(?:/.*)?$", "mode": "fallback" },
-    { "pattern": "^/(?:about|candidates|employers|partners|pricing|agencies|agencies-recruiters|how-it-works|account-deletion|discussions)(?:/.*)?$", "mode": "fallback" }
+    { "pattern": "^/(?:about|candidates|employers|partners|pricing|agencies|agencies-recruiters|how-it-works|account-deletion)(?:/.*)?$", "mode": "fallback" },
+    { "pattern": "^/(?:discussions|grow-your-network|expert-insights)(?:/.*)?$", "mode": "fallback" }
   ]
 }
