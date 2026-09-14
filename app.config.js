@@ -21,7 +21,7 @@ module.exports = () => {
     name: isStaging ? "Global Sponsor Hub Staging" : "Global Sponsor Hub",
     slug: "gsh-candidate-app",
     scheme: isStaging ? "gsh-candidate-staging" : "gsh-candidate",
-    version: "1.0.3",
+    version: "1.0.4",
     orientation: "portrait",
     icon: "./assets/brand-icon.png",
     userInterfaceStyle: "light",
