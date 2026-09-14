@@ -20,6 +20,7 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Image,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -38,7 +39,9 @@ import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobCardSkeleton } from "@/components/SkeletonLoader";
 import { GshDarkFeedHeading } from "@/components/GshDarkFeedHeading";
 import { GshScreenShell } from "@/components/GshScreenShell";
-import { GshTabHeroHeader } from "@/components/GshTabHeroHeader";
+import { GshSwipeAction } from "@/components/GshSwipeAction";
+import { GshTabStickyHeader } from "@/components/GshTabStickyHeader";
+import { brandMark } from "@/lib/brand-assets";
 import {
   fetchPublicExternalJobListings,
   fetchPublicJobs,
@@ -116,18 +119,30 @@ function HubJobCard({
   const sal = formatSalary(job, locale);
 
   return (
+    <GshSwipeAction
+      rightActions={[
+        {
+          label: savedRowId ? t("jobsUnsave") : t("jobsSave"),
+          onPress: onToggleBookmark,
+          tone: "primary",
+        },
+      ]}
+    >
     <View style={[styles.card, feedCardStyle()]}>
+      <View style={styles.cardAccentStrip} />
       <Pressable
         onPress={onPress}
         style={styles.cardMainHit}
         accessibilityRole="button"
       >
-        <CompanyLogo
-          logoUrl={logoUrl}
-          companyName={employer}
-          size={48}
-          radius={12}
-        />
+        <View style={styles.logoWell}>
+          <CompanyLogo
+            logoUrl={logoUrl}
+            companyName={employer}
+            size={64}
+            radius={16}
+          />
+        </View>
         <View style={styles.cardMid}>
           <View style={styles.cardCompanyRow}>
             <Text style={styles.cardCompanyLine} numberOfLines={1}>
@@ -143,7 +158,7 @@ function HubJobCard({
                 <Ionicons
                   name="shield-checkmark"
                   size={10}
-                  color={colors.brandDeep}
+                  color={colors.navy}
                 />
                 <Text style={styles.sponsorPillText} numberOfLines={1}>
                   {sponsorBadge.label}
@@ -158,7 +173,7 @@ function HubJobCard({
             <View style={styles.cardMetaRow}>
               <Ionicons
                 name="location-outline"
-                size={13}
+                size={14}
                 color={colors.textMuted}
               />
               <Text style={styles.cardMetaLine} numberOfLines={2}>
@@ -203,12 +218,12 @@ function HubJobCard({
           disabled={bookmarkLoading}
         >
           {bookmarkLoading ? (
-            <ActivityIndicator size="small" color={colors.brand} />
+            <ActivityIndicator size="small" color={colors.cyan} />
           ) : (
             <Ionicons
               name={savedRowId ? "bookmark" : "bookmark-outline"}
               size={22}
-              color={savedRowId ? colors.brand : colors.textMuted}
+              color={savedRowId ? colors.cyan : colors.textMuted}
             />
           )}
         </Pressable>
@@ -222,13 +237,16 @@ function HubJobCard({
           ) : (
             <View style={styles.cardSalarySpacer} />
           )}
-          <View style={styles.cardFooterEnd}>
+          <View style={styles.cardFooterCta}>
             <Text style={styles.cardCta}>{t("jobsView")}</Text>
-            <Ionicons name="chevron-forward" size={16} color={colors.brand} />
+            <View style={styles.cardCtaArrow}>
+              <Ionicons name="arrow-forward" size={14} color={colors.navy} />
+            </View>
           </View>
         </View>
       </Pressable>
     </View>
+    </GshSwipeAction>
   );
 }
 
@@ -515,65 +533,6 @@ export default function JobsTabScreen() {
 
   const listHeader = (
     <>
-      <GshTabHeroHeader
-        paddingTop={Math.max(insets.top, 20) + 8}
-        tagline={t("jobsTagline")}
-      >
-        <View style={styles.heroSearch}>
-          <Ionicons
-            name="search"
-            size={19}
-            color={colors.accent}
-            style={styles.heroSearchIcon}
-          />
-          <TextInput
-            style={styles.heroSearchInput}
-            placeholder={
-              feedTab === "direct"
-                ? t("jobsSearchDirect")
-                : feedTab === "connected"
-                  ? t("jobsSearchConnected")
-                  : t("jobsSearchExternal")
-            }
-            placeholderTextColor={colors.placeholder}
-            value={q}
-            onChangeText={setQ}
-            autoCapitalize="none"
-            autoCorrect={false}
-            returnKeyType="search"
-            accessibilityLabel={t("jobsSearch")}
-          />
-          {q.length > 0 ? (
-            <Pressable
-              onPress={() => setQ("")}
-              hitSlop={12}
-              accessibilityRole="button"
-              accessibilityLabel={t("jobsClear")}
-            >
-              <Ionicons
-                name="close-circle"
-                size={20}
-                color={colors.textMuted}
-              />
-            </Pressable>
-          ) : null}
-          <Pressable
-            onPress={() => setTopicsModalOpen(true)}
-            hitSlop={8}
-            style={styles.heroFilterBtn}
-            accessibilityRole="button"
-            accessibilityLabel={t("jobsOpenFilters")}
-          >
-            <Ionicons
-              name="options-outline"
-              size={18}
-              color={colors.navy}
-            />
-            <Text style={styles.heroFilterLabel}>{t("jobsFilter")}</Text>
-          </Pressable>
-        </View>
-      </GshTabHeroHeader>
-
       {/* ── Feed controls ── */}
       <View style={styles.feedControls}>
         <View style={styles.segmentHost}>
@@ -844,7 +803,9 @@ export default function JobsTabScreen() {
     </View>
   ) : listRows.length === 0 ? (
     <View style={styles.emptyWrap}>
-      <Ionicons name="search-outline" size={44} color={colors.borderStrong} />
+      <View style={styles.emptyMarkWell}>
+        <Image source={brandMark} style={styles.emptyMark} resizeMode="contain" />
+      </View>
       <Text style={styles.empty}>
         {debouncedQ ? t("jobsNoMatches") : t("jobsEmpty")}
       </Text>
@@ -872,17 +833,69 @@ export default function JobsTabScreen() {
   ) : null;
 
   return (
-    <GshScreenShell constrainTabletWidth>
+    <GshScreenShell constrainTabletWidth style={styles.shell}>
+      <GshTabStickyHeader
+        title={t("jobs")}
+        subtitle={t("jobsTagline")}
+        paddingTop={Math.max(insets.top, 12) + 4}
+      >
+        <View style={styles.searchCapsule}>
+          <Ionicons
+            name="search"
+            size={20}
+            color={colors.navy}
+            style={styles.heroSearchIcon}
+          />
+          <TextInput
+            style={styles.heroSearchInput}
+            placeholder={
+              feedTab === "direct"
+                ? t("jobsSearchDirect")
+                : feedTab === "connected"
+                  ? t("jobsSearchConnected")
+                  : t("jobsSearchExternal")
+            }
+            placeholderTextColor={colors.placeholder}
+            value={q}
+            onChangeText={setQ}
+            autoCapitalize="none"
+            autoCorrect={false}
+            returnKeyType="search"
+            accessibilityLabel={t("jobsSearch")}
+          />
+          {q.length > 0 ? (
+            <Pressable
+              onPress={() => setQ("")}
+              hitSlop={12}
+              accessibilityRole="button"
+              accessibilityLabel={t("jobsClear")}
+            >
+              <Ionicons name="close-circle" size={20} color={colors.textMuted} />
+            </Pressable>
+          ) : null}
+          <Pressable
+            onPress={() => setTopicsModalOpen(true)}
+            hitSlop={8}
+            style={styles.heroFilterBtn}
+            accessibilityRole="button"
+            accessibilityLabel={t("jobsOpenFilters")}
+          >
+            <Ionicons name="options-outline" size={18} color={colors.navy} />
+            <Text style={styles.heroFilterLabel}>{t("jobsFilter")}</Text>
+          </Pressable>
+        </View>
+      </GshTabStickyHeader>
       <FlatList
         data={activeError ? [] : listRows}
         keyExtractor={(item) => item._id}
         ListHeaderComponent={listHeader}
         ListEmptyComponent={emptyBody}
+        style={styles.listFlex}
         refreshControl={
           <RefreshControl
             refreshing={pullRefreshing}
             onRefresh={onRefresh}
-            tintColor={colors.navy}
+            tintColor={colors.cyan}
           />
         }
         contentContainerStyle={[
@@ -965,15 +978,19 @@ export default function JobsTabScreen() {
 }
 
 const styles = StyleSheet.create({
-  heroSearch: {
+  shell: { backgroundColor: colors.pale },
+  listFlex: { flex: 1 },
+  searchCapsule: {
+    marginTop: 12,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.white,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingHorizontal: 12,
+    borderRadius: radii.pill,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.borderStrong,
+    paddingHorizontal: 14,
     paddingVertical: 2,
+    minHeight: 52,
   },
   heroSearchIcon: { marginRight: 8 },
   heroSearchInput: {
@@ -986,20 +1003,30 @@ const styles = StyleSheet.create({
     color: colors.navy,
   },
   heroFilterBtn: {
-    minHeight: 44,
+    minHeight: 36,
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: radii.pill,
-    backgroundColor: colors.surfaceMuted,
+    backgroundColor: colors.brandSoft,
   },
   heroFilterLabel: {
     fontSize: 13,
     fontFamily: fontFamily.semiBold,
     color: colors.navy,
   },
+  emptyMarkWell: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: colors.brandSoft,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
+  },
+  emptyMark: { width: 40, height: 40 },
 
   feedControls: {
     paddingTop: 12,
@@ -1110,7 +1137,7 @@ const styles = StyleSheet.create({
   },
 
   /** No horizontal pad here — hero is full-bleed like Home; rows use listRow. */
-  listPad: { paddingBottom: 32, gap: 10 },
+  listPad: { paddingBottom: 110, gap: 10 },
   listRow: { paddingHorizontal: 16 },
   listPadGrow: { flexGrow: 1 },
   paginationLoader: { paddingVertical: 22, alignItems: "center", gap: 8 },
@@ -1120,12 +1147,13 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   card: {
-    paddingVertical: 14,
+    paddingVertical: 16,
     paddingRight: 14,
-    paddingLeft: 16,
+    paddingLeft: 18,
     position: "relative",
     overflow: "hidden",
-    minHeight: 128,
+    minHeight: 148,
+    borderRadius: radii.lg,
   },
   cardAccentStrip: {
     position: "absolute",
@@ -1133,13 +1161,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     width: 4,
-    backgroundColor: colors.teal,
+    backgroundColor: colors.cyan,
   },
   cardMainHit: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: 10,
+    gap: 12,
     minWidth: 0,
+  },
+  logoWell: {
+    borderRadius: 18,
+    backgroundColor: colors.pale,
+    padding: 2,
   },
   cardAvatar: {
     width: 48,
@@ -1159,13 +1192,13 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   cardTitle: {
-    fontSize: 15,
-    fontFamily: fontFamily.bold,
+    fontSize: 17,
+    fontFamily: fontFamily.heading,
     color: colors.navy,
-    letterSpacing: -0.2,
-    marginTop: 3,
-    marginBottom: 2,
-    lineHeight: 20,
+    letterSpacing: -0.3,
+    marginTop: 4,
+    marginBottom: 4,
+    lineHeight: 22,
   },
   cardCompanyRow: {
     flexDirection: "row",
@@ -1193,7 +1226,7 @@ const styles = StyleSheet.create({
   sponsorPillText: {
     fontSize: 10,
     fontFamily: fontFamily.semiBold,
-    color: colors.brandDeep,
+    color: colors.navy,
     letterSpacing: 0.3,
     flexShrink: 1,
   },
@@ -1206,53 +1239,65 @@ const styles = StyleSheet.create({
   },
   cardMetaLine: {
     flex: 1,
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: fontFamily.regular,
     color: colors.textMuted,
-    lineHeight: 17,
+    lineHeight: 18,
   },
-  chipWrap: { marginTop: 6, flexDirection: "row", flexWrap: "wrap", gap: 4 },
+  chipWrap: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", gap: 6 },
   listChip: {
-    paddingVertical: 3,
-    paddingHorizontal: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 9,
     borderRadius: radii.pill,
   },
-  listChipText: { fontSize: 10, fontFamily: fontFamily.medium },
+  listChipText: { fontSize: 11, fontFamily: fontFamily.medium },
   compatibilityBadge: {
     alignSelf: "flex-start",
-    marginTop: 7,
+    marginTop: 8,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: radii.pill,
-    backgroundColor: "#ecfeff",
+    backgroundColor: colors.brandSoft,
     borderWidth: 1,
-    borderColor: "#a5f3fc",
+    borderColor: "rgba(66,224,227,0.45)",
   },
   compatibilityBadgeText: {
     fontSize: 10,
     fontFamily: fontFamily.bold,
-    color: colors.brandDeep,
+    color: colors.navy,
   },
   cardFooter: {
-    marginTop: 8,
+    marginTop: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: "#f1f5f9",
+    paddingTop: 12,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
   },
   cardFooterEnd: { flexDirection: "row", alignItems: "center", gap: 4 },
+  cardFooterCta: { flexDirection: "row", alignItems: "center", gap: 8 },
   cardSalary: {
-    fontSize: 13,
-    fontFamily: fontFamily.bold,
-    color: colors.brand,
+    fontSize: 15,
+    fontFamily: fontFamily.heading,
+    color: colors.navy,
+    letterSpacing: -0.2,
+    flex: 1,
+    paddingRight: 8,
   },
   cardSalarySpacer: { flex: 1 },
   cardCta: {
-    fontSize: 13,
-    fontFamily: fontFamily.semiBold,
-    color: colors.brand,
+    fontSize: 14,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+  },
+  cardCtaArrow: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   // Empty/error

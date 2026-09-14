@@ -6,6 +6,8 @@ import { useRouter } from "expo-router";
 import { useCallback } from "react";
 import {
   ActivityIndicator,
+  Image,
+  Platform,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -13,46 +15,48 @@ import {
   Text,
   View,
 } from "react-native";
+import Animated, { useReducedMotion } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { DashboardHubJobPreview } from "@/components/DashboardHubJobPreview";
+import { GshChromeIconButton } from "@/components/GshChromeIconButton";
+import { GshHomeDestinationRail } from "@/components/GshHomeDestinationRail";
+import { GshPressable } from "@/components/GshPressable";
 import { GshScreenShell } from "@/components/GshScreenShell";
-import { GshTabHeroHeader } from "@/components/GshTabHeroHeader";
 import { GshEmptyState } from "@/components/GshEmptyState";
-import { GshLinkRow } from "@/components/gsh-ui-kit";
+import { brandLogo } from "@/lib/brand-assets";
 import {
   fetchCandidateDashboard,
   fetchConversations,
   fetchJobMatches,
   fetchOwnProfile,
+  fetchUnreadNotificationCount,
 } from "@/lib/api-client";
 import { presentApiError } from "@/lib/api-error";
 import { getCandidateCompletionBreakdown } from "@/lib/profile-completion";
-import { hapticLight } from "@/lib/haptics";
-import { FEED_ITEM_GAP, FEED_SECTION_GAP } from "@/lib/screen-layout";
-import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
+import { enterDown, enterUp, MOTION } from "@/lib/motion";
+import { FEED_SECTION_GAP } from "@/lib/screen-layout";
+import { colors, fontFamily, radii } from "@/lib/theme";
 
-function Metric({
+function StatusChip({
   label,
   value,
-  hint,
   onPress,
 }: {
   label: string;
   value: string | number;
-  hint: string;
   onPress: () => void;
 }) {
   return (
-    <Pressable
-      style={styles.metric}
+    <GshPressable
+      style={styles.statusChip}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`${label}: ${value}`}
+      pressScale={0.96}
     >
-      <Text style={styles.metricLabel}>{label}</Text>
-      <Text style={styles.metricValue}>{value}</Text>
-      <Text style={styles.metricHint}>{hint}</Text>
-    </Pressable>
+      <Text style={styles.statusValue}>{value}</Text>
+      <Text style={styles.statusLabel}>{label}</Text>
+    </GshPressable>
   );
 }
 
@@ -60,6 +64,7 @@ export default function HomeScreen() {
   const { t, locale } = useAppCopy();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const reduceMotion = useReducedMotion();
 
   const q = useQuery({
     queryKey: ["analytics", "candidate-dashboard"],
@@ -78,6 +83,11 @@ export default function HomeScreen() {
   const matchesQuery = useQuery({
     queryKey: ["candidate", "job-matches", "home"],
     queryFn: () => fetchJobMatches({ unread: true, limit: 1 }),
+    staleTime: 30_000,
+  });
+  const notificationsQuery = useQuery({
+    queryKey: ["notifications-unread"],
+    queryFn: fetchUnreadNotificationCount,
     staleTime: 30_000,
   });
 
@@ -102,7 +112,7 @@ export default function HomeScreen() {
         <View style={styles.center}>
           <ActivityIndicator
             size="large"
-            color={colors.brand}
+            color={colors.cyan}
             accessibilityLabel={t("homeLoadingLabel")}
           />
           <Text style={styles.loadingHint}>{t("homeLoading")}</Text>
@@ -134,7 +144,7 @@ export default function HomeScreen() {
             <Ionicons
               name="briefcase-outline"
               size={48}
-              color={colors.teal}
+              color={colors.cyan}
               importantForAccessibility="no"
             />
             <Text style={styles.errorTitle}>{errCopy.title}</Text>
@@ -168,7 +178,14 @@ export default function HomeScreen() {
     ? t("homeGreetingName", { name: firstName })
     : t("homeGreeting");
   const chatCount = conversationsQuery.data?.length ?? 0;
-  const latestJobCount = (d.latestJobs ?? []).length;
+  const unreadMessages = (conversationsQuery.data ?? []).reduce(
+    (total, row) =>
+      total + Math.max(0, row.unreadCount ?? (row.read === false ? 1 : 0)),
+    0,
+  );
+  const unreadNotifications = notificationsQuery.data?.unreadCount ?? 0;
+  const latestJobs = (d.latestJobs ?? []).slice(0, 6);
+  const latestJobCount = latestJobs.length;
   const unreadMatches = matchesQuery.data?.unreadCount ?? 0;
   const appliedCount = d.stats.totalApplied ?? 0;
   const isNewUser =
@@ -195,8 +212,31 @@ export default function HomeScreen() {
               href: "/(tabs)/jobs" as const,
             };
 
+  const toolTiles = [
+    {
+      icon: "airplane-outline" as const,
+      label: t("screenRelocationhelp"),
+      href: "/relocation-help" as const,
+    },
+    {
+      icon: "people-outline" as const,
+      label: t("resourcesSpecialists"),
+      href: "/partners" as const,
+    },
+    {
+      icon: "map-outline" as const,
+      label: t("resourcesGuides"),
+      href: "/guides" as const,
+    },
+    {
+      icon: "library-outline" as const,
+      label: t("homeTools"),
+      href: "/tools-resources" as const,
+    },
+  ] as const;
+
   return (
-    <GshScreenShell constrainTabletWidth>
+    <GshScreenShell constrainTabletWidth style={styles.shell}>
       <ScrollView
         contentContainerStyle={styles.scrollPad}
         refreshControl={
@@ -208,167 +248,208 @@ export default function HomeScreen() {
         }
         showsVerticalScrollIndicator={false}
       >
-        <GshTabHeroHeader
-          paddingTop={Math.max(insets.top, 20) + 8}
-          tagline={t("homeTagline")}
-        >
-          <Text style={styles.heroTitle}>{greeting}</Text>
-          <Text style={styles.heroLead}>{t("homeLead")}</Text>
-        </GshTabHeroHeader>
+        <View style={[styles.appBar, { paddingTop: Math.max(insets.top, 12) + 4 }]}>
+          <Image
+            source={brandLogo}
+            style={styles.logo}
+            resizeMode="contain"
+            accessibilityLabel="Global Sponsor Hub"
+          />
+          <View style={styles.appBarActions}>
+            <GshChromeIconButton
+              icon="notifications-outline"
+              onPress={() => router.push("/notification-feed")}
+              accessibilityLabel={t("inbox")}
+              badgeCount={unreadNotifications}
+            />
+            <GshChromeIconButton
+              icon="chatbubble-outline"
+              onPress={() => router.push("/(tabs)/messages")}
+              accessibilityLabel={t("messages")}
+              badgeCount={unreadMessages}
+            />
+          </View>
+        </View>
+        <Text style={styles.largeTitle}>{greeting}</Text>
+
+        <Animated.View entering={enterUp(MOTION.primary, reduceMotion)} style={styles.statusRow}>
+          <StatusChip
+            label={t("homeMatches")}
+            value={matchesQuery.isError ? "—" : unreadMatches}
+            onPress={() => router.push("/alerts")}
+          />
+          <StatusChip
+            label={t("saved")}
+            value={savedCount}
+            onPress={() => router.push("/saved")}
+          />
+          <StatusChip
+            label={t("applications")}
+            value={appliedCount}
+            onPress={() => router.push("/(tabs)/applications")}
+          />
+        </Animated.View>
+
+        <Animated.View entering={enterUp(MOTION.secondary, reduceMotion)} style={styles.destBlock}>
+          <GshHomeDestinationRail />
+        </Animated.View>
 
         <View style={styles.bodyPad}>
-          <Pressable
-            style={styles.nextCard}
-            onPress={() => {
-              void hapticLight();
-              router.push(next.href);
-            }}
-            accessibilityRole="button"
-          >
-            <View style={styles.nextRule} />
-            <Text style={styles.nextEyebrow}>{t("homeNextStep")}</Text>
-            <Text style={styles.nextTitle}>{next.title}</Text>
-            <Text style={styles.nextBody}>{t("homePickUp")}</Text>
-            <View style={styles.nextCta}>
-              <Text style={styles.nextCtaText}>{t("homeContinue")}</Text>
-              <Ionicons name="arrow-forward" size={16} color={colors.navy} />
-            </View>
-          </Pressable>
-
-          <View style={styles.metrics}>
-            <Metric
-              label={t("homeMatches")}
-              value={matchesQuery.isError ? "—" : unreadMatches}
-              hint={t("homeSeeAll")}
-              onPress={() => router.push("/alerts")}
-            />
-            <Metric
-              label={t("saved")}
-              value={savedCount}
-              hint={t("homeSeeAll")}
-              onPress={() => router.push("/saved")}
-            />
-            <Metric
-              label={t("applications")}
-              value={appliedCount}
-              hint={t("homeOpen")}
-              onPress={() => router.push("/(tabs)/applications")}
-            />
-          </View>
+          <Animated.View entering={enterUp(MOTION.secondary + 40, reduceMotion)}>
+            <GshPressable
+              style={styles.taskCard}
+              onPress={() => router.push(next.href)}
+              accessibilityRole="button"
+              pressScale={0.98}
+            >
+              <View style={styles.taskIcon}>
+                <Ionicons name="flash" size={20} color={colors.navy} />
+              </View>
+              <View style={styles.taskCopy}>
+                <Text style={styles.taskEyebrow}>{t("homeNextStep")}</Text>
+                <Text style={styles.taskTitle} numberOfLines={2}>
+                  {next.title}
+                </Text>
+              </View>
+              <View style={styles.taskChevron}>
+                <Ionicons name="arrow-forward" size={18} color={colors.navy} />
+              </View>
+            </GshPressable>
+          </Animated.View>
 
           {isNewUser ? (
-            <GshEmptyState
-              icon="compass-outline"
-              title={t("homeEmpty")}
-              actionLabel={t("homeBrowse")}
-              onAction={() => router.push("/(tabs)/jobs")}
-            />
+            <Animated.View entering={enterDown(MOTION.tertiary, reduceMotion)}>
+              <GshEmptyState
+                icon="compass-outline"
+                title={t("homeEmpty")}
+                actionLabel={t("homeBrowse")}
+                onAction={() => router.push("/(tabs)/jobs")}
+                useBrandMark
+              />
+            </Animated.View>
           ) : null}
+        </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionEyebrow}>{t("homeFind")}</Text>
-            <Text style={styles.sectionTitle}>{t("homeNew")}</Text>
-            {latestJobCount > 0 ? (
-              <View style={styles.feedCardStack}>
-                {(d.latestJobs ?? []).slice(0, 3).map((job) => (
-                  <DashboardHubJobPreview
-                    key={job._id}
-                    job={job}
-                    onPress={() => router.push(`/job/${job._id}`)}
-                  />
+        {latestJobCount > 0 ? (
+          <Animated.View entering={enterUp(MOTION.tertiary, reduceMotion)}>
+            <View style={styles.railHeaderPad}>
+              <Text style={styles.sectionTitle}>{t("homeNew")}</Text>
+              <GshPressable
+                onPress={() => router.push("/(tabs)/jobs")}
+                accessibilityRole="button"
+                haptic={false}
+                style={styles.seeAllHit}
+              >
+                <Text style={styles.seeAll}>{t("homeBrowseAll")}</Text>
+              </GshPressable>
+            </View>
+            <View style={styles.featuredPad}>
+              <DashboardHubJobPreview
+                job={latestJobs[0]}
+                variant="hero"
+                featuredLabel={t("homeFeatured")}
+                viewLabel={t("jobsView")}
+                onPress={() => router.push(`/job/${latestJobs[0]._id}`)}
+              />
+            </View>
+            {latestJobs.length > 1 ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.jobRail}
+                decelerationRate="fast"
+                snapToInterval={292}
+              >
+                {latestJobs.slice(1).map((job) => (
+                  <View key={job._id} style={styles.jobCardWrap}>
+                    <DashboardHubJobPreview
+                      job={job}
+                      variant="card"
+                      viewLabel={t("jobsView")}
+                      onPress={() => router.push(`/job/${job._id}`)}
+                    />
+                  </View>
                 ))}
-              </View>
-            ) : (
-              <Text style={styles.sectionHint}>{t("homeFindLead")}</Text>
-            )}
-            <Pressable
-              style={styles.textLink}
-              onPress={() => router.push("/(tabs)/jobs")}
-              accessibilityRole="button"
-            >
-              <Text style={styles.textLinkLabel}>{t("homeBrowseAll")}</Text>
-              <Ionicons name="arrow-forward" size={16} color={colors.navy} />
-            </Pressable>
-          </View>
+              </ScrollView>
+            ) : null}
+          </Animated.View>
+        ) : null}
 
+        <View style={styles.bodyPad}>
           {recentSlice.length > 0 ? (
-            <View style={styles.section}>
-              <Text style={styles.sectionEyebrow}>{t("applications")}</Text>
+            <Animated.View
+              entering={enterUp(MOTION.tertiary + 60, reduceMotion)}
+              style={styles.section}
+            >
               <Text style={styles.sectionTitle}>{t("homeRecent")}</Text>
-              <View style={styles.feedCardStack}>
+              <View style={styles.listGroup}>
                 {recentSlice.map((a, i) => (
-                  <View
-                    key={`${a.jobTitle}-${i}`}
-                    style={[styles.appRow, feedCardStyle()]}
-                  >
-                    <View style={styles.appText}>
-                      <Text style={styles.listTitle} numberOfLines={2}>
-                        {a.jobTitle}
-                      </Text>
-                      <Text style={styles.listSub} numberOfLines={2}>
-                        {a.companyName} ·{" "}
-                        <Text style={styles.statusEm}>
-                          {applicationStatusLabel(a.status, locale)}
+                  <View key={`${a.jobTitle}-${i}`}>
+                    <GshPressable
+                      style={styles.appRow}
+                      onPress={() => router.push("/(tabs)/applications")}
+                      accessibilityRole="button"
+                    >
+                      <View style={styles.appText}>
+                        <Text style={styles.listTitle} numberOfLines={2}>
+                          {a.jobTitle}
                         </Text>
-                      </Text>
-                    </View>
+                        <Text style={styles.listSub} numberOfLines={2}>
+                          {a.companyName} ·{" "}
+                          <Text style={styles.statusEm}>
+                            {applicationStatusLabel(a.status, locale)}
+                          </Text>
+                        </Text>
+                      </View>
+                      <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                    </GshPressable>
+                    {i < recentSlice.length - 1 ? <View style={styles.listHairline} /> : null}
                   </View>
                 ))}
               </View>
-              <Pressable
-                style={styles.textLink}
-                onPress={() => router.push("/(tabs)/applications")}
-                accessibilityRole="button"
-              >
-                <Text style={styles.textLinkLabel}>{t("homeOpen")}</Text>
-                <Ionicons name="arrow-forward" size={16} color={colors.navy} />
-              </Pressable>
-            </View>
+            </Animated.View>
           ) : null}
 
           {chatCount > 0 ? (
-            <GshLinkRow
-              title={t("messages")}
-              subtitle={t("homePickUp")}
-              icon="chatbubbles-outline"
-              accent="teal"
-              onPress={() => router.push("/(tabs)/messages")}
-            />
+            <Animated.View entering={enterUp(MOTION.tertiary + 80, reduceMotion)}>
+              <GshPressable
+                style={styles.messageCard}
+                onPress={() => router.push("/(tabs)/messages")}
+                accessibilityRole="button"
+              >
+                <View style={styles.toolIconWell}>
+                  <Ionicons name="chatbubbles-outline" size={22} color={colors.navy} />
+                </View>
+                <Text style={styles.toolRowLabel}>{t("messages")}</Text>
+                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+              </GshPressable>
+            </Animated.View>
           ) : null}
 
-          <View style={styles.section}>
-            <Text style={styles.sectionEyebrow}>{t("homeHelp")}</Text>
-            <Text style={styles.sectionTitle}>{t("screenRelocationhelp")}</Text>
-            <Text style={styles.sectionHint}>{t("homeMoveLead")}</Text>
-          </View>
-          <GshLinkRow
-            title={t("screenRelocationhelp")}
-            subtitle={t("homeMoveLead")}
-            icon="airplane-outline"
-            accent="teal"
-            onPress={() => router.push("/relocation-help")}
-          />
-          <GshLinkRow
-            title={t("resourcesSpecialists")}
-            subtitle={t("resourcesSpecialistsHelp")}
-            icon="people-outline"
-            accent="teal"
-            onPress={() => router.push("/partners")}
-          />
-          <GshLinkRow
-            title={t("resourcesGuides")}
-            subtitle={t("resourcesGuidesHelp")}
-            icon="map-outline"
-            accent="teal"
-            onPress={() => router.push("/guides")}
-          />
-          <GshLinkRow
-            title={t("homeTools")}
-            subtitle={t("homeToolsHelp")}
-            icon="library-outline"
-            accent="teal"
-            onPress={() => router.push("/tools-resources")}
-          />
+          <Animated.View
+            entering={enterUp(MOTION.tertiary + 100, reduceMotion)}
+            style={styles.toolsBlock}
+          >
+            <Text style={styles.sectionTitle}>{t("homeTools")}</Text>
+            <View style={styles.toolGrid}>
+              {toolTiles.map((row) => (
+                <GshPressable
+                  key={row.href}
+                  style={styles.toolTile}
+                  onPress={() => router.push(row.href)}
+                  accessibilityRole="button"
+                  pressScale={0.97}
+                >
+                  <View style={styles.toolIconWell}>
+                    <Ionicons name={row.icon} size={22} color={colors.navy} />
+                  </View>
+                  <Text style={styles.toolTileLabel} numberOfLines={2}>
+                    {row.label}
+                  </Text>
+                </GshPressable>
+              ))}
+            </View>
+          </Animated.View>
         </View>
       </ScrollView>
     </GshScreenShell>
@@ -376,141 +457,151 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  scrollPad: { paddingBottom: 48 },
+  shell: { backgroundColor: colors.pale },
+  scrollPad: { paddingBottom: Platform.OS === "ios" ? 96 : 48 },
+  appBar: {
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  logo: { width: 168, height: 36, maxWidth: "62%" },
+  appBarActions: { flexDirection: "row", gap: 8 },
+  largeTitle: {
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+    fontSize: 34,
+    lineHeight: 40,
+    fontFamily: fontFamily.headingStrong,
+    color: colors.navy,
+    letterSpacing: -0.8,
+  },
+  destBlock: { paddingTop: 6 },
   bodyPad: {
     paddingHorizontal: 16,
     paddingTop: FEED_SECTION_GAP,
     paddingBottom: 4,
-    gap: 14,
+    gap: 12,
   },
-  heroTitle: {
-    fontSize: 32,
-    lineHeight: 36,
-    fontFamily: fontFamily.headingStrong,
-    color: colors.navy,
-    letterSpacing: -0.8,
-    marginBottom: 10,
+  statusRow: {
+    flexDirection: "row",
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 10,
   },
-  heroLead: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontFamily: fontFamily.regular,
-    color: colors.textSecondary,
-    maxWidth: 420,
-  },
-  nextCard: {
-    backgroundColor: colors.navy,
+  statusChip: {
+    flex: 1,
+    minHeight: 64,
     borderRadius: radii.lg,
-    paddingVertical: 22,
-    paddingHorizontal: 22,
-    overflow: "hidden",
+    backgroundColor: colors.navy,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
   },
-  nextRule: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 4,
-    backgroundColor: colors.tealOnNavy,
-  },
-  nextEyebrow: {
-    fontSize: 11,
-    fontFamily: fontFamily.bold,
-    color: colors.tealOnNavy,
-    letterSpacing: 1.6,
-    textTransform: "uppercase",
-  },
-  nextTitle: {
-    marginTop: 10,
-    fontSize: 22,
-    lineHeight: 26,
-    fontFamily: fontFamily.heading,
-    color: colors.white,
+  statusValue: {
+    fontSize: 24,
+    fontFamily: fontFamily.headingStrong,
+    color: colors.cyan,
     letterSpacing: -0.4,
   },
-  nextBody: {
-    marginTop: 8,
-    fontSize: 14,
-    lineHeight: 20,
-    fontFamily: fontFamily.regular,
-    color: "rgba(255,255,255,0.65)",
-  },
-  nextCta: {
-    marginTop: 18,
-    alignSelf: "flex-start",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    backgroundColor: colors.teal,
-    borderRadius: radii.pill,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-  },
-  nextCtaText: {
-    fontSize: 14,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-  },
-  metrics: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  metric: {
-    flex: 1,
-    minHeight: 88,
-    backgroundColor: colors.white,
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-  },
-  metricLabel: {
+  statusLabel: {
+    marginTop: 2,
     fontSize: 11,
     fontFamily: fontFamily.semiBold,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 0.4,
+    color: "rgba(255,255,255,0.72)",
   },
-  metricValue: {
-    marginTop: 6,
-    fontSize: 22,
-    fontFamily: fontFamily.headingStrong,
-    color: colors.navy,
-    letterSpacing: -0.4,
+  taskCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+    minHeight: 72,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: radii.lg,
+    backgroundColor: colors.white,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
   },
-  metricHint: {
-    marginTop: 4,
-    fontSize: 11,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
+  taskIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  section: { paddingTop: 8, gap: 6 },
-  sectionEyebrow: {
+  taskCopy: { flex: 1, minWidth: 0 },
+  taskEyebrow: {
     fontSize: 11,
     fontFamily: fontFamily.bold,
-    color: colors.teal,
-    letterSpacing: 1.4,
+    color: colors.navy,
+    letterSpacing: 0.8,
     textTransform: "uppercase",
   },
+  taskTitle: {
+    marginTop: 3,
+    fontSize: 17,
+    fontFamily: fontFamily.heading,
+    color: colors.navy,
+    letterSpacing: -0.3,
+  },
+  taskChevron: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  railHeaderPad: {
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+    marginTop: FEED_SECTION_GAP,
+  },
+  featuredPad: { paddingHorizontal: 16, marginBottom: 12 },
+  jobRail: { paddingHorizontal: 16, gap: 12, paddingBottom: 4 },
+  jobCardWrap: { width: 280 },
+  seeAllHit: { minHeight: 44, justifyContent: "center" },
+  seeAll: {
+    fontSize: 15,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+  },
+  section: { paddingTop: 4, gap: 10 },
   sectionTitle: {
     fontSize: 22,
     fontFamily: fontFamily.heading,
     color: colors.navy,
     letterSpacing: -0.4,
   },
-  sectionHint: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontFamily: fontFamily.regular,
-    color: colors.textSecondary,
+  listGroup: {
+    borderRadius: radii.lg,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
+    backgroundColor: colors.white,
+    overflow: "hidden",
   },
-  feedCardStack: { gap: FEED_ITEM_GAP, marginTop: 8 },
-  appRow: { paddingVertical: 14, paddingHorizontal: 14 },
-  appText: { minWidth: 0 },
+  listHairline: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.border,
+    marginLeft: 14,
+  },
+  appRow: {
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: colors.white,
+  },
+  appText: { flex: 1, minWidth: 0 },
   listTitle: {
-    fontSize: 15,
-    fontFamily: fontFamily.bold,
+    fontSize: 16,
+    fontFamily: fontFamily.semiBold,
     color: colors.navy,
     letterSpacing: -0.2,
   },
@@ -518,23 +609,58 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: fontFamily.regular,
     color: colors.textMuted,
-    marginTop: 6,
+    marginTop: 4,
     lineHeight: 20,
   },
   statusEm: { fontFamily: fontFamily.semiBold, color: colors.textSecondary },
-  textLink: {
-    marginTop: 6,
-    minHeight: 44,
+  messageCard: {
+    minHeight: 64,
+    paddingHorizontal: 14,
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
+    gap: 12,
+    backgroundColor: colors.white,
+    borderRadius: radii.lg,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
   },
-  textLinkLabel: {
-    fontSize: 14,
-    fontFamily: fontFamily.bold,
+  toolsBlock: { paddingTop: 8, gap: 12 },
+  toolGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+  },
+  toolTile: {
+    width: "48%",
+    flexGrow: 1,
+    minHeight: 108,
+    padding: 14,
+    borderRadius: radii.lg,
+    backgroundColor: colors.white,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
+    gap: 12,
+  },
+  toolIconWell: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: colors.brandSoft,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  toolTileLabel: {
+    fontSize: 15,
+    fontFamily: fontFamily.semiBold,
     color: colors.navy,
-    textDecorationLine: "underline",
-    textDecorationColor: colors.teal,
+    letterSpacing: -0.2,
+    lineHeight: 20,
+  },
+  toolRowLabel: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
   },
   center: {
     flex: 1,
@@ -583,3 +709,4 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
 });
+

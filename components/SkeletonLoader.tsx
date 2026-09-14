@@ -56,20 +56,20 @@ export function JobCardSkeleton() {
   return (
     <View style={styles.card}>
       <View style={styles.topRow}>
-        <SkeletonBox width={48} height={48} radius={13} />
+        <SkeletonBox width={64} height={64} radius={16} />
         <View style={styles.midCol}>
-          <SkeletonBox width="75%" height={15} radius={6} />
-          <SkeletonBox width="50%" height={12} radius={5} style={{ marginTop: 8 }} />
-          <SkeletonBox width="40%" height={10} radius={5} style={{ marginTop: 6 }} />
+          <SkeletonBox width="55%" height={12} radius={5} />
+          <SkeletonBox width="85%" height={17} radius={6} style={{ marginTop: 8 }} />
+          <SkeletonBox width="45%" height={12} radius={5} style={{ marginTop: 8 }} />
           <View style={styles.chipRow}>
-            <SkeletonBox width={90} height={20} radius={99} />
-            <SkeletonBox width={72} height={20} radius={99} />
+            <SkeletonBox width={90} height={22} radius={99} />
+            <SkeletonBox width={72} height={22} radius={99} />
           </View>
         </View>
       </View>
       <View style={styles.footer}>
-        <SkeletonBox width={90} height={13} radius={5} />
-        <SkeletonBox width={60} height={13} radius={5} />
+        <SkeletonBox width={100} height={15} radius={5} />
+        <SkeletonBox width={72} height={28} radius={99} />
       </View>
     </View>
   );

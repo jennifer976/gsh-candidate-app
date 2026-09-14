@@ -1,14 +1,17 @@
-/** GSH 2.0 candidate theme: navy, approved teal, pale canvas. */
+/** GSH 2.0 candidate theme: navy + cyan highlights (no teal lane). */
 import { TextStyle, ViewStyle } from "react-native";
 
 export const colors = {
-  // Core brand — matches design-direction / live marketing site
+  // Core brand — navy + cyan only
   navy: "#0d194e",
   navyDeep: "#070d2c",
   navyMid: "#0d194e",
-  teal: "#00a8b2",
-  tealOnNavy: "#6fdde3",
-  tealDim: "rgba(0,168,178,0.16)",
+  /** Primary cyan accent (replaces darker teal). */
+  cyan: "#42e0e3",
+  /** @deprecated Use `cyan` — kept as alias so existing imports keep compiling. */
+  teal: "#42e0e3",
+  tealOnNavy: "#42e0e3",
+  tealDim: "rgba(66,224,227,0.16)",
   // Compatibility aliases. New UI must not create a purple visual lane.
   purple: "#0d194e",
   purpleBright: "#0d194e",
@@ -21,10 +24,10 @@ export const colors = {
 
   // Light surface (forms, modals, input fields)
   background: "#ffffff",
-  pale: "#f2fafb",
+  pale: "#f4f7fb",
   pale2: "#eef3f8",
-  surfaceMuted: "#e6f6f7",
-  surfaceLight: "#f2fafb",
+  surfaceMuted: "#eef3f8",
+  surfaceLight: "#f4f7fb",
 
   // Text — dark backgrounds
   textOnDark: "#ffffff",
@@ -44,13 +47,13 @@ export const colors = {
   borderOnDark: "rgba(255,255,255,0.12)",
   borderOnDarkStrong: "rgba(255,255,255,0.22)",
 
-  // Navy carries actions; cyan is a controlled highlight.
+  // Navy carries actions; cyan is the only highlight.
   brand: "#0d194e",
   brandDeep: "#0d194e",
-  brandSoft: "rgba(0,168,178,0.16)",
-  brandGlow: "rgba(0,168,178,0.22)",
+  brandSoft: "rgba(66,224,227,0.16)",
+  brandGlow: "rgba(66,224,227,0.22)",
   secondary: "#0d194e",
-  accent: "#00a8b2",
+  accent: "#42e0e3",
   error: "#b91c1c",
   white: "#ffffff",
 
@@ -59,13 +62,13 @@ export const colors = {
   purpleBorder: "#e2e8f0",
   purpleText: "#0d194e",
   purpleTextDark: "#0d194e",
-  secondaryTintBg: "rgba(0,168,178,0.14)",
+  secondaryTintBg: "rgba(66,224,227,0.14)",
   secondaryTintText: "#0d194e",
   treeapp: "#75be00",
   chipOnBg: "#0d194e",
   chipOnBorder: "#0d194e",
-  unreadBorder: "rgba(0,168,178,0.72)",
-  unreadBg: "rgba(0,168,178,0.08)",
+  unreadBorder: "rgba(66,224,227,0.72)",
+  unreadBg: "rgba(66,224,227,0.08)",
   warningBg: "#fffbeb",
   warningBorder: "#fde68a",
   warningText: "#92400e",
@@ -181,10 +184,10 @@ export const heroGradient = {
 export const gradient = {
   authCTA: [colors.navy, colors.navy] as const,
   heroBg: [colors.navy, colors.navy] as const,
-  cardAccent: ["rgba(0,168,178,0.14)", "rgba(0,168,178,0.04)"] as const,
-  cyanGlow: ["rgba(0,168,178,0)", "rgba(0,168,178,0.10)"] as const,
-  employerHeader: ["rgba(0,168,178,0.10)", "rgba(0,168,178,0)"] as const,
-  curatedHeader: ["rgba(0,168,178,0.08)", "rgba(0,168,178,0)"] as const,
+  cardAccent: ["rgba(66,224,227,0.14)", "rgba(66,224,227,0.04)"] as const,
+  cyanGlow: ["rgba(66,224,227,0)", "rgba(66,224,227,0.10)"] as const,
+  employerHeader: ["rgba(66,224,227,0.10)", "rgba(66,224,227,0)"] as const,
+  curatedHeader: ["rgba(66,224,227,0.08)", "rgba(66,224,227,0)"] as const,
 };
 
 /** Vertical accent strip on the left edge of a card — signals lane (employer vs curated) */

@@ -1,5 +1,5 @@
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
-import { useAppLanguage } from "@/lib/i18n";
+import { useAppCopy, useAppLanguage } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as DocumentPicker from "expo-document-picker";
@@ -23,7 +23,7 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { CandidateReadinessSummary } from "@/components/CandidateReadinessSummary";
 import { GshLinkRow } from "@/components/gsh-ui-kit";
 import { GshScreenShell } from "@/components/GshScreenShell";
-import { GshTabHeroHeader } from "@/components/GshTabHeroHeader";
+import { GshTabStickyHeader } from "@/components/GshTabStickyHeader";
 import { GshToolTile } from "@/components/GshToolTile";
 import { fetchOwnProfile, recordCandidateJourneyStart, updateProfile, uploadFileFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -138,6 +138,7 @@ const STATIC_MORE_TOOLS_LINKS = [
 
 export default function ProfileScreen() {
  const ac = useAccountCopy();
+ const { t } = useAppCopy();
  const locale = useAppLanguage(s => s.locale);
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -360,7 +361,7 @@ export default function ProfileScreen() {
   const profileReady = completionPct >= 100;
 
   return (
-    <GshScreenShell constrainTabletWidth>
+    <GshScreenShell constrainTabletWidth style={styles.shell}>
       <ScrollView
         ref={scrollRef}
         style={styles.scroll}
@@ -368,16 +369,35 @@ export default function ProfileScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <GshTabHeroHeader paddingTop={Math.max(insets.top, 12)} tagline={ac("Account settings")}>
-          <View style={styles.heroIdentity}>
-            <View style={styles.avatarRing}><View style={styles.avatarInner}><Text style={styles.profileAvatarText}>{initials}</Text></View></View>
-            <View style={{flex: 1, minWidth: 0}}>
-              <Text style={styles.profileName}>{displayName}</Text>
-              <Text style={styles.profileEmail}>{user?.email ?? ""}</Text>
+        <GshTabStickyHeader
+          title={t("profile")}
+          subtitle={ac("Account settings")}
+          paddingTop={Math.max(insets.top, 12) + 4}
+        />
+        <View style={styles.identityCard}>
+          <View style={styles.avatarRing}>
+            <View style={styles.avatarInner}>
+              <Text style={styles.profileAvatarText}>{initials}</Text>
             </View>
           </View>
-          <GshGradientPrimaryButton title={ac("Edit profile")} tone="cyan" onPress={() => scrollRef.current?.scrollTo({y: contentSectionY.current + formSectionY.current, animated: true})} containerStyle={styles.completeCta} />
-        </GshTabHeroHeader>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text style={styles.profileName}>{displayName}</Text>
+            <Text style={styles.profileEmail}>{user?.email ?? ""}</Text>
+          </View>
+        </View>
+        <View style={styles.editCtaPad}>
+          <GshGradientPrimaryButton
+            title={ac("Edit profile")}
+            tone="cyan"
+            onPress={() =>
+              scrollRef.current?.scrollTo({
+                y: contentSectionY.current + formSectionY.current,
+                animated: true,
+              })
+            }
+            containerStyle={styles.completeCta}
+          />
+        </View>
 
         <View style={styles.content} onLayout={event => {contentSectionY.current = event.nativeEvent.layout.y;}}>
           {profileErrCopy ? (
@@ -671,31 +691,43 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  shell: { backgroundColor: colors.pale },
   loadingWrap: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
   scroll: { flex: 1 },
   scrollContent: { paddingBottom: 24 },
-  heroIdentity: { flexDirection: "row", gap: 14, alignItems: "center", paddingBottom: 4 },
+  identityCard: {
+    marginHorizontal: 16,
+    marginTop: 14,
+    flexDirection: "row",
+    gap: 14,
+    alignItems: "center",
+    padding: 16,
+    borderRadius: radii.lg,
+    backgroundColor: colors.white,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
+  },
+  editCtaPad: { paddingHorizontal: 16, paddingTop: 12 },
   avatarRing: {
-    width: 58,
-    height: 58,
-    borderRadius: 40,
-    borderWidth: 1,
-    borderColor: colors.teal,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    borderWidth: 2,
+    borderColor: colors.cyan,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 12,
   },
   avatarRingIncomplete: { borderColor: "rgba(255,255,255,0.35)" },
   avatarInner: {
-    width: 50,
-    height: 50,
-    borderRadius: 34,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
   },
-  profileAvatarText: { fontSize: 26, fontFamily: fontFamily.extraBold, color: colors.white },
-  profileName: { fontSize: 26, fontFamily: fontFamily.headingStrong, color: colors.navy, letterSpacing: -0.4 },
+  profileAvatarText: { fontSize: 22, fontFamily: fontFamily.extraBold, color: colors.cyan },
+  profileName: { fontSize: 22, fontFamily: fontFamily.headingStrong, color: colors.navy, letterSpacing: -0.4 },
   profileEmail: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textSecondary },
   completionShort: {
     marginTop: 8,
@@ -703,7 +735,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: "rgba(255,255,255,0.75)",
   },
-  completeCta: { marginTop: 14, alignSelf: "flex-start", minWidth: 150 },
+  completeCta: { marginTop: 0, alignSelf: "stretch", minWidth: 150 },
   content: { paddingHorizontal: 16, paddingTop: 16, gap: 14 },
   tileGrid: { gap: 10, marginBottom: 4 },
   tileRow: { flexDirection: "row", gap: 10 },

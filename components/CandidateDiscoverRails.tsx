@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GshSheetGrabber } from "@/components/GshSheetGrabber";
 import { JOB_DESTINATION_FILTERS } from "@/lib/jobDiscoverCountries";
 import { VISA_ROUTE_OPTIONS } from "@/lib/job-display";
 import {
@@ -151,6 +152,7 @@ export function DiscoverTopicsFilterModal({
       onRequestClose={onClose}
     >
       <SafeAreaView style={styles.modalSafe} edges={["top", "bottom"]}>
+        <GshSheetGrabber />
         <View style={styles.modalHeader}>
           <Text style={styles.modalTitle}>{t("jobFiltersTitle")}</Text>
           <Pressable
@@ -398,6 +400,7 @@ export function DiscoverListingInfoModal({
       onRequestClose={onClose}
     >
       <SafeAreaView style={styles.modalSafe} edges={["top", "bottom"]}>
+        <GshSheetGrabber />
         <View style={styles.modalHeader}>
           <Text style={styles.infoTitle}>{t("jobsInfo")}</Text>
           <Pressable

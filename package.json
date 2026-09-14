@@ -1,6 +1,6 @@
 {
   "name": "gsh-candidate-app",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -22,6 +22,7 @@
     "babel-preset-expo": "~54.0.10",
     "expo": "~54.0.37",
     "expo-av": "~16.0.8",
+    "expo-blur": "~15.0.8",
     "expo-clipboard": "~8.0.8",
     "expo-constants": "~18.0.14",
     "expo-dev-client": "~6.0.21",

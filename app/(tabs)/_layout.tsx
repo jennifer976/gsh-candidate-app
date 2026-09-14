@@ -1,17 +1,21 @@
 import { useAppCopy } from "@/lib/i18n";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useQuery } from "@tanstack/react-query";
-import type { ComponentProps } from "react";
-import { Redirect, Tabs, useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
+import {
+  Badge,
+  Icon,
+  Label,
+  NativeTabs,
+  VectorIcon,
+} from "expo-router/unstable-native-tabs";
 import { useEffect, useRef, useState } from "react";
-import { Alert, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Alert, Platform } from "react-native";
 import { CandidateOnboardingModal } from "@/components/CandidateOnboardingModal";
 import {
   isCandidateOnboardingComplete,
   markCandidateOnboardingComplete,
 } from "@/lib/candidate-onboarding";
-import { tabBarBottomPadding } from "@/lib/android-insets";
 import { useAuthStore } from "@/lib/auth-store";
 import {
   fetchConversations,
@@ -19,47 +23,49 @@ import {
   fetchUnreadNotificationCount,
 } from "@/lib/api-client";
 import { resumeCandidateReturnIntent } from "@/lib/candidate-return-intent";
-import { colors, fontFamily } from "@/lib/theme";
+import { colors } from "@/lib/theme";
 
-type IonName = ComponentProps<typeof Ionicons>["name"];
+type IonName = keyof typeof Ionicons.glyphMap;
 
-function TabGlyph({
-  focused,
-  color,
-  filled,
+function TabIcon({
+  sfDefault,
+  sfSelected,
   outline,
+  filled,
 }: {
-  focused: boolean;
-  color: string;
-  filled: IonName;
+  sfDefault: string;
+  sfSelected: string;
   outline: IonName;
+  filled: IonName;
 }) {
   return (
-    <View style={{ alignItems: "center", justifyContent: "center" }}>
-      {focused && (
-        <View
-          style={{
-            position: "absolute",
-            width: 40,
-            height: 36,
-            borderRadius: 18,
-            backgroundColor: colors.accent,
-          }}
-        />
-      )}
-      <Ionicons name={focused ? filled : outline} size={23} color={color} />
-    </View>
+    <Icon
+      sf={
+        {
+          default: sfDefault,
+          selected: sfSelected,
+        } as never
+      }
+      androidSrc={{
+        default: <VectorIcon family={Ionicons} name={outline} />,
+        selected: <VectorIcon family={Ionicons} name={filled} />,
+      }}
+    />
   );
+}
+
+function badgeText(n: number): string {
+  return n > 99 ? "99+" : String(n);
 }
 
 export default function TabsLayout() {
   const { t } = useAppCopy();
   const router = useRouter();
   const token = useAuthStore((s) => s.token);
-  const insets = useSafeAreaInsets();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [onboardingReady, setOnboardingReady] = useState(false);
   const resumingIntent = useRef(false);
+
   const matchesBadge = useQuery({
     queryKey: ["candidate", "job-matches", "badge"],
     queryFn: () => fetchJobMatches({ unread: true, limit: 1 }),
@@ -83,6 +89,8 @@ export default function TabsLayout() {
       total + Math.max(0, row.unreadCount ?? (row.read === false ? 1 : 0)),
     0,
   );
+  const matchesCount = matchesBadge.data?.unreadCount ?? 0;
+  const notifCount = notificationsBadge.data?.unreadCount ?? 0;
 
   useEffect(() => {
     if (!token) {
@@ -125,139 +133,68 @@ export default function TabsLayout() {
 
   if (!token) return <Redirect href="/login" />;
 
-  const bottomInset = tabBarBottomPadding(insets.bottom);
-  const tabBarPaddingTop = 8;
-  const tabIconRowHeight = 54;
-
-  const lightHeader = {
-    headerStyle: { backgroundColor: colors.white },
-    headerTintColor: colors.navy,
-    headerTitleStyle: {
-      fontFamily: fontFamily.heading,
-      fontSize: 17,
-      color: colors.navy,
-    },
-    headerShadowVisible: false,
-  };
-
   return (
     <>
-      <Tabs
-        initialRouteName="home"
-        screenOptions={{
-          headerShown: false,
-          tabBarActiveTintColor: colors.navy,
-          tabBarInactiveTintColor: colors.textMuted,
-          tabBarStyle: {
-            backgroundColor: colors.white,
-            borderTopColor: colors.border,
-            borderTopWidth: 1,
-            paddingTop: tabBarPaddingTop,
-            paddingBottom: bottomInset,
-            height: tabIconRowHeight + tabBarPaddingTop + bottomInset,
-          },
-          tabBarLabelStyle: {
-            fontFamily: fontFamily.semiBold,
-            fontSize: 10,
-            marginTop: 2,
-          },
-          tabBarItemStyle: { minHeight: 44 },
-          tabBarBadgeStyle: {
-            backgroundColor: colors.teal,
-            color: colors.navy,
-            fontFamily: fontFamily.bold,
-          },
-          tabBarHideOnKeyboard: true,
-        }}
+      <NativeTabs
+        tintColor={colors.navy}
+        labelStyle={{ fontSize: 10, fontWeight: "600" }}
+        minimizeBehavior={Platform.OS === "ios" ? "onScrollDown" : undefined}
+        blurEffect={Platform.OS === "ios" ? "systemDefault" : undefined}
       >
-        <Tabs.Screen name="index" options={{ href: null }} />
-        <Tabs.Screen
-          name="home"
-          options={{
-            title: t("home"),
-            tabBarLabel: t("home"),
-            tabBarIcon: ({ color, focused }) => (
-              <TabGlyph
-                focused={focused}
-                color={color}
-                filled="home"
-                outline="home-outline"
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="jobs"
-          options={{
-            title: t("jobs"),
-            tabBarLabel: t("jobs"),
-            tabBarBadge: (matchesBadge.data?.unreadCount ?? 0) || undefined,
-            tabBarIcon: ({ color, focused }) => (
-              <TabGlyph
-                focused={focused}
-                color={color}
-                filled="briefcase"
-                outline="briefcase-outline"
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="applications"
-          options={{
-            title: t("applications"),
-            headerShown: true,
-            ...lightHeader,
-            tabBarLabel: t("applications"),
-            tabBarIcon: ({ color, focused }) => (
-              <TabGlyph
-                focused={focused}
-                color={color}
-                filled="send"
-                outline="send-outline"
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="messages"
-          options={{
-            title: t("messages"),
-            headerShown: true,
-            ...lightHeader,
-            tabBarLabel: t("messages"),
-            tabBarBadge: unreadMessages || undefined,
-            tabBarIcon: ({ color, focused }) => (
-              <TabGlyph
-                focused={focused}
-                color={color}
-                filled="chatbubbles"
-                outline="chatbubbles-outline"
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: t("profile"),
-            headerShown: false,
-            tabBarLabel: t("profile"),
-            tabBarBadge:
-              (notificationsBadge.data?.unreadCount ?? 0) || undefined,
-            tabBarIcon: ({ color, focused }) => (
-              <TabGlyph
-                focused={focused}
-                color={color}
-                filled="person-circle"
-                outline="person-circle-outline"
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen name="saved" options={{ href: null }} />
-        <Tabs.Screen name="more" options={{ href: null }} />
-      </Tabs>
+        <NativeTabs.Trigger name="home">
+          <Label>{t("home")}</Label>
+          <TabIcon
+            sfDefault="house"
+            sfSelected="house.fill"
+            outline="home-outline"
+            filled="home"
+          />
+        </NativeTabs.Trigger>
+
+        <NativeTabs.Trigger name="jobs">
+          <Label>{t("jobs")}</Label>
+          <TabIcon
+            sfDefault="briefcase"
+            sfSelected="briefcase.fill"
+            outline="briefcase-outline"
+            filled="briefcase"
+          />
+          {matchesCount > 0 ? <Badge>{badgeText(matchesCount)}</Badge> : null}
+        </NativeTabs.Trigger>
+
+        <NativeTabs.Trigger name="applications">
+          <Label>{t("applications")}</Label>
+          <TabIcon
+            sfDefault="paperplane"
+            sfSelected="paperplane.fill"
+            outline="send-outline"
+            filled="send"
+          />
+        </NativeTabs.Trigger>
+
+        <NativeTabs.Trigger name="messages">
+          <Label>{t("messages")}</Label>
+          <TabIcon
+            sfDefault="bubble.left.and.bubble.right"
+            sfSelected="bubble.left.and.bubble.right.fill"
+            outline="chatbubbles-outline"
+            filled="chatbubbles"
+          />
+          {unreadMessages > 0 ? <Badge>{badgeText(unreadMessages)}</Badge> : null}
+        </NativeTabs.Trigger>
+
+        <NativeTabs.Trigger name="profile">
+          <Label>{t("profile")}</Label>
+          <TabIcon
+            sfDefault="person.crop.circle"
+            sfSelected="person.crop.circle.fill"
+            outline="person-circle-outline"
+            filled="person-circle"
+          />
+          {notifCount > 0 ? <Badge>{badgeText(notifCount)}</Badge> : null}
+        </NativeTabs.Trigger>
+      </NativeTabs>
+
       {onboardingReady ? (
         <CandidateOnboardingModal
           visible={showOnboarding}

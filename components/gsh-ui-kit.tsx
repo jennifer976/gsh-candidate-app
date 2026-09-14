@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View, type ViewStyle } from "react-native";
+import { GshPressable } from "@/components/GshPressable";
 import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
@@ -139,8 +140,8 @@ export function GshLinkRow({
 }) {
   const pal = ACCENT[accent];
   return (
-    <Pressable
-      style={({ pressed }) => [rowStyles.row, cardSurfaceStyle(true), pressed && rowStyles.pressed]}
+    <GshPressable
+      style={[rowStyles.row, cardSurfaceStyle(true)]}
       onPress={onPress}
       accessibilityRole="button"
     >
@@ -154,7 +155,7 @@ export function GshLinkRow({
       <View style={rowStyles.chev}>
         <Ionicons name="chevron-forward" size={20} color={colors.navy} />
       </View>
-    </Pressable>
+    </GshPressable>
   );
 }
 
@@ -167,7 +168,6 @@ const rowStyles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
   },
-  pressed: { opacity: 0.92 },
   iconTile: {
     width: 44,
     height: 44,

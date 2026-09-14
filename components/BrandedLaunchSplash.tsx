@@ -1,18 +1,20 @@
 import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
-import { brandLockupLight } from "@/lib/brand-assets";
-import { colors, fontFamily } from "@/lib/theme";
+import { brandMarkLight } from "@/lib/brand-assets";
+import { colors } from "@/lib/theme";
 
-/** In-app launch layer while fonts and auth hydrate — pairs with navy native splash. */
+/** In-app launch layer — hub mark on navy while fonts/auth hydrate. */
 export function BrandedLaunchSplash() {
   return (
     <View style={styles.root}>
-      <Image
-        source={brandLockupLight}
-        style={styles.logo}
-        resizeMode="contain"
-        accessibilityLabel="Global Sponsor Hub"
-      />
-      <ActivityIndicator size="large" color={colors.teal} style={styles.spinner} />
+      <View style={styles.markWell}>
+        <Image
+          source={brandMarkLight}
+          style={styles.mark}
+          resizeMode="contain"
+          accessibilityLabel="Global Sponsor Hub"
+        />
+      </View>
+      <ActivityIndicator size="large" color={colors.cyan} style={styles.spinner} />
     </View>
   );
 }
@@ -25,6 +27,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 32,
   },
-  logo: { width: 240, height: 52, marginBottom: 28 },
+  markWell: {
+    width: 112,
+    height: 112,
+    borderRadius: 56,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(66,224,227,0.08)",
+    marginBottom: 28,
+  },
+  mark: { width: 72, height: 72 },
   spinner: { marginTop: 4 },
 });
