@@ -137,7 +137,7 @@ export default function CuratedListingsScreen() {
           eyebrow={ac("Jobs")}
           title={ac("External jobs")}
           subtitle={ac(
-            "Agency-listed jobs are shared by agencies. Open the linked website to apply.",
+            "External roles open on the employer or source website. Agency-submitted roles are labelled Agency.",
           )}
           style={{ marginBottom: 10 }}
         />
