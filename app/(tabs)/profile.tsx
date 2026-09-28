@@ -65,6 +65,10 @@ const SEARCH_INTENT_OPTIONS = [
   "Not actively looking",
 ] as const;
 const MAX_SECONDARY_INDUSTRIES = 2;
+/** Backend limits for PUT /profile. */
+const MAX_WORK_ENTRIES = 25;
+const MAX_EDUCATION_ENTRIES = 15;
+const MAX_LANGUAGES = 20;
 /** The profile model requires a company; this placeholder is shown as an empty field. */
 const COMPANY_PLACEHOLDER = "Not specified";
 
@@ -364,7 +368,9 @@ function ProfileScreen() {
     setLanguages((prev) =>
       prev.some((row) => row.language === language)
         ? prev.filter((row) => row.language !== language)
-        : [...prev, { language, fluency: "Basic" }],
+        : prev.length >= MAX_LANGUAGES
+          ? prev
+          : [...prev, { language, fluency: "Basic" }],
     );
   const updateWork = (index: number, patch: Partial<WorkEntry>) =>
     setWorkHistory((prev) => prev.map((row, i) => (i === index ? { ...row, ...patch } : row)));
@@ -660,9 +666,9 @@ function ProfileScreen() {
           >
           <SectionCard title={ac("Your profession")} initiallyOpen>
             <FieldLabel label={ac("Current job title")} />
-            <TextInput style={styles.input} value={currentJobTitle} onChangeText={setCurrentJobTitle} placeholder={ac("Role title")} placeholderTextColor={colors.placeholder} />
+            <TextInput style={styles.input} value={currentJobTitle} maxLength={500} onChangeText={setCurrentJobTitle} placeholder={ac("Role title")} placeholderTextColor={colors.placeholder} />
             <FieldLabel label={ac("Current Company")} />
-            <TextInput style={styles.input} value={currentCompany} onChangeText={setCurrentCompany} placeholder={ac("Company")} placeholderTextColor={colors.placeholder} />
+            <TextInput style={styles.input} value={currentCompany} maxLength={500} onChangeText={setCurrentCompany} placeholder={ac("Company")} placeholderTextColor={colors.placeholder} />
             <FieldLabel label={ac("Years of Experience")} hint={ac("Whole years of experience (0–50).")} />
             <TextInput
               style={[styles.input, { marginBottom: 0 }]}
@@ -720,7 +726,7 @@ function ProfileScreen() {
             />
             <View style={styles.listHead}>
               <Text style={styles.fieldLabel}>{ac("Work history")}</Text>
-              <Pressable onPress={() => setWorkHistory((prev) => [...prev, { title: "", company: "", startDate: "", endDate: "", isCurrent: false }])} hitSlop={8} accessibilityRole="button">
+              <Pressable onPress={() => setWorkHistory((prev) => (prev.length >= MAX_WORK_ENTRIES ? prev : [...prev, { title: "", company: "", startDate: "", endDate: "", isCurrent: false }]))} hitSlop={8} accessibilityRole="button">
                 <Text style={styles.listAdd}>+ {ac("Add role")}</Text>
               </Pressable>
             </View>
@@ -739,10 +745,10 @@ function ProfileScreen() {
                 <Pressable onPress={() => setWorkHistory((prev) => prev.filter((_, i) => i !== index))} style={styles.listRemove} hitSlop={8} accessibilityRole="button" accessibilityLabel={ac("Remove role")}>
                   <Ionicons name="trash-outline" size={18} color={colors.textMuted} />
                 </Pressable>
-                <TextInput style={styles.input} value={row.title} onChangeText={(v) => updateWork(index, { title: v })} placeholder={ac("Role title")} placeholderTextColor={colors.placeholder} />
-                <TextInput style={styles.input} value={row.company} onChangeText={(v) => updateWork(index, { company: v })} placeholder={ac("Company")} placeholderTextColor={colors.placeholder} />
-                <TextInput style={styles.input} value={row.startDate} onChangeText={(v) => updateWork(index, { startDate: v })} placeholder={ac("Start date")} placeholderTextColor={colors.placeholder} />
-                <TextInput style={[styles.input, row.isCurrent && styles.disabledBtn]} value={row.endDate} editable={!row.isCurrent} onChangeText={(v) => updateWork(index, { endDate: v })} placeholder={ac("End date (leave blank if current)")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={styles.input} value={row.title} maxLength={240} onChangeText={(v) => updateWork(index, { title: v })} placeholder={ac("Role title")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={styles.input} value={row.company} maxLength={240} onChangeText={(v) => updateWork(index, { company: v })} placeholder={ac("Company")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={styles.input} value={row.startDate} maxLength={40} onChangeText={(v) => updateWork(index, { startDate: v })} placeholder={ac("Start date")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={[styles.input, row.isCurrent && styles.disabledBtn]} value={row.endDate} maxLength={40} editable={!row.isCurrent} onChangeText={(v) => updateWork(index, { endDate: v })} placeholder={ac("End date (leave blank if current)")} placeholderTextColor={colors.placeholder} />
                 <Pressable
                   onPress={() => updateWork(index, { isCurrent: !row.isCurrent, endDate: row.isCurrent ? row.endDate : "" })}
                   style={styles.checkRow}
@@ -756,7 +762,7 @@ function ProfileScreen() {
             ))}
             <View style={styles.listHead}>
               <Text style={styles.fieldLabel}>{ac("Education")}</Text>
-              <Pressable onPress={() => setEducationHistory((prev) => [...prev, { degree: "", school: "", year: "" }])} hitSlop={8} accessibilityRole="button">
+              <Pressable onPress={() => setEducationHistory((prev) => (prev.length >= MAX_EDUCATION_ENTRIES ? prev : [...prev, { degree: "", school: "", year: "" }]))} hitSlop={8} accessibilityRole="button">
                 <Text style={styles.listAdd}>+ {ac("Add education")}</Text>
               </Pressable>
             </View>
@@ -766,9 +772,9 @@ function ProfileScreen() {
                 <Pressable onPress={() => setEducationHistory((prev) => prev.filter((_, i) => i !== index))} style={styles.listRemove} hitSlop={8} accessibilityRole="button" accessibilityLabel={ac("Remove education")}>
                   <Ionicons name="trash-outline" size={18} color={colors.textMuted} />
                 </Pressable>
-                <TextInput style={styles.input} value={row.degree} onChangeText={(v) => updateEducation(index, { degree: v })} placeholder={ac("Qualification")} placeholderTextColor={colors.placeholder} />
-                <TextInput style={styles.input} value={row.school} onChangeText={(v) => updateEducation(index, { school: v })} placeholder={ac("School")} placeholderTextColor={colors.placeholder} />
-                <TextInput style={[styles.input, { marginBottom: 0 }]} value={row.year} onChangeText={(v) => updateEducation(index, { year: v })} placeholder={ac("Year")} placeholderTextColor={colors.placeholder} keyboardType="number-pad" />
+                <TextInput style={styles.input} value={row.degree} maxLength={240} onChangeText={(v) => updateEducation(index, { degree: v })} placeholder={ac("Qualification")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={styles.input} value={row.school} maxLength={240} onChangeText={(v) => updateEducation(index, { school: v })} placeholder={ac("School")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={[styles.input, { marginBottom: 0 }]} value={row.year} maxLength={20} onChangeText={(v) => updateEducation(index, { year: v })} placeholder={ac("Year")} placeholderTextColor={colors.placeholder} keyboardType="number-pad" />
               </View>
             ))}
           </SectionCard>
@@ -806,17 +812,17 @@ function ProfileScreen() {
               </Pressable>
             </View>
             <FieldLabel label={ac("First Name")} />
-            <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder={ac("First Name")} placeholderTextColor={colors.placeholder} />
+            <TextInput style={styles.input} value={firstName} maxLength={500} onChangeText={setFirstName} placeholder={ac("First Name")} placeholderTextColor={colors.placeholder} />
             <FieldLabel label={ac("Last Name")} />
-            <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder={ac("Last Name")} placeholderTextColor={colors.placeholder} />
+            <TextInput style={styles.input} value={lastName} maxLength={500} onChangeText={setLastName} placeholder={ac("Last Name")} placeholderTextColor={colors.placeholder} />
             <FieldLabel label={ac("Email Address *")} />
-            <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="email@example.com" placeholderTextColor={colors.placeholder} keyboardType="email-address" autoCapitalize="none" autoCorrect={false} />
+            <TextInput style={styles.input} value={email} maxLength={500} onChangeText={setEmail} placeholder="email@example.com" placeholderTextColor={colors.placeholder} keyboardType="email-address" autoCapitalize="none" autoCorrect={false} />
             <FieldLabel label={ac("Phone Number")} />
-            <TextInput style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} placeholder="+44 7700 900000" placeholderTextColor={colors.placeholder} keyboardType="phone-pad" />
+            <TextInput style={styles.input} value={phoneNumber} maxLength={500} onChangeText={setPhoneNumber} placeholder="+44 7700 900000" placeholderTextColor={colors.placeholder} keyboardType="phone-pad" />
             <FieldLabel label={ac("Current location")} />
-            <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder={ac("City and country")} placeholderTextColor={colors.placeholder} />
+            <TextInput style={styles.input} value={location} maxLength={500} onChangeText={setLocation} placeholder={ac("City and country")} placeholderTextColor={colors.placeholder} />
             <FieldLabel label={ac("Preferred job location")} />
-            <TextInput style={styles.input} value={preferredJobLocation} onChangeText={setPreferredJobLocation} placeholder="e.g. Remote, New York, London" placeholderTextColor={colors.placeholder} />
+            <TextInput style={styles.input} value={preferredJobLocation} maxLength={500} onChangeText={setPreferredJobLocation} placeholder="e.g. Remote, New York, London" placeholderTextColor={colors.placeholder} />
             <View style={{ marginBottom: 14 }}>
               <CountryPicker label={ac("Nationality")} value={nationality} onChange={setNationality} multiple />
             </View>
@@ -847,6 +853,7 @@ function ProfileScreen() {
             <TextInput
               style={styles.input}
               value={linkedin}
+              maxLength={500}
               onChangeText={setLinkedin}
               placeholder="https://linkedin.com/in/…"
               placeholderTextColor={colors.placeholder}
@@ -857,6 +864,7 @@ function ProfileScreen() {
             <TextInput
               style={[styles.input, { marginBottom: 0 }]}
               value={portfolio}
+              maxLength={500}
               onChangeText={setPortfolio}
               placeholder="https://website.com"
               placeholderTextColor={colors.placeholder}
