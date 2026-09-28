@@ -14,6 +14,7 @@ import {
   PosterTitle,
   posterParts,
 } from "@/components/gsh-brand";
+import { useLastCvCheck } from "@/lib/cv-check-history";
 import { useRelocationPerksNav } from "@/lib/use-relocation-perks-nav";
 import { colors, fontFamily } from "@/lib/theme";
 
@@ -27,6 +28,7 @@ export default function ToolsAndResourcesScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const relocationPerksNav = useRelocationPerksNav();
+  const lastCvCheck = useLastCvCheck();
 
   const jobReady: Link[] = [
     { icon: "git-compare", label: ac("CV and job comparison"), hint: ac("Match your CV to a role"), href: "/ats-assistant" },
@@ -87,9 +89,15 @@ export default function ToolsAndResourcesScreen() {
           </View>
           <Text style={styles.featureTitle}>{ac("CV quality check")}</Text>
           <Text style={styles.featureBody}>{ac("Check structure, contact details, dates, and measurable results.")}</Text>
+          {lastCvCheck ? (
+            <View style={styles.lastScore}>
+              <Ionicons name="stats-chart" size={13} color={colors.cyan} />
+              <Text style={styles.lastScoreText}>{ac("Last score {score}/100", { score: lastCvCheck.score })}</Text>
+            </View>
+          ) : null}
           <View style={styles.featureFoot}>
             <DepthButton
-              title={ac("Start")}
+              title={lastCvCheck ? ac("Check again") : ac("Start")}
               onPress={() => router.push("/cv-quality-checker")}
               variant="navy"
               size="md"
@@ -232,6 +240,18 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: "rgba(13,25,78,0.7)",
   },
+  lastScore: {
+    alignSelf: "flex-start",
+    marginTop: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 999,
+    backgroundColor: colors.navy,
+  },
+  lastScoreText: { fontSize: 12, fontFamily: fontFamily.extraBold, color: colors.white },
   featureFoot: { marginTop: 16, flexDirection: "row", alignItems: "center", gap: 12 },
   featureNote: { flexDirection: "row", alignItems: "center", gap: 4 },
   featureNoteText: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.navy },

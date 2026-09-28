@@ -10,6 +10,7 @@ import {
   Alert,
   Pressable,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -20,6 +21,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { CandidateCompatibilityCard } from "@/components/CandidateCompatibilityCard";
 import {
+  BrandLinkRow,
   BrandStatePanel,
   DecorRing,
   DepthButton,
@@ -31,6 +33,9 @@ import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-cl
 import { useAuthStore } from "@/lib/auth-store";
 import { computeCandidateReadiness } from "@/lib/candidate-readiness";
 import { persistCandidateReturnIntent } from "@/lib/candidate-return-intent";
+import { getMarketingSiteUrl } from "@/lib/config";
+import { canonicalCountryCode, countryDisplayName } from "@/lib/countries";
+import { PUBLIC_COUNTRIES } from "@/lib/publicResources";
 import { hapticLight, hapticSuccess, hapticWarning } from "@/lib/haptics";
 import { clearIdempotencyKey, getOrCreateIdempotencyKey } from "@/lib/idempotency";
 import {
@@ -273,18 +278,27 @@ export default function JobDetailScreen() {
     saveMut.mutate();
   }
 
+  function onSharePress() {
+    const title = jobQuery.data?.title ?? "";
+    const url = `${getMarketingSiteUrl()}/jobs/${encodeURIComponent(jobId)}`;
+    void Share.share({ title, message: title ? `${title}\n${url}` : url, url }).catch(() => undefined);
+  }
+
   const screenOptions = <Stack.Screen options={{ title: t("detailTitle"), headerShown: false }} />;
   const topBar = (showSave: boolean) => (
     <View style={[styles.topBar, { paddingTop: Math.max(insets.top, 12) + 8 }]}>
       <RoundButton icon="arrow-back" onPress={goBack} label={t("detailBack")} />
       {showSave ? (
-        <RoundButton
-          icon={saved ? "bookmark" : "bookmark-outline"}
-          onPress={onSavePress}
-          label={saved ? t("detailSaved") : t("jobsSave")}
-          active={saved}
-          disabled={saveMut.isPending || saved}
-        />
+        <View style={styles.topActions}>
+          <RoundButton icon="share-outline" onPress={onSharePress} label={ac("Share job")} />
+          <RoundButton
+            icon={saved ? "bookmark" : "bookmark-outline"}
+            onPress={onSavePress}
+            label={saved ? t("detailSaved") : t("jobsSave")}
+            active={saved}
+            disabled={saveMut.isPending || saved}
+          />
+        </View>
       ) : null}
     </View>
   );
@@ -356,6 +370,10 @@ export default function JobDetailScreen() {
   ];
   const facts = allFacts.filter((fact) => fact.value);
   const showFacts = facts.length >= 2;
+  const jobCountryCode = canonicalCountryCode(job.locationCountry);
+  const countryGuide = jobCountryCode
+    ? PUBLIC_COUNTRIES.find((country) => country.iso2.toUpperCase() === jobCountryCode)
+    : undefined;
 
   return (
     <View style={styles.root}>
@@ -459,6 +477,16 @@ export default function JobDetailScreen() {
                 ))}
               </View>
             </>
+          ) : null}
+
+          {countryGuide && jobCountryCode ? (
+            <BrandLinkRow
+              icon="map"
+              label={ac("Read the {country} guide", { country: countryDisplayName(jobCountryCode, locale) })}
+              hint={ac("Visa routes, hiring sectors and everyday life.")}
+              onPress={() => router.push(`/country/${countryGuide.slug}`)}
+              style={styles.guideLink}
+            />
           ) : null}
 
           {perkItems.length > 0 ? (
@@ -646,6 +674,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
   },
+  topActions: { flexDirection: "row", alignItems: "center", gap: 10 },
+  guideLink: { marginTop: 20 },
   roundButton: {
     width: 44,
     height: 44,

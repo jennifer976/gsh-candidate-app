@@ -2177,7 +2177,14 @@
     "Browse by topic": "Browse by topic",
     "Latest from the blog": "Latest from the blog",
     "All guides and templates": "All guides and templates",
-    "Visas and sponsorship": "Visas and sponsorship"
+    "Visas and sponsorship": "Visas and sponsorship",
+    "Last score {score}/100": "Last score {score}/100",
+    "Check again": "Check again",
+    "Share job": "Share job",
+    "Read the {country} guide": "Read the {country} guide",
+    "Visa routes, hiring sectors and everyday life.": "Visa routes, hiring sectors and everyday life.",
+    "Employers can find you": "Employers can find you",
+    "Employers can't search for you": "Employers can't search for you"
   },
   "fr": {
     "Settings": "Paramètres",
@@ -4357,7 +4364,14 @@
     "Browse by topic": "Parcourir par thème",
     "Latest from the blog": "Dernières publications du blog",
     "All guides and templates": "Tous les guides et modèles",
-    "Visas and sponsorship": "Visas et parrainage"
+    "Visas and sponsorship": "Visas et parrainage",
+    "Last score {score}/100": "Dernier score {score}/100",
+    "Check again": "Vérifier à nouveau",
+    "Share job": "Partager l'offre",
+    "Read the {country} guide": "Lire le guide {country}",
+    "Visa routes, hiring sectors and everyday life.": "Visas, secteurs qui recrutent et vie quotidienne.",
+    "Employers can find you": "Les employeurs peuvent vous trouver",
+    "Employers can't search for you": "Les employeurs ne peuvent pas vous rechercher"
   },
   "de": {
     "Settings": "Einstellungen",
@@ -6537,7 +6551,14 @@
     "Browse by topic": "Nach Thema durchsuchen",
     "Latest from the blog": "Neu im Blog",
     "All guides and templates": "Alle Ratgeber und Vorlagen",
-    "Visas and sponsorship": "Visa und Sponsoring"
+    "Visas and sponsorship": "Visa und Sponsoring",
+    "Last score {score}/100": "Letzte Bewertung {score}/100",
+    "Check again": "Erneut prüfen",
+    "Share job": "Stelle teilen",
+    "Read the {country} guide": "Den Leitfaden für {country} lesen",
+    "Visa routes, hiring sectors and everyday life.": "Visumwege, Branchen mit Bedarf und Alltag.",
+    "Employers can find you": "Arbeitgeber können Sie finden",
+    "Employers can't search for you": "Arbeitgeber können nicht nach Ihnen suchen"
   },
   "es": {
     "Settings": "Configuración",
@@ -8717,7 +8738,14 @@
     "Browse by topic": "Explorar por tema",
     "Latest from the blog": "Lo último del blog",
     "All guides and templates": "Todas las guías y plantillas",
-    "Visas and sponsorship": "Visados y patrocinio"
+    "Visas and sponsorship": "Visados y patrocinio",
+    "Last score {score}/100": "Última puntuación {score}/100",
+    "Check again": "Comprobar de nuevo",
+    "Share job": "Compartir empleo",
+    "Read the {country} guide": "Leer la guía de {country}",
+    "Visa routes, hiring sectors and everyday life.": "Vías de visado, sectores que contratan y vida diaria.",
+    "Employers can find you": "Las empresas pueden encontrarte",
+    "Employers can't search for you": "Las empresas no pueden buscarte"
   },
   "pt": {
     "Settings": "Definições",
@@ -10897,7 +10925,14 @@
     "Browse by topic": "Explorar por tema",
     "Latest from the blog": "Novidades do blogue",
     "All guides and templates": "Todos os guias e modelos",
-    "Visas and sponsorship": "Vistos e patrocínio"
+    "Visas and sponsorship": "Vistos e patrocínio",
+    "Last score {score}/100": "Última pontuação {score}/100",
+    "Check again": "Verificar novamente",
+    "Share job": "Partilhar emprego",
+    "Read the {country} guide": "Ler o guia de {country}",
+    "Visa routes, hiring sectors and everyday life.": "Vias de visto, setores que contratam e vida quotidiana.",
+    "Employers can find you": "Os empregadores podem encontrá-lo",
+    "Employers can't search for you": "Os empregadores não o podem pesquisar"
   },
   "it": {
     "Settings": "Impostazioni",
@@ -13077,7 +13112,14 @@
     "Browse by topic": "Sfoglia per argomento",
     "Latest from the blog": "Ultimi articoli dal blog",
     "All guides and templates": "Tutte le guide e i modelli",
-    "Visas and sponsorship": "Visti e sponsorizzazione"
+    "Visas and sponsorship": "Visti e sponsorizzazione",
+    "Last score {score}/100": "Ultimo punteggio {score}/100",
+    "Check again": "Controlla di nuovo",
+    "Share job": "Condividi offerta",
+    "Read the {country} guide": "Leggi la guida su {country}",
+    "Visa routes, hiring sectors and everyday life.": "Percorsi per il visto, settori che assumono e vita quotidiana.",
+    "Employers can find you": "I datori di lavoro possono trovarti",
+    "Employers can't search for you": "I datori di lavoro non possono cercarti"
   },
   "nl": {
     "Settings": "Instellingen",
@@ -15257,7 +15299,14 @@
     "Browse by topic": "Bladeren per onderwerp",
     "Latest from the blog": "Nieuw op de blog",
     "All guides and templates": "Alle gidsen en sjablonen",
-    "Visas and sponsorship": "Visa en sponsoring"
+    "Visas and sponsorship": "Visa en sponsoring",
+    "Last score {score}/100": "Laatste score {score}/100",
+    "Check again": "Opnieuw controleren",
+    "Share job": "Vacature delen",
+    "Read the {country} guide": "Lees de gids voor {country}",
+    "Visa routes, hiring sectors and everyday life.": "Visumroutes, sectoren die werven en het dagelijks leven.",
+    "Employers can find you": "Werkgevers kunnen je vinden",
+    "Employers can't search for you": "Werkgevers kunnen niet naar je zoeken"
   },
   "pl": {
     "Settings": "Ustawienia",
@@ -17437,6 +17486,13 @@
     "Browse by topic": "Przeglądaj według tematu",
     "Latest from the blog": "Najnowsze z bloga",
     "All guides and templates": "Wszystkie poradniki i szablony",
-    "Visas and sponsorship": "Wizy i sponsorowanie"
+    "Visas and sponsorship": "Wizy i sponsorowanie",
+    "Last score {score}/100": "Ostatni wynik {score}/100",
+    "Check again": "Sprawdź ponownie",
+    "Share job": "Udostępnij ofertę",
+    "Read the {country} guide": "Przeczytaj przewodnik: {country}",
+    "Visa routes, hiring sectors and everyday life.": "Ścieżki wizowe, sektory zatrudniające i codzienne życie.",
+    "Employers can find you": "Pracodawcy mogą Cię znaleźć",
+    "Employers can't search for you": "Pracodawcy nie mogą Cię wyszukać"
   }
 }

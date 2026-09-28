@@ -1,11 +1,12 @@
 import { GshPressable } from "@/components/GshPressable";
+import { saveLastCvCheck } from "@/lib/cv-check-history";
 import { analyzeCvQuality, type CvQualitySeverity } from "@/lib/cv-quality";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { colors, fontFamily, navHeader, radii } from "@/lib/theme";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import { Stack } from "expo-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -35,6 +36,10 @@ export default function CvQualityCheckerScreen() {
     () => (analyzed && rawText.trim() ? analyzeCvQuality(rawText) : null),
     [analyzed, rawText],
   );
+  const resultScore = result?.score;
+  useEffect(() => {
+    if (typeof resultScore === "number") void saveLastCvCheck(resultScore);
+  }, [resultScore]);
 
   const chooseTextFile = async () => {
     setBusy(true);

@@ -24,6 +24,7 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { CandidateReadinessSummary } from "@/components/CandidateReadinessSummary";
 import { CountryFlag } from "@/components/CountryFlag";
 import { canonicalCountryCode, countryDisplayName } from "@/lib/countries";
+import { useLastCvCheck } from "@/lib/cv-check-history";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { GuestProfileHub } from "@/components/GuestProfileHub";
 import { BrandLinkRow, DecorRing, DepthButton, DepthSurface, Eyebrow } from "@/components/gsh-brand";
@@ -146,6 +147,7 @@ function ProfileScreen() {
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const user = useAuthStore((s) => s.user);
   const scrollRef = useRef<ScrollView>(null);
+  const lastCvCheck = useLastCvCheck();
   const formSectionY = useRef(0);
   const contentSectionY = useRef(0);
 
@@ -311,6 +313,9 @@ function ProfileScreen() {
   const profileErrCopy = profileQuery.isError;
   const completionBreakdown = getCandidateCompletionBreakdown(p, locale);
   const resumeUrl = typeof p?.resume === "string" ? p.resume : "";
+  const employerDiscoveryOn =
+    p?.talent_pool_visible !== false &&
+    (p?.employerDiscoveryConsent as { enabled?: unknown } | undefined)?.enabled === true;
   const targetCountryCodes = Array.isArray(p?.targetCountries)
     ? [...new Set((p.targetCountries as unknown[]).map(canonicalCountryCode).filter((code): code is string => Boolean(code)))]
     : [];
@@ -444,6 +449,11 @@ function ProfileScreen() {
               <View style={{ flex: 1, minWidth: 0 }}>
                 <Text style={styles.quickTitle} numberOfLines={1}>{resumeUrl ? ac("CV on file") : ac("No CV uploaded yet")}</Text>
                 <Text style={styles.quickHint} numberOfLines={1}>{resumeUrl ? ac("Tap below to replace") : ac("Upload PDF or Word")}</Text>
+                {lastCvCheck ? (
+                  <Pressable onPress={() => router.push("/cv-quality-checker")} hitSlop={8} accessibilityRole="button">
+                    <Text style={styles.quickScore}>{ac("Last score {score}/100", { score: lastCvCheck.score })}</Text>
+                  </Pressable>
+                ) : null}
               </View>
               <Pressable
                 onPress={() => cvMut.mutate()}
@@ -617,7 +627,13 @@ function ProfileScreen() {
                 key={row.href}
                 icon={row.icon}
                 label={ac(row.title)}
-                hint={ac(row.subtitle)}
+                hint={
+                  row.href === "/mobility-profile"
+                    ? employerDiscoveryOn
+                      ? ac("Employers can find you")
+                      : ac("Employers can't search for you")
+                    : ac(row.subtitle)
+                }
                 onPress={() => {
                   if (row.href === "/mobility-profile") void recordCandidateJourneyStart("global_mobility_profile_started");
                   router.push(row.href);
@@ -813,6 +829,7 @@ const styles = StyleSheet.create({
   },
   quickTitle: { fontSize: 14, fontFamily: fontFamily.extraBold, color: colors.navy },
   quickHint: { marginTop: 2, fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textMuted },
+  quickScore: { marginTop: 4, fontSize: 12, fontFamily: fontFamily.extraBold, color: colors.navy, textDecorationLine: "underline" },
   quickPill: {
     minHeight: 36,
     minWidth: 72,
