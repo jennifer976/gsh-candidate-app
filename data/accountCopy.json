@@ -2189,7 +2189,8 @@
     "Latest from|the blog.": "Latest from|the blog.",
     "Your career|toolkit.": "Your career|toolkit.",
     "What's your|main goal?": "What's your|main goal?",
-    "Create your|profile.": "Create your|profile."
+    "Create your|profile.": "Create your|profile.",
+    "These save straight away. Pausing hides your profile from search, even when discovery is on above.": "These save straight away. Pausing hides your profile from search, even when discovery is on above."
   },
   "fr": {
     "Settings": "Paramètres",
@@ -4381,7 +4382,8 @@
     "Latest from|the blog.": "Les derniers|articles.",
     "Your career|toolkit.": "Votre boîte à outils|carrière.",
     "What's your|main goal?": "Quel est votre|objectif ?",
-    "Create your|profile.": "Créez votre|profil."
+    "Create your|profile.": "Créez votre|profil.",
+    "These save straight away. Pausing hides your profile from search, even when discovery is on above.": "Ces réglages sont enregistrés immédiatement. La mise en pause masque votre profil des recherches, même si la visibilité est activée ci-dessus."
   },
   "de": {
     "Settings": "Einstellungen",
@@ -6573,7 +6575,8 @@
     "Latest from|the blog.": "Neu im|Blog.",
     "Your career|toolkit.": "Ihr Karriere-|Werkzeugkasten.",
     "What's your|main goal?": "Was ist Ihr|Hauptziel?",
-    "Create your|profile.": "Erstellen Sie Ihr|Profil."
+    "Create your|profile.": "Erstellen Sie Ihr|Profil.",
+    "These save straight away. Pausing hides your profile from search, even when discovery is on above.": "Diese Einstellungen werden sofort gespeichert. Das Pausieren blendet Ihr Profil in der Suche aus, auch wenn die Auffindbarkeit oben aktiviert ist."
   },
   "es": {
     "Settings": "Configuración",
@@ -8765,7 +8768,8 @@
     "Latest from|the blog.": "Lo último|del blog.",
     "Your career|toolkit.": "Tu kit|profesional.",
     "What's your|main goal?": "¿Cuál es tu|objetivo?",
-    "Create your|profile.": "Crea tu|perfil."
+    "Create your|profile.": "Crea tu|perfil.",
+    "These save straight away. Pausing hides your profile from search, even when discovery is on above.": "Estos ajustes se guardan al instante. Pausar oculta tu perfil de las búsquedas, aunque la visibilidad esté activada arriba."
   },
   "pt": {
     "Settings": "Definições",
@@ -10957,7 +10961,8 @@
     "Latest from|the blog.": "O mais recente|do blog.",
     "Your career|toolkit.": "O seu kit|de carreira.",
     "What's your|main goal?": "Qual é o seu|objetivo?",
-    "Create your|profile.": "Crie o seu|perfil."
+    "Create your|profile.": "Crie o seu|perfil.",
+    "These save straight away. Pausing hides your profile from search, even when discovery is on above.": "Estas definições são guardadas de imediato. Pausar oculta o seu perfil das pesquisas, mesmo com a visibilidade ativada acima."
   },
   "it": {
     "Settings": "Impostazioni",
@@ -13149,7 +13154,8 @@
     "Latest from|the blog.": "Le novità|dal blog.",
     "Your career|toolkit.": "Il tuo kit|per la carriera.",
     "What's your|main goal?": "Qual è il tuo|obiettivo?",
-    "Create your|profile.": "Crea il tuo|profilo."
+    "Create your|profile.": "Crea il tuo|profilo.",
+    "These save straight away. Pausing hides your profile from search, even when discovery is on above.": "Queste impostazioni vengono salvate subito. La pausa nasconde il tuo profilo dalle ricerche, anche se la visibilità è attiva qui sopra."
   },
   "nl": {
     "Settings": "Instellingen",
@@ -15341,7 +15347,8 @@
     "Latest from|the blog.": "Nieuw op|de blog.",
     "Your career|toolkit.": "Jouw carrière-|toolkit.",
     "What's your|main goal?": "Wat is je|hoofddoel?",
-    "Create your|profile.": "Maak je|profiel."
+    "Create your|profile.": "Maak je|profiel.",
+    "These save straight away. Pausing hides your profile from search, even when discovery is on above.": "Deze instellingen worden direct opgeslagen. Pauzeren verbergt je profiel in zoekresultaten, ook als vindbaarheid hierboven aan staat."
   },
   "pl": {
     "Settings": "Ustawienia",
@@ -17533,6 +17540,7 @@
     "Latest from|the blog.": "Najnowsze|z bloga.",
     "Your career|toolkit.": "Twój zestaw|kariery.",
     "What's your|main goal?": "Jaki jest Twój|cel?",
-    "Create your|profile.": "Utwórz swój|profil."
+    "Create your|profile.": "Utwórz swój|profil.",
+    "These save straight away. Pausing hides your profile from search, even when discovery is on above.": "Te ustawienia zapisują się od razu. Wstrzymanie ukrywa Twój profil w wyszukiwaniu, nawet jeśli widoczność powyżej jest włączona."
   }
 }

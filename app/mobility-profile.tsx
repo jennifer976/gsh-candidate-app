@@ -231,6 +231,8 @@ function Records<T extends object>({
   );
 }
 
+type PrivacyField = "hide_email" | "hide_resume" | "talent_pool_visible";
+
 function MobilityProfileScreen() {
  const ac = useAccountCopy();
   const router = useRouter();
@@ -342,6 +344,18 @@ function MobilityProfileScreen() {
         errorCopy(error),
       ),
   });
+
+  const privacy = useMutation({
+    mutationFn: ({ field, value }: { field: PrivacyField; value: boolean }) =>
+      updateProfile({ [field]: value }),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ["profile", "me"] }),
+    onError: () =>
+      Alert.alert(ac("Could not save"), ac("Could not save settings. Try again.")),
+  });
+  const privacyValue = (field: PrivacyField) =>
+    privacy.isPending && privacy.variables?.field === field
+      ? privacy.variables.value
+      : profileQuery.data?.[field];
 
   if (profileQuery.isError) {
     return (
@@ -676,6 +690,34 @@ function MobilityProfileScreen() {
               );
             })}
             <Text style={styles.hint}>{ac("Optional. Switch discovery off to stop new contact from that group. You can still apply and read earlier messages. Save to apply your changes.")}</Text>
+          </View>
+
+          <View style={styles.consent}>
+            <Text style={styles.switchText}>{ac("Privacy")}</Text>
+            {(
+              [
+                ["hide_email", ac("Hide email address"), privacyValue("hide_email") === true],
+                ["hide_resume", ac("Hide CV"), privacyValue("hide_resume") === true],
+                ["talent_pool_visible", ac("Pause employer search visibility"), privacyValue("talent_pool_visible") === false],
+              ] as const
+            ).map(([field, label, on]) => (
+              <View key={field} style={styles.switchRow}>
+                <Text style={styles.switchText}>{label}</Text>
+                <Switch
+                  accessibilityLabel={label}
+                  value={on}
+                  disabled={!profileQuery.data}
+                  onValueChange={(enabled) =>
+                    privacy.mutate({
+                      field,
+                      value: field === "talent_pool_visible" ? !enabled : enabled,
+                    })
+                  }
+                  trackColor={{ false: colors.borderStrong, true: colors.accent }}
+                />
+              </View>
+            ))}
+            <Text style={styles.hint}>{ac("These save straight away. Pausing hides your profile from search, even when discovery is on above.")}</Text>
           </View>
 
           <Pressable
