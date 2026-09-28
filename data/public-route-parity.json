@@ -71,7 +71,7 @@
     { "pattern": "^/acceptable-use/?$", "mode": "native", "target": "/legal/acceptable-use" },
     { "pattern": "^/legal/?$", "mode": "native", "target": "/legal" },
     { "pattern": "^/(?:specialists|plan-the-move)(?:/.*)?$", "mode": "fallback" },
-    { "pattern": "^/matching-explained/?$", "mode": "fallback" },
+    { "pattern": "^/matching-explained/?$", "mode": "native", "target": "/legal/matching-explained" },
     { "pattern": "^/(?:employer-talent-access-terms|provider-lead-terms|affiliate-terms|payment-terms)/?$", "mode": "fallback" },
     { "pattern": "^/(?:relocating|countries|seo|trust)(?:/.*)?$", "mode": "fallback" },
     { "pattern": "^/(?:about|candidates|employers|partners|pricing|agencies|agencies-recruiters|how-it-works|account-deletion)(?:/.*)?$", "mode": "fallback" },

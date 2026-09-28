@@ -14,6 +14,7 @@ const ROWS: { slug: string; title: string; sub: string }[] = [
   { slug: "terms-and-conditions", title: "Terms & Conditions", sub: "Rules for using Global Sponsor Hub" },
   { slug: "cookie-policy", title: "Cookie Policy", sub: "Cookies and similar technologies (web context)" },
   { slug: "acceptable-use", title: "Acceptable Use", sub: "Fair use of messaging, listings, and features" },
+  { slug: "matching-explained", title: "Matching explained", sub: "How job and profile comparisons work" },
 ];
 
 export default function LegalHubScreen() {

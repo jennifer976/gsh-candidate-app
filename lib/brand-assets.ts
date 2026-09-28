@@ -21,5 +21,5 @@ export const brandLogoStacked = require("../assets/brand-logo-stacked.png");
 export const brandMark = require("../assets/brand-mark.webp");
 /** Marketing composite used on the website app billboard. */
 export const candidateAppHero = require("../assets/candidate-app-hero.png");
-/** Website hero illustration (opaque white background — place on white or inside a white circle). */
+/** Website hero (`hero-walking-cyan-v5`): walker over the cyan hub mark, opaque white background — place on white or inside a white circle. */
 export const heroWalking = require("../assets/hero-walking.webp");

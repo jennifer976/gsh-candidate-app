@@ -13,7 +13,12 @@ export type LegalDocDef = {
   sections: LegalSection[];
 };
 
-export type LegalDocId = "privacy-policy" | "terms-and-conditions" | "cookie-policy" | "acceptable-use";
+export type LegalDocId =
+  | "privacy-policy"
+  | "terms-and-conditions"
+  | "cookie-policy"
+  | "acceptable-use"
+  | "matching-explained";
 
 export const LEGAL_DOCUMENTS: Record<LegalDocId, LegalDocDef> = {
   "privacy-policy": {
@@ -250,6 +255,36 @@ export const LEGAL_DOCUMENTS: Record<LegalDocId, LegalDocDef> = {
       {
         heading: "5. Enforcement",
         paragraphs: ["We may suspend accounts or remove content that violates this policy or the Terms."],
+      },
+    ],
+  },
+  "matching-explained": {
+    title: "How Matching and Compatibility Work",
+    subtitle: "Effective: 8 September 2026",
+    sections: [
+      {
+        heading: "Summary",
+        paragraphs: [
+          "Compatibility is a transparent rules-first aid. It organises available facts; it does not predict or decide a person's future.",
+        ],
+      },
+      {
+        heading: "1. Signals shown separately",
+        paragraphs: [
+          "The service compares declared job requirements and candidate data across mobility, occupation, experience and readiness. Missing information is shown separately rather than silently treated as a negative. Results are generated per role and may change when either party updates data or an underlying fact expires.",
+        ],
+      },
+      {
+        heading: "2. What it is not",
+        paragraphs: [
+          "It is not immigration eligibility. It is not legal advice. It is not a probability. It is not an opaque score. It is not a guaranteed job or a recommendation to discriminate. It is not an automated hiring decision. Employers remain responsible for fair assessment and lawful right-to-work checks; candidates should use official authorities or qualified advisers for immigration questions.",
+        ],
+      },
+      {
+        heading: "3. Provenance and responsibilities",
+        paragraphs: [
+          "Inputs can come from candidate self-attestation, employer or agency declarations, sourced job records and mobility facts marked verified or self-attested. A verified fact means its stated evidence workflow was completed, not that Global Sponsor Hub guarantees an outcome. Candidates, employers and sources must keep information accurate; the interface should expose missing or stale inputs.",
+        ],
       },
     ],
   },
