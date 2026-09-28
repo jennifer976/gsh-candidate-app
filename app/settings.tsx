@@ -1,6 +1,7 @@
 import { withSignIn } from "@/components/SignInGate";
 import { AppLanguageSetting } from "@/components/AppLanguageSetting";
 import { useAppCopy } from "@/lib/i18n";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -32,6 +33,7 @@ import { colors, fontFamily, radii } from "@/lib/theme";
 
 function SettingsScreen() {
   const { t } = useAppCopy();
+  const ac = useAccountCopy();
   const router = useRouter();
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -170,6 +172,22 @@ function SettingsScreen() {
               containerStyle={{ marginTop: 8 }}
             />
 
+            <GshSectionTitle title={ac("Your data")} />
+            <Text style={styles.sectionHint}>
+              {ac("To request a copy of your data or help deleting your account, email:")}{" "}
+              <Text
+                style={styles.dataLink}
+                accessibilityRole="link"
+                onPress={() =>
+                  void Linking.openURL(
+                    "mailto:info@globalsponsorhub.com?subject=Data%20request%20%E2%80%94%20Global%20Sponsor%20Hub",
+                  )
+                }
+              >
+                info@globalsponsorhub.com
+              </Text>
+            </Text>
+
             <GshSectionTitle title={t("closeAccount")} />
             <View style={styles.dangerCard}>
               <Text style={styles.dangerTitle}>{t("deleteAccount")}</Text>
@@ -251,6 +269,11 @@ const styles = StyleSheet.create({
     color: colors.textMarketing,
     marginBottom: 12,
     lineHeight: 20,
+  },
+  dataLink: {
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+    textDecorationLine: "underline",
   },
   label: {
     fontSize: 13,

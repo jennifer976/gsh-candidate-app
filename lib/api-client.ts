@@ -341,7 +341,24 @@ export async function updateProfile(body: Record<string, unknown>) {
 }
 
 /** Multipart upload — field name `file` per API. */
+export async function uploadImageFromUri(
+  localUri: string,
+  filename: string,
+  mimeType: string,
+) {
+  return uploadFromUri("image", localUri, filename, mimeType);
+}
+
 export async function uploadFileFromUri(
+  localUri: string,
+  filename: string,
+  mimeType: string,
+) {
+  return uploadFromUri("file", localUri, filename, mimeType);
+}
+
+async function uploadFromUri(
+  kind: "file" | "image",
   localUri: string,
   filename: string,
   mimeType: string,
@@ -349,9 +366,9 @@ export async function uploadFileFromUri(
   const token = getToken();
   if (!token) throw { message: "Not signed in", status: 401 } as ApiError;
 
-  const url = `${getApiV1BaseUrl()}/uploads/file`;
+  const url = `${getApiV1BaseUrl()}/uploads/${kind}`;
   const form = new FormData();
-  form.append("file", {
+  form.append(kind, {
     uri: localUri,
     name: filename,
     type: mimeType || "application/octet-stream",

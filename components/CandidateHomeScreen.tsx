@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import type { ComponentProps } from "react";
 import { useCallback, useMemo, useState } from "react";
+import { resolveUploadAssetUrl } from "@/lib/media-url";
 import {
   ActivityIndicator,
   Image,
@@ -246,7 +247,7 @@ export default function CandidateHomeScreen() {
   const profile = signedIn ? (profileQuery.data as Record<string, unknown> | undefined) : undefined;
   const firstName = typeof profile?.firstName === "string" ? profile.firstName.trim() : "";
   const lastName = typeof profile?.lastName === "string" ? profile.lastName.trim() : "";
-  const avatarUrl = typeof profile?.profile_picture === "string" ? profile.profile_picture.trim() : "";
+  const avatarUrl = resolveUploadAssetUrl(typeof profile?.profile_picture === "string" ? profile.profile_picture : "");
   const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   const completion = useMemo(() => getCandidateCompletionBreakdown(profile, locale), [profile, locale]);
   const missing = completion.missing.filter((item) => !item.filled).slice(0, 3);

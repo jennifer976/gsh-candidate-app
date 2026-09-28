@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as DocumentPicker from "expo-document-picker";
 import { useRouter } from "expo-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -24,11 +24,14 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { CandidateReadinessSummary } from "@/components/CandidateReadinessSummary";
 import { CountryFlag } from "@/components/CountryFlag";
 import { canonicalCountryCode, countryDisplayName } from "@/lib/countries";
+import { CountryPicker } from "@/components/CountryPicker";
+import { resolveUploadAssetUrl } from "@/lib/media-url";
+import profileOptions from "@/data/profileOptions.json";
 import { useLastCvCheck } from "@/lib/cv-check-history";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { GuestProfileHub } from "@/components/GuestProfileHub";
 import { BrandLinkRow, DecorRing, DepthButton, DepthSurface, Eyebrow } from "@/components/gsh-brand";
-import { fetchOwnProfile, recordCandidateJourneyStart, updateProfile, uploadFileFromUri } from "@/lib/api-client";
+import { fetchOwnProfile, recordCandidateJourneyStart, updateProfile, uploadFileFromUri, uploadImageFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
 import { getCandidateCompletionBreakdown } from "@/lib/profile-completion";
@@ -38,11 +41,14 @@ import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
 const ALL_SKILLS = getAllSkillsSorted();
 const MAX_SKILLS = 30;
-const SPONSORSHIP_OPTIONS = [
-  "Requires sponsorship",
-  "No sponsorship required",
-  "Already sponsored",
-  "Open to relocation support",
+const REMOTE_OPTIONS = ["Remote", "Hybrid", "On-site", "Remote or Hybrid"] as const;
+const VISA_STATUS_OPTIONS = [
+  "Citizen",
+  "Permanent Resident",
+  "Work Permit Required",
+  "Student Visa",
+  "Work Visa",
+  "Other",
 ] as const;
 const NOTICE_OPTIONS = [
   "Immediately available",
@@ -58,19 +64,55 @@ const SEARCH_INTENT_OPTIONS = [
   "Exploring relocation options",
   "Not actively looking",
 ] as const;
-const RELOCATION_OPTIONS = [
-  "Ready to relocate",
-  "Can relocate with employer support",
-  "Remote-first only",
-  "Exploring options",
-  "Not willing to relocate",
-] as const;
+const MAX_SECONDARY_INDUSTRIES = 2;
+/** The profile model requires a company; this placeholder is shown as an empty field. */
+const COMPANY_PLACEHOLDER = "Not specified";
 
-function mergeCandidateExtras(profile: Record<string, unknown> | undefined, userEmail: string | undefined, body: Record<string, unknown>) {
-  const p = profile ?? {};
-  const existingEmail = typeof p.email === "string" ? p.email.trim() : "";
-  if (!existingEmail) { const em = userEmail?.trim(); if (em) body.email = em; }
-  if (!((typeof p.currentCompany === "string") ? p.currentCompany.trim() : "")) body.currentCompany = "Not specified";
+type WorkEntry = { title: string; company: string; startDate: string; endDate: string; isCurrent: boolean };
+type EducationEntry = { degree: string; school: string; year: string };
+type LanguageEntry = { language: string; fluency: string };
+
+const text = (value: unknown) => (typeof value === "string" ? value : "");
+const strings = (value: unknown) =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+
+function hydrateWork(value: unknown): WorkEntry[] {
+  if (!Array.isArray(value)) return [];
+  return value.map((row: Record<string, unknown>) => ({
+    title: text(row?.title),
+    company: text(row?.company),
+    startDate: text(row?.startDate),
+    endDate: text(row?.endDate),
+    isCurrent: row?.isCurrent === true,
+  }));
+}
+
+function hydrateEducation(value: unknown): EducationEntry[] {
+  if (!Array.isArray(value)) return [];
+  return value.map((row: Record<string, unknown>) => ({
+    degree: text(row?.degree),
+    school: text(row?.school),
+    year: text(row?.year),
+  }));
+}
+
+function hydrateLanguages(value: unknown): LanguageEntry[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((row: Record<string, unknown>) => typeof row?.language === "string")
+    .map((row: Record<string, unknown>) => ({
+      language: text(row.language),
+      fluency: text(row.fluency) || "Basic",
+    }));
+}
+
+function nationalityNames(value: string): string {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item) => (/^[A-Z]{2}$/.test(item) ? countryDisplayName(item, "en") : item))
+    .join(", ");
 }
 
 function SectionCard({ title, children, initiallyOpen = false }: { title: string; children: React.ReactNode; initiallyOpen?: boolean }) {
@@ -126,6 +168,98 @@ function ChoiceChips({
   );
 }
 
+function PickerModal({
+  visible,
+  title,
+  options,
+  selected,
+  onToggle,
+  onClose,
+  searchPlaceholder,
+}: {
+  visible: boolean;
+  title: string;
+  options: readonly string[];
+  selected: readonly string[];
+  onToggle: (option: string) => void;
+  onClose: () => void;
+  searchPlaceholder: string;
+}) {
+  const ac = useAccountCopy();
+  const [search, setSearch] = useState("");
+  const q = search.trim().toLowerCase();
+  const filtered = q ? options.filter((option) => option.toLowerCase().includes(q) || ac(option).toLowerCase().includes(q)) : options;
+  const close = () => {
+    setSearch("");
+    onClose();
+  };
+  return (
+    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={close}>
+      <SafeAreaView style={styles.modalSafe} edges={["top"]}>
+        <View style={styles.modalHeader}>
+          <Text style={styles.modalTitle}>{title}</Text>
+          <Pressable onPress={close} hitSlop={12} accessibilityRole="button">
+            <Text style={styles.modalDone}>{ac("Done")}</Text>
+          </Pressable>
+        </View>
+        <View style={styles.modalSearch}>
+          <Ionicons name="search" size={18} color={colors.placeholder} />
+          <TextInput
+            style={styles.modalSearchInput}
+            value={search}
+            onChangeText={setSearch}
+            placeholder={searchPlaceholder}
+            autoCapitalize="none"
+            autoCorrect={false}
+            placeholderTextColor={colors.placeholder}
+          />
+        </View>
+        <FlatList
+          data={filtered}
+          keyExtractor={(item) => item}
+          keyboardShouldPersistTaps="handled"
+          renderItem={({ item }) => {
+            const on = selected.includes(item);
+            return (
+              <Pressable
+                style={[styles.skillRow, on && styles.skillRowOn]}
+                onPress={() => onToggle(item)}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: on }}
+              >
+                <Text style={[styles.skillRowText, on && styles.skillRowTextOn]}>{ac(item)}</Text>
+                {on ? <Ionicons name="checkmark-circle" size={20} color={colors.brand} /> : <View style={styles.skillRowCircle} />}
+              </Pressable>
+            );
+          }}
+          ListEmptyComponent={<Text style={[styles.emptySkillsHint, { padding: 16 }]}>{ac("No matches.")}</Text>}
+        />
+      </SafeAreaView>
+    </Modal>
+  );
+}
+
+function SelectedChips({ items, onRemove }: { items: readonly string[]; onRemove: (item: string) => void }) {
+  const ac = useAccountCopy();
+  if (items.length === 0) return null;
+  return (
+    <View style={[styles.chipGrid, { marginBottom: 12 }]}>
+      {items.map((item) => (
+        <Pressable
+          key={item}
+          onPress={() => onRemove(item)}
+          style={[styles.prefChip, styles.prefChipOn]}
+          accessibilityRole="button"
+          accessibilityLabel={ac("Remove {name}", { name: ac(item) })}
+        >
+          <Text style={[styles.prefChipText, styles.prefChipTextOn]}>{ac(item)}</Text>
+          <Ionicons name="close" size={13} color={colors.white} style={{ marginLeft: 4 }} />
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
 const ACCOUNT_LINKS = [
   { title: "Work and move preferences", subtitle: "Choose who can find and contact you", icon: "earth-outline" as const, href: "/mobility-profile" },
   { title: "Invites to apply", subtitle: "Review employer and agency invites", icon: "people-circle-outline" as const, href: "/agency-introductions" },
@@ -155,89 +289,90 @@ function ProfileScreen() {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [location, setLocation] = useState("");
+  const [preferredJobLocation, setPreferredJobLocation] = useState("");
   const [linkedin, setLinkedin] = useState("");
+  const [portfolio, setPortfolio] = useState("");
   const [nationality, setNationality] = useState("");
+  const [languages, setLanguages] = useState<LanguageEntry[]>([]);
   const [currentJobTitle, setCurrentJobTitle] = useState("");
+  const [currentCompany, setCurrentCompany] = useState("");
   const [yearsOfExperience, setYearsOfExperience] = useState("");
   const [primaryIndustry, setPrimaryIndustry] = useState("");
-  const [sponsorshipStatus, setSponsorshipStatus] = useState("");
+  const [secondaryIndustries, setSecondaryIndustries] = useState<string[]>([]);
+  const [remoteWorkPreference, setRemoteWorkPreference] = useState("");
+  const [currentVisaStatus, setCurrentVisaStatus] = useState("");
   const [noticePeriod, setNoticePeriod] = useState("");
   const [jobSearchIntent, setJobSearchIntent] = useState("");
-  const [relocationReadiness, setRelocationReadiness] = useState("");
-  const [targetCountries, setTargetCountries] = useState("");
   const [careerSummary, setCareerSummary] = useState("");
-  const [workTitle, setWorkTitle] = useState("");
-  const [workCompany, setWorkCompany] = useState("");
-  const [educationDegree, setEducationDegree] = useState("");
-  const [educationSchool, setEducationSchool] = useState("");
+  const [workHistory, setWorkHistory] = useState<WorkEntry[]>([]);
+  const [educationHistory, setEducationHistory] = useState<EducationEntry[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
   const [jobPreferences, setJobPreferences] = useState<string[]>([]);
-  const [skillModalOpen, setSkillModalOpen] = useState(false);
-  const [skillSearch, setSkillSearch] = useState("");
+  const [picker, setPicker] = useState<"skills" | "primaryIndustry" | "secondaryIndustries" | "languages" | null>(null);
 
   useEffect(() => {
     const p = profileQuery.data;
     if (!p) return;
-    setFirstName(typeof p.firstName === "string" ? p.firstName : "");
-    setLastName(typeof p.lastName === "string" ? p.lastName : "");
-    setPhoneNumber(typeof p.phoneNumber === "string" ? p.phoneNumber : "");
-    setLocation(typeof p.location === "string" ? p.location : "");
-    setLinkedin(typeof p.linkedin_profile === "string" ? p.linkedin_profile : "");
-    setNationality(typeof p.nationality === "string" ? p.nationality : "");
-    setCurrentJobTitle(typeof p.currentJobTitle === "string" ? p.currentJobTitle : "");
+    setFirstName(text(p.firstName));
+    setLastName(text(p.lastName));
+    setEmail(text(p.email) || user?.email || "");
+    setPhoneNumber(text(p.phoneNumber));
+    setLocation(text(p.location));
+    setPreferredJobLocation(text(p.preferred_job_location));
+    setLinkedin(text(p.linkedin_profile));
+    setPortfolio(text(p.portfolio_website));
+    setNationality(Array.isArray(p.nationality) ? strings(p.nationality).join(", ") : text(p.nationality));
+    setLanguages(hydrateLanguages(p.languages));
+    setCurrentJobTitle(text(p.currentJobTitle));
+    const company = text(p.currentCompany);
+    setCurrentCompany(company === COMPANY_PLACEHOLDER ? "" : company);
     setYearsOfExperience(typeof p.yearsOfExperience === "number" ? String(p.yearsOfExperience) : "");
-    const industry = p.industryExperience as { primary?: unknown } | undefined;
-    setPrimaryIndustry(typeof industry?.primary === "string" ? industry.primary : "");
-    setSponsorshipStatus(typeof p.sponsorshipStatus === "string" ? p.sponsorshipStatus : "");
-    setNoticePeriod(typeof p.noticePeriod === "string" ? p.noticePeriod : "");
-    setJobSearchIntent(typeof p.jobSearchIntent === "string" ? p.jobSearchIntent : "");
-    setRelocationReadiness(typeof p.relocationReadiness === "string" ? p.relocationReadiness : "");
-    setTargetCountries(
-      Array.isArray(p.targetCountries)
-        ? (p.targetCountries as unknown[]).filter((value): value is string => typeof value === "string").join(", ")
-        : ""
-    );
-    setCareerSummary(typeof p.careerSummary === "string" ? p.careerSummary : "");
-    const firstWork = Array.isArray(p.workHistory) ? p.workHistory[0] as Record<string, unknown> | undefined : undefined;
-    setWorkTitle(typeof firstWork?.title === "string" ? firstWork.title : "");
-    setWorkCompany(typeof firstWork?.company === "string" ? firstWork.company : "");
-    const firstEducation = Array.isArray(p.educationHistory)
-      ? p.educationHistory[0] as Record<string, unknown> | undefined
-      : undefined;
-    setEducationDegree(typeof firstEducation?.degree === "string" ? firstEducation.degree : "");
-    setEducationSchool(typeof firstEducation?.school === "string" ? firstEducation.school : "");
-    setSkills(Array.isArray(p.skills) ? (p.skills as unknown[]).filter((x): x is string => typeof x === "string") : []);
-    setJobPreferences(Array.isArray(p.jobPreferences) ? (p.jobPreferences as unknown[]).filter((x): x is string => typeof x === "string") : []);
-  }, [profileQuery.data]);
-
-  const filteredSkillChoices = useMemo(() => {
-    const q = skillSearch.trim().toLowerCase();
-    if (!q) return ALL_SKILLS;
-    return ALL_SKILLS.filter((s) => s.toLowerCase().includes(q));
-  }, [skillSearch]);
+    const industry = p.industryExperience as { primary?: unknown; secondary?: unknown } | undefined;
+    setPrimaryIndustry(text(industry?.primary));
+    setSecondaryIndustries(strings(industry?.secondary).slice(0, MAX_SECONDARY_INDUSTRIES));
+    setRemoteWorkPreference(text(p.remoteWorkPreference));
+    setCurrentVisaStatus(text(p.currentVisaStatus));
+    setNoticePeriod(text(p.noticePeriod));
+    setJobSearchIntent(text(p.jobSearchIntent));
+    setCareerSummary(text(p.careerSummary));
+    setWorkHistory(hydrateWork(p.workHistory));
+    setEducationHistory(hydrateEducation(p.educationHistory));
+    setSkills(strings(p.skills));
+    setJobPreferences(strings(p.jobPreferences));
+  }, [profileQuery.data, user?.email]);
 
   const toggleJobPreference = (pref: string) => setJobPreferences((prev) => prev.includes(pref) ? prev.filter((p) => p !== pref) : [...prev, pref]);
   const toggleSkillChoice = (skill: string) => setSkills((prev) => { if (prev.includes(skill)) return prev.filter((s) => s !== skill); if (prev.length >= MAX_SKILLS) return prev; return [...prev, skill]; });
   const removeSkill = (skill: string) => setSkills((prev) => prev.filter((s) => s !== skill));
-  const closeSkillModal = () => { setSkillModalOpen(false); setSkillSearch(""); };
+  const choosePrimaryIndustry = (industry: string) => {
+    setPrimaryIndustry((prev) => (prev === industry ? "" : industry));
+    setSecondaryIndustries((prev) => prev.filter((item) => item !== industry));
+    setPicker(null);
+  };
+  const toggleSecondaryIndustry = (industry: string) =>
+    setSecondaryIndustries((prev) =>
+      prev.includes(industry)
+        ? prev.filter((item) => item !== industry)
+        : prev.length >= MAX_SECONDARY_INDUSTRIES
+          ? prev
+          : [...prev, industry],
+    );
+  const toggleLanguage = (language: string) =>
+    setLanguages((prev) =>
+      prev.some((row) => row.language === language)
+        ? prev.filter((row) => row.language !== language)
+        : [...prev, { language, fluency: "Basic" }],
+    );
+  const updateWork = (index: number, patch: Partial<WorkEntry>) =>
+    setWorkHistory((prev) => prev.map((row, i) => (i === index ? { ...row, ...patch } : row)));
+  const updateEducation = (index: number, patch: Partial<EducationEntry>) =>
+    setEducationHistory((prev) => prev.map((row, i) => (i === index ? { ...row, ...patch } : row)));
 
   const saveMut = useMutation({
     mutationFn: () => {
-      if (skills.length === 0) return Promise.reject(new Error("PROFILE_INPUT_0"));
-      if (jobPreferences.length === 0) return Promise.reject(new Error("PROFILE_INPUT_1"));
-      if ((workTitle.trim() && !workCompany.trim()) || (!workTitle.trim() && workCompany.trim())) {
-        return Promise.reject(new Error("PROFILE_INPUT_2"));
-      }
-      if ((educationDegree.trim() && !educationSchool.trim()) || (!educationDegree.trim() && educationSchool.trim())) {
-        return Promise.reject(new Error("PROFILE_INPUT_3"));
-      }
-
-      const profile = profileQuery.data ?? {};
-      const existingIndustry = profile.industryExperience as { secondary?: unknown } | undefined;
-      const existingWorkHistory = Array.isArray(profile.workHistory) ? profile.workHistory : [];
-      const existingEducationHistory = Array.isArray(profile.educationHistory) ? profile.educationHistory : [];
       const parsedYears = yearsOfExperience.trim() === "" ? undefined : Number(yearsOfExperience);
       if (parsedYears !== undefined && (!Number.isFinite(parsedYears) || parsedYears < 0 || parsedYears > 50)) {
         return Promise.reject(new Error("PROFILE_INPUT_4"));
@@ -246,36 +381,38 @@ function ProfileScreen() {
       const body: Record<string, unknown> = {
         firstName: firstName.trim(),
         lastName: lastName.trim(),
+        email: email.trim() || user?.email,
         phoneNumber: phoneNumber.trim(),
         location: location.trim(),
+        preferred_job_location: preferredJobLocation.trim(),
         linkedin_profile: linkedin.trim(),
-        nationality: nationality.trim(),
+        portfolio_website: portfolio.trim(),
+        nationality: nationalityNames(nationality),
+        languages,
         currentJobTitle: currentJobTitle.trim(),
+        currentCompany: currentCompany.trim() || COMPANY_PLACEHOLDER,
         ...(parsedYears !== undefined ? { yearsOfExperience: parsedYears } : {}),
-        industryExperience: {
-          primary: primaryIndustry.trim(),
-          secondary: Array.isArray(existingIndustry?.secondary)
-            ? existingIndustry.secondary.filter((value): value is string => typeof value === "string").slice(0, 2)
-            : [],
-        },
-        sponsorshipStatus,
+        industryExperience: { primary: primaryIndustry, secondary: secondaryIndustries },
+        remoteWorkPreference,
+        currentVisaStatus,
         noticePeriod,
         jobSearchIntent,
-        relocationReadiness,
-        targetCountries: targetCountries.split(",").map((country) => country.trim()).filter(Boolean).slice(0, 12),
-        careerSummary: careerSummary.trim(),
-        workHistory:
-          workTitle.trim() && workCompany.trim()
-            ? [{ ...(existingWorkHistory[0] as Record<string, unknown> | undefined), title: workTitle.trim(), company: workCompany.trim() }, ...existingWorkHistory.slice(1)]
-            : existingWorkHistory,
-        educationHistory:
-          educationDegree.trim() && educationSchool.trim()
-            ? [{ ...(existingEducationHistory[0] as Record<string, unknown> | undefined), degree: educationDegree.trim(), school: educationSchool.trim() }, ...existingEducationHistory.slice(1)]
-            : existingEducationHistory,
+        careerSummary: careerSummary.trim() || undefined,
+        workHistory: workHistory
+          .filter((w) => w.title.trim() && w.company.trim())
+          .map((w) => ({
+            title: w.title.trim(),
+            company: w.company.trim(),
+            startDate: w.startDate.trim() || undefined,
+            endDate: w.isCurrent ? undefined : w.endDate.trim() || undefined,
+            isCurrent: w.isCurrent,
+          })),
+        educationHistory: educationHistory
+          .filter((e) => e.degree.trim() && e.school.trim())
+          .map((e) => ({ degree: e.degree.trim(), school: e.school.trim(), year: e.year.trim() || undefined })),
         skills,
         jobPreferences,
       };
-      mergeCandidateExtras(profileQuery.data, user?.email, body);
       return updateProfile(body);
     },
     onSuccess: () => {
@@ -286,7 +423,7 @@ function ProfileScreen() {
       Alert.alert(ac("Profile saved"), ac("Your profile details have been saved."));
     },
     onError: (e: unknown) => {
- const localErrors: Record<string,string> = {"PROFILE_INPUT_0": ac("Select at least one skill."), "PROFILE_INPUT_1": ac("Select at least one work preference."), "PROFILE_INPUT_2": ac("Add both a role title and company for work experience."), "PROFILE_INPUT_3": ac("Add both a qualification and institution."), "PROFILE_INPUT_4": ac("Years of experience must be between 0 and 50.")};
+ const localErrors: Record<string,string> = {"PROFILE_INPUT_4": ac("Years of experience must be between 0 and 50.")};
  Alert.alert(ac("Could not save"), ac(e instanceof Error && localErrors[e.message] ? localErrors[e.message] : "Could not save settings. Try again."));
  },
   });
@@ -309,21 +446,42 @@ function ProfileScreen() {
     onError: (e: unknown) => { if (e instanceof Error && e.message === "cancel") return; Alert.alert(ac("Upload failed"), ac("Your file could not be uploaded. Try again.")); },
   });
 
+  const photoMut = useMutation({
+    mutationFn: async () => {
+      const res = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true, type: ["image/jpeg", "image/png", "image/webp"] });
+      if (res.canceled || !res.assets?.[0]) throw new Error("cancel");
+      const a = res.assets[0];
+      const up = await uploadImageFromUri(a.uri, a.name || "photo.jpg", a.mimeType ?? "image/jpeg");
+      await updateProfile({ profile_picture: up.url });
+    },
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ["profile", "me"] }),
+    onError: (e: unknown) => { if (e instanceof Error && e.message === "cancel") return; Alert.alert(ac("Upload failed"), ac("Your file could not be uploaded. Try again.")); },
+  });
+
   const p = profileQuery.data;
   const profileErrCopy = profileQuery.isError;
   const completionBreakdown = getCandidateCompletionBreakdown(p, locale);
   const resumeUrl = typeof p?.resume === "string" ? p.resume : "";
-  const employerDiscoveryOn =
-    p?.talent_pool_visible !== false &&
-    (p?.employerDiscoveryConsent as { enabled?: unknown } | undefined)?.enabled === true;
+  const consentOn = (field: string) =>
+    p?.talent_pool_visible !== false && (p?.[field] as { enabled?: unknown } | undefined)?.enabled === true;
+  const employerDiscoveryOn = consentOn("employerDiscoveryConsent");
+  const agencyDiscoveryOn = consentOn("agencyDiscoveryConsent");
+  const discoveryHint =
+    employerDiscoveryOn && agencyDiscoveryOn
+      ? ac("Employers and agencies can find you")
+      : employerDiscoveryOn
+        ? ac("Employers can find you")
+        : agencyDiscoveryOn
+          ? ac("Agencies can find you")
+          : ac("Employers and agencies can't search for you");
   const targetCountryCodes = Array.isArray(p?.targetCountries)
     ? [...new Set((p.targetCountries as unknown[]).map(canonicalCountryCode).filter((code): code is string => Boolean(code)))]
     : [];
   const displayName = [firstName, lastName].filter(Boolean).join(" ") || user?.email || ac("Your profile");
   const initials = [firstName.charAt(0), lastName.charAt(0)].filter(Boolean).join("").toUpperCase() || "?";
-  const avatarUrl = typeof p?.profile_picture === "string" ? p.profile_picture.trim() : "";
+  const avatarUrl = resolveUploadAssetUrl(typeof p?.profile_picture === "string" ? p.profile_picture : "");
   const openToRelocate =
-    relocationReadiness === "Ready to relocate" || relocationReadiness === "Can relocate with employer support";
+    p?.relocationReadiness === "Ready to relocate" || p?.relocationReadiness === "Can relocate with employer support";
 
   function scrollToForm() {
     scrollRef.current?.scrollTo({ y: contentSectionY.current + formSectionY.current, animated: true });
@@ -474,7 +632,7 @@ function ProfileScreen() {
           <DepthSurface depth={4} radius={22} borderWidth={2} borderColor={colors.navy} innerStyle={styles.quickCard}>
             <View style={styles.quickHead}>
               <Text style={styles.quickTitle}>{ac("Target countries")}</Text>
-              <Pressable onPress={scrollToForm} hitSlop={10} accessibilityRole="button" accessibilityLabel={`${ac("Edit")}: ${ac("Target countries")}`}>
+              <Pressable onPress={() => router.push("/mobility-profile")} hitSlop={10} accessibilityRole="button" accessibilityLabel={`${ac("Edit")}: ${ac("Target countries")}`}>
                 <Text style={styles.quickEdit}>{ac("Edit")}</Text>
               </Pressable>
             </View>
@@ -500,95 +658,136 @@ function ProfileScreen() {
               formSectionY.current = e.nativeEvent.layout.y;
             }}
           >
-          <SectionCard title={ac("Basic info")} initiallyOpen>
-            <FieldLabel label={ac("First name")} />
-            <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder={ac("First name")} placeholderTextColor={colors.placeholder} />
-            <FieldLabel label={ac("Last name")} />
-            <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder={ac("Last name")} placeholderTextColor={colors.placeholder} />
-            <FieldLabel label={ac("Phone number")} />
-            <TextInput style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} placeholder={ac("Phone number")} placeholderTextColor={colors.placeholder} keyboardType="phone-pad" />
-            <FieldLabel label={ac("Location")} />
-            <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder={ac("City and country")} placeholderTextColor={colors.placeholder} />
-            <FieldLabel label={ac("Citizenship")} hint={ac("Used to understand relevant mobility options.")} />
-            <TextInput style={[styles.input, { marginBottom: 0 }]} value={nationality} onChangeText={setNationality} placeholder={ac("Citizenship")} placeholderTextColor={colors.placeholder} />
-          </SectionCard>
-
-          <SectionCard title={ac("Professional details")}>
-            <FieldLabel label={ac("Current or most recent role")} />
+          <SectionCard title={ac("Your profession")} initiallyOpen>
+            <FieldLabel label={ac("Current job title")} />
             <TextInput style={styles.input} value={currentJobTitle} onChangeText={setCurrentJobTitle} placeholder={ac("Role title")} placeholderTextColor={colors.placeholder} />
-            <FieldLabel label={ac("Years of experience")} />
+            <FieldLabel label={ac("Current Company")} />
+            <TextInput style={styles.input} value={currentCompany} onChangeText={setCurrentCompany} placeholder={ac("Company")} placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Years of Experience")} hint={ac("Whole years of experience (0–50).")} />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { marginBottom: 0 }]}
               value={yearsOfExperience}
-              onChangeText={setYearsOfExperience}
+              onChangeText={(value) => setYearsOfExperience(value.replace(/[^\d]/g, "").slice(0, 2))}
               placeholder="0"
               placeholderTextColor={colors.placeholder}
               keyboardType="number-pad"
             />
-            <FieldLabel label={ac("Primary industry")} />
-            <TextInput style={[styles.input, { marginBottom: 0 }]} value={primaryIndustry} onChangeText={setPrimaryIndustry} placeholder={ac("Primary industry")} placeholderTextColor={colors.placeholder} />
           </SectionCard>
 
-          <SectionCard title={ac("Mobility readiness")}>
-            <FieldLabel label={ac("Sponsorship status")} />
-            <ChoiceChips options={SPONSORSHIP_OPTIONS} value={sponsorshipStatus} onChange={setSponsorshipStatus} />
-            <FieldLabel label={ac("Notice period")} />
-            <ChoiceChips options={NOTICE_OPTIONS} value={noticePeriod} onChange={setNoticePeriod} />
-            <FieldLabel label={ac("Job-search intent")} />
-            <ChoiceChips options={SEARCH_INTENT_OPTIONS} value={jobSearchIntent} onChange={setJobSearchIntent} />
-            <FieldLabel label={ac("Relocation readiness")} />
-            <ChoiceChips options={RELOCATION_OPTIONS} value={relocationReadiness} onChange={setRelocationReadiness} />
-            <FieldLabel label={ac("Target countries")} hint={ac("Separate countries with commas.")} />
-            <TextInput
-              style={[styles.input, { marginBottom: 0 }]}
-              value={targetCountries}
-              onChangeText={setTargetCountries}
-              placeholder={ac("Target countries")}
-              placeholderTextColor={colors.placeholder}
-            />
+          <SectionCard title={ac("Industry experience")}>
+            <FieldLabel label={ac("Primary Industry")} hint={ac("Choose one main industry.")} />
+            <SelectedChips items={primaryIndustry ? [primaryIndustry] : []} onRemove={() => setPrimaryIndustry("")} />
+            <Pressable style={[styles.addSkillBtn, styles.pickerBtn]} onPress={() => setPicker("primaryIndustry")} accessibilityRole="button">
+              <Ionicons name={primaryIndustry ? "swap-horizontal" : "add"} size={16} color={colors.white} />
+              <Text style={styles.addSkillBtnText}>{primaryIndustry ? ac("Change") : ac("Choose")}</Text>
+            </Pressable>
+            <FieldLabel label={ac("Secondary Industries")} hint={ac("Choose up to two other industries.")} />
+            <SelectedChips items={secondaryIndustries} onRemove={toggleSecondaryIndustry} />
+            {secondaryIndustries.length < MAX_SECONDARY_INDUSTRIES ? (
+              <Pressable style={[styles.addSkillBtn, styles.pickerBtn, { marginBottom: 0 }]} onPress={() => setPicker("secondaryIndustries")} accessibilityRole="button">
+                <Ionicons name="add" size={16} color={colors.white} />
+                <Text style={styles.addSkillBtnText}>{ac("Add")}</Text>
+              </Pressable>
+            ) : null}
           </SectionCard>
 
-          <SectionCard title={ac("Career evidence")}>
-            <FieldLabel label={ac("Career summary")} hint={ac("Summarise your experience, strengths and next role.")} />
+          <SectionCard title={ac("Skills")}>
+            <View style={styles.skillsTopRow}>
+              <Text style={styles.skillsCount}>{ac("Selected: {count}", {count: skills.length})} / {MAX_SKILLS}</Text>
+              <Pressable style={styles.addSkillBtn} onPress={() => setPicker("skills")}>
+                <Ionicons name="add" size={16} color={colors.white} />
+                <Text style={styles.addSkillBtnText}>{ac("Add skills")}</Text>
+              </Pressable>
+            </View>
+            {skills.length > 0 ? (
+              <SelectedChips items={skills} onRemove={removeSkill} />
+            ) : (
+              <Text style={styles.emptySkillsHint}>{ac("Use Add skills to select at least one skill for your application.")}</Text>
+            )}
+          </SectionCard>
+
+          <SectionCard title={ac("Career history")}>
+            <FieldLabel label={ac("Looking for")} hint={ac("Describe what you want from your next role.")} />
             <TextInput
               style={[styles.input, styles.multilineInput]}
               value={careerSummary}
               onChangeText={setCareerSummary}
-              placeholder={ac("Summarise your experience, strengths and next role.")}
+              placeholder={ac("Describe what you want from your next role.")}
               placeholderTextColor={colors.placeholder}
+              maxLength={2000}
               multiline
               textAlignVertical="top"
             />
-            <FieldLabel label={ac("Most recent work experience")} />
-            <TextInput style={styles.input} value={workTitle} onChangeText={setWorkTitle} placeholder={ac("Role title")} placeholderTextColor={colors.placeholder} />
-            <TextInput style={styles.input} value={workCompany} onChangeText={setWorkCompany} placeholder={ac("Company")} placeholderTextColor={colors.placeholder} />
-            <FieldLabel label={ac("Education and qualifications")} />
-            <TextInput style={styles.input} value={educationDegree} onChangeText={setEducationDegree} placeholder={ac("Degree, trade or professional qualification")} placeholderTextColor={colors.placeholder} />
-            <TextInput style={[styles.input, { marginBottom: 0 }]} value={educationSchool} onChangeText={setEducationSchool} placeholder={ac("Institution or awarding body")} placeholderTextColor={colors.placeholder} />
+            <View style={styles.listHead}>
+              <Text style={styles.fieldLabel}>{ac("Work history")}</Text>
+              <Pressable onPress={() => setWorkHistory((prev) => [...prev, { title: "", company: "", startDate: "", endDate: "", isCurrent: false }])} hitSlop={8} accessibilityRole="button">
+                <Text style={styles.listAdd}>+ {ac("Add role")}</Text>
+              </Pressable>
+            </View>
+            {currentJobTitle.trim() && currentCompany.trim() && !workHistory.some((w) => w.title.trim() && w.company.trim()) ? (
+              <Pressable
+                onPress={() => setWorkHistory([{ title: currentJobTitle.trim(), company: currentCompany.trim(), startDate: "", endDate: "", isCurrent: true }])}
+                style={styles.listSuggest}
+                accessibilityRole="button"
+              >
+                <Text style={styles.listSuggestText}>{ac("Add current role to work history")}</Text>
+              </Pressable>
+            ) : null}
+            {workHistory.length === 0 ? <Text style={[styles.emptySkillsHint, { marginBottom: 14 }]}>{ac("No roles added yet.")}</Text> : null}
+            {workHistory.map((row, index) => (
+              <View key={index} style={styles.listCard}>
+                <Pressable onPress={() => setWorkHistory((prev) => prev.filter((_, i) => i !== index))} style={styles.listRemove} hitSlop={8} accessibilityRole="button" accessibilityLabel={ac("Remove role")}>
+                  <Ionicons name="trash-outline" size={18} color={colors.textMuted} />
+                </Pressable>
+                <TextInput style={styles.input} value={row.title} onChangeText={(v) => updateWork(index, { title: v })} placeholder={ac("Role title")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={styles.input} value={row.company} onChangeText={(v) => updateWork(index, { company: v })} placeholder={ac("Company")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={styles.input} value={row.startDate} onChangeText={(v) => updateWork(index, { startDate: v })} placeholder={ac("Start date")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={[styles.input, row.isCurrent && styles.disabledBtn]} value={row.endDate} editable={!row.isCurrent} onChangeText={(v) => updateWork(index, { endDate: v })} placeholder={ac("End date (leave blank if current)")} placeholderTextColor={colors.placeholder} />
+                <Pressable
+                  onPress={() => updateWork(index, { isCurrent: !row.isCurrent, endDate: row.isCurrent ? row.endDate : "" })}
+                  style={styles.checkRow}
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked: row.isCurrent }}
+                >
+                  <Ionicons name={row.isCurrent ? "checkbox" : "square-outline"} size={22} color={colors.navy} />
+                  <Text style={styles.checkText}>{ac("I currently work here")}</Text>
+                </Pressable>
+              </View>
+            ))}
+            <View style={styles.listHead}>
+              <Text style={styles.fieldLabel}>{ac("Education")}</Text>
+              <Pressable onPress={() => setEducationHistory((prev) => [...prev, { degree: "", school: "", year: "" }])} hitSlop={8} accessibilityRole="button">
+                <Text style={styles.listAdd}>+ {ac("Add education")}</Text>
+              </Pressable>
+            </View>
+            {educationHistory.length === 0 ? <Text style={styles.emptySkillsHint}>{ac("No education added yet.")}</Text> : null}
+            {educationHistory.map((row, index) => (
+              <View key={index} style={styles.listCard}>
+                <Pressable onPress={() => setEducationHistory((prev) => prev.filter((_, i) => i !== index))} style={styles.listRemove} hitSlop={8} accessibilityRole="button" accessibilityLabel={ac("Remove education")}>
+                  <Ionicons name="trash-outline" size={18} color={colors.textMuted} />
+                </Pressable>
+                <TextInput style={styles.input} value={row.degree} onChangeText={(v) => updateEducation(index, { degree: v })} placeholder={ac("Qualification")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={styles.input} value={row.school} onChangeText={(v) => updateEducation(index, { school: v })} placeholder={ac("School")} placeholderTextColor={colors.placeholder} />
+                <TextInput style={[styles.input, { marginBottom: 0 }]} value={row.year} onChangeText={(v) => updateEducation(index, { year: v })} placeholder={ac("Year")} placeholderTextColor={colors.placeholder} keyboardType="number-pad" />
+              </View>
+            ))}
           </SectionCard>
 
-          {/* Online presence */}
-          <SectionCard title={ac("Online presence")}>
-            <FieldLabel label={ac("LinkedIn URL")} />
-            <TextInput
-              style={[styles.input, { marginBottom: 0 }]}
-              value={linkedin}
-              onChangeText={setLinkedin}
-              placeholder="https://linkedin.com/in/…"
-              placeholderTextColor={colors.placeholder}
-              autoCapitalize="none"
-              keyboardType="url"
-            />
-          </SectionCard>
-
-          {/* Work preferences */}
-          <SectionCard title={ac("Work preferences")}>
-            <FieldLabel label={ac("How you want to work")} />
+          <SectionCard title={ac("Availability and job preferences")}>
+            <FieldLabel label={ac("Remote work")} />
+            <ChoiceChips options={REMOTE_OPTIONS} value={remoteWorkPreference} onChange={setRemoteWorkPreference} />
+            <FieldLabel label={ac("Job-search intent")} />
+            <ChoiceChips options={SEARCH_INTENT_OPTIONS} value={jobSearchIntent} onChange={setJobSearchIntent} />
+            <FieldLabel label={ac("Notice period")} />
+            <ChoiceChips options={NOTICE_OPTIONS} value={noticePeriod} onChange={setNoticePeriod} />
+            <FieldLabel label={ac("Visa status")} />
+            <ChoiceChips options={VISA_STATUS_OPTIONS} value={currentVisaStatus} onChange={setCurrentVisaStatus} />
+            <FieldLabel label={ac("Job Preferences")} />
             <View style={styles.chipGrid}>
               {JOB_PREFERENCE_OPTIONS.map((pref) => {
                 const on = jobPreferences.includes(pref);
                 return (
-                  <Pressable key={pref} onPress={() => toggleJobPreference(pref)} style={[styles.prefChip, on && styles.prefChipOn]}>
+                  <Pressable key={pref} onPress={() => toggleJobPreference(pref)} style={[styles.prefChip, on && styles.prefChipOn]} accessibilityRole="checkbox" accessibilityState={{ checked: on }}>
                     {on && <Ionicons name="checkmark" size={13} color={colors.white} style={{ marginRight: 4 }} />}
                     <Text style={[styles.prefChipText, on && styles.prefChipTextOn]}>{ac(pref)}</Text>
                   </Pressable>
@@ -597,27 +796,73 @@ function ProfileScreen() {
             </View>
           </SectionCard>
 
-          {/* Skills */}
-          <SectionCard title={ac("Skills")}>
-            <View style={styles.skillsTopRow}>
-              <Text style={styles.skillsCount}>{ac("Selected: {count}", {count: skills.length})} / {MAX_SKILLS}</Text>
-              <Pressable style={styles.addSkillBtn} onPress={() => { setSkillSearch(""); setSkillModalOpen(true); }}>
-                <Ionicons name="add" size={16} color={colors.white} />
-                <Text style={styles.addSkillBtnText}>{ac("Add skills")}</Text>
+          <SectionCard title={ac("Personal details")}>
+            <View style={styles.photoRow}>
+              <View style={styles.photoCircle}>
+                {avatarUrl ? <Image source={{ uri: avatarUrl }} style={styles.avatarImage} /> : <Text style={styles.photoInitials}>{initials}</Text>}
+              </View>
+              <Pressable onPress={() => photoMut.mutate()} disabled={photoMut.isPending} style={[styles.quickPill, photoMut.isPending && styles.disabledBtn]} accessibilityRole="button">
+                {photoMut.isPending ? <ActivityIndicator color={colors.navy} size="small" /> : <Text style={styles.quickPillText}>{ac("Change photo")}</Text>}
               </Pressable>
             </View>
-            {skills.length > 0 ? (
-              <View style={styles.chipGrid}>
-                {skills.map((s) => (
-                  <Pressable key={s} onPress={() => removeSkill(s)} style={[styles.prefChip, styles.prefChipOn, styles.skillChipActive]}>
-                    <Text style={[styles.prefChipText, styles.prefChipTextOn]}>{s}</Text>
-                    <Ionicons name="close" size={13} color={colors.white} style={{ marginLeft: 4 }} />
+            <FieldLabel label={ac("First Name")} />
+            <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder={ac("First Name")} placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Last Name")} />
+            <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder={ac("Last Name")} placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Email Address *")} />
+            <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="email@example.com" placeholderTextColor={colors.placeholder} keyboardType="email-address" autoCapitalize="none" autoCorrect={false} />
+            <FieldLabel label={ac("Phone Number")} />
+            <TextInput style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} placeholder="+44 7700 900000" placeholderTextColor={colors.placeholder} keyboardType="phone-pad" />
+            <FieldLabel label={ac("Current location")} />
+            <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder={ac("City and country")} placeholderTextColor={colors.placeholder} />
+            <FieldLabel label={ac("Preferred job location")} />
+            <TextInput style={styles.input} value={preferredJobLocation} onChangeText={setPreferredJobLocation} placeholder="e.g. Remote, New York, London" placeholderTextColor={colors.placeholder} />
+            <View style={{ marginBottom: 14 }}>
+              <CountryPicker label={ac("Nationality")} value={nationality} onChange={setNationality} multiple />
+            </View>
+            <FieldLabel label={ac("Languages Spoken")} />
+            {languages.map((row) => (
+              <View key={row.language} style={styles.languageRow}>
+                <View style={styles.languageHead}>
+                  <Text style={styles.languageName}>{ac(row.language)}</Text>
+                  <Pressable onPress={() => toggleLanguage(row.language)} hitSlop={8} accessibilityRole="button" accessibilityLabel={ac("Remove {name}", { name: ac(row.language) })}>
+                    <Ionicons name="close" size={18} color={colors.textMuted} />
                   </Pressable>
-                ))}
+                </View>
+                <ChoiceChips
+                  options={profileOptions.fluencyLevels}
+                  value={row.fluency}
+                  onChange={(fluency) => setLanguages((prev) => prev.map((l) => (l.language === row.language ? { ...l, fluency } : l)))}
+                />
               </View>
-            ) : (
-              <Text style={styles.emptySkillsHint}>{ac("Use Add skills to select at least one skill for your application.")}</Text>
-            )}
+            ))}
+            <Pressable style={[styles.addSkillBtn, styles.pickerBtn, { marginBottom: 0 }]} onPress={() => setPicker("languages")} accessibilityRole="button">
+              <Ionicons name="add" size={16} color={colors.white} />
+              <Text style={styles.addSkillBtnText}>{ac("Select languages")}</Text>
+            </Pressable>
+          </SectionCard>
+
+          <SectionCard title={ac("Profile links")}>
+            <FieldLabel label={ac("LinkedIn Profile")} />
+            <TextInput
+              style={styles.input}
+              value={linkedin}
+              onChangeText={setLinkedin}
+              placeholder="https://linkedin.com/in/…"
+              placeholderTextColor={colors.placeholder}
+              autoCapitalize="none"
+              keyboardType="url"
+            />
+            <FieldLabel label={ac("Portfolio Website")} />
+            <TextInput
+              style={[styles.input, { marginBottom: 0 }]}
+              value={portfolio}
+              onChangeText={setPortfolio}
+              placeholder="https://website.com"
+              placeholderTextColor={colors.placeholder}
+              autoCapitalize="none"
+              keyboardType="url"
+            />
           </SectionCard>
 
           <View style={styles.accountList}>
@@ -628,11 +873,7 @@ function ProfileScreen() {
                 icon={row.icon}
                 label={ac(row.title)}
                 hint={
-                  row.href === "/mobility-profile"
-                    ? employerDiscoveryOn
-                      ? ac("Employers can find you")
-                      : ac("Employers can't search for you")
-                    : ac(row.subtitle)
+                  row.href === "/mobility-profile" ? discoveryHint : ac(row.subtitle)
                 }
                 onPress={() => {
                   if (row.href === "/mobility-profile") void recordCandidateJourneyStart("global_mobility_profile_started");
@@ -666,44 +907,42 @@ function ProfileScreen() {
         />
       </View>
 
-      {/* Skill picker modal */}
-      <Modal visible={skillModalOpen} animationType="slide" presentationStyle="pageSheet" onRequestClose={closeSkillModal}>
-        <SafeAreaView style={styles.modalSafe} edges={["top"]}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>{ac("Select skills")}</Text>
-            <Pressable onPress={closeSkillModal} hitSlop={12}>
-              <Text style={styles.modalDone}>{ac("Done")}</Text>
-            </Pressable>
-          </View>
-          <View style={styles.modalSearch}>
-            <Ionicons name="search" size={18} color={colors.placeholder} />
-            <TextInput
-              style={styles.modalSearchInput}
-              value={skillSearch}
-              onChangeText={setSkillSearch}
-              placeholder={ac("Search skills…")}
-              autoCapitalize="none"
-              autoCorrect={false}
-              placeholderTextColor={colors.placeholder}
-            />
-          </View>
-          <FlatList
-            data={filteredSkillChoices}
-            keyExtractor={(item) => item}
-            keyboardShouldPersistTaps="handled"
-            renderItem={({ item }) => {
-              const selected = skills.includes(item);
-              return (
-                <Pressable style={[styles.skillRow, selected && styles.skillRowOn]} onPress={() => toggleSkillChoice(item)}>
-                  <Text style={[styles.skillRowText, selected && styles.skillRowTextOn]}>{item}</Text>
-                  {selected ? <Ionicons name="checkmark-circle" size={20} color={colors.brand} /> : <View style={styles.skillRowCircle} />}
-                </Pressable>
-              );
-            }}
-            ListEmptyComponent={<Text style={styles.emptySkillsHint}>{ac("No matches.")}</Text>}
-          />
-        </SafeAreaView>
-      </Modal>
+      <PickerModal
+        visible={picker === "skills"}
+        title={ac("Select skills")}
+        options={ALL_SKILLS}
+        selected={skills}
+        onToggle={toggleSkillChoice}
+        onClose={() => setPicker(null)}
+        searchPlaceholder={ac("Search skills…")}
+      />
+      <PickerModal
+        visible={picker === "primaryIndustry"}
+        title={ac("Primary Industry")}
+        options={profileOptions.industries}
+        selected={primaryIndustry ? [primaryIndustry] : []}
+        onToggle={choosePrimaryIndustry}
+        onClose={() => setPicker(null)}
+        searchPlaceholder={ac("Search industries")}
+      />
+      <PickerModal
+        visible={picker === "secondaryIndustries"}
+        title={ac("Secondary Industries")}
+        options={profileOptions.industries.filter((industry) => industry !== primaryIndustry)}
+        selected={secondaryIndustries}
+        onToggle={toggleSecondaryIndustry}
+        onClose={() => setPicker(null)}
+        searchPlaceholder={ac("Search industries")}
+      />
+      <PickerModal
+        visible={picker === "languages"}
+        title={ac("Languages Spoken")}
+        options={profileOptions.languages}
+        selected={languages.map((row) => row.language)}
+        onToggle={toggleLanguage}
+        onClose={() => setPicker(null)}
+        searchPlaceholder={ac("Select languages")}
+      />
     </GshScreenShell>
   );
 }
@@ -907,8 +1146,6 @@ const styles = StyleSheet.create({
   prefChipOn: { backgroundColor: colors.brand, borderColor: colors.brand },
   prefChipText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
   prefChipTextOn: { color: colors.white },
-  skillChipActive: {},
-
   // Skills
   skillsTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 },
   skillsCount: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
@@ -924,6 +1161,23 @@ const styles = StyleSheet.create({
   },
   addSkillBtnText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.white },
   emptySkillsHint: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 20 },
+  pickerBtn: { alignSelf: "flex-start", marginBottom: 16 },
+
+  // Career history and languages
+  listHead: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4, marginBottom: 10 },
+  listAdd: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.navy, textDecorationLine: "underline" },
+  listSuggest: { alignSelf: "flex-start", minHeight: 44, justifyContent: "center", paddingHorizontal: 14, borderRadius: radii.pill, borderWidth: 1.5, borderColor: colors.navy, marginBottom: 12 },
+  listSuggestText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.navy },
+  listCard: { borderWidth: 1, borderColor: colors.border, borderRadius: 14, padding: 12, paddingTop: 8, marginBottom: 14, backgroundColor: colors.surfaceMuted },
+  listRemove: { alignSelf: "flex-end", minWidth: 44, minHeight: 36, alignItems: "flex-end", justifyContent: "center" },
+  checkRow: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 44 },
+  checkText: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textPrimary },
+  photoRow: { flexDirection: "row", alignItems: "center", gap: 16, marginBottom: 18 },
+  photoCircle: { width: 72, height: 72, borderRadius: 36, overflow: "hidden", alignItems: "center", justifyContent: "center", backgroundColor: colors.navy },
+  photoInitials: { fontSize: 24, fontFamily: fontFamily.heading, color: colors.white },
+  languageRow: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border, marginBottom: 12 },
+  languageHead: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 36, marginBottom: 6 },
+  languageName: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.navy },
 
   disabledBtn: { opacity: 0.6 },
 
