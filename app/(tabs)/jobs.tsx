@@ -37,7 +37,6 @@ import {
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
 import { JobCardSkeleton } from "@/components/SkeletonLoader";
-import { GshDarkFeedHeading } from "@/components/GshDarkFeedHeading";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { GshSwipeAction } from "@/components/GshSwipeAction";
 import {
@@ -46,7 +45,6 @@ import {
   DecorRing,
   DepthPressable,
   DepthSurface,
-  Eyebrow,
   PosterTitle,
   posterParts,
 } from "@/components/gsh-brand";
@@ -67,7 +65,6 @@ import {
   getJobLogoUrl,
   hubListingChipsPrioritized,
 } from "@/lib/job-display";
-import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
 import {
   addRecentJobSearch,
   loadRecentJobSearches,
@@ -125,128 +122,72 @@ function HubJobCard({
         },
       ]}
     >
-    <DepthSurface depth={5} radius={20} borderWidth={2} borderColor={colors.navy} innerStyle={styles.card}>
-      <Pressable
-        onPress={onPress}
-        style={styles.cardMainHit}
-        accessibilityRole="button"
-      >
-        <View style={styles.logoWell}>
-          <CompanyLogo
-            logoUrl={logoUrl}
-            companyName={employer}
-            size={64}
-            radius={16}
-          />
-        </View>
-        <View style={styles.cardMid}>
-          <View style={styles.cardCompanyRow}>
+    <DepthSurface depth={5} radius={24} borderWidth={2} borderColor={colors.navy} innerStyle={styles.card}>
+      <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${job.title}, ${employer}`}>
+        <View style={styles.cardMainHit}>
+          <CompanyLogo logoUrl={logoUrl} companyName={employer} size={48} radius={14} />
+          <View style={styles.cardMid}>
             <Text style={styles.cardCompanyLine} numberOfLines={1}>
-              {employer}
+              {[employer, meta].filter(Boolean).join(" · ")}
             </Text>
-            {sponsorBadge ? (
-              <View
-                style={[
-                  styles.sponsorPill,
-                  sponsorBadge.positive && styles.sponsorPillActive,
-                ]}
-              >
-                <Ionicons
-                  name="shield-checkmark"
-                  size={10}
-                  color={colors.navy}
-                />
-                <Text style={styles.sponsorPillText} numberOfLines={1}>
-                  {sponsorBadge.label}
-                </Text>
-              </View>
-            ) : null}
+            <Text style={styles.cardTitle} numberOfLines={2}>
+              {job.title}
+            </Text>
           </View>
-          <Text style={styles.cardTitle} numberOfLines={2}>
-            {job.title}
-          </Text>
-          {meta ? (
-            <View style={styles.cardMetaRow}>
-              <Ionicons
-                name="location-outline"
-                size={14}
-                color={colors.textMuted}
-              />
-              <Text style={styles.cardMetaLine} numberOfLines={2}>
-                {meta}
+          <Pressable
+            onPress={() => {
+              void hapticLight();
+              onToggleBookmark();
+            }}
+            hitSlop={10}
+            style={styles.cardBookmarkHit}
+            accessibilityRole="button"
+            accessibilityLabel={savedRowId ? t("jobsUnsave") : t("jobsSave")}
+            disabled={bookmarkLoading}
+          >
+            {bookmarkLoading ? (
+              <ActivityIndicator size="small" color={colors.navy} />
+            ) : (
+              <View style={[styles.bookmarkDisc, savedRowId ? styles.bookmarkDiscOn : null]}>
+                <Ionicons name={savedRowId ? "bookmark" : "bookmark-outline"} size={18} color={colors.navy} />
+              </View>
+            )}
+          </Pressable>
+        </View>
+        <View style={styles.chipWrap}>
+          {chips.map((c, index) => (
+            <View key={c} style={[styles.listChip, index === 0 ? styles.listChipNavy : styles.listChipPale]}>
+              <Text style={[styles.listChipText, index === 0 && styles.listChipTextCyan]} numberOfLines={1}>
+                {jobChipLabel(c, locale)}
+              </Text>
+            </View>
+          ))}
+          {sal ? (
+            <View style={[styles.listChip, styles.listChipPale]}>
+              <Text style={styles.listChipText} numberOfLines={1}>
+                {sal}
               </Text>
             </View>
           ) : null}
-          {sal ? (
-            <Text style={styles.cardSalaryInline} numberOfLines={1}>
-              {sal}
-            </Text>
+          {sponsorBadge ? (
+            <View style={[styles.listChip, styles.listChipPale, styles.listChipRow]}>
+              <Ionicons name="shield-checkmark" size={11} color={colors.navy} />
+              <Text style={styles.listChipText} numberOfLines={1}>
+                {sponsorBadge.label}
+              </Text>
+            </View>
           ) : null}
-          {chips.length > 0 ? (
-            <View style={styles.chipWrap}>
-              {chips.map((c) => {
-                const pal = mobilityChipStyle(c);
-                return (
-                  <View key={c} style={[styles.listChip, pal.wrap]}>
-                    <Text
-                      style={[styles.listChipText, pal.text]}
-                      numberOfLines={1}
-                    >
-                      {jobChipLabel(c, locale)}
-                    </Text>
-                  </View>
-                );
-              })}
+          {appliesOnPlatform ? (
+            <View style={[styles.listChip, styles.listChipPale, styles.listChipRow]}>
+              <Ionicons name="flash" size={11} color={colors.navy} />
+              <Text style={styles.listChipText}>{t("jobsEasyApply")}</Text>
             </View>
           ) : null}
           {compatibility ? (
-            <View style={styles.compatibilityBadge}>
-              <Text style={styles.compatibilityBadgeText}>
-                {jobMatchLabel(compatibility.status, locale)}
-              </Text>
+            <View style={[styles.listChip, styles.listChipPale]}>
+              <Text style={styles.listChipText}>{jobMatchLabel(compatibility.status, locale)}</Text>
             </View>
           ) : null}
-        </View>
-        <Pressable
-          onPress={() => {
-            void hapticLight();
-            onToggleBookmark();
-          }}
-          hitSlop={10}
-          style={styles.cardBookmarkHit}
-          accessibilityRole="button"
-          accessibilityLabel={savedRowId ? t("jobsUnsave") : t("jobsSave")}
-          disabled={bookmarkLoading}
-        >
-          {bookmarkLoading ? (
-            <ActivityIndicator size="small" color={colors.cyan} />
-          ) : (
-            <View style={[styles.bookmarkDisc, savedRowId ? styles.bookmarkDiscOn : null]}>
-              <Ionicons
-                name={savedRowId ? "bookmark" : "bookmark-outline"}
-                size={18}
-                color={colors.navy}
-              />
-            </View>
-          )}
-        </Pressable>
-      </Pressable>
-      <Pressable onPress={onPress} accessibilityRole="button">
-        <View style={styles.cardFooter}>
-          {appliesOnPlatform ? (
-            <View style={styles.easyApplyRow}>
-              <Ionicons name="flash" size={14} color={colors.navy} />
-              <Text style={styles.easyApplyText}>{t("jobsEasyApply")}</Text>
-            </View>
-          ) : (
-            <View />
-          )}
-          <View style={styles.cardFooterCta}>
-            <Text style={styles.cardCta}>{t("jobsView")}</Text>
-            <View style={styles.cardCtaArrow}>
-              <Ionicons name="arrow-forward" size={14} color={colors.navy} />
-            </View>
-          </View>
         </View>
       </Pressable>
     </DepthSurface>
@@ -255,7 +196,7 @@ function HubJobCard({
 }
 
 export default function JobsTabScreen() {
-  const { t, locale } = useAppCopy();
+  const { t, locale, intlLocale } = useAppCopy();
 
   const [sortHelpOpen, setSortHelpOpen] = useState(false);
   const router = useRouter();
@@ -530,6 +471,15 @@ export default function JobsTabScreen() {
     ]).finally(() => setPullRefreshing(false));
   }, [hubJobsQuery, curatedJobsQuery, connectedJobsQuery, savedJobsQuery, signedIn]);
 
+  const firstPageTotal = shownQuery.data?.pages[0]?.total;
+  const resultCount = listBootloading || activeError
+    ? null
+    : shownLane === "direct" && visaRouteFilter
+      ? listRows.length
+      : typeof firstPageTotal === "number"
+        ? firstPageTotal
+        : null;
+
   const filterCount = activeStructuredFilters.length + (locationFilter ? 1 : 0);
   const narrowed = Boolean(debouncedQ) || filterCount > 0;
 
@@ -538,17 +488,18 @@ export default function JobsTabScreen() {
       <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 12 }]}>
         <DecorRing size={220} thickness={30} color="rgba(66,224,227,0.18)" style={{ top: -100, right: -90 }} />
         <View style={styles.headerTop}>
-          <Eyebrow>{t("jobs")}</Eyebrow>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <PosterTitle {...posterParts(ac("Find your|next move."))} size={34} />
+          </View>
           <Pressable
             onPress={() => router.push("/alerts")}
             style={styles.roundButton}
             accessibilityRole="button"
             accessibilityLabel={ac("Job alerts")}
           >
-            <Ionicons name="notifications-outline" size={20} color={colors.navy} />
+            <Ionicons name="notifications" size={22} color={colors.navy} />
           </Pressable>
         </View>
-        <PosterTitle {...posterParts(ac("Find your|next move."))} size={34} />
         <View style={styles.searchRow}>
           <DepthSurface
             depth={4}
@@ -698,7 +649,7 @@ export default function JobsTabScreen() {
                       : "ellipse-outline"
                   }
                   size={18}
-                  color={colors.teal}
+                  color={colors.navy}
                 />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.compatibilityOrderTitle}>
@@ -814,7 +765,7 @@ export default function JobsTabScreen() {
                 <Ionicons
                   name="checkmark-circle-outline"
                   size={12}
-                  color={colors.teal}
+                  color={colors.navy}
                 />
                 <Text style={styles.recentChipText} numberOfLines={1}>
                   {label}
@@ -858,28 +809,19 @@ export default function JobsTabScreen() {
 
       <View style={styles.listHeadingWrap}>
         <View style={{ flex: 1, minWidth: 0 }}>
-          <GshDarkFeedHeading
-            title={
-              feedTab === "direct"
-                ? t("jobsDirectTitle")
-                : feedTab === "connected"
-                  ? t("jobsConnectedTitle")
-                  : t("jobsExternalTitle")
-            }
-            subtitle={
-              feedTab === "direct"
-                ? t("jobsDirectDesc")
-                : feedTab === "connected"
-                  ? t("jobsConnectedDesc")
-                  : t("jobsExternalDesc")
-            }
-            actionLabel={feedTab === "curated" ? t("homeSeeAll") : undefined}
-            onAction={
-              feedTab === "curated"
-                ? () => router.push("/curated-listings")
-                : undefined
-            }
-          />
+          {resultCount != null ? (
+            <Text style={styles.countLine}>
+              <Text style={styles.countNumber}>{new Intl.NumberFormat(intlLocale).format(resultCount)}</Text>{" "}
+              {resultCount === 1 ? ac("role") : ac("roles")}
+            </Text>
+          ) : null}
+          <Text style={styles.laneDesc}>
+            {shownLane === "direct"
+              ? t("jobsDirectDesc")
+              : shownLane === "connected"
+                ? t("jobsConnectedDesc")
+                : t("jobsExternalDesc")}
+          </Text>
         </View>
         <Pressable
           onPress={() => setListingInfoOpen(true)}
@@ -888,11 +830,7 @@ export default function JobsTabScreen() {
           accessibilityRole="button"
           accessibilityLabel={t("jobsInfo")}
         >
-          <Ionicons
-            name="information-circle-outline"
-            size={20}
-            color={colors.teal}
-          />
+          <Ionicons name="information-circle" size={22} color={colors.navy} />
         </Pressable>
       </View>
       {showingFallback ? (
@@ -1046,7 +984,7 @@ export default function JobsTabScreen() {
         ListFooterComponent={
           activeFetchingNextPage ? (
             <View style={styles.paginationLoader}>
-              <ActivityIndicator color={colors.brand} />
+              <ActivityIndicator color={colors.navy} />
               <Text style={styles.paginationLoaderText}>
                 {t("jobsLoadingMore")}
               </Text>
@@ -1091,17 +1029,15 @@ const styles = StyleSheet.create({
   },
   headerTop: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
     justifyContent: "space-between",
-    marginBottom: 6,
+    gap: 12,
   },
   roundButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: colors.navy,
-    backgroundColor: colors.white,
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: colors.pale,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1166,14 +1102,12 @@ const styles = StyleSheet.create({
   compatibilityOrder: {
     minHeight: 52,
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     gap: 9,
-    marginTop: 9,
+    marginTop: 10,
     padding: 10,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surfaceMuted,
+    borderRadius: 16,
+    backgroundColor: colors.pale,
   },
   compatibilityOrderTitle: {
     fontSize: 13,
@@ -1228,34 +1162,37 @@ const styles = StyleSheet.create({
   },
   recentScroll: { gap: 8, paddingBottom: 4 },
   recentChip: {
-    minHeight: 44,
+    minHeight: 40,
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
     paddingVertical: 7,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     borderRadius: radii.pill,
-    backgroundColor: colors.surfaceMuted,
-    borderWidth: 1,
+    backgroundColor: colors.white,
+    borderWidth: 2,
     borderColor: colors.border,
   },
   recentChipText: {
-    fontSize: 13,
-    fontFamily: fontFamily.medium,
-    color: colors.textSecondary,
+    fontSize: 12,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
     maxWidth: 160,
   },
 
   listHeadingWrap: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     paddingHorizontal: 16,
-    gap: 4,
+    paddingTop: 14,
+    gap: 8,
   },
+  countLine: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textMuted },
+  countNumber: { fontSize: 16, fontFamily: fontFamily.headingStrong, color: colors.navy },
+  laneDesc: { marginTop: 2, fontSize: 12, lineHeight: 17, fontFamily: fontFamily.regular, color: colors.textMuted },
   listInfoBtn: {
     minWidth: 44,
     minHeight: 44,
-    marginTop: 10,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1302,18 +1239,12 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.textMuted,
   },
-  card: {
-    paddingVertical: 16,
-    paddingHorizontal: 14,
-    minHeight: 148,
-  },
+  card: { padding: 16 },
   bookmarkDisc: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    borderWidth: 2,
-    borderColor: colors.navy,
-    backgroundColor: colors.white,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.pale,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1405,13 +1336,18 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.navy,
   },
-  chipWrap: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 6 },
+  chipWrap: { marginTop: 12, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 8 },
   listChip: {
     paddingVertical: 4,
-    paddingHorizontal: 9,
+    paddingHorizontal: 10,
     borderRadius: radii.pill,
+    maxWidth: "100%",
   },
-  listChipText: { fontSize: 11, fontFamily: fontFamily.medium },
+  listChipNavy: { backgroundColor: colors.navy },
+  listChipPale: { backgroundColor: colors.pale },
+  listChipRow: { flexDirection: "row", alignItems: "center", gap: 4 },
+  listChipText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy },
+  listChipTextCyan: { color: colors.cyan },
   compatibilityBadge: {
     alignSelf: "flex-start",
     marginTop: 8,

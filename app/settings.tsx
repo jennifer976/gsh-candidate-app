@@ -27,7 +27,6 @@ import {
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { changePassword, deleteCandidateAccount } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
-import { LEGAL_IN_APP } from "@/lib/legal/inAppRoutes";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
@@ -122,37 +121,18 @@ function SettingsScreen() {
             />
 
             <AppLanguageSetting />
-            <GshSectionTitle title={t("notifications")} topSpacing="none" />
-            <GshLinkRow
-              title={t("preferences")}
-              subtitle={t("preferencesHelp")}
-              icon="notifications-outline"
-              accent="teal"
-              onPress={() => router.push("/alerts")}
-            />
             {Platform.OS !== "web" ? (
-              <GshLinkRow
-                title={t("deviceSettings")}
-                subtitle={t("deviceHelp")}
-                icon="phone-portrait-outline"
-                accent="ocean"
-                onPress={() => void Linking.openSettings()}
-              />
+              <>
+                <GshSectionTitle title={t("notifications")} topSpacing="none" />
+                <GshLinkRow
+                  title={t("deviceSettings")}
+                  subtitle={t("deviceHelp")}
+                  icon="phone-portrait-outline"
+                  accent="ocean"
+                  onPress={() => void Linking.openSettings()}
+                />
+              </>
             ) : null}
-            <GshLinkRow
-              title={t("inbox")}
-              subtitle={t("inboxHelp")}
-              icon="file-tray-full-outline"
-              accent="purple"
-              onPress={() => router.push("/notification-feed")}
-            />
-            <GshLinkRow
-              title={t("resources")}
-              subtitle={t("resourcesHelp")}
-              icon="layers-outline"
-              accent="purple"
-              onPress={() => router.push("/tools-resources")}
-            />
 
             <GshSectionTitle title={t("security")} hint={t("securityHelp")} />
             <Text style={styles.label}>{t("currentPassword")}</Text>
@@ -188,43 +168,6 @@ function SettingsScreen() {
               onPress={savePw}
               disabled={mut.isPending}
               containerStyle={{ marginTop: 8 }}
-            />
-
-            <GshSectionTitle title={t("legal")} />
-            <GshLinkRow
-              title={t("legalHub")}
-              subtitle={t("legalHelp")}
-              icon="document-text-outline"
-              accent="purple"
-              onPress={() => router.push(LEGAL_IN_APP.hub)}
-            />
-            <GshLinkRow
-              title={t("privacy")}
-              subtitle={t("privacyHelp")}
-              icon="lock-closed-outline"
-              accent="teal"
-              onPress={() => router.push(LEGAL_IN_APP.privacy)}
-            />
-            <GshLinkRow
-              title={t("terms")}
-              subtitle={t("termsHelp")}
-              icon="reader-outline"
-              accent="ocean"
-              onPress={() => router.push(LEGAL_IN_APP.terms)}
-            />
-            <GshLinkRow
-              title={t("cookies")}
-              subtitle={t("cookiesHelp")}
-              icon="nutrition-outline"
-              accent="purple"
-              onPress={() => router.push(LEGAL_IN_APP.cookies)}
-            />
-            <GshLinkRow
-              title={t("acceptableUse")}
-              subtitle={t("acceptableHelp")}
-              icon="warning-outline"
-              accent="teal"
-              onPress={() => router.push(LEGAL_IN_APP.acceptableUse)}
             />
 
             <GshSectionTitle title={t("closeAccount")} />

@@ -22,17 +22,14 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { CandidateReadinessSummary } from "@/components/CandidateReadinessSummary";
-import { GshLinkRow } from "@/components/gsh-ui-kit";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { GuestProfileHub } from "@/components/GuestProfileHub";
-import { DecorRing, DepthButton, DepthSurface, Eyebrow } from "@/components/gsh-brand";
-import { GshToolTile } from "@/components/GshToolTile";
+import { BrandLinkRow, DecorRing, DepthButton, DepthSurface, Eyebrow } from "@/components/gsh-brand";
 import { fetchOwnProfile, recordCandidateJourneyStart, updateProfile, uploadFileFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
 import { getCandidateCompletionBreakdown } from "@/lib/profile-completion";
 import { getAllSkillsSorted } from "@/lib/skills-data";
-import { useRelocationPerksNav } from "@/lib/use-relocation-perks-nav";
 import { tabBarBottomPadding } from "@/lib/android-insets";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
@@ -126,17 +123,10 @@ function ChoiceChips({
   );
 }
 
-const STATIC_MORE_TOOLS_LINKS = [
-  { title: "Work and move preferences", subtitle: "Choose who can find and contact you", icon: "earth-outline" as const, accent: "teal" as const, href: "/mobility-profile" },
-  { title: "Plan the move", subtitle: "Guides, worksheets and partners", icon: "navigate-outline" as const, accent: "ocean" as const, href: "/relocation-help" },
-  { title: "Invites to apply", subtitle: "Review employer and agency invites", icon: "people-circle-outline" as const, accent: "purple" as const, href: "/agency-introductions" },
-  { title: "Countries", subtitle: "Visa routes, hiring sectors and everyday life, destination by destination.", icon: "earth-outline" as const, accent: "purple" as const, href: "/countries" },
-  { title: "Job alerts", subtitle: "Match preferences", icon: "flash-outline" as const, accent: "ocean" as const, href: "/alerts" },
-  { title: "Tools and resources", subtitle: "Blog, FAQs and contact", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },
-  { title: "Saved roles", subtitle: "Open saved jobs", icon: "bookmark-outline" as const, accent: "teal" as const, href: "/saved" },
-  { title: "Partner offers and codes", subtitle: "Partner discount codes", icon: "gift-outline" as const, accent: "purple" as const, href: "/offers" },
-  { title: "Notifications", subtitle: "Account updates", icon: "notifications-outline" as const, accent: "teal" as const, href: "/notification-feed" },
-  { title: "Feedback", subtitle: "Report an issue", icon: "chatbox-ellipses-outline" as const, accent: "ocean" as const, href: "/feedback" },
+const ACCOUNT_LINKS = [
+  { title: "Work and move preferences", subtitle: "Choose who can find and contact you", icon: "earth-outline" as const, href: "/mobility-profile" },
+  { title: "Invites to apply", subtitle: "Review employer and agency invites", icon: "people-circle-outline" as const, href: "/agency-introductions" },
+  { title: "Partner offers and codes", subtitle: "Partner discount codes", icon: "gift-outline" as const, href: "/offers" },
 ] as const;
 
 export default function ProfileTab() {
@@ -151,7 +141,6 @@ function ProfileScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
-  const relocationPerksNav = useRelocationPerksNav();
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const user = useAuthStore((s) => s.user);
   const scrollRef = useRef<ScrollView>(null);
@@ -160,30 +149,6 @@ function ProfileScreen() {
 
   const profileQuery = useQuery({ queryKey: ["profile", "me"], queryFn: fetchOwnProfile });
 
-  const moreToolsLinks = useMemo(
-    () => [
-      STATIC_MORE_TOOLS_LINKS[0],
-      STATIC_MORE_TOOLS_LINKS[1],
-      STATIC_MORE_TOOLS_LINKS[2],
-      STATIC_MORE_TOOLS_LINKS[3],
-      STATIC_MORE_TOOLS_LINKS[4],
-      STATIC_MORE_TOOLS_LINKS[5],
-      STATIC_MORE_TOOLS_LINKS[6],
-      {
-        title: relocationPerksNav.title,
-        subtitle: relocationPerksNav.subtitle,
-        icon: "airplane-outline" as const,
-        accent: "teal" as const,
-        href: "/relocation-perks" as const,
-      },
-      STATIC_MORE_TOOLS_LINKS[7],
-      STATIC_MORE_TOOLS_LINKS[8],
-      STATIC_MORE_TOOLS_LINKS[9],
-    ],
-    [relocationPerksNav.title, relocationPerksNav.subtitle]
-  );
-
-  const [moreToolsOpen, setMoreToolsOpen] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -635,51 +600,21 @@ function ProfileScreen() {
             </Pressable>
           </SectionCard>
 
-          <SectionCard title={ac("Resources and settings")}>
-          <View style={styles.tileGrid}>
-            <View style={styles.tileRow}>
-              <GshToolTile label={ac("Browse jobs")} icon="compass-outline" accent="teal" onPress={() => router.push("/(tabs)/jobs")} />
-              <GshToolTile label={ac("Specialists")} icon="people-outline" accent="purple" onPress={() => router.push("/partners")} />
-            </View>
-            <View style={styles.tileRow}>
-              <GshToolTile label={ac("CV and job comparison")} icon="document-text-outline" accent="ocean" onPress={() => router.push("/ats-assistant")} />
-            </View>
-            <View style={styles.tileRow}>
-              <GshToolTile label={ac("Settings")} icon="settings-outline" accent="ocean" onPress={() => router.push("/settings")} />
-              <Pressable
-                style={[styles.moreTile, feedCardStyle()]}
-                onPress={() => setMoreToolsOpen((v) => !v)}
-                accessibilityRole="button"
-                accessibilityState={{ expanded: moreToolsOpen }}
-              >
-                <View style={[styles.moreTileIcon, { backgroundColor: colors.surfaceMuted }]}>
-                  <Ionicons name={moreToolsOpen ? "chevron-up" : "grid-outline"} size={24} color={colors.navy} />
-                </View>
-                <Text style={styles.moreTileLabel}>{moreToolsOpen ? ac("Hide extras") : ac("More tools")}</Text>
-              </Pressable>
-            </View>
+          <View style={styles.accountList}>
+            <Text style={styles.accountHeading}>{ac("Your account")}</Text>
+            {ACCOUNT_LINKS.map((row) => (
+              <BrandLinkRow
+                key={row.href}
+                icon={row.icon}
+                label={ac(row.title)}
+                hint={ac(row.subtitle)}
+                onPress={() => {
+                  if (row.href === "/mobility-profile") void recordCandidateJourneyStart("global_mobility_profile_started");
+                  router.push(row.href);
+                }}
+              />
+            ))}
           </View>
-
-          {moreToolsOpen ? (
-            <View style={styles.moreToolsList}>
-              {moreToolsLinks.map((row) => (
-                <GshLinkRow
-                  key={row.href}
-                  title={ac(row.title)}
-                  subtitle={ac(row.subtitle)}
-                  icon={row.icon}
-                  accent={row.accent}
-                  onPress={() => {
-                    if (row.href === "/mobility-profile") void recordCandidateJourneyStart("global_mobility_profile_started");
-                    if (row.href === "/relocation-help") void recordCandidateJourneyStart("relocation_help_started");
-                    router.push(row.href);
-                  }}
-                />
-              ))}
-            </View>
-          ) : null}
-
-          </SectionCard>
 
           {/* Sign out */}
           <Pressable style={styles.signOutBtn} onPress={logout}>
@@ -841,28 +776,8 @@ const styles = StyleSheet.create({
   finishRow: { minHeight: 36, flexDirection: "row", alignItems: "center", gap: 10 },
   finishRowText: { flex: 1, fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.white },
   content: { paddingHorizontal: 16, paddingTop: 16, gap: 14 },
-  tileGrid: { gap: 10, marginBottom: 4 },
-  tileRow: { flexDirection: "row", gap: 10 },
-  moreTile: {
-    flex: 1,
-    minHeight: 112,
-    minWidth: "46%",
-    maxWidth: "50%",
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    alignItems: "center",
-    borderRadius: radii.lg,
-    gap: 10,
-  },
-  moreTileIcon: {
-    width: 52,
-    height: 52,
-    borderRadius: radii.md,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  moreTileLabel: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.navy, textAlign: "center" },
-  moreToolsList: { gap: 0, marginBottom: 8 },
+  accountList: { gap: 10 },
+  accountHeading: { fontFamily: fontFamily.headingStrong, fontSize: 20, color: colors.navy, marginBottom: 2 },
   formBlock: { gap: 14 },
 
   errorBanner: {

@@ -24,14 +24,11 @@ import {
   DepthPressable,
   DepthSurface,
   Eyebrow,
-  IconBadge,
   PosterTitle,
   posterParts,
   SectionHeading,
 } from "@/components/gsh-brand";
 import {
-  fetchCandidateDashboard,
-  fetchConversations,
   fetchOwnProfile,
   fetchPublicExternalJobListings,
   fetchPublicJobs,
@@ -191,46 +188,6 @@ function JobCardPlaceholder() {
   );
 }
 
-function QuickTile({
-  icon,
-  label,
-  value,
-  badge,
-  onPress,
-}: {
-  icon: IonName;
-  label: string;
-  value?: number;
-  badge?: number;
-  onPress: () => void;
-}) {
-  return (
-    <DepthPressable
-      onPress={onPress}
-      depth={4}
-      radius={20}
-      borderWidth={2}
-      borderColor={colors.navy}
-      accessibilityLabel={value != null ? `${label}: ${value}` : label}
-      style={styles.quickTileWrap}
-      innerStyle={styles.quickTile}
-    >
-      <View style={styles.quickTop}>
-        <IconBadge icon={icon} size={38} radius={12} />
-        {value != null ? <Text style={styles.quickValue}>{value}</Text> : null}
-        {badge ? (
-          <View style={styles.quickBadge}>
-            <Text style={styles.quickBadgeText}>{badge > 99 ? "99+" : badge}</Text>
-          </View>
-        ) : null}
-      </View>
-      <Text style={styles.quickLabel} numberOfLines={1}>
-        {label}
-      </Text>
-    </DepthPressable>
-  );
-}
-
 export default function CandidateHomeScreen() {
   const { t, locale } = useAppCopy();
   const ac = useAccountCopy();
@@ -257,11 +214,6 @@ export default function CandidateHomeScreen() {
     staleTime: 120_000,
     retry: false,
   });
-  const dashboardQuery = useQuery({
-    queryKey: ["analytics", "candidate-dashboard"],
-    queryFn: fetchCandidateDashboard,
-    enabled: signedIn,
-  });
   const profileQuery = useQuery({
     queryKey: ["profile", "me"],
     queryFn: fetchOwnProfile,
@@ -274,26 +226,15 @@ export default function CandidateHomeScreen() {
     staleTime: 30_000,
     enabled: signedIn,
   });
-  const conversationsQuery = useQuery({
-    queryKey: ["message-conversations"],
-    queryFn: fetchConversations,
-    staleTime: 30_000,
-    enabled: signedIn,
-  });
-
   const onRefresh = useCallback(() => {
     void jobsQuery.refetch();
     if (noDirectJobs) void externalJobsQuery.refetch();
     void blogQuery.refetch();
     if (!signedIn) return;
-    void dashboardQuery.refetch();
     void profileQuery.refetch();
     void notificationsQuery.refetch();
-    void conversationsQuery.refetch();
   }, [
     blogQuery,
-    conversationsQuery,
-    dashboardQuery,
     externalJobsQuery,
     jobsQuery,
     noDirectJobs,
@@ -310,11 +251,6 @@ export default function CandidateHomeScreen() {
   const completion = useMemo(() => getCandidateCompletionBreakdown(profile, locale), [profile, locale]);
   const missing = completion.missing.filter((item) => !item.filled).slice(0, 3);
 
-  const dashboard = signedIn ? dashboardQuery.data : undefined;
-  const unreadMessages = (conversationsQuery.data ?? []).reduce(
-    (total, row) => total + Math.max(0, row.unreadCount ?? (row.read === false ? 1 : 0)),
-    0,
-  );
   const roles: HomeRole[] = noDirectJobs
     ? (externalJobsQuery.data?.data ?? []).slice(0, 6).map((job) => externalRole(job, locale, ac))
     : (jobsQuery.data?.data ?? []).slice(0, 6).map((job) => directRole(job, locale));
@@ -332,7 +268,7 @@ export default function CandidateHomeScreen() {
   };
 
   const refreshing =
-    jobsQuery.isRefetching || (signedIn && (dashboardQuery.isRefetching || profileQuery.isRefetching));
+    jobsQuery.isRefetching || (signedIn && profileQuery.isRefetching);
 
   return (
     <GshScreenShell constrainTabletWidth>
@@ -545,33 +481,6 @@ export default function CandidateHomeScreen() {
             </DepthSurface>
           ) : null}
         </View>
-
-        {signedIn ? (
-          <View style={styles.section}>
-            <SectionHeading title={ac("Jump back in")} style={styles.headingGap} />
-            <View style={styles.quickGrid}>
-              <QuickTile
-                icon="bookmark-outline"
-                label={t("saved")}
-                value={dashboard ? (dashboard.savedJobs ?? []).length : undefined}
-                onPress={() => router.push("/(tabs)/saved")}
-              />
-              <QuickTile
-                icon="document-text-outline"
-                label={t("applications")}
-                value={dashboard ? (dashboard.stats.totalApplied ?? 0) : undefined}
-                onPress={() => router.push({ pathname: "/(tabs)/saved", params: { segment: "applications" } })}
-              />
-              <QuickTile icon="notifications-outline" label={ac("Job alerts")} onPress={() => router.push("/alerts")} />
-              <QuickTile
-                icon="chatbubbles-outline"
-                label={t("messages")}
-                badge={unreadMessages}
-                onPress={() => router.push("/(tabs)/messages")}
-              />
-            </View>
-          </View>
-        ) : null}
 
         {rolesLoading || roles.length > 0 || rolesError ? (
           <View style={styles.sectionFlush}>
@@ -832,27 +741,6 @@ const styles = StyleSheet.create({
   nextButton: { marginTop: 18 },
   nextLink: { minHeight: 44, alignItems: "center", justifyContent: "center", marginTop: 4 },
   nextLinkText: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.cyan },
-  quickGrid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
-  quickTileWrap: { width: "47.5%", flexGrow: 1 },
-  quickTile: { padding: 14, gap: 12, minHeight: 104 },
-  quickTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  quickValue: {
-    fontFamily: fontFamily.headingStrong,
-    fontSize: 26,
-    color: colors.navy,
-    letterSpacing: -0.6,
-  },
-  quickBadge: {
-    minWidth: 26,
-    height: 26,
-    paddingHorizontal: 7,
-    borderRadius: 13,
-    backgroundColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  quickBadgeText: { fontFamily: fontFamily.extraBold, fontSize: 12, color: colors.cyan },
-  quickLabel: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.navy },
   rail: { paddingHorizontal: 20, gap: 16, paddingBottom: 4 },
   inlineRetry: {
     marginHorizontal: 20,

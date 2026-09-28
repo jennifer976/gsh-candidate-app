@@ -2154,7 +2154,14 @@
     "View profile": "View profile",
     "Try a different word, like visa, housing or tax.": "Try a different word, like visa, housing or tax.",
     "Help and contact": "Help and contact",
-    "Employer site": "Employer site"
+    "Employer site": "Employer site",
+    "role": "role",
+    "roles": "roles",
+    "Match your CV to a role": "Match your CV to a role",
+    "For visa-sponsored roles": "For visa-sponsored roles",
+    "Spot fake job offers": "Spot fake job offers",
+    "Employers hiring with us": "Employers hiring with us",
+    "Recommended": "Recommended"
   },
   "fr": {
     "Settings": "Paramètres",
@@ -4311,7 +4318,14 @@
     "View profile": "Voir le profil",
     "Try a different word, like visa, housing or tax.": "Essayez un autre mot, comme visa, logement ou impôts.",
     "Help and contact": "Aide et contact",
-    "Employer site": "Site de l'employeur"
+    "Employer site": "Site de l'employeur",
+    "role": "offre",
+    "roles": "offres",
+    "Match your CV to a role": "Comparez votre CV à une offre",
+    "For visa-sponsored roles": "Pour les postes avec parrainage de visa",
+    "Spot fake job offers": "Repérez les fausses offres d'emploi",
+    "Employers hiring with us": "Employeurs qui recrutent avec nous",
+    "Recommended": "Recommandé"
   },
   "de": {
     "Settings": "Einstellungen",
@@ -6468,7 +6482,14 @@
     "View profile": "Profil ansehen",
     "Try a different word, like visa, housing or tax.": "Versuchen Sie ein anderes Wort, etwa Visum, Wohnen oder Steuern.",
     "Help and contact": "Hilfe und Kontakt",
-    "Employer site": "Arbeitgeber-Website"
+    "Employer site": "Arbeitgeber-Website",
+    "role": "Stelle",
+    "roles": "Stellen",
+    "Match your CV to a role": "Gleichen Sie Ihren Lebenslauf mit einer Stelle ab",
+    "For visa-sponsored roles": "Für Stellen mit Visa-Sponsoring",
+    "Spot fake job offers": "Gefälschte Jobangebote erkennen",
+    "Employers hiring with us": "Arbeitgeber, die über uns einstellen",
+    "Recommended": "Empfohlen"
   },
   "es": {
     "Settings": "Configuración",
@@ -8625,7 +8646,14 @@
     "View profile": "Ver perfil",
     "Try a different word, like visa, housing or tax.": "Prueba con otra palabra, como visado, vivienda o impuestos.",
     "Help and contact": "Ayuda y contacto",
-    "Employer site": "Web del empleador"
+    "Employer site": "Web del empleador",
+    "role": "puesto",
+    "roles": "puestos",
+    "Match your CV to a role": "Compara tu CV con un puesto",
+    "For visa-sponsored roles": "Para puestos con patrocinio de visado",
+    "Spot fake job offers": "Detecta ofertas de empleo falsas",
+    "Employers hiring with us": "Empresas que contratan con nosotros",
+    "Recommended": "Recomendado"
   },
   "pt": {
     "Settings": "Definições",
@@ -10782,7 +10810,14 @@
     "View profile": "Ver perfil",
     "Try a different word, like visa, housing or tax.": "Experimente outra palavra, como visto, habitação ou impostos.",
     "Help and contact": "Ajuda e contacto",
-    "Employer site": "Site do empregador"
+    "Employer site": "Site do empregador",
+    "role": "vaga",
+    "roles": "vagas",
+    "Match your CV to a role": "Compare o seu CV com uma vaga",
+    "For visa-sponsored roles": "Para vagas com patrocínio de visto",
+    "Spot fake job offers": "Identifique ofertas de emprego falsas",
+    "Employers hiring with us": "Empregadores que recrutam connosco",
+    "Recommended": "Recomendado"
   },
   "it": {
     "Settings": "Impostazioni",
@@ -12939,7 +12974,14 @@
     "View profile": "Vedi profilo",
     "Try a different word, like visa, housing or tax.": "Prova un'altra parola, come visto, casa o tasse.",
     "Help and contact": "Aiuto e contatti",
-    "Employer site": "Sito del datore di lavoro"
+    "Employer site": "Sito del datore di lavoro",
+    "role": "posizione",
+    "roles": "posizioni",
+    "Match your CV to a role": "Confronta il tuo CV con un'offerta",
+    "For visa-sponsored roles": "Per posizioni con sponsorizzazione del visto",
+    "Spot fake job offers": "Riconosci le offerte di lavoro false",
+    "Employers hiring with us": "Datori di lavoro che assumono con noi",
+    "Recommended": "Consigliato"
   },
   "nl": {
     "Settings": "Instellingen",
@@ -15096,7 +15138,14 @@
     "View profile": "Profiel bekijken",
     "Try a different word, like visa, housing or tax.": "Probeer een ander woord, zoals visum, woning of belasting.",
     "Help and contact": "Hulp en contact",
-    "Employer site": "Site van werkgever"
+    "Employer site": "Site van werkgever",
+    "role": "vacature",
+    "roles": "vacatures",
+    "Match your CV to a role": "Vergelijk je cv met een vacature",
+    "For visa-sponsored roles": "Voor vacatures met visumsponsoring",
+    "Spot fake job offers": "Herken nep-vacatures",
+    "Employers hiring with us": "Werkgevers die via ons werven",
+    "Recommended": "Aanbevolen"
   },
   "pl": {
     "Settings": "Ustawienia",
@@ -17253,6 +17302,13 @@
     "View profile": "Zobacz profil",
     "Try a different word, like visa, housing or tax.": "Spróbuj innego słowa, np. wiza, mieszkanie lub podatki.",
     "Help and contact": "Pomoc i kontakt",
-    "Employer site": "Strona pracodawcy"
+    "Employer site": "Strona pracodawcy",
+    "role": "oferta",
+    "roles": "ofert",
+    "Match your CV to a role": "Porównaj swoje CV z ofertą",
+    "For visa-sponsored roles": "Do ofert ze sponsorowaniem wizy",
+    "Spot fake job offers": "Rozpoznaj fałszywe oferty pracy",
+    "Employers hiring with us": "Pracodawcy rekrutujący z nami",
+    "Recommended": "Polecane"
   }
 }

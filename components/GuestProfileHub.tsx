@@ -1,12 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import type { ComponentProps } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppLanguageSetting } from "@/components/AppLanguageSetting";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import {
-  BrandLinkRow,
   DecorRing,
   DepthButton,
   Eyebrow,
@@ -19,26 +16,9 @@ import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useSignInPrompt } from "@/lib/useSignInPrompt";
 import { colors, fontFamily } from "@/lib/theme";
 
-type IonName = ComponentProps<typeof Ionicons>["name"];
-
-const EXPLORE: Array<{ icon: IonName; label: string; hint: string; href: string }> = [
-  { icon: "briefcase-outline", label: "Browse jobs", hint: "Sponsored and relocation-friendly roles", href: "/(tabs)/jobs" },
-  { icon: "globe-outline", label: "Country guides", hint: "Visa routes, costs and everyday life", href: "/countries" },
-  { icon: "business-outline", label: "Companies", hint: "Employers hiring international talent", href: "/companies" },
-  { icon: "construct-outline", label: "Tools & resources", hint: "Templates, checklists and calculators", href: "/tools-resources" },
-  { icon: "people-outline", label: "Specialists", hint: "Immigration and relocation partners", href: "/partners" },
-];
-
-const HELP: Array<{ icon: IonName; label: string; href: string }> = [
-  { icon: "help-circle-outline", label: "FAQs", href: "/faq" },
-  { icon: "mail-outline", label: "Contact us", href: "/contact" },
-  { icon: "document-text-outline", label: "Legal", href: "/legal" },
-];
-
-/** Profile tab for signed-out visitors: account benefits, open areas of the app, language and help. */
+/** Profile tab for signed-out visitors: sign in or register, plus language. */
 export function GuestProfileHub() {
   const ac = useAccountCopy();
-  const router = useRouter();
   const insets = useSafeAreaInsets();
   const { openSignIn, openRegister } = useSignInPrompt();
 
@@ -77,35 +57,8 @@ export function GuestProfileHub() {
         </View>
 
         <View style={styles.section}>
-          <SectionHeading eyebrow={ac("No account needed")} title={ac("Explore the app")} style={styles.heading} />
-          {EXPLORE.map((row) => (
-            <BrandLinkRow
-              key={row.href}
-              icon={row.icon}
-              label={ac(row.label)}
-              hint={ac(row.hint)}
-              onPress={() => router.push(row.href as never)}
-              style={styles.row}
-            />
-          ))}
-        </View>
-
-        <View style={styles.section}>
           <SectionHeading title={ac("Language")} style={styles.heading} />
           <AppLanguageSetting />
-        </View>
-
-        <View style={styles.section}>
-          <SectionHeading title={ac("Help and legal")} style={styles.heading} />
-          {HELP.map((row) => (
-            <BrandLinkRow
-              key={row.href}
-              icon={row.icon}
-              label={ac(row.label)}
-              onPress={() => router.push(row.href as never)}
-              style={styles.row}
-            />
-          ))}
         </View>
       </ScrollView>
     </GshScreenShell>
@@ -135,5 +88,4 @@ const styles = StyleSheet.create({
   trustText: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.navy },
   section: { paddingHorizontal: 20, marginTop: 28 },
   heading: { marginBottom: 12 },
-  row: { marginBottom: 10 },
 });
