@@ -231,7 +231,7 @@ function Records<T extends object>({
   );
 }
 
-type PrivacyField = "hide_email" | "hide_resume" | "talent_pool_visible";
+type PrivacyField = "hide_phone" | "hide_email" | "hide_resume" | "talent_pool_visible";
 
 function MobilityProfileScreen() {
  const ac = useAccountCopy();
@@ -696,6 +696,7 @@ function MobilityProfileScreen() {
             <Text style={styles.switchText}>{ac("Privacy")}</Text>
             {(
               [
+                ["hide_phone", ac("Hide phone number"), privacyValue("hide_phone") === true],
                 ["hide_email", ac("Hide email address"), privacyValue("hide_email") === true],
                 ["hide_resume", ac("Hide CV"), privacyValue("hide_resume") === true],
                 ["talent_pool_visible", ac("Pause employer search visibility"), privacyValue("talent_pool_visible") === false],
