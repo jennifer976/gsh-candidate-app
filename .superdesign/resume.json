@@ -94,14 +94,15 @@
         "6d17b633-31d2-4a87-a850-118c0d778ace": { "title": "Onboarding 1 - Splash (cyan)", "sourceHtml": ".superdesign/tmp/onboarding-01-splash.html", "currentVersion": 1 },
         "a96d0a91-c619-4b65-bc51-fc68640eba9a": { "title": "Onboarding 2 - Walkthrough (white)", "sourceHtml": ".superdesign/tmp/onboarding-02-walkthrough.html", "currentVersion": 1 },
         "eff98d2c-07d2-4b51-a41c-3aef9d7b0f6b": { "title": "Onboarding 3 - Sign up / Log in (navy)", "sourceHtml": ".superdesign/tmp/onboarding-03-signup.html", "currentVersion": 1 },
-        "f9ac931c-b6eb-4bd0-81d8-036e9ab63f81": { "title": "Onboarding 4 - Verification (cyan)", "sourceHtml": ".superdesign/tmp/onboarding-04-verify.html", "currentVersion": 1 },
+        "f9ac931c-b6eb-4bd0-81d8-036e9ab63f81": { "title": "Onboarding 4 - Verification (cyan)", "sourceHtml": ".superdesign/tmp/onboarding-04-verify.html", "currentVersion": 3 },
+        "f3b515fb-cbf5-48cf-83a9-7544eaebeec2": { "title": "Onboarding 5 - Main goal pop-up (white)", "sourceHtml": ".superdesign/tmp/onboarding-05-goal.html", "currentVersion": 1 },
         "25f831ce-ceb8-4dca-a0d7-4a3120a1f158": { "title": "Onboarding 5 - Account setup (white)", "sourceHtml": ".superdesign/tmp/onboarding-05-setup.html", "currentVersion": 1 },
         "16ac1983-6292-48b4-9e03-57a873e30e3e": { "title": "Onboarding 6 - Quick start guide (navy)", "sourceHtml": ".superdesign/tmp/onboarding-06-quickstart.html", "currentVersion": 2 },
         "bd56bb82-809e-4b11-855c-2fb2851542d1": { "title": "Walkthrough idea A - Open stage (white)", "sourceHtml": ".superdesign/tmp/onboarding-02a-open-stage.html", "currentVersion": 1 },
         "23734eb7-2317-4d80-b34f-976b36e89a29": { "title": "Walkthrough idea B - Job card deck (white)", "sourceHtml": ".superdesign/tmp/onboarding-02b-card-deck.html", "currentVersion": 1 },
         "0299be01-fbc7-48c6-a4cf-98d800cc2c91": { "title": "Walkthrough idea C - Journey route (white)", "sourceHtml": ".superdesign/tmp/onboarding-02c-journey.html", "currentVersion": 1 }
       },
-      "notes": "Headings use Montserrat one step lighter than v1 (poster = 800, section titles = 700). hero-walking-cyan-v5.webp has an opaque white background: place it directly on white, or inside a white circle on cyan/navy.",
+      "notes": "Real flow is Splash, Sign up, Verify, Main goal pop-up. Walkthrough (and ideas A/B/C), Account setup and Quick start drafts are retired: not in the app. Headings use Montserrat one step lighter than v1 (poster = 800, section titles = 700). hero-walking-cyan-v5.webp has an opaque white background: place it directly on white, or inside a white circle on cyan/navy.",
       "updatedAt": "2026-09-27T22:55:00.000Z"
     },
     "/app-rhythm": {
