@@ -13,12 +13,12 @@ export function androidTabBarMetrics(insetsBottom: number) {
   };
 }
 
-/** Extra space so list content clears the tab bar + Android gesture/nav bar. */
+/**
+ * Bottom padding for tab screen lists. The Android JS tab bar sits below the scene,
+ * so lists only need breathing room; the iOS native tab bar overlays content.
+ */
 export function tabBarBottomPadding(insetsBottom: number): number {
-  if (Platform.OS === "android") {
-    const bar = androidTabBarMetrics(insetsBottom);
-    return bar.height + 20;
-  }
+  if (Platform.OS === "android") return 12;
   return 56 + Math.max(insetsBottom, 8) + 16;
 }
 
