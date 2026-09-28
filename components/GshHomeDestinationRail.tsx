@@ -11,24 +11,28 @@ const DESTINATIONS = [
   {
     label: "Canada",
     iso2: "ca",
+    slug: "canada",
     location: "Canada",
     uri: "https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=800&q=75",
   },
   {
     label: "Australia",
     iso2: "au",
+    slug: "australia",
     location: "Australia",
     uri: "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?auto=format&fit=crop&w=800&q=75",
   },
   {
     label: "UK",
     iso2: "gb",
+    slug: "uk",
     location: "United Kingdom",
     uri: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=75",
   },
   {
     label: "Ireland",
     iso2: "ie",
+    slug: "ireland",
     location: "Ireland",
     uri: "https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?auto=format&fit=crop&w=800&q=75",
   },
@@ -37,17 +41,30 @@ const DESTINATIONS = [
 const CARD_W = 148;
 const CARD_H = 170;
 
-/** Destination rail: photo cards with a navy edge and cyan depth that open Jobs filtered to the country. */
-export function GshHomeDestinationRail() {
+/**
+ * Destination rail: photo cards with a navy edge and cyan depth.
+ * `opens="jobs"` filters Jobs to the country; `opens="guide"` opens the country guide.
+ */
+export function GshHomeDestinationRail({
+  opens = "jobs",
+  eyebrow,
+  title,
+  actionLabel,
+}: {
+  opens?: "jobs" | "guide";
+  eyebrow?: string;
+  title?: string;
+  actionLabel?: string;
+}) {
   const router = useRouter();
   const ac = useAccountCopy();
 
   return (
     <View>
       <SectionHeading
-        eyebrow={ac("Where to next?")}
-        title={ac("Popular destinations")}
-        actionLabel={ac("See all")}
+        eyebrow={eyebrow ?? ac("Where to next?")}
+        title={title ?? ac("Popular destinations")}
+        actionLabel={actionLabel ?? ac("See all")}
         onAction={() => router.push("/countries")}
         style={styles.heading}
       />
@@ -63,10 +80,12 @@ export function GshHomeDestinationRail() {
           <DepthPressable
             key={d.iso2}
             onPress={() =>
-              router.push({
-                pathname: "/(tabs)/jobs",
-                params: { location: d.location },
-              })
+              opens === "guide"
+                ? router.push(`/country/${d.slug}`)
+                : router.push({
+                    pathname: "/(tabs)/jobs",
+                    params: { location: d.location },
+                  })
             }
             face={colors.navy}
             depthColor={colors.cyan}
@@ -74,7 +93,9 @@ export function GshHomeDestinationRail() {
             radius={22}
             borderWidth={2}
             borderColor={colors.navy}
-            accessibilityLabel={ac("Browse jobs in {country}", { country: ac(d.label) })}
+            accessibilityLabel={
+              opens === "guide" ? ac(d.label) : ac("Browse jobs in {country}", { country: ac(d.label) })
+            }
             innerStyle={{ width: CARD_W, height: CARD_H }}
           >
             <Image source={{ uri: d.uri }} style={styles.image} />

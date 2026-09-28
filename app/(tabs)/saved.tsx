@@ -96,7 +96,9 @@ function PipelineStepper({ status }: { status: string }) {
             <View style={styles.stepTrackRow}>
               <View style={[styles.stepLine, index === 0 && styles.hidden, index <= current && styles.stepLineOn]} />
               <View style={[styles.stepDot, done && styles.stepDotOn, index === current && styles.stepDotCurrent]}>
-                {done ? <Ionicons name="checkmark" size={11} color={colors.navy} /> : null}
+                {done ? (
+                  <Ionicons name="checkmark" size={13} color={index === current ? colors.cyan : colors.navy} />
+                ) : null}
               </View>
               <View
                 style={[
@@ -453,21 +455,19 @@ const styles = StyleSheet.create({
   stepper: { flexDirection: "row" },
   step: { flex: 1, alignItems: "center", gap: 6 },
   stepTrackRow: { flexDirection: "row", alignItems: "center", alignSelf: "stretch" },
-  stepLine: { flex: 1, height: 3, backgroundColor: colors.border },
-  stepLineOn: { backgroundColor: colors.navy },
+  stepLine: { flex: 1, height: 6, backgroundColor: colors.pale },
+  stepLineOn: { backgroundColor: colors.cyan },
   hidden: { opacity: 0 },
   stepDot: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: colors.pale,
     alignItems: "center",
     justifyContent: "center",
   },
-  stepDotOn: { backgroundColor: colors.cyan, borderColor: colors.navy },
-  stepDotCurrent: { transform: [{ scale: 1.15 }] },
+  stepDotOn: { backgroundColor: colors.cyan },
+  stepDotCurrent: { width: 32, height: 32, borderRadius: 16, borderWidth: 3, borderColor: colors.cyan, backgroundColor: colors.navy },
   stepLabel: { fontFamily: fontFamily.semiBold, fontSize: 11, color: colors.textMuted },
   stepLabelOn: { fontFamily: fontFamily.extraBold, color: colors.navy },
   stoppedPill: {

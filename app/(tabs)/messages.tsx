@@ -63,15 +63,18 @@ export default function MessagesScreen() {
       <Eyebrow>{ac("Inbox")}</Eyebrow>
       <PosterTitle {...posterParts(ac("Your|messages."))} size={38} style={styles.title} />
       {signedIn ? (
-        <SegmentTabs
-          value={filter}
-          onChange={setFilter}
-          options={[
-            { id: "all", label: ac("All") },
-            { id: "unread", label: unreadTotal > 0 ? `${ac("Unread")} (${unreadTotal})` : ac("Unread") },
-          ]}
-          style={styles.segment}
-        />
+        <>
+          <Text style={styles.body}>{ac("Employers and agencies message you here.")}</Text>
+          <SegmentTabs
+            value={filter}
+            onChange={setFilter}
+            options={[
+              { id: "all", label: all.length > 0 ? `${ac("All")} · ${all.length}` : ac("All") },
+              { id: "unread", label: unreadTotal > 0 ? `${ac("Unread")} · ${unreadTotal}` : ac("Unread") },
+            ]}
+            style={styles.segment}
+          />
+        </>
       ) : (
         <Text style={styles.body}>{ac("Talk to employers and agencies about your applications.")}</Text>
       )}
@@ -135,11 +138,12 @@ export default function MessagesScreen() {
         ListEmptyComponent={empty}
         ListFooterComponent={
           rows.length > 0 ? (
-            <DepthSurface face={colors.navy} depthColor={colors.navyDeep} depth={5} radius={20} style={styles.tip}>
+            <DepthSurface face={colors.navy} depthColor={colors.cyan} depth={5} radius={20} style={styles.tip}>
               <View style={styles.tipInner}>
-                <IconBadge icon="bulb-outline" size={36} radius={11} />
+                <IconBadge icon="shield-checkmark" size={36} radius={11} />
                 <Text style={styles.tipText}>
-                  {ac("Reply when an employer or agency starts a conversation.")}
+                  <Text style={styles.tipStrong}>{ac("Employers and agencies start the chat.")}</Text>{" "}
+                  {ac("Control who can find and contact you in Profile.")}
                 </Text>
               </View>
             </DepthSurface>
@@ -251,5 +255,6 @@ const styles = StyleSheet.create({
   badgeText: { fontSize: 11, fontFamily: fontFamily.extraBold, color: colors.cyan },
   tip: { marginHorizontal: 20, marginTop: 8 },
   tipInner: { flexDirection: "row", alignItems: "center", gap: 12, padding: 16 },
-  tipText: { flex: 1, fontFamily: fontFamily.medium, fontSize: 14, lineHeight: 20, color: colors.white },
+  tipText: { flex: 1, fontFamily: fontFamily.medium, fontSize: 13, lineHeight: 20, color: "rgba(255,255,255,0.75)" },
+  tipStrong: { fontFamily: fontFamily.extraBold, color: colors.white },
 });

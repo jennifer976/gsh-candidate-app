@@ -22,6 +22,8 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
 import { CandidateReadinessSummary } from "@/components/CandidateReadinessSummary";
+import { CountryFlag } from "@/components/CountryFlag";
+import { canonicalCountryCode, countryDisplayName } from "@/lib/countries";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { GuestProfileHub } from "@/components/GuestProfileHub";
 import { BrandLinkRow, DecorRing, DepthButton, DepthSurface, Eyebrow } from "@/components/gsh-brand";
@@ -309,6 +311,9 @@ function ProfileScreen() {
   const profileErrCopy = profileQuery.isError;
   const completionBreakdown = getCandidateCompletionBreakdown(p, locale);
   const resumeUrl = typeof p?.resume === "string" ? p.resume : "";
+  const targetCountryCodes = Array.isArray(p?.targetCountries)
+    ? [...new Set((p.targetCountries as unknown[]).map(canonicalCountryCode).filter((code): code is string => Boolean(code)))]
+    : [];
   const displayName = [firstName, lastName].filter(Boolean).join(" ") || user?.email || ac("Your profile");
   const initials = [firstName.charAt(0), lastName.charAt(0)].filter(Boolean).join("").toUpperCase() || "?";
   const avatarUrl = typeof p?.profile_picture === "string" ? p.profile_picture.trim() : "";
@@ -431,21 +436,53 @@ function ProfileScreen() {
             </View>
           ) : null}
 
-          <CandidateReadinessSummary profile={p} accountEmail={user?.email} />
+          <DepthSurface depth={4} radius={22} borderWidth={2} borderColor={colors.navy} innerStyle={styles.quickCard}>
+            <View style={styles.quickRow}>
+              <View style={styles.quickIcon}>
+                <Ionicons name="document-text" size={20} color={colors.cyan} />
+              </View>
+              <View style={{ flex: 1, minWidth: 0 }}>
+                <Text style={styles.quickTitle} numberOfLines={1}>{resumeUrl ? ac("CV on file") : ac("No CV uploaded yet")}</Text>
+                <Text style={styles.quickHint} numberOfLines={1}>{resumeUrl ? ac("Tap below to replace") : ac("Upload PDF or Word")}</Text>
+              </View>
+              <Pressable
+                onPress={() => cvMut.mutate()}
+                disabled={cvMut.isPending}
+                style={[styles.quickPill, cvMut.isPending && styles.disabledBtn]}
+                accessibilityRole="button"
+                accessibilityLabel={resumeUrl ? ac("Replace CV") : ac("Upload CV")}
+              >
+                {cvMut.isPending ? (
+                  <ActivityIndicator color={colors.navy} size="small" />
+                ) : (
+                  <Text style={styles.quickPillText}>{resumeUrl ? ac("Replace CV") : ac("Upload CV")}</Text>
+                )}
+              </Pressable>
+            </View>
+          </DepthSurface>
 
-          {completionBreakdown.missing.length > 0 ? (
-            <SectionCard title={ac("Details to review")}>
-              <Text style={styles.completionHelp}>{ac("These details help with applications and your job search. Add only information that is correct.")}</Text>
-              <View style={styles.missingList}>
-                {completionBreakdown.missing.map((item) => (
-                  <View key={item.path} style={styles.missingRow}>
-                    <View style={styles.missingDot} />
-                    <Text style={styles.missingText}>{item.label}</Text>
+          <DepthSurface depth={4} radius={22} borderWidth={2} borderColor={colors.navy} innerStyle={styles.quickCard}>
+            <View style={styles.quickHead}>
+              <Text style={styles.quickTitle}>{ac("Target countries")}</Text>
+              <Pressable onPress={scrollToForm} hitSlop={10} accessibilityRole="button" accessibilityLabel={`${ac("Edit")}: ${ac("Target countries")}`}>
+                <Text style={styles.quickEdit}>{ac("Edit")}</Text>
+              </Pressable>
+            </View>
+            {targetCountryCodes.length > 0 ? (
+              <View style={styles.countryChips}>
+                {targetCountryCodes.map((code) => (
+                  <View key={code} style={styles.countryChip}>
+                    <CountryFlag iso2={code.toLowerCase()} width={18} />
+                    <Text style={styles.countryChipText}>{countryDisplayName(code, locale)}</Text>
                   </View>
                 ))}
               </View>
-            </SectionCard>
-          ) : null}
+            ) : (
+              <Text style={styles.quickHint}>{ac("Add the countries you would move to.")}</Text>
+            )}
+          </DepthSurface>
+
+          <CandidateReadinessSummary profile={p} accountEmail={user?.email} />
 
           <View
             style={styles.formBlock}
@@ -571,33 +608,6 @@ function ProfileScreen() {
             ) : (
               <Text style={styles.emptySkillsHint}>{ac("Use Add skills to select at least one skill for your application.")}</Text>
             )}
-          </SectionCard>
-
-          {/* CV */}
-          <SectionCard title={ac("CV or résumé")}>
-            <View style={styles.cvRow}>
-              <View style={[styles.cvIconTile, resumeUrl ? styles.cvIconTileHas : {}]}>
-                <Ionicons name={resumeUrl ? "document-text" : "document-text-outline"} size={22} color={resumeUrl ? colors.brand : colors.textMuted} />
-              </View>
-              <View style={styles.cvTextCol}>
-                <Text style={styles.cvStatus}>{resumeUrl ? ac("CV on file") : ac("No CV uploaded yet")}</Text>
-                <Text style={styles.cvHint}>{resumeUrl ? ac("Tap below to replace") : ac("Upload PDF or Word")}</Text>
-              </View>
-            </View>
-            <Pressable
-              style={[styles.uploadBtn, cvMut.isPending && styles.disabledBtn]}
-              onPress={() => cvMut.mutate()}
-              disabled={cvMut.isPending}
-            >
-              {cvMut.isPending ? (
-                <ActivityIndicator color={colors.brand} size="small" />
-              ) : (
-                <>
-                  <Ionicons name="cloud-upload-outline" size={18} color={colors.brand} />
-                  <Text style={styles.uploadBtnText}>{resumeUrl ? ac("Replace CV") : ac("Upload CV")}</Text>
-                </>
-              )}
-            </Pressable>
           </SectionCard>
 
           <View style={styles.accountList}>
@@ -791,17 +801,43 @@ const styles = StyleSheet.create({
     borderColor: "#fde68a",
   },
   errorText: { flex: 1, fontSize: 14, fontFamily: fontFamily.medium, color: "#92400e", lineHeight: 20 },
-  completionHelp: {
-    fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: colors.textSecondary,
-    lineHeight: 19,
-    marginBottom: 12,
+  quickCard: { padding: 16 },
+  quickRow: { flexDirection: "row", alignItems: "center", gap: 12 },
+  quickIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: colors.navy,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  missingList: { gap: 8 },
-  missingRow: { flexDirection: "row", alignItems: "center", gap: 9 },
-  missingDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.brand },
-  missingText: { flex: 1, fontSize: 13, fontFamily: fontFamily.medium, color: colors.textPrimary },
+  quickTitle: { fontSize: 14, fontFamily: fontFamily.extraBold, color: colors.navy },
+  quickHint: { marginTop: 2, fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textMuted },
+  quickPill: {
+    minHeight: 36,
+    minWidth: 72,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  quickPillText: { fontSize: 12, fontFamily: fontFamily.extraBold, color: colors.navy },
+  quickHead: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
+  quickEdit: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.textMuted },
+  countryChips: { flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 8 },
+  countryChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 999,
+    borderWidth: 2,
+    borderColor: colors.navy,
+    backgroundColor: colors.cyan,
+  },
+  countryChipText: { fontSize: 12, fontFamily: fontFamily.extraBold, color: colors.navy },
 
   sectionCard: {
     padding: 16,
@@ -872,35 +908,6 @@ const styles = StyleSheet.create({
   addSkillBtnText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.white },
   emptySkillsHint: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 20 },
 
-  // CV
-  cvRow: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 14 },
-  cvIconTile: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: colors.surfaceMuted,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  cvIconTileHas: { backgroundColor: colors.secondaryTintBg, borderColor: colors.purpleBorder },
-  cvTextCol: { flex: 1 },
-  cvStatus: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
-  cvHint: { marginTop: 3, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 17 },
-  uploadBtn: {
-    minHeight: 48,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    paddingVertical: 12,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: colors.brand,
-    backgroundColor: colors.white,
-  },
-  uploadBtnText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.brand },
   disabledBtn: { opacity: 0.6 },
 
   // Sign out

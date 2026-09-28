@@ -343,6 +343,19 @@ export default function JobDetailScreen() {
   const jobTypeLabel = job.jobType ? String(job.jobType).replace(/-/g, " ") : "";
   const unavailableReason = applicationUnavailableReason(job, locale);
   const postedLabel = jobAgeLabel(job.createdAt, locale);
+  const expiresDate = job.expiresAt ? new Date(job.expiresAt) : null;
+  const closesLabel =
+    expiresDate && Number.isFinite(expiresDate.getTime())
+      ? expiresDate.toLocaleDateString(intlLocale, { day: "numeric", month: "short", year: "numeric" })
+      : "";
+  const allFacts: { icon: IonName; label: string; value: string }[] = [
+    { icon: "cash", label: ac("Salary"), value: salary ?? "" },
+    { icon: "airplane", label: ac("Visa"), value: visaRoutes[0] ? jobChipLabel(formatVisaRouteChip(visaRoutes[0]), locale) : "" },
+    { icon: "home", label: ac("Relocation"), value: mobilityItems[0] ? jobChipLabel(mobilityItems[0], locale) : "" },
+    { icon: "calendar", label: ac("Closes"), value: closesLabel },
+  ];
+  const facts = allFacts.filter((fact) => fact.value);
+  const showFacts = facts.length >= 2;
 
   return (
     <View style={styles.root}>
@@ -362,7 +375,7 @@ export default function JobDetailScreen() {
             </DepthSurface>
             <Text style={styles.heroCompany} numberOfLines={1}>{employer}</Text>
             <Text style={styles.heroTitle} numberOfLines={4} accessibilityRole="header">{job.title}</Text>
-            {salary ? <Text style={styles.heroSalary}>{salary}</Text> : null}
+            {salary && !showFacts ? <Text style={styles.heroSalary}>{salary}</Text> : null}
             <View style={styles.heroFacts}>
               <HeroFact icon="location-outline" label={location} />
               <HeroFact icon="briefcase-outline" label={jobTypeLabel} />
@@ -376,6 +389,28 @@ export default function JobDetailScreen() {
           entering={reducedMotion ? undefined : FadeInUp.delay(150).duration(400)}
           style={styles.sheet}
         >
+          {showFacts ? (
+            <View style={styles.factGrid}>
+              {facts.map((fact) => (
+                <DepthSurface
+                  key={fact.label}
+                  depth={4}
+                  radius={18}
+                  borderWidth={2}
+                  borderColor={colors.navy}
+                  style={styles.factTile}
+                  innerStyle={styles.factInner}
+                >
+                  <View style={styles.factIcon}>
+                    <Ionicons name={fact.icon} size={16} color={colors.navy} />
+                  </View>
+                  <Text style={styles.factLabel}>{fact.label}</Text>
+                  <Text style={styles.factValue} numberOfLines={2}>{fact.value}</Text>
+                </DepthSurface>
+              ))}
+            </View>
+          ) : null}
+
           {chips.length > 0 ? (
             <View style={styles.chipRow}>
               {chips.map((c) => (
@@ -583,6 +618,26 @@ export default function JobDetailScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.navy, overflow: "hidden" },
+  factGrid: { flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 12, marginBottom: 16 },
+  factTile: { width: "47%", flexGrow: 1 },
+  factInner: { padding: 12, minHeight: 104 },
+  factIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  factLabel: {
+    marginTop: 8,
+    fontSize: 10,
+    fontFamily: fontFamily.bold,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    color: colors.textMuted,
+  },
+  factValue: { marginTop: 2, fontSize: 15, lineHeight: 19, fontFamily: fontFamily.headingStrong, color: colors.navy },
   scrollPad: { flexGrow: 1, backgroundColor: colors.white },
 
   topBar: {

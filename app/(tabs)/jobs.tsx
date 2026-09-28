@@ -493,11 +493,12 @@ export default function JobsTabScreen() {
           </View>
           <Pressable
             onPress={() => router.push("/alerts")}
-            style={styles.roundButton}
+            style={styles.alertsButton}
             accessibilityRole="button"
             accessibilityLabel={ac("Job alerts")}
           >
-            <Ionicons name="notifications" size={22} color={colors.navy} />
+            <Ionicons name="flash" size={18} color={colors.cyan} />
+            <Text style={styles.alertsText}>{ac("Job alerts")}</Text>
           </Pressable>
         </View>
         <View style={styles.searchRow}>
@@ -1033,14 +1034,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 12,
   },
-  roundButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
-    backgroundColor: colors.pale,
+  alertsButton: {
+    minHeight: 44,
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    gap: 6,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    backgroundColor: colors.navy,
   },
+  alertsText: { fontSize: 12, fontFamily: fontFamily.extraBold, color: colors.white },
   searchRow: {
     marginTop: 16,
     flexDirection: "row",
