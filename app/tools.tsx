@@ -106,16 +106,10 @@ export default function ToolsScreen() {
           <SectionHeading title={t("resourcesMove")} />
           <View style={styles.rows}>
             <BrandLinkRow
-              icon="earth-outline"
-              label={ac("Countries")}
-              hint={ac("Visa routes, hiring sectors and everyday life, destination by destination.")}
-              onPress={() => router.push("/countries")}
-            />
-            <BrandLinkRow
-              icon="shield-checkmark-outline"
-              label={copy.sponsor}
-              hint={ac("Search the company directory for employers and their sponsorship signals.")}
-              onPress={() => router.push("/companies")}
+              icon="swap-horizontal-outline"
+              label={t("resourcesCompare")}
+              hint={t("resourcesCompareHelp")}
+              onPress={() => router.push("/compare-countries")}
             />
             <BrandLinkRow
               icon="cash-outline"
@@ -128,12 +122,6 @@ export default function ToolsScreen() {
               label={copy.worksheets}
               hint={copy.worksheetsHelp}
               onPress={() => router.push("/relocation-worksheets")}
-            />
-            <BrandLinkRow
-              icon="grid-outline"
-              label={copy.resources}
-              hint={copy.resourcesHelp}
-              onPress={() => router.push("/tools-resources")}
             />
           </View>
         </View>

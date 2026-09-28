@@ -75,6 +75,28 @@ export function resolveJobBrandLogo(job: Job): string {
   return resolveUploadAssetUrl(raw);
 }
 
+export function resolveDirectoryEmployerLogo(row: {
+  employerUserId: string;
+  companyName: string;
+  companyLogo?: string;
+}): string {
+  let raw = row.companyLogo?.trim() ?? "";
+  const nameKey = normalizedCompanyKey(row.companyName);
+  for (const o of EMPLOYER_JOB_LOGO_OVERRIDES) {
+    const wantUrl = o.logoUrl?.trim();
+    if (!wantUrl) continue;
+    if (o.employerUserId?.trim() && o.employerUserId.trim() === row.employerUserId) {
+      raw = wantUrl;
+      break;
+    }
+    if (o.companyNameKey?.trim() && nameKey && normalizedCompanyKey(o.companyNameKey) === nameKey) {
+      raw = wantUrl;
+      break;
+    }
+  }
+  return resolveUploadAssetUrl(raw);
+}
+
 export function resolveDashboardJobLogo(job: {
   companyLogo?: string | null;
   postedBy?: unknown;

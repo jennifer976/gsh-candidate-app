@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   },
   heroShell: { marginBottom: 12, borderRadius: radii.lg, overflow: "hidden" },
   heroInner: { flex: 1, padding: 18 },
-  badgeRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 12 },
+  badgeRow: { flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 8, marginBottom: 12 },
   badge: {
     alignSelf: "flex-start",
     paddingHorizontal: 10,

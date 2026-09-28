@@ -666,7 +666,7 @@ const styles = StyleSheet.create({
   stateWrap: { flex: 1, justifyContent: "center", paddingHorizontal: 16, paddingBottom: 60 },
   skeletonPad: { paddingTop: 4 },
 
-  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: 16 },
+  chipRow: { flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 6, marginBottom: 16 },
   chip: {
     paddingVertical: 6,
     paddingHorizontal: 11,

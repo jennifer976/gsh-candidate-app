@@ -471,51 +471,38 @@ export default function JobsTabScreen() {
     curatedJobsQuery.data?.pages.flatMap((page) => page.data) ?? [];
   const connectedJobs =
     connectedJobsQuery.data?.pages.flatMap((page) => page.data) ?? [];
-  const listRows =
+  const laneRows =
     feedTab === "direct"
       ? orderedHubJobs
       : feedTab === "connected"
         ? connectedJobs
         : curatedJobs;
+  const laneQuery =
+    feedTab === "direct"
+      ? hubJobsQuery
+      : feedTab === "connected"
+        ? connectedJobsQuery
+        : curatedJobsQuery;
+  const laneLoading = laneQuery.isLoading && !laneQuery.data;
+  const showingFallback =
+    feedTab !== "curated" &&
+    !laneLoading &&
+    !laneQuery.isError &&
+    laneRows.length === 0 &&
+    !curatedJobsQuery.isError &&
+    (curatedJobs.length > 0 || curatedJobsQuery.isLoading);
+  const shownLane = showingFallback ? "curated" : feedTab;
+  const shownQuery = showingFallback ? curatedJobsQuery : laneQuery;
+  const listRows = showingFallback ? curatedJobs : laneRows;
 
-  const listBootloading =
-    feedTab === "direct"
-      ? hubJobsQuery.isLoading && !hubJobsQuery.data
-      : feedTab === "connected"
-        ? connectedJobsQuery.isLoading && !connectedJobsQuery.data
-        : curatedJobsQuery.isLoading && !curatedJobsQuery.data;
-
-  const activeError =
-    feedTab === "direct"
-      ? hubJobsQuery.isError
-      : feedTab === "connected"
-        ? connectedJobsQuery.isError
-        : curatedJobsQuery.isError;
-  const activeHasNextPage =
-    feedTab === "direct"
-      ? hubJobsQuery.hasNextPage
-      : feedTab === "connected"
-        ? connectedJobsQuery.hasNextPage
-        : curatedJobsQuery.hasNextPage;
-  const activeFetchingNextPage =
-    feedTab === "direct"
-      ? hubJobsQuery.isFetchingNextPage
-      : feedTab === "connected"
-        ? connectedJobsQuery.isFetchingNextPage
-        : curatedJobsQuery.isFetchingNextPage;
+  const listBootloading = laneLoading || (showingFallback && curatedJobsQuery.isLoading && !curatedJobsQuery.data);
+  const activeError = laneQuery.isError;
+  const activeHasNextPage = shownQuery.hasNextPage;
+  const activeFetchingNextPage = shownQuery.isFetchingNextPage;
   const loadNextPage = useCallback(() => {
     if (!activeHasNextPage || activeFetchingNextPage) return;
-    if (feedTab === "direct") void hubJobsQuery.fetchNextPage();
-    else if (feedTab === "connected") void connectedJobsQuery.fetchNextPage();
-    else void curatedJobsQuery.fetchNextPage();
-  }, [
-    activeFetchingNextPage,
-    activeHasNextPage,
-    connectedJobsQuery,
-    curatedJobsQuery,
-    feedTab,
-    hubJobsQuery,
-  ]);
+    void shownQuery.fetchNextPage();
+  }, [activeFetchingNextPage, activeHasNextPage, shownQuery]);
   const activeStructuredFilters = [
     ...(workModeFilter ? [{ id: "workMode", label: ac(({remote: "Remote", hybrid: "Hybrid", onsite: "On-site"} as Record<string, string>)[workModeFilter]) }] : []),
     ...(mobilityFilter
@@ -544,6 +531,7 @@ export default function JobsTabScreen() {
   }, [hubJobsQuery, curatedJobsQuery, connectedJobsQuery, savedJobsQuery, signedIn]);
 
   const filterCount = activeStructuredFilters.length + (locationFilter ? 1 : 0);
+  const narrowed = Boolean(debouncedQ) || filterCount > 0;
 
   const listHeader = (
     <>
@@ -907,6 +895,26 @@ export default function JobsTabScreen() {
           />
         </Pressable>
       </View>
+      {showingFallback ? (
+        <View style={styles.fallbackNote}>
+          <View style={styles.fallbackIcon}>
+            <Ionicons name="open-outline" size={18} color={colors.navy} />
+          </View>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text style={styles.fallbackTitle}>
+              {feedTab === "direct"
+                ? ac("No direct roles match right now")
+                : ac("No connected roles match right now")}
+            </Text>
+            <Text style={styles.fallbackBody}>
+              {ac("Here are matching roles that open on the employer's own site.")}
+              {feedTab === "direct" && visaRouteFilter
+                ? ` ${ac("The visa route filter only applies to direct roles.")}`
+                : ""}
+            </Text>
+          </View>
+        </View>
+      ) : null}
     </>
   );
 
@@ -935,20 +943,32 @@ export default function JobsTabScreen() {
     />
   ) : listRows.length === 0 ? (
     <BrandStatePanel
-      icon={debouncedQ ? "search-outline" : "briefcase-outline"}
-      title={debouncedQ ? t("jobsNoMatches") : t("jobsEmpty")}
+      icon={narrowed ? "search-outline" : "briefcase-outline"}
+      title={narrowed ? t("jobsNoMatches") : t("jobsEmpty")}
       body={
-        debouncedQ
+        narrowed
           ? ac("Try a different word, or clear your filters.")
           : ac("New roles are added every week. Set up an alert and we'll tell you.")
       }
       primary={
-        debouncedQ
-          ? { label: t("jobsClear"), icon: "close", onPress: () => setQ("") }
+        narrowed
+          ? {
+              label: t("jobsClear"),
+              icon: "close",
+              onPress: () => {
+                setQ("");
+                setLocationFilter("");
+                setMobilityFilter("");
+                setWorkModeFilter("");
+                setVisaRouteFilter("");
+              },
+            }
           : { label: ac("Set up a job alert"), icon: "notifications-outline", onPress: () => router.push("/alerts") }
       }
       secondary={
-        !debouncedQ && feedTab === "direct"
+        narrowed
+          ? { label: ac("Set up a job alert"), onPress: () => router.push("/alerts") }
+          : feedTab === "direct"
           ? {
               label: t("jobsTryExternal"),
               onPress: () => {
@@ -985,7 +1005,7 @@ export default function JobsTabScreen() {
         keyboardShouldPersistTaps="handled"
         renderItem={({ item }) => (
           <View style={styles.listRow}>
-            {feedTab === "direct" ? (
+            {shownLane === "direct" ? (
               <HubJobCard
                 job={item as Job}
                 onPress={() => router.push(`/job/${(item as Job)._id}`)}
@@ -1241,9 +1261,41 @@ const styles = StyleSheet.create({
   },
 
   /** No horizontal pad here — hero is full-bleed like Home; rows use listRow. */
-  listPad: { gap: 10 },
+  listPad: { gap: 18 },
   listRow: { paddingHorizontal: 16 },
   listPadGrow: { flexGrow: 1 },
+  fallbackNote: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    marginHorizontal: 16,
+    marginTop: 12,
+    padding: 14,
+    borderRadius: 18,
+    backgroundColor: colors.pale,
+    borderWidth: 2,
+    borderColor: colors.navy,
+  },
+  fallbackIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  fallbackTitle: {
+    fontSize: 15,
+    fontFamily: fontFamily.heading,
+    color: colors.navy,
+  },
+  fallbackBody: {
+    marginTop: 3,
+    fontSize: 13,
+    lineHeight: 19,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
+  },
   paginationLoader: { paddingVertical: 22, alignItems: "center", gap: 8 },
   paginationLoaderText: {
     fontSize: 12,
@@ -1353,7 +1405,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.navy,
   },
-  chipWrap: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", gap: 6 },
+  chipWrap: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 6 },
   listChip: {
     paddingVertical: 4,
     paddingHorizontal: 9,

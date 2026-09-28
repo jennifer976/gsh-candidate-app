@@ -19,7 +19,6 @@ import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshHomeDestinationRail } from "@/components/GshHomeDestinationRail";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import {
-  BrandChip,
   DecorRing,
   DepthButton,
   DepthPressable,
@@ -34,65 +33,84 @@ import {
   fetchCandidateDashboard,
   fetchConversations,
   fetchOwnProfile,
+  fetchPublicExternalJobListings,
   fetchPublicJobs,
   fetchUnreadNotificationCount,
 } from "@/lib/api-client";
 import { tabBarBottomPadding } from "@/lib/android-insets";
 import { brandLockupNavy, heroWalking } from "@/lib/brand-assets";
+import { resolveBrandImageUrl } from "@/lib/brand-logo";
 import { fetchPublishedBlogList } from "@/lib/content/blogQueries";
 import { useAppCopy } from "@/lib/i18n";
+import type { AppLanguage as AppLocale } from "@/lib/i18n/catalog";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { getJobEmployerLabel, getJobLogoUrl, hubListingChipsPrioritized } from "@/lib/job-display";
 import { jobAgeLabel, jobChipLabel, jobLocationLabel, jobSalaryLabel } from "@/lib/job-presentation";
 import { getCandidateCompletionBreakdown } from "@/lib/profile-completion";
 import { useSignInPrompt } from "@/lib/useSignInPrompt";
 import { colors, fontFamily } from "@/lib/theme";
-import type { Job } from "@/types/models";
+import type { ExternalJobListingPublic, Job } from "@/types/models";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
-
-const COLLECTIONS: Array<{
-  label: string;
-  icon: IonName;
-  params: { q?: string; benefit?: string; workMode?: string };
-}> = [
-  { label: "Relocation", icon: "airplane", params: { benefit: "Relocation Support" } },
-  { label: "Remote", icon: "laptop-outline", params: { workMode: "remote" } },
-  { label: "Tech", icon: "code-slash-outline", params: { q: "technology" } },
-  { label: "Healthcare", icon: "pulse-outline", params: { q: "healthcare" } },
-  { label: "Engineering", icon: "construct-outline", params: { q: "engineering" } },
-];
-
-const MOVE_TOOLS: Array<{ label: string; icon: IonName; href: string }> = [
-  { label: "Country guides", icon: "globe-outline", href: "/countries" },
-  { label: "Compare countries", icon: "git-compare-outline", href: "/compare-countries" },
-  { label: "Move checklists", icon: "list-outline", href: "/relocation-worksheets" },
-  { label: "Currency", icon: "cash-outline", href: "/currency-converter" },
-  { label: "Specialist help", icon: "people-outline", href: "/partners" },
-];
-
-const PREP_TOOLS: Array<{ label: string; icon: IonName; href: string }> = [
-  { label: "CV quality check", icon: "document-text-outline", href: "/cv-quality-checker" },
-  { label: "CV and job comparison", icon: "scan-outline", href: "/ats-assistant" },
-  {
-    label: "Cover letter template",
-    icon: "create-outline",
-    href: "/resources/visa-sponsorship-cover-letter-template",
-  },
-  { label: "Scam checklist", icon: "shield-checkmark-outline", href: "/resources/job-offer-scam-checklist" },
-];
 
 const HERO_SIZE = 116;
 const JOB_CARD_W = 284;
 
-function HomeJobCard({ job, index, onPress }: { job: Job; index: number; onPress: () => void }) {
-  const { t, locale } = useAppCopy();
-  const employer = getJobEmployerLabel(job, locale);
+type HomeRole = {
+  key: string;
+  title: string;
+  employer: string;
+  logoUrl: string;
+  bandLabel: string;
+  bandIcon: IonName;
+  age: string | null;
+  location: string;
+  footer: string;
+  href: string;
+};
+
+function directRole(job: Job, locale: AppLocale): HomeRole {
   const chip = hubListingChipsPrioritized(job, 1)[0];
-  const bandLabel = chip ? jobChipLabel(chip, locale) : job.jobType || "";
-  const age = jobAgeLabel(job.createdAt, locale);
-  const location = jobLocationLabel(job, locale);
-  const salary = jobSalaryLabel(job, locale);
+  return {
+    key: job._id,
+    title: job.title,
+    employer: getJobEmployerLabel(job, locale),
+    logoUrl: getJobLogoUrl(job),
+    bandLabel: chip ? jobChipLabel(chip, locale) : job.jobType || "",
+    bandIcon: chip ? "airplane" : "briefcase-outline",
+    age: jobAgeLabel(job.createdAt, locale),
+    location: jobLocationLabel(job, locale),
+    footer: jobSalaryLabel(job, locale),
+    href: `/job/${encodeURIComponent(job._id)}`,
+  };
+}
+
+function externalRole(
+  job: ExternalJobListingPublic,
+  locale: AppLocale,
+  ac: (key: string) => string,
+): HomeRole {
+  return {
+    key: job._id,
+    title: job.title,
+    employer: job.companyName,
+    logoUrl: resolveBrandImageUrl(job.companyLogo),
+    bandLabel: ac("Employer site"),
+    bandIcon: "open-outline",
+    age: jobAgeLabel(job.externalPostedAt ?? job.createdAt, locale),
+    location: job.location ?? "",
+    footer: job.sponsorshipAvailable
+      ? ac("Visa sponsorship")
+      : job.relocationAvailable
+        ? ac("Relocation support")
+        : "",
+    href: `/external-job/${encodeURIComponent(job._id)}`,
+  };
+}
+
+function HomeJobCard({ role, index, onPress }: { role: HomeRole; index: number; onPress: () => void }) {
+  const { t } = useAppCopy();
+  const { employer, bandLabel, age, location } = role;
   const navyBand = index % 2 === 1;
   const bandText = navyBand ? colors.cyan : colors.navy;
 
@@ -103,14 +121,14 @@ function HomeJobCard({ job, index, onPress }: { job: Job; index: number; onPress
       radius={22}
       borderWidth={2}
       borderColor={colors.navy}
-      accessibilityLabel={`${job.title}, ${employer}`}
+      accessibilityLabel={`${role.title}, ${employer}`}
       innerStyle={{ width: JOB_CARD_W }}
     >
       <View style={[styles.jobBand, { backgroundColor: navyBand ? colors.navy : colors.cyan }]}>
         <View style={styles.jobBandLeft}>
           {bandLabel ? (
             <>
-              <Ionicons name={chip ? "airplane" : "briefcase-outline"} size={13} color={bandText} />
+              <Ionicons name={role.bandIcon} size={13} color={bandText} />
               <Text style={[styles.jobBandText, { color: bandText }]} numberOfLines={1}>
                 {bandLabel}
               </Text>
@@ -121,13 +139,13 @@ function HomeJobCard({ job, index, onPress }: { job: Job; index: number; onPress
       </View>
       <View style={styles.jobBody}>
         <View style={styles.jobHead}>
-          <CompanyLogo logoUrl={getJobLogoUrl(job)} companyName={employer} size={46} radius={12} />
+          <CompanyLogo logoUrl={role.logoUrl} companyName={employer} size={46} radius={12} />
           <View style={styles.jobHeadText}>
             <Text style={styles.jobCompany} numberOfLines={1}>
               {employer}
             </Text>
             <Text style={styles.jobTitle} numberOfLines={2}>
-              {job.title}
+              {role.title}
             </Text>
           </View>
         </View>
@@ -141,7 +159,7 @@ function HomeJobCard({ job, index, onPress }: { job: Job; index: number; onPress
         ) : null}
         <View style={styles.jobFooter}>
           <Text style={styles.jobSalary} numberOfLines={1}>
-            {salary}
+            {role.footer}
           </Text>
           <View style={styles.jobView}>
             <Text style={styles.jobViewText}>{t("jobsView")}</Text>
@@ -226,6 +244,13 @@ export default function CandidateHomeScreen() {
     queryFn: () => fetchPublicJobs({ page: 1, perPage: 8 }),
     staleTime: 60_000,
   });
+  const noDirectJobs = jobsQuery.isSuccess && (jobsQuery.data?.data ?? []).length === 0;
+  const externalJobsQuery = useQuery({
+    queryKey: ["external-jobs", "public", "home"],
+    queryFn: () => fetchPublicExternalJobListings({ sourceRelationship: "curated_external", page: 1, perPage: 8 }),
+    staleTime: 60_000,
+    enabled: noDirectJobs,
+  });
   const blogQuery = useQuery({
     queryKey: ["blogs", "published"],
     queryFn: fetchPublishedBlogList,
@@ -258,13 +283,24 @@ export default function CandidateHomeScreen() {
 
   const onRefresh = useCallback(() => {
     void jobsQuery.refetch();
+    if (noDirectJobs) void externalJobsQuery.refetch();
     void blogQuery.refetch();
     if (!signedIn) return;
     void dashboardQuery.refetch();
     void profileQuery.refetch();
     void notificationsQuery.refetch();
     void conversationsQuery.refetch();
-  }, [blogQuery, conversationsQuery, dashboardQuery, jobsQuery, notificationsQuery, profileQuery, signedIn]);
+  }, [
+    blogQuery,
+    conversationsQuery,
+    dashboardQuery,
+    externalJobsQuery,
+    jobsQuery,
+    noDirectJobs,
+    notificationsQuery,
+    profileQuery,
+    signedIn,
+  ]);
 
   const profile = signedIn ? (profileQuery.data as Record<string, unknown> | undefined) : undefined;
   const firstName = typeof profile?.firstName === "string" ? profile.firstName.trim() : "";
@@ -279,7 +315,12 @@ export default function CandidateHomeScreen() {
     (total, row) => total + Math.max(0, row.unreadCount ?? (row.read === false ? 1 : 0)),
     0,
   );
-  const jobs = (jobsQuery.data?.data ?? []).slice(0, 6);
+  const roles: HomeRole[] = noDirectJobs
+    ? (externalJobsQuery.data?.data ?? []).slice(0, 6).map((job) => externalRole(job, locale, ac))
+    : (jobsQuery.data?.data ?? []).slice(0, 6).map((job) => directRole(job, locale));
+  const rolesLoading = jobsQuery.isLoading || (noDirectJobs && externalJobsQuery.isLoading);
+  const rolesError = noDirectJobs ? externalJobsQuery.isError : jobsQuery.isError;
+  const retryRoles = () => void (noDirectJobs ? externalJobsQuery.refetch() : jobsQuery.refetch());
   const posts = (blogQuery.data ?? []).slice(0, 3);
   const [featuredPost, ...morePosts] = posts;
 
@@ -532,7 +573,7 @@ export default function CandidateHomeScreen() {
           </View>
         ) : null}
 
-        {jobsQuery.isLoading || jobs.length > 0 || jobsQuery.isError ? (
+        {rolesLoading || roles.length > 0 || rolesError ? (
           <View style={styles.sectionFlush}>
             <SectionHeading
               eyebrow={ac("Fresh roles")}
@@ -541,8 +582,8 @@ export default function CandidateHomeScreen() {
               onAction={() => router.push("/(tabs)/jobs")}
               style={styles.headingInset}
             />
-            {jobsQuery.isError && jobs.length === 0 ? (
-              <Pressable onPress={() => void jobsQuery.refetch()} style={styles.inlineRetry} accessibilityRole="button">
+            {rolesError && roles.length === 0 ? (
+              <Pressable onPress={retryRoles} style={styles.inlineRetry} accessibilityRole="button">
                 <Ionicons name="refresh" size={16} color={colors.navy} />
                 <Text style={styles.inlineRetryText}>{ac("Jobs could not load. Tap to try again.")}</Text>
               </Pressable>
@@ -555,14 +596,14 @@ export default function CandidateHomeScreen() {
                 decelerationRate="fast"
                 snapToInterval={JOB_CARD_W + 16}
               >
-                {jobsQuery.isLoading
+                {rolesLoading
                   ? [0, 1].map((key) => <JobCardPlaceholder key={key} />)
-                  : jobs.map((job, index) => (
+                  : roles.map((role, index) => (
                       <HomeJobCard
-                        key={job._id}
-                        job={job}
+                        key={role.key}
+                        role={role}
                         index={index}
-                        onPress={() => router.push(`/job/${encodeURIComponent(job._id)}`)}
+                        onPress={() => router.push(role.href as never)}
                       />
                     ))}
               </ScrollView>
@@ -570,66 +611,8 @@ export default function CandidateHomeScreen() {
           </View>
         ) : null}
 
-        <View style={styles.moveBand}>
-          <DecorRing size={220} thickness={34} color="rgba(255,255,255,0.3)" style={{ top: -90, left: -80 }} />
-          <SectionHeading
-            eyebrow={ac("Plan your move")}
-            title={ac("Everything for the move")}
-            style={styles.headingInset}
-          />
-          <ScrollView
-            horizontal
-            nestedScrollEnabled
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.rail}
-          >
-            {MOVE_TOOLS.map((tool) => (
-              <DepthPressable
-                key={tool.href}
-                onPress={() => router.push(tool.href as never)}
-                face={colors.navy}
-                depthColor={colors.navyDeep}
-                depth={5}
-                radius={20}
-                accessibilityLabel={ac(tool.label)}
-                innerStyle={styles.moveTile}
-              >
-                <IconBadge icon={tool.icon} size={40} radius={12} />
-                <Text style={styles.moveTileText} numberOfLines={2}>
-                  {ac(tool.label)}
-                </Text>
-              </DepthPressable>
-            ))}
-          </ScrollView>
-        </View>
-
         <View style={styles.sectionFlush}>
           <GshHomeDestinationRail />
-        </View>
-
-        <View style={styles.section}>
-          <SectionHeading eyebrow={ac("Get job-ready")} title={ac("Learn and prepare")} style={styles.headingGap} />
-          <View style={styles.quickGrid}>
-            {PREP_TOOLS.map((tool) => (
-              <DepthPressable
-                key={tool.href}
-                onPress={() => router.push(tool.href as never)}
-                depthColor={colors.cyan}
-                depth={5}
-                radius={20}
-                borderWidth={2}
-                borderColor={colors.navy}
-                accessibilityLabel={ac(tool.label)}
-                style={styles.quickTileWrap}
-                innerStyle={styles.prepTile}
-              >
-                <IconBadge icon={tool.icon} face={colors.navy} color={colors.cyan} size={38} radius={12} />
-                <Text style={styles.prepText} numberOfLines={2}>
-                  {ac(tool.label)}
-                </Text>
-              </DepthPressable>
-            ))}
-          </View>
         </View>
 
         {featuredPost ? (
@@ -685,21 +668,6 @@ export default function CandidateHomeScreen() {
             ))}
           </View>
         ) : null}
-
-        <View style={styles.section}>
-          <SectionHeading title={ac("Browse job collections")} style={styles.headingGap} />
-          <View style={styles.chips}>
-            {COLLECTIONS.map((item) => (
-              <BrandChip
-                key={item.label}
-                label={ac(item.label)}
-                icon={item.icon}
-                solid
-                onPress={() => router.push({ pathname: "/(tabs)/jobs", params: item.params })}
-              />
-            ))}
-          </View>
-        </View>
 
         <View style={styles.section}>
           <DepthSurface face={colors.navy} depthColor={colors.cyan} depth={6} radius={26}>
@@ -935,16 +903,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   ph: { backgroundColor: colors.pale, borderRadius: 6 },
-  moveBand: {
-    marginTop: 32,
-    paddingVertical: 24,
-    backgroundColor: colors.cyan,
-    overflow: "hidden",
-  },
-  moveTile: { width: 132, height: 132, padding: 14, justifyContent: "space-between" },
-  moveTileText: { fontFamily: fontFamily.heading, fontSize: 14, lineHeight: 18, color: colors.white },
-  prepTile: { padding: 14, gap: 12, minHeight: 112 },
-  prepText: { fontFamily: fontFamily.bold, fontSize: 14, lineHeight: 19, color: colors.navy },
   postImage: { width: "100%", aspectRatio: 16 / 9, backgroundColor: colors.pale },
   postBody: { padding: 16, gap: 6 },
   postTitle: {
@@ -966,7 +924,6 @@ const styles = StyleSheet.create({
   postRowFirst: { marginTop: 8 },
   postNumber: { fontFamily: fontFamily.headingStrong, fontSize: 20, color: colors.cyan, width: 30 },
   postRowTitle: { flex: 1, fontFamily: fontFamily.semiBold, fontSize: 15, lineHeight: 20, color: colors.navy },
-  chips: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   closing: { padding: 22, overflow: "hidden" },
   closingBody: {
     marginTop: 12,

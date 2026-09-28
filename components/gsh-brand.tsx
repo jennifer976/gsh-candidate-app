@@ -465,7 +465,7 @@ export function BrandLinkRow({
     >
       <IconBadge icon={icon} size={36} radius={11} face={onDark ? colors.cyan : colors.pale} />
       <View style={styles.linkText}>
-        <Text style={[styles.linkLabel, onDark && { color: colors.white }]} numberOfLines={1}>
+        <Text style={[styles.linkLabel, onDark && { color: colors.white }]} numberOfLines={2}>
           {label}
         </Text>
         {hint ? (

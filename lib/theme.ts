@@ -109,23 +109,19 @@ export function darkCardStyle(_accent?: "teal" | "purple" | "none"): ViewStyle {
 }
 
 /** Flat native section on a light background. */
+/** Brand card: navy outline with a heavier bottom edge, matching `DepthSurface`. */
 export function cardSurfaceStyle(_interactive?: boolean): ViewStyle {
   return {
     backgroundColor: colors.background,
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderBottomWidth: 5,
+    borderColor: colors.navy,
   };
 }
 
-/** Flat feed section with a hairline boundary. */
 export function feedCardStyle(): ViewStyle {
-  return {
-    backgroundColor: colors.background,
-    borderRadius: radii.feed,
-    borderWidth: 1,
-    borderColor: colors.border,
-  };
+  return cardSurfaceStyle();
 }
 
 // Legacy aliases — keep existing callers working
@@ -139,12 +135,7 @@ export function discoverSearchFieldStyle(): ViewStyle {
   };
 }
 export function cardCuratedSurfaceStyle(interactive?: boolean): ViewStyle {
-  return {
-    backgroundColor: colors.background,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-  };
+  return cardSurfaceStyle(interactive);
 }
 
 export const typography = {

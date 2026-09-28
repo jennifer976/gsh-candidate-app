@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.regular,
     color: colors.textPrimary,
   },
-  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 10 },
+  listPad: { paddingHorizontal: 16, paddingBottom: 24, gap: 18 },
   listPadGrow: { flexGrow: 1 },
   emptyWrap: {
     alignItems: "center",

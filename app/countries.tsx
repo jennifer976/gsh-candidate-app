@@ -47,12 +47,20 @@ export default function CountriesScreen() {
                   <CountryFlag iso2={country.iso2} />
                 </View>
                 <View style={styles.cardBody}>
-                  <Text style={styles.cardTitle}>{ac(country.name)}</Text>
-                  <Text style={styles.cardBlurb}>{ac(country.blurb)}</Text>
-                  <View style={styles.chips}>
-                    <Text style={styles.chip}>{ac(country.pathType)}</Text>
-                    <Text style={styles.chipOutline}>{country.currencyCode}</Text>
+                  <View style={styles.titleRow}>
+                    <Text
+                      style={styles.cardTitle}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.8}
+                    >
+                      {ac(country.name)}
+                    </Text>
+                    <Text style={styles.currency}>{country.currencyCode}</Text>
                   </View>
+                  <Text style={styles.cardBlurb} numberOfLines={2}>
+                    {ac(country.blurb)}
+                  </Text>
                 </View>
                 <View style={styles.arrow}>
                   <Ionicons name="arrow-forward" size={16} color={colors.navy} />
@@ -87,6 +95,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 14,
     padding: 14,
+    minHeight: 92,
   },
   flagWell: {
     padding: 6,
@@ -94,35 +103,31 @@ const styles = StyleSheet.create({
     backgroundColor: colors.pale,
   },
   cardBody: { flex: 1, minWidth: 0 },
-  cardTitle: { fontSize: 17, fontFamily: fontFamily.heading, color: colors.navy, letterSpacing: -0.2 },
+  titleRow: { flexDirection: "row", alignItems: "center", gap: 8 },
+  cardTitle: {
+    flexShrink: 1,
+    fontSize: 17,
+    fontFamily: fontFamily.heading,
+    color: colors.navy,
+    letterSpacing: -0.2,
+  },
+  currency: {
+    overflow: "hidden",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: radii.pill,
+    backgroundColor: colors.pale,
+    fontSize: 10,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+  },
   cardBlurb: {
-    marginTop: 3,
+    marginTop: 4,
+    minHeight: 36,
     fontSize: 13,
     lineHeight: 18,
     fontFamily: fontFamily.regular,
     color: colors.textSecondary,
-  },
-  chips: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 8 },
-  chip: {
-    overflow: "hidden",
-    paddingHorizontal: 9,
-    paddingVertical: 3,
-    borderRadius: radii.pill,
-    backgroundColor: colors.cyan,
-    fontSize: 11,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-  },
-  chipOutline: {
-    overflow: "hidden",
-    paddingHorizontal: 9,
-    paddingVertical: 2,
-    borderRadius: radii.pill,
-    borderWidth: 1.5,
-    borderColor: colors.navy,
-    fontSize: 11,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
   },
   arrow: {
     width: 30,

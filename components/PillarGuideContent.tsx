@@ -2,8 +2,10 @@ import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import * as Linking from "expo-linking";
 import type { Router } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
 import Markdown from "react-native-markdown-display";
+import { BrandLinkRow, DepthButton, Eyebrow } from "@/components/gsh-brand";
 import { getMarketingSiteUrl } from "@/lib/config";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
@@ -80,29 +82,41 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
   return (
     <View style={styles.wrap}>
       <View style={styles.hero}>
-        <Text style={styles.h1}>{config.h1}</Text>
+        <Eyebrow>{ac("Guide")}</Eyebrow>
+        <Text style={styles.h1} accessibilityRole="header">
+          {config.h1}
+        </Text>
+        <View style={styles.accent} />
         <Markdown style={mdStyles} onLinkPress={(url) => onLink(url)}>
           {config.intro.trim()}
         </Markdown>
         {config.lastReviewed ? (
-          <Text style={styles.reviewed}>{ac("Last reviewed: {date}", { date: new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(new Date(config.lastReviewed)) })}</Text>
+          <View style={styles.reviewedPill}>
+            <Ionicons name="checkmark-circle" size={14} color={colors.navy} />
+            <Text style={styles.reviewed}>{ac("Last reviewed: {date}", { date: new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(new Date(config.lastReviewed)) })}</Text>
+          </View>
         ) : null}
       </View>
 
       {config.officialLinks && config.officialLinks.length > 0 ? (
         <View style={styles.block}>
-          <Text style={styles.blockLabel}>{ac("Official sources")}</Text>
-          {config.officialLinks.map((l) => (
-            <Pressable key={l.href} onPress={() => onLink(l.href)} style={styles.linkRow} accessibilityRole="link">
-              <Text style={styles.linkText}>{l.label}</Text>
-            </Pressable>
-          ))}
+          <Eyebrow>{ac("Official sources")}</Eyebrow>
+          <View style={styles.rowList}>
+            {config.officialLinks.map((l) => (
+              <BrandLinkRow key={l.href} icon="shield-checkmark-outline" label={l.label} onPress={() => onLink(l.href)} />
+            ))}
+          </View>
         </View>
       ) : null}
 
       {config.sections.map((sec, i) => (
         <View key={`${sec.h2}-${i}`} style={styles.section}>
-          <Text style={styles.h2}>{sec.h2}</Text>
+          <View style={styles.h2Row}>
+            <View style={styles.h2Bar} />
+            <Text style={styles.h2} accessibilityRole="header">
+              {sec.h2}
+            </Text>
+          </View>
           <Markdown style={mdStyles} onLinkPress={(url) => onLink(url)}>
             {sec.body.trim()}
           </Markdown>
@@ -113,37 +127,34 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
 
       {config.faqs.length > 0 ? (
         <View style={styles.block}>
-          <Text style={styles.blockLabel}>{ac("Common questions")}</Text>
-          {config.faqs.map((faq, i) => (
-            <View key={i} style={styles.faq}>
-              <Text style={styles.faqQ}>{faq.question}</Text>
-              <Text style={styles.faqA}>{faq.answer}</Text>
-            </View>
-          ))}
+          <Eyebrow>{ac("Common questions")}</Eyebrow>
+          <View style={styles.rowList}>
+            {config.faqs.map((faq, i) => (
+              <View key={i} style={styles.faq}>
+                <Text style={styles.faqQ}>{faq.question}</Text>
+                <Text style={styles.faqA}>{faq.answer}</Text>
+              </View>
+            ))}
+          </View>
         </View>
       ) : null}
 
-      <Pressable
-        style={styles.cta}
+      <DepthButton
+        title={config.browseLabel}
         onPress={() => navigateGuideLink(router, config.browseHref)}
-        accessibilityRole="button"
-      >
-        <Text style={styles.ctaText}>{config.browseLabel}</Text>
-      </Pressable>
+        variant="cyan"
+        size="md"
+        style={styles.cta}
+      />
 
       {config.relatedGuides && config.relatedGuides.length > 0 ? (
         <View style={styles.block}>
-          <Text style={styles.blockLabel}>{ac("Related guides")}</Text>
-          {config.relatedGuides.map((r) => (
-            <Pressable
-              key={r.href}
-              style={styles.relatedBtn}
-              onPress={() => navigateGuideLink(router, r.href)}
-              accessibilityRole="button"
-            >
-              <Text style={styles.relatedText}>{r.label}</Text>
-            </Pressable>
-          ))}
+          <Eyebrow>{ac("Related guides")}</Eyebrow>
+          <View style={styles.rowList}>
+            {config.relatedGuides.map((r) => (
+              <BrandLinkRow key={r.href} icon="book-outline" label={r.label} onPress={() => navigateGuideLink(router, r.href)} />
+            ))}
+          </View>
         </View>
       ) : null}
 
@@ -156,69 +167,68 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
 
 const styles = StyleSheet.create({
   wrap: { gap: 0 },
-  hero: { marginBottom: 8 },
+  hero: { marginBottom: 4 },
   h1: {
-    fontSize: 24,
-    fontFamily: fontFamily.extraBold,
+    marginTop: 6,
+    fontSize: 30,
+    lineHeight: 35,
+    fontFamily: fontFamily.headingStrong,
     color: colors.navy,
-    letterSpacing: -0.35,
-    marginBottom: 14,
-    lineHeight: 30,
+    letterSpacing: -0.6,
   },
-  reviewed: { marginTop: 12, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
-  block: { marginTop: 20 },
-  blockLabel: {
-    fontSize: 13,
-    fontFamily: fontFamily.semiBold,
-    color: colors.navy,
-    letterSpacing: -0.2,
-    marginBottom: 12,
+  accent: { width: 56, height: 6, borderRadius: 3, backgroundColor: colors.cyan, marginTop: 12, marginBottom: 4 },
+  reviewedPill: {
+    marginTop: 14,
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: radii.pill,
+    backgroundColor: colors.pale,
   },
-  section: { marginTop: 22 },
+  reviewed: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.navy },
+  block: { marginTop: 28 },
+  rowList: { marginTop: 10, gap: 10 },
+  section: { marginTop: 28 },
+  h2Row: { flexDirection: "row", alignItems: "flex-start", gap: 10, marginBottom: 6 },
+  h2Bar: { width: 5, alignSelf: "stretch", minHeight: 22, borderRadius: 3, backgroundColor: colors.cyan },
   h2: {
-    fontSize: 18,
-    fontFamily: fontFamily.bold,
+    flex: 1,
+    fontSize: 21,
+    lineHeight: 26,
+    fontFamily: fontFamily.heading,
     color: colors.navy,
-    marginBottom: 10,
-    letterSpacing: -0.2,
+    letterSpacing: -0.3,
   },
-  linkRow: { paddingVertical: 10, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
-  linkText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.brand },
-  appendix: { marginTop: 20 },
-  appendixTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy, marginBottom: 12 },
+  appendix: { marginTop: 28 },
+  appendixTitle: { fontSize: 19, fontFamily: fontFamily.heading, color: colors.navy, marginBottom: 12 },
   appendixCard: {
     padding: 14,
-    borderRadius: radii.md,
-    backgroundColor: colors.surfaceMuted,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderBottomWidth: 4,
+    borderColor: colors.navy,
+    backgroundColor: colors.white,
     marginBottom: 12,
     gap: 10,
   },
   appendixCell: { gap: 4 },
-  appendixCol: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
+  appendixCol: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.textSecondary, textTransform: "uppercase", letterSpacing: 0.6 },
   appendixVal: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 20 },
-  faq: { marginBottom: 16, paddingBottom: 16, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
-  faqQ: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.navy, marginBottom: 8 },
+  faq: {
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: colors.navy,
+    backgroundColor: colors.pale,
+  },
+  faqQ: { fontSize: 16, fontFamily: fontFamily.heading, color: colors.navy, marginBottom: 8 },
   faqA: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 21 },
-  cta: {
-    marginTop: 20,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: radii.sm,
-    backgroundColor: colors.brand,
-    alignItems: "center",
-  },
-  ctaText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.white },
-  relatedBtn: {
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: colors.brand,
-    borderRadius: radii.sm,
-    marginBottom: 10,
-    alignItems: "center",
-  },
-  relatedText: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.brand },
+  cta: { marginTop: 28 },
   disclaimer: {
-    marginTop: 20,
+    marginTop: 24,
     fontSize: 13,
     fontFamily: fontFamily.regular,
     color: colors.textMuted,

@@ -1,35 +1,30 @@
 import { useAppCopy } from "@/lib/i18n";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
+import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { getMarketingSiteUrl } from "@/lib/config";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import { useRouter } from "expo-router";
-import {
-  ActivityIndicator,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ContentComingSoonCard } from "@/components/ContentComingSoonCard";
 import {
-  GshContentAccentBar,
-  GshOutlineButton,
-  GshScreenIntro,
-} from "@/components/gsh-ui-kit";
+  BrandLinkRow,
+  BrandStatePanel,
+  DepthPressable,
+  Eyebrow,
+  PosterTitle,
+  posterParts,
+} from "@/components/gsh-brand";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { isSupabaseNotConfigured } from "@/lib/content/contentAvailability";
-import {
-  fetchPublishedBlogList,
-  SupabaseNotConfiguredError,
-} from "@/lib/content/blogQueries";
+import { fetchPublishedBlogList, SupabaseNotConfiguredError } from "@/lib/content/blogQueries";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
-import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
+import { colors, fontFamily, radii } from "@/lib/theme";
 
 export default function BlogIndexScreen() {
   const { t } = useAppCopy();
+  const ac = useAccountCopy();
   const router = useRouter();
   const q = useQuery({
     queryKey: ["blogs", "published"],
@@ -45,111 +40,85 @@ export default function BlogIndexScreen() {
     (q.isError && isSupabaseNotConfigured(q.error)) ||
     (!q.isLoading && !q.isError && (q.data?.length ?? 0) === 0);
 
+  const header = (
+    <View style={styles.header}>
+      <Eyebrow>{t("resourcesBlog")}</Eyebrow>
+      <PosterTitle {...posterParts(ac("Fresh reads|for the move."))} size={34} />
+      <Text style={styles.intro}>{t("blogIntro")}</Text>
+    </View>
+  );
+
   return (
     <GshScreenBackground>
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         {q.isLoading ? (
           <View style={styles.center}>
-            <ActivityIndicator size="large" color={colors.brand} />
+            <ActivityIndicator size="large" color={colors.navy} />
           </View>
         ) : q.isError && !isSupabaseNotConfigured(q.error) ? (
           <ScrollView contentContainerStyle={styles.pad}>
-            <GshScreenIntro
+            <BrandStatePanel
+              icon="cloud-offline-outline"
               title={t("readingError")}
-              subtitle={t("readingErrorHelp")}
-              style={{ marginBottom: 16 }}
-            />
-            <GshOutlineButton
-              title={t("retry")}
-              onPress={() => void q.refetch()}
-            />
-            <GshOutlineButton
-              title={t("resourcesTitle")}
-              onPress={() => router.push("/tools-resources")}
-              style={{ marginTop: 10 }}
+              body={t("readingErrorHelp")}
+              primary={{ label: t("retry"), onPress: () => void q.refetch(), icon: "refresh" }}
+              secondary={{ label: t("resourcesTitle"), onPress: () => router.push("/tools-resources"), icon: null }}
             />
           </ScrollView>
         ) : comingSoon ? (
-          <ScrollView
-            contentContainerStyle={styles.pad}
-            showsVerticalScrollIndicator={false}
-          >
-            <GshScreenIntro
-              eyebrow={t("resourcesBlog")}
-              title={t("resourcesBlog")}
-              subtitle={t("blogIntro")}
-              style={{ marginBottom: 10 }}
-            />
-            <GshContentAccentBar />
+          <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
+            {header}
             <ContentComingSoonCard
               feature="blog"
-              state={
-                q.isError && isSupabaseNotConfigured(q.error)
-                  ? "not-configured"
-                  : "empty"
-              }
+              state={q.isError && isSupabaseNotConfigured(q.error) ? "not-configured" : "empty"}
             />
-            <GshOutlineButton
-              title={t("blogOnline")}
-              onPress={() =>
-                openExternalUrlInApp(`${getMarketingSiteUrl()}/blog`)
-              }
-              style={{ marginTop: 14 }}
-            />
-            <GshOutlineButton
-              title={t("resourcesNews")}
-              onPress={() => router.push("/news")}
-              style={{ marginTop: 10 }}
-            />
-            <GshOutlineButton
-              title={t("openGuides")}
-              onPress={() => router.push("/resources")}
-              style={{ marginTop: 14 }}
-            />
-            <GshOutlineButton
-              title={t("resourcesTitle")}
-              onPress={() => router.push("/tools-resources")}
-              style={{ marginTop: 10 }}
-            />
+            <View style={styles.links}>
+              <BrandLinkRow
+                icon="globe-outline"
+                label={t("blogOnline")}
+                onPress={() => openExternalUrlInApp(`${getMarketingSiteUrl()}/blog`)}
+              />
+              <BrandLinkRow icon="newspaper-outline" label={t("resourcesNews")} onPress={() => router.push("/news")} />
+              <BrandLinkRow icon="library-outline" label={t("openGuides")} onPress={() => router.push("/resources")} />
+            </View>
           </ScrollView>
         ) : (
-          <ScrollView
-            contentContainerStyle={styles.pad}
-            showsVerticalScrollIndicator={false}
-          >
-            <GshScreenIntro
-              eyebrow={t("resourcesBlog")}
-              title={t("resourcesBlog")}
-              subtitle={t("blogIntro")}
-              style={{ marginBottom: 10 }}
-            />
-            <GshContentAccentBar />
+          <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
+            {header}
             {q.data?.map((b) => (
-              <Pressable
+              <DepthPressable
                 key={b.id}
-                style={[styles.card, cardSurfaceStyle(true)]}
-                onPress={() =>
-                  router.push(`/blog/${encodeURIComponent(b.slug)}`)
-                }
-                accessibilityRole="button"
+                onPress={() => router.push(`/blog/${encodeURIComponent(b.slug)}`)}
+                depth={5}
+                radius={20}
+                borderWidth={2}
+                borderColor={colors.navy}
+                accessibilityLabel={b.title}
+                innerStyle={styles.card}
               >
                 {b.featured_image ? (
-                  <Image
-                    source={{ uri: b.featured_image }}
-                    style={styles.thumb}
-                    accessibilityIgnoresInvertColors
-                  />
+                  <Image source={{ uri: b.featured_image }} style={styles.thumb} accessibilityIgnoresInvertColors />
                 ) : null}
-                <Text style={styles.eyebrow}>
-                  {b.category?.name ?? t("article")}
-                </Text>
-                <Text style={styles.title}>{b.title}</Text>
-                {b.description ? (
-                  <Text style={styles.desc} numberOfLines={3}>
-                    {b.description}
-                  </Text>
-                ) : null}
-              </Pressable>
+                <View style={styles.cardBody}>
+                  <View style={styles.category}>
+                    <Text style={styles.categoryText} numberOfLines={1}>
+                      {b.category?.name ?? t("article")}
+                    </Text>
+                  </View>
+                  <Text style={styles.title}>{b.title}</Text>
+                  {b.description ? (
+                    <Text style={styles.desc} numberOfLines={3}>
+                      {b.description}
+                    </Text>
+                  ) : null}
+                  <View style={styles.readRow}>
+                    <Text style={styles.readText}>{ac("Read article")}</Text>
+                    <View style={styles.arrow}>
+                      <Ionicons name="arrow-forward" size={14} color={colors.navy} />
+                    </View>
+                  </View>
+                </View>
+              </DepthPressable>
             ))}
           </ScrollView>
         )}
@@ -161,47 +130,31 @@ export default function BlogIndexScreen() {
 const styles = StyleSheet.create({
   safe: { flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  pad: { ...stackScrollContentStyle, paddingBottom: 40, gap: 14 },
-  accentBar: { height: 4, borderRadius: 2, marginBottom: 12 },
-  card: { padding: 16, borderRadius: radii.lg },
-  thumb: {
-    width: "100%",
-    height: 160,
-    borderRadius: radii.sm,
-    marginBottom: 12,
-    resizeMode: "cover",
+  pad: { ...stackScrollContentStyle, paddingBottom: 40, gap: 18 },
+  header: { gap: 8 },
+  intro: { fontSize: 15, lineHeight: 22, fontFamily: fontFamily.regular, color: colors.textSecondary },
+  links: { gap: 10 },
+  card: { padding: 0 },
+  thumb: { width: "100%", height: 170, resizeMode: "cover", backgroundColor: colors.pale },
+  cardBody: { padding: 16, gap: 8 },
+  category: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: radii.pill,
+    backgroundColor: colors.cyan,
   },
-  eyebrow: {
-    fontSize: 12,
-    fontFamily: fontFamily.semiBold,
-    color: colors.teal,
-    letterSpacing: 0.2,
-    marginBottom: 6,
-  },
-  title: {
-    fontSize: 18,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-    letterSpacing: -0.2,
-  },
-  desc: {
-    marginTop: 8,
-    fontSize: 14,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-    lineHeight: 20,
-  },
-  primaryOutline: {
-    marginTop: 8,
-    borderWidth: 1,
-    borderColor: colors.brand,
-    borderRadius: radii.sm,
-    paddingVertical: 14,
+  categoryText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: 0.3 },
+  title: { fontSize: 19, lineHeight: 24, fontFamily: fontFamily.heading, color: colors.navy, letterSpacing: -0.3 },
+  desc: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 20 },
+  readRow: { marginTop: 4, flexDirection: "row", alignItems: "center", justifyContent: "flex-end", gap: 8 },
+  readText: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy },
+  arrow: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: colors.cyan,
     alignItems: "center",
-  },
-  primaryOutlineText: {
-    fontFamily: fontFamily.semiBold,
-    fontSize: 15,
-    color: colors.brand,
+    justifyContent: "center",
   },
 });

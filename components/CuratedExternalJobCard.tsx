@@ -7,6 +7,8 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { CompanyLogo } from "@/components/CompanyLogo";
+import { DepthSurface } from "@/components/gsh-brand";
+import { resolveBrandImageUrl } from "@/lib/brand-logo";
 import { curatedListingPrimaryBadge } from "@/lib/curated-listing-labels";
 import {
   externalListingChips,
@@ -14,32 +16,12 @@ import {
   getExternalListingSummaryPreview,
 } from "@/lib/job-display";
 import { mobilityChipStyle } from "@/lib/mobility-chip-styles";
-import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
+import { colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic } from "@/types/models";
 
 const CHIP_CAP = 4;
 
-function ChipWrap({ chips }: { chips: string[] }) {
-  const { locale } = useAppCopy();
-
-  if (chips.length === 0) return null;
-  return (
-    <View style={styles.chipWrap}>
-      {chips.map((c) => {
-        const pal = mobilityChipStyle(c);
-        return (
-          <View key={c} style={[styles.listChip, pal.wrap]}>
-            <Text style={[styles.listChipText, pal.text]} numberOfLines={1}>
-              {jobChipLabel(c, locale)}
-            </Text>
-          </View>
-        );
-      })}
-    </View>
-  );
-}
-
-/** Curated / agency listing — richer preview before opening external detail. */
+/** Curated / agency / employer-connected listing that applies on the source site. */
 export function CuratedExternalJobCard({
   job,
   onPress,
@@ -63,56 +45,26 @@ export function CuratedExternalJobCard({
   const isConnected =
     job.sourceRelationship === "employer_connected" &&
     job.employerPermissionStatus === "approved";
-  const timeCaption = jobAgeLabel(
-    job.externalPostedAt ?? job.createdAt,
-    locale,
-  );
-  const companyLine = [job.companyName || t("screenEmployer"), locationLabel]
-    .filter(Boolean)
-    .join(" · ");
+  const timeCaption = jobAgeLabel(job.externalPostedAt ?? job.createdAt, locale);
+  const companyName = job.companyName || t("screenEmployer");
+  const agencyName = typeof job.agencyName === "string" ? job.agencyName.trim() : "";
 
   return (
-    <View
-      style={[
-        styles.card,
-        feedCardStyle(),
-        summaryPreview ? styles.cardWithSummary : null,
-      ]}
-    >
-      <Pressable
-        onPress={onPress}
-        style={styles.cardMainHit}
-        accessibilityRole="button"
-      >
-        <CompanyLogo
-          logoUrl=""
-          companyName={job.companyName || t("screenEmployer")}
-          size={48}
-          radius={12}
-        />
+    <DepthSurface depth={5} radius={20} borderWidth={2} borderColor={colors.navy} innerStyle={styles.card}>
+      <Pressable onPress={onPress} style={styles.cardMainHit} accessibilityRole="button">
+        <View style={styles.logoWell}>
+          <CompanyLogo
+            logoUrl={resolveBrandImageUrl(job.companyLogo)}
+            companyName={companyName}
+            size={64}
+            radius={16}
+          />
+        </View>
         <View style={styles.cardMid}>
           <View style={styles.topMetaRow}>
             <View style={styles.badgeRow}>
-              <View
-                style={[
-                  styles.kindBadge,
-                  isConnected
-                    ? styles.kindBadgeConnected
-                    : isAgency
-                      ? styles.kindBadgeAgency
-                      : styles.kindBadgeCurated,
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.kindBadgeText,
-                    isConnected
-                      ? styles.kindBadgeTextConnected
-                      : isAgency
-                        ? styles.kindBadgeTextAgency
-                        : styles.kindBadgeTextCurated,
-                  ]}
-                >
+              <View style={[styles.kindBadge, isConnected && styles.kindBadgeConnected]}>
+                <Text style={styles.kindBadgeText}>
                   {isConnected
                     ? t("jobsConnectedBadge")
                     : isAgency
@@ -122,79 +74,88 @@ export function CuratedExternalJobCard({
               </View>
               {job.isFeatured ? (
                 <View style={styles.featuredBadge}>
-                  <Ionicons name="star" size={9} color={colors.warningText} />
-                  <Text style={styles.featuredBadgeText}>
-                    {t("jobsFeatured")}
-                  </Text>
+                  <Ionicons name="star" size={9} color={colors.cyan} />
+                  <Text style={styles.featuredBadgeText}>{t("jobsFeatured")}</Text>
                 </View>
               ) : null}
             </View>
-            {timeCaption ? (
-              <Text style={styles.timeCaption}>{timeCaption}</Text>
-            ) : null}
+            {timeCaption ? <Text style={styles.timeCaption}>{timeCaption}</Text> : null}
           </View>
+          <Text style={styles.cardCompanyLine} numberOfLines={1}>
+            {companyName}
+          </Text>
           <Text style={styles.cardTitle} numberOfLines={2}>
             {job.title}
           </Text>
-          <Text style={styles.cardCompanyLine} numberOfLines={2}>
-            {companyLine}
-          </Text>
-          {typeof job.agencyName === "string" &&
-          job.agencyName.trim().length > 0 ? (
+          {locationLabel ? (
+            <View style={styles.cardMetaRow}>
+              <Ionicons name="location-outline" size={14} color={colors.textMuted} />
+              <Text style={styles.cardMetaLine} numberOfLines={2}>
+                {locationLabel}
+              </Text>
+            </View>
+          ) : null}
+          {agencyName ? (
             <Text style={styles.agencyVia} numberOfLines={1}>
               {job.sourceType === "agency_submitted"
-                ? t("jobsSubmitted", { name: job.agencyName.trim() })
-                : t("jobsVia", { name: job.agencyName.trim() })}
+                ? t("jobsSubmitted", { name: agencyName })
+                : t("jobsVia", { name: agencyName })}
             </Text>
           ) : null}
           {summaryPreview ? (
-            <Text style={styles.summaryPreview} numberOfLines={3}>
+            <Text style={styles.summaryPreview} numberOfLines={2}>
               {summaryPreview}
             </Text>
           ) : null}
-          <ChipWrap chips={chips} />
+          {chips.length > 0 ? (
+            <View style={styles.chipWrap}>
+              {chips.map((c) => {
+                const pal = mobilityChipStyle(c);
+                return (
+                  <View key={c} style={[styles.listChip, pal.wrap]}>
+                    <Text style={[styles.listChipText, pal.text]} numberOfLines={1}>
+                      {jobChipLabel(c, locale)}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          ) : null}
         </View>
       </Pressable>
       <Pressable onPress={onPress} accessibilityRole="button">
         <View style={styles.cardFooter}>
-          <Text style={styles.footerHint}>
+          <Text style={styles.footerHint} numberOfLines={1}>
             {t(isConnected ? "jobsApplyEmployer" : "jobsApplySource")}
           </Text>
           <View style={styles.footerCtaRow}>
             <Text style={styles.cardCta}>{t("jobsDetails")}</Text>
-            <Ionicons name="open-outline" size={18} color={colors.secondary} />
+            <View style={styles.cardCtaArrow}>
+              <Ionicons name="open-outline" size={14} color={colors.navy} />
+            </View>
           </View>
         </View>
       </Pressable>
-    </View>
+    </DepthSurface>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
     paddingVertical: 16,
-    paddingRight: 16,
-    paddingLeft: 18,
-    position: "relative",
-    overflow: "hidden",
-    borderRadius: 14,
+    paddingHorizontal: 14,
     minHeight: 148,
   },
-  cardWithSummary: { minHeight: 188 },
-  cardAccentStrip: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    width: 4,
-    backgroundColor: colors.purple,
-  },
-  cardAccentAgency: { backgroundColor: colors.secondary },
   cardMainHit: {
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 12,
     minWidth: 0,
+  },
+  logoWell: {
+    borderRadius: 18,
+    backgroundColor: colors.pale,
+    padding: 2,
   },
   cardMid: { flex: 1, minWidth: 0 },
   topMetaRow: {
@@ -204,7 +165,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 6,
   },
-  badgeRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, flex: 1 },
+  badgeRow: { flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 6, flex: 1 },
   timeCaption: {
     fontSize: 11,
     fontFamily: fontFamily.medium,
@@ -212,57 +173,61 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     marginTop: 2,
   },
-  cardTitle: {
-    fontSize: 16,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-    letterSpacing: -0.25,
-    lineHeight: 21,
-  },
   kindBadge: {
-    paddingHorizontal: 7,
+    paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: radii.pill,
-    borderWidth: 1,
+    borderWidth: 1.5,
+    borderColor: colors.navy,
+    backgroundColor: colors.white,
   },
-  kindBadgeCurated: {
-    backgroundColor: colors.purpleMuted,
-    borderColor: colors.purpleBorder,
-  },
+  kindBadgeConnected: { backgroundColor: colors.cyan },
   kindBadgeText: {
     fontSize: 10,
-    fontFamily: fontFamily.semiBold,
-    letterSpacing: 0.05,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+    letterSpacing: 0.2,
   },
-  kindBadgeTextCurated: { color: colors.purpleText },
-  kindBadgeConnected: { backgroundColor: "#ecfeff", borderColor: "#67e8f9" },
-  kindBadgeTextConnected: { color: colors.brandDeep },
-  kindBadgeAgency: {
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.border,
-  },
-  kindBadgeTextAgency: { color: colors.textSecondary },
   featuredBadge: {
     flexDirection: "row",
     alignItems: "center",
     gap: 3,
-    paddingHorizontal: 7,
+    paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: radii.pill,
-    backgroundColor: "rgba(245,158,11,0.12)",
-    borderWidth: 1,
-    borderColor: "rgba(245,158,11,0.35)",
+    backgroundColor: colors.navy,
   },
   featuredBadgeText: {
     fontSize: 10,
-    fontFamily: fontFamily.semiBold,
-    color: colors.warningText,
+    fontFamily: fontFamily.bold,
+    color: colors.white,
   },
   cardCompanyLine: {
-    marginTop: 5,
     fontSize: 13,
     fontFamily: fontFamily.medium,
     color: colors.textSecondary,
+  },
+  cardTitle: {
+    fontSize: 17,
+    fontFamily: fontFamily.heading,
+    color: colors.navy,
+    letterSpacing: -0.3,
+    marginTop: 4,
+    marginBottom: 4,
+    lineHeight: 22,
+  },
+  cardMetaRow: {
+    marginTop: 2,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 4,
+    paddingRight: 4,
+  },
+  cardMetaLine: {
+    flex: 1,
+    fontSize: 13,
+    fontFamily: fontFamily.regular,
+    color: colors.textMuted,
     lineHeight: 18,
   },
   agencyVia: {
@@ -275,38 +240,44 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 13,
     fontFamily: fontFamily.regular,
-    color: colors.textMarketing,
+    color: colors.textSecondary,
     lineHeight: 19,
   },
-  chipWrap: { marginTop: 10, flexDirection: "row", flexWrap: "wrap", gap: 5 },
+  chipWrap: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 6 },
   listChip: {
     paddingVertical: 4,
     paddingHorizontal: 9,
     borderRadius: radii.pill,
   },
-  listChipText: { fontSize: 11, fontFamily: fontFamily.semiBold },
+  listChipText: { fontSize: 11, fontFamily: fontFamily.medium },
   cardFooter: {
     marginTop: 12,
     paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: "#f1f5f9",
-    gap: 4,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 8,
   },
   footerHint: {
+    flex: 1,
     fontSize: 11,
     fontFamily: fontFamily.medium,
     color: colors.textMuted,
-    letterSpacing: 0.1,
   },
-  footerCtaRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: 4,
-  },
+  footerCtaRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   cardCta: {
     fontSize: 14,
-    fontFamily: fontFamily.semiBold,
-    color: colors.secondary,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+  },
+  cardCtaArrow: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

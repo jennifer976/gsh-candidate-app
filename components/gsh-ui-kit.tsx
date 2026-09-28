@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View, type ViewStyle } from "react-native";
+import { BrandChip, DepthButton, Eyebrow } from "@/components/gsh-brand";
 import { GshPressable } from "@/components/GshPressable";
 import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
@@ -11,9 +12,9 @@ type IonName = ComponentProps<typeof Ionicons>["name"];
 export type GshLinkAccent = "teal" | "purple" | "ocean";
 
 const ACCENT: Record<GshLinkAccent, { wrap: string; icon: string }> = {
-  teal: { wrap: colors.brandSoft, icon: colors.navy },
-  purple: { wrap: colors.surfaceMuted, icon: colors.navy },
-  ocean: { wrap: colors.surfaceMuted, icon: colors.navy },
+  teal: { wrap: colors.cyan, icon: colors.navy },
+  purple: { wrap: colors.cyan, icon: colors.navy },
+  ocean: { wrap: colors.cyan, icon: colors.navy },
 };
 
 export function GshScreenIntro({
@@ -32,7 +33,7 @@ export function GshScreenIntro({
 }) {
   return (
     <View style={[introStyles.wrap, underStackHeader && introStyles.underStack, style]}>
-      {eyebrow ? <Text style={introStyles.eyebrow}>{eyebrow}</Text> : null}
+      {eyebrow && eyebrow !== title ? <Eyebrow>{eyebrow}</Eyebrow> : null}
       <Text style={introStyles.title}>{title}</Text>
       {subtitle ? <Text style={introStyles.subtitle}>{subtitle}</Text> : null}
     </View>
@@ -42,20 +43,14 @@ export function GshScreenIntro({
 const introStyles = StyleSheet.create({
   wrap: { marginBottom: 16 },
   underStack: { paddingTop: STACK_HEADER_BODY_GAP },
-  eyebrow: {
-    fontSize: 11,
-    fontFamily: fontFamily.semiBold,
-    color: colors.teal,
-    letterSpacing: 0.8,
-    textTransform: "lowercase",
-    marginBottom: 8,
-  },
   title: {
-    fontSize: 26,
+    marginTop: 4,
+    fontSize: 30,
+    lineHeight: 34,
     fontFamily: fontFamily.headingStrong,
     color: colors.navy,
-    letterSpacing: -0.5,
-    marginBottom: 6,
+    letterSpacing: -0.6,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 15,
@@ -171,20 +166,18 @@ const rowStyles = StyleSheet.create({
   iconTile: {
     width: 44,
     height: 44,
-    borderRadius: radii.md,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(15, 23, 42, 0.06)",
   },
   textCol: { flex: 1, minWidth: 0 },
-  rowTitle: { fontSize: 16, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: -0.2 },
-  rowSub: { marginTop: 5, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMuted, lineHeight: 20 },
+  rowTitle: { fontSize: 16, fontFamily: fontFamily.heading, color: colors.navy, letterSpacing: -0.2 },
+  rowSub: { marginTop: 4, fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 20 },
   chev: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.surfaceMuted,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: colors.cyan,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -338,28 +331,8 @@ export function GshOutlineButton({
   onPress: () => void;
   style?: ViewStyle;
 }) {
-  return (
-    <Pressable
-      style={[cardSurfaceStyle(false), outlineBtnStyles.btn, style]}
-      onPress={onPress}
-      accessibilityRole="button"
-    >
-      <Text style={outlineBtnStyles.text}>{title}</Text>
-    </Pressable>
-  );
+  return <DepthButton title={title} onPress={onPress} variant="white" bordered size="md" icon={null} style={style} />;
 }
-
-const outlineBtnStyles = StyleSheet.create({
-  btn: {
-    borderRadius: radii.pill,
-    minHeight: 48,
-    borderWidth: 1,
-    borderColor: colors.brand,
-    paddingVertical: 14,
-    alignItems: "center",
-  },
-  text: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.brand },
-});
 
 export function GshFilterChip({
   label,
@@ -370,44 +343,14 @@ export function GshFilterChip({
   active: boolean;
   onPress: () => void;
 }) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[filterChipStyles.chip, active ? filterChipStyles.active : filterChipStyles.inactive]}
-      accessibilityRole="button"
-      accessibilityState={{ selected: active }}
-    >
-      <Text style={[filterChipStyles.label, active && filterChipStyles.labelActive]}>{label}</Text>
-    </Pressable>
-  );
+  return <BrandChip label={label} selected={active} onPress={onPress} />;
 }
-
-const filterChipStyles = StyleSheet.create({
-  chip: {
-    minHeight: 44,
-    justifyContent: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-  },
-  inactive: {
-    borderColor: colors.border,
-    backgroundColor: colors.white,
-  },
-  active: {
-    borderColor: colors.teal,
-    backgroundColor: colors.brandSoft,
-  },
-  label: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.navy },
-  labelActive: { color: colors.navy },
-});
 
 /** Destination / expert name chips on light content screens. */
 export function GshTopicChip({ label, onPress }: { label: string; onPress: () => void }) {
   return (
     <Pressable
-      style={[topicChipStyles.chip, cardSurfaceStyle(true)]}
+      style={[cardSurfaceStyle(true), topicChipStyles.chip]}
       onPress={onPress}
       accessibilityRole="button"
     >
@@ -417,6 +360,13 @@ export function GshTopicChip({ label, onPress }: { label: string; onPress: () =>
 }
 
 const topicChipStyles = StyleSheet.create({
-  chip: { minHeight: 44, justifyContent: "center", paddingHorizontal: 14, paddingVertical: 8, borderRadius: radii.pill },
-  text: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.brand },
+  chip: {
+    minHeight: 44,
+    justifyContent: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: radii.pill,
+    borderBottomWidth: 2,
+  },
+  text: { fontFamily: fontFamily.bold, fontSize: 13, color: colors.navy },
 });

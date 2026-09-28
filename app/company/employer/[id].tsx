@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.regular,
     color: "rgba(255,255,255,0.65)",
   },
-  badges: { flexDirection: "row", flexWrap: "wrap", gap: 7, marginTop: 18 },
+  badges: { flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 7, marginTop: 18 },
   badge: {
     overflow: "hidden",
     paddingHorizontal: 10,

@@ -558,6 +558,7 @@ export interface ExternalJobListingPublic {
   _id: string;
   title: string;
   companyName: string;
+  companyLogo?: string;
   location?: string;
   applyUrl?: string;
   summary?: string;
