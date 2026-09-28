@@ -1,9 +1,9 @@
-import { useAppLanguage } from "@/lib/i18n";
+import { useAppLanguage, toIntlLocale } from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import countryOptions from "@/lib/country-options.json";
-import { canonicalCountryCode } from "@/lib/countries";
+import { canonicalCountryCode, countryDisplayName } from "@/lib/countries";
 import { colors, fontFamily } from "@/lib/theme";
 
 export function CountryPicker({
@@ -21,22 +21,16 @@ export function CountryPicker({
 }) {
   const ac = useAccountCopy();
   const locale = useAppLanguage((s) => s.locale);
-  const countryName = (code: string) => {
-    const fallback = countryOptions.find((c) => c.code === code)?.label || code;
-    if (!/^[A-Z]{2}$/.test(code)) return fallback;
-    try {
-      return (
-        new Intl.DisplayNames([locale], { type: "region" }).of(code) || fallback
-      );
-    } catch {
-      return fallback;
-    }
-  };
+  const intlLocale = toIntlLocale(locale);
+  const countryName = (code: string) =>
+    /^[A-Z]{2}$/.test(code)
+      ? countryDisplayName(code, locale)
+      : countryOptions.find((c) => c.code === code)?.label || code;
   const normalise = (value: string) =>
     value
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
-      .toLocaleLowerCase(locale);
+      .toLocaleLowerCase(intlLocale);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const selected = value

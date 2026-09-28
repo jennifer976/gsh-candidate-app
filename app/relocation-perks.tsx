@@ -1,4 +1,5 @@
-import { useAppLanguage } from "@/lib/i18n";
+import { withSignIn } from "@/components/SignInGate";
+import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -18,7 +19,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshScreenIntro } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { fetchRelocationPerks } from "@/lib/api-client";
+import { fetchRelocationPerks, recordRelocationPerkClick } from "@/lib/api-client";
+import { useAuthStore } from "@/lib/auth-store";
 import { candidateBenefitOffers } from "@/lib/benefit-offers";
 import {
   RELOCATION_PERKS_FALLBACK_SUBTITLE,
@@ -48,7 +50,7 @@ function openAffiliate(url: string) {
 
 function PerkCard({ item }: { item: BenefitOfferView }) {
   const ac = useAccountCopy();
-  const locale = useAppLanguage((s) => s.locale);
+  const locale = toIntlLocale(useAppLanguage((s) => s.locale));
 
   const logo = resolveUploadAssetUrl(item.logoUrl);
   return (
@@ -85,7 +87,12 @@ function PerkCard({ item }: { item: BenefitOfferView }) {
       {item.redemptionKind === "external_offer" && item.destinationUrl ? (
         <Pressable
           style={styles.cta}
-          onPress={() => openAffiliate(item.destinationUrl!)}
+          onPress={() => {
+            if (item.placementId && useAuthStore.getState().token) {
+              void recordRelocationPerkClick(item.id, item.placementId).catch(() => undefined);
+            }
+            openAffiliate(item.destinationUrl!);
+          }}
           accessibilityRole="link"
         >
           <Text style={styles.ctaText}>{ac("View offer")}</Text>
@@ -104,9 +111,9 @@ function PerkCard({ item }: { item: BenefitOfferView }) {
   );
 }
 
-export default function RelocationPerksScreen() {
+function RelocationPerksScreen() {
   const ac = useAccountCopy();
-  const locale = useAppLanguage((s) => s.locale);
+  const locale = toIntlLocale(useAppLanguage((s) => s.locale));
 
   const navigation = useNavigation();
   const query = useQuery({
@@ -371,4 +378,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.white,
   },
+});
+
+export default withSignIn(RelocationPerksScreen, {
+  icon: "gift-outline",
+  title: "Relocation perks",
+  body: "Sign in to see discounts and perks for your move.",
 });

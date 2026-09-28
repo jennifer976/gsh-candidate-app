@@ -2,8 +2,8 @@
   "pillars": [
     {
       "path": "/visa-sponsorship-jobs",
-      "metaTitle": "Visa sponsorship jobs & work abroad search | Global Sponsor Hub",
-      "metaDescription": "Find visa sponsorship jobs and international roles—employer-posted listings, sponsorship badges, relocation filters, and country hubs so you can search global careers without guesswork.",
+      "metaTitle": "Visa sponsorship jobs worldwide | Global Sponsor Hub",
+      "metaDescription": "Search visa sponsorship jobs worldwide. Filter employer-declared sponsorship, relocation support and country hubs. Search is free. Confirm labels with the employer.",
       "h1": "Visa sponsorship jobs on Global Sponsor Hub",
       "intro": "Whether you’re targeting **work abroad**, **global jobs**, or roles that explicitly advertise **visa sponsorship**, this page is **about the search experience**—filters, listings, applications, and labels—not a country-by-country visa encyclopaedia.\n\nIf you are deciding *where* in the world to move, start with our **international outlook** guide; if you need to *vet a company*, jump to the sponsor-employer primer.\n\nThink of this as the “how do I actually use the marketplace” layer for candidates.",
       "lastReviewed": "2026-04-30",
@@ -648,6 +648,276 @@
       ]
     }
   ],
+  "content": [
+    {
+      "path": "/best-visa-sponsorship-job-sites",
+      "metaTitle": "Best websites for visa sponsorship jobs: where to start",
+      "metaDescription": "Compare websites for visa sponsorship jobs and learn why Global Sponsor Hub should be your starting point, with LinkedIn, Indeed, sponsor databases, and regional boards used for research.",
+      "h1": "Best websites for visa sponsorship jobs",
+      "intro": "If you are searching for **visa sponsorship jobs**, the best starting point is a platform that treats sponsorship, relocation support, and work-authorisation context as part of the job search — not as a keyword you have to guess.\n\nThat is why we recommend starting with **Global Sponsor Hub** for active roles and using broad job boards or sponsor databases as supporting research. LinkedIn, Indeed, Interstride, MyVisaJobs, H1B Grader, USCIS data, and regional boards can all be useful, but they are not the same thing: some help you find live roles, while others help you verify whether an employer has sponsored before.\n\nUse this guide as a practical search stack: start on Global Sponsor Hub, then use the other sources to cross-check employers, widen your search, and validate sponsorship claims before you apply.",
+      "lastReviewed": "2026-06-22",
+      "officialLinks": [
+        {
+          "label": "USCIS H-1B Employer Data Hub",
+          "href": "https://www.uscis.gov/tools/reports-and-studies/h-1b-employer-data-hub"
+        },
+        {
+          "label": "UK — register of licensed sponsors",
+          "href": "https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers"
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Compare the job-site stack before you search",
+          "body": "**Visa sponsorship job sites and research sources compared**\n\n**Source:** Global Sponsor Hub\n\n**Best for:** Starting with roles that expose sponsorship and relocation context\n\n**Coverage:** International jobs, country hubs, comparison and relocation tools\n\n**Main limitation:** Employer-posted inventory varies by market and changes over time\n\n---\n\n**Source:** LinkedIn and Indeed\n\n**Best for:** Widening discovery and setting broad alerts\n\n**Coverage:** Large, multi-sector and multi-country job coverage\n\n**Main limitation:** Sponsorship wording and filters are inconsistent; keyword matches need verification\n\n---\n\n**Source:** Interstride, MyVisaJobs, H1B Grader\n\n**Best for:** Researching employers and historical sponsorship signals\n\n**Coverage:** Strongest for US-focused visa and employer data, depending on the service\n\n**Main limitation:** Historical records do not prove a current role or team will sponsor\n\n---\n\n**Source:** Official sponsor registers and government data\n\n**Best for:** Verifying licences, petitions, routes, and current rules\n\n**Coverage:** Jurisdiction-specific official records where published\n\n**Main limitation:** Not designed as a candidate-friendly live job search\n\n---\n\n**Source:** Regional job boards\n\n**Best for:** Going deeper after choosing a destination\n\n**Coverage:** Local-market roles and employers that may not appear globally\n\n**Main limitation:** Manual visa, salary, and sponsorship checks are still required\n\nGlobal Sponsor Hub is built around the problem general job boards struggle with: international candidates and global employers need to know whether a role has **visa sponsorship**, **relocation support**, **remote-friendly mobility**, or other work-authorisation context before investing time in an application.\n\nStart with the [Visa Sponsorship jobs filter](/jobs?benefit=Visa%20Sponsorship), then use country hubs, comparison guides, [Plan the move](/plan-the-move), salary tools, and relocation worksheets to decide whether a role is realistic for your situation.\n\nThis keeps the search practical: live roles first, destination context next, and employer/partner support nearby when you need to verify details.\n\n**Use other sites as research, not your whole workflow**\n\nBroad job boards and sponsor databases can help you research an employer, but they often leave you doing manual keyword checks. Use them to supplement your Global Sponsor Hub search, not replace it."
+        },
+        {
+          "h2": "LinkedIn and Indeed: useful, but noisy",
+          "body": "LinkedIn and Indeed are useful because they have huge coverage. Many large employers post roles there, and some sponsored roles appear there first.\n\nThe limitation is structure. LinkedIn does not have a dependable visa-sponsorship filter, and Indeed wording can be inconsistent across employer posts, staffing agencies, and third-party feeds. You often need to search keywords like **\"visa sponsorship\"**, **\"H-1B\"**, **\"Skilled Worker\"**, **\"relocation support\"**, or a specific visa route.\n\nUse these sites to widen your search and set alerts, but treat a keyword match as a lead to verify — not proof that the employer will sponsor you."
+        },
+        {
+          "h2": "Sponsor databases: best for employer research",
+          "body": "Interstride, MyVisaJobs, H1B Grader, and the USCIS Employer Data Hub are strongest as **research tools**. They help you understand whether an employer has sponsored before, which occupations they sponsor, and whether the company has enough immigration history to be worth approaching.\n\nThey are not always the cleanest way to find current, candidate-ready jobs. Use them after you find a role to answer questions like: has this employer sponsored before, which offices file petitions, what salaries have been reported, and does the sponsorship claim look credible?\n\nThat is especially useful before interviews, salary conversations, or relocation negotiations."
+        },
+        {
+          "h2": "Regional boards and official sources",
+          "body": "Regional job boards can be helpful when you know the destination. Germany's Arbeitnow, Canada's Job Bank, Australia's SEEK, and similar local boards may surface roles that never reach global platforms.\n\nThe trade-off is manual verification. You still need to check the job against official immigration rules, salary thresholds, occupation lists, and employer sponsorship requirements.\n\nUse regional boards for depth in a specific market, then cross-check the opportunity against official government sources and Global Sponsor Hub's country guides before committing time to a full application."
+        },
+        {
+          "h2": "Recommended search stack",
+          "body": "Use several source types in sequence to get reach without losing structure.\n\n1. **Start on Global Sponsor Hub** — Find roles and filters built around sponsorship, relocation, and international hiring.\n2. **Widen with LinkedIn or Indeed** — Catch employers that have not yet posted through specialist channels.\n3. **Research sponsor history** — Use sponsor databases to see whether an employer has sponsored before.\n4. **Confirm with official sources** — Check the visa route, fees, salary thresholds, and eligibility rules.\n5. **Ask direct questions** — Before applying deeply, establish who sponsors, what costs are covered, whether relocation is included, and whether the details will be confirmed in writing."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Should I use Global Sponsor Hub instead of LinkedIn or Indeed?",
+          "answer": "Start with Global Sponsor Hub because sponsorship and relocation context are built into the search experience. Use LinkedIn and Indeed as backup discovery channels, then verify any sponsorship wording before applying."
+        },
+        {
+          "question": "Are US sponsorship databases useful if I'm not targeting the US?",
+          "answer": "Partly. Tools like MyVisaJobs and the USCIS Data Hub are US-specific, but a global employer with a strong US sponsorship record may also be more familiar with sponsorship processes in other markets. Treat that as a signal, not a guarantee."
+        },
+        {
+          "question": "How do I avoid fake sponsorship listings?",
+          "answer": "Use structured sponsorship filters where possible, verify the employer through official channels, never pay fees to secure a visa, and watch for pressure tactics. See our recruitment scam red flags and offer verification guides before committing."
+        }
+      ],
+      "browseHref": "/jobs?benefit=Visa Sponsorship",
+      "browseLabel": "Search mobility-labelled roles",
+      "breadcrumbs": [
+        {
+          "name": "Home",
+          "path": "/"
+        },
+        {
+          "name": "Guides",
+          "path": "/countries"
+        },
+        {
+          "name": "Best visa sponsorship job sites",
+          "path": "/best-visa-sponsorship-job-sites"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/jobs",
+          "label": "What visa sponsorship means"
+        },
+        {
+          "href": "/companies",
+          "label": "Check if an employer can really sponsor"
+        },
+        {
+          "href": "/resources/job-offer-scam-checklist",
+          "label": "Recruitment scam red flags"
+        },
+        {
+          "href": "/employers",
+          "label": "International recruitment resources"
+        }
+      ]
+    },
+    {
+      "path": "/employers/how-to-hire-international-talent",
+      "metaTitle": "How to hire international talent: sponsorship, EOR & relocation",
+      "metaDescription": "Hire internationally: sponsorship, EOR, remote or relocation. Connect the careers page you already run, for free, or post a role here. We don’t replace your ATS.",
+      "h1": "How to hire international talent",
+      "intro": "Hiring internationally is more complex than domestic recruiting, but it opens access to a far larger talent pool, diverse perspectives, and entry into new markets.\n\nThis guide gives employers a **step-by-step process** for recruiting across borders, followed by best practices. When you are ready to advertise, [post your first international role free](/auth/signup?role=employer&source=how_to_hire_guide) on Global Sponsor Hub with no placement commission.\n\nIt is general guidance — partner with immigration counsel for legal compliance in each market.",
+      "lastReviewed": "2026-06-22",
+      "officialLinks": [
+        {
+          "label": "USCIS — working in the United States (employers)",
+          "href": "https://www.uscis.gov/working-in-the-united-states"
+        },
+        {
+          "label": "Government of Canada — Temporary Foreign Worker Program",
+          "href": "https://www.canada.ca/en/employment-social-development/services/foreign-workers.html"
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Plan: needs, recruitment model, and job description",
+          "body": "- **Identify hiring needs** — Define which roles require global recruitment and why — focus on high-impact or hard-to-fill positions.\n- **Build a recruitment plan** — Decide whether you will hire remotely, through an **Employer of Record (EOR)**, or by relocating employees; choose advertising channels and plan screening and interviews.\n- **Write a clear, compelling job description** — Highlight essential skills, **visa sponsorship availability**, and any location flexibility so candidates self-select accurately. Our [globally remote checklist](/employers/before-marking-role-globally-remote) helps you describe remote eligibility honestly."
+        },
+        {
+          "h2": "Source and screen globally",
+          "body": "List sponsor-friendly roles where international candidates already look — [post roles on Global Sponsor Hub](/employers).\n\n- **Advertise globally** — Use global job boards, targeted communities, and university partnerships. Proactive sourcing is often necessary for niche skills.\n- **Pre-screen and interview** — Assess language ability, cultural fit, and readiness to relocate or work remotely. Provide clear information about the hiring timeline and visa process so candidates can plan."
+        },
+        {
+          "h2": "Compensation, benefits, and work authorisation",
+          "body": "- **Determine compensation and benefits** — Account for cost-of-living differences and ensure pay equity across locations. Offer relocation or remote-work support where appropriate.\n- **Handle work authorisation** — Review legal requirements in both the hiring country and the candidate's home country. Partner with immigration counsel to obtain the necessary visas and ensure compliance — see our [employer sponsorship resources](/employers/sponsorship-resources).\n\n**Partner resource: estimate employment cost first**\n\nBefore opening a role in a new country, model salary, employer taxes, statutory contributions, and payroll costs with [Oyster's employment cost calculator](https://www.oysterhr.com/cost-calculator?utm_source=global_sponsor_hub&utm_medium=partner_resource&utm_campaign=employment_cost_calculator). It is useful planning guidance, not legal, tax, or payroll advice."
+        },
+        {
+          "h2": "Onboard international hires",
+          "body": "Where your support is limited, compare listed providers in the [specialist listings](/specialists) and verify qualifications for specialist immigration, relocation, or tax work.\n\n- **Onboard thoughtfully** — Provide orientation on company culture, local labour laws, and cross-cultural communication. A structured first 90 days reduces early attrition."
+        },
+        {
+          "h2": "Best practices for employers",
+          "body": "- **Segment target markets** — Understand where your ideal candidates live and tailor strategies accordingly.\n- **Offer a strong candidate experience** — Transparent communication, timely feedback, and cultural sensitivity improve your reputation.\n- **Develop a global employer brand** — Showcase diversity, inclusion, and international success stories.\n- **Hire for skills, not degrees** — Focus on transferable skills and potential, especially across different education systems.\n- **Leverage HR technology** — Use applicant tracking, video-interview tools, and global payroll to streamline the process."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Should we hire through an Employer of Record or sponsor a visa?",
+          "answer": "It depends. An EOR lets you employ someone in a country where you have no legal entity, without sponsoring a relocation. Sponsorship is for bringing a worker into your country. Many employers use both depending on the role and location."
+        },
+        {
+          "question": "How do we keep pay equitable across countries?",
+          "answer": "Define a compensation philosophy up front — whether you pay to local market, a global band, or a blend — and account for cost-of-living and tax differences so offers are fair and defensible."
+        },
+        {
+          "question": "Do we need immigration counsel?",
+          "answer": "For anything beyond the simplest cases, yes. Immigration counsel helps you choose the right visa route, stay compliant, and avoid delays or penalties that can derail a hire."
+        }
+      ],
+      "browseHref": "/employers",
+      "browseLabel": "Explore employer tools",
+      "breadcrumbs": [
+        {
+          "name": "Home",
+          "path": "/"
+        },
+        {
+          "name": "Employers",
+          "path": "/employers"
+        },
+        {
+          "name": "How to hire international talent",
+          "path": "/employers/how-to-hire-international-talent"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/employers/sponsorship-resources",
+          "label": "Employer sponsorship resources"
+        },
+        {
+          "href": "/employers/corporate-global-mobility",
+          "label": "Corporate global mobility playbook"
+        },
+        {
+          "href": "/employers/before-marking-role-globally-remote",
+          "label": "Globally remote checklist"
+        },
+        {
+          "href": "/employers",
+          "label": "International recruitment resources"
+        }
+      ]
+    },
+    {
+      "path": "/employers/sponsorship-resources",
+      "metaTitle": "Employer sponsorship & global mobility resources",
+      "metaDescription": "What employers must do to sponsor international workers and run a compliant global mobility program — UK and US obligations, key databases, mobility tooling, and where to get specialist help.",
+      "h1": "Employer sponsorship & global mobility resources",
+      "intro": "Sponsoring international workers means meeting regulatory requirements and managing ongoing compliance — and building a mobility program that handles immigration, tax, relocation logistics, and cross-cultural integration.\n\nThis page summarises the **core employer obligations**, the most useful **resources and databases**, and what a strong **global mobility program** includes. This is general information, not legal or immigration advice. Visa rules, salary thresholds, and programme names change frequently — always confirm the current position on official government sites before you act.",
+      "lastReviewed": "2026-06-22",
+      "officialLinks": [
+        {
+          "label": "UK — sponsor a worker (employer guidance)",
+          "href": "https://www.gov.uk/uk-visa-sponsorship-employers"
+        },
+        {
+          "label": "USCIS — H-1B specialty occupations",
+          "href": "https://www.uscis.gov/working-in-the-united-states/temporary-workers/h-1b-specialty-occupations"
+        },
+        {
+          "label": "USCIS H-1B Employer Data Hub",
+          "href": "https://www.uscis.gov/tools/reports-and-studies/h-1b-employer-data-hub"
+        }
+      ],
+      "sections": [
+        {
+          "h2": "UK sponsorship obligations",
+          "body": "In the UK, employers must ensure the job complies with **minimum wage and working-time regulations** and meets all visa criteria.\n\nThey must also provide a **Certificate of Sponsorship** for each worker, maintain **sponsor-management records**, and report changes in employment to the **Home Office**. Non-compliance can result in fines or loss of the sponsor licence — so assign clear internal ownership for record-keeping and reporting."
+        },
+        {
+          "h2": "US sponsorship and data sources",
+          "body": "In the US, employers petition **USCIS** for work visas such as the **H-1B**. Databases like **MyVisaJobs** and the **H-1B Employer Data Hub** provide historical sponsorship data useful for benchmarking.\n\nNote that these databases reflect past behaviour — employers can change sponsorship policies and may only sponsor for specific roles, so treat the data as a guide, not a guarantee."
+        },
+        {
+          "h2": "Useful databases and consultants",
+          "body": "Beyond official registers, several resources help employers and candidates alike:\n\n• **Interstride Visa Insights** — jobs and internships by visa type and work authorisation.\n• **H1B Grader** — wage data, company sponsorship statistics, reports by job title or location.\n• **USCIS H-1B Employer Data Hub** — official record of employers who filed H-1B petitions.\n• **Global mobility consultants** (e.g. WHR Global) — relocation management, immigration assistance, and policy design.\n\nSee the full list on our [international recruitment resources](/employers) page."
+        },
+        {
+          "h2": "Building a global mobility program",
+          "body": "Creating a global mobility program means managing immigration compliance, tax, relocation logistics, and cross-cultural integration together. Employers can lean on:\n\n• **Relocation management firms** that coordinate services, design policy, and offer cost-estimator tools.\n• **International recruiting guides** (such as Boundless) for planning, candidate experience, and global branding.\n• **Government immigration sites** (UK Home Office, US USCIS, Canada's IRCC) for current requirements and obligations.\n• **Tax advisory services** for double-taxation agreements and cross-border employer obligations.\n• **Technology platforms** for global payroll, compliance, and mobility management.\n\nA strong program includes clear relocation policies, standardised packages (full service, lump sum, reimbursement), cultural training, and support for accompanying family — plus ongoing monitoring of changing immigration and tax law."
+        },
+        {
+          "h2": "Where to get specialist help",
+          "body": "Sponsorship obligations vary by country and often include advertising requirements, immigration-skills charges, and reporting duties. Review local immigration laws, labour-market tests, minimum salary thresholds, and taxation before you commit.\n\nFor execution, compare listed specialists in the [specialist listings](/specialists), verify their credentials, and use our [corporate global mobility playbook](/employers/corporate-global-mobility) to assign internal ownership."
+        }
+      ],
+      "faqs": [
+        {
+          "question": "What happens if we breach sponsor compliance?",
+          "answer": "Consequences vary by country but can include fines and loss of your sponsor licence, which stops you sponsoring future hires. Maintaining accurate records and reporting changes promptly is essential."
+        },
+        {
+          "question": "Are sponsorship databases reliable for vetting employers?",
+          "answer": "They show historical petitions, which is a strong signal, but policies change and sponsorship can be role-specific. Use them alongside official registers and direct confirmation."
+        },
+        {
+          "question": "Do small companies need a full mobility program?",
+          "answer": "Not necessarily. Lean teams can combine an HRIS with fractional specialists and counsel, scaling the program as international hiring grows."
+        }
+      ],
+      "browseHref": "/employers",
+      "browseLabel": "Explore employer tools",
+      "breadcrumbs": [
+        {
+          "name": "Home",
+          "path": "/"
+        },
+        {
+          "name": "Employers",
+          "path": "/employers"
+        },
+        {
+          "name": "Sponsorship resources",
+          "path": "/employers/sponsorship-resources"
+        }
+      ],
+      "relatedGuides": [
+        {
+          "href": "/employers/how-to-hire-international-talent",
+          "label": "How to hire international talent"
+        },
+        {
+          "href": "/employers/corporate-global-mobility",
+          "label": "Corporate global mobility playbook"
+        },
+        {
+          "href": "/employers",
+          "label": "International recruitment resources"
+        },
+        {
+          "href": "/companies",
+          "label": "How candidates vet sponsors"
+        }
+      ]
+    }
+  ],
   "redirects": {
     "/companies-that-sponsor-visas": "/companies",
     "/jobs-with-relocation-support": "/jobs",
@@ -657,6 +927,11 @@
     "/relocating/cv-cover-letter-international-relocation-job": "/resources/visa-sponsorship-cover-letter-template",
     "/relocating/interview-employer-relocation-visas-benefits": "/resources/visa-sponsorship-interview-questions",
     "/relocating/moving-country-relocation-first-90-days": "/resources/first-90-days-relocation-checklist",
-    "/relocating/relocating-move-budget-financial-checklist": "/resources/relocation-budget-checklist"
+    "/relocating/relocating-move-budget-financial-checklist": "/resources/relocation-budget-checklist",
+    "/what-is-visa-sponsorship": "/jobs",
+    "/visa-sponsorship-by-country": "/countries",
+    "/visa-sponsorship-vs-relocation-support": "/plan-the-move",
+    "/sponsorship-jobs-vs-skilled-worker-programs": "/jobs",
+    "/international-recruitment-resources": "/employers"
   }
 }

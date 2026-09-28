@@ -37,12 +37,12 @@ function section(s,route){
  const body=parts.filter(Boolean).join('\n\n');assert(body.trim(),`Empty app section in ${route}: ${s.h2}`);return{h2:s.h2,body};
 }
 try{
- const pillars=require(path.join(frontend,'src/data/seoPillarPages.ts')),spokes=require(path.join(frontend,'src/data/relocationSpokePages.ts'));
+ const pillars=require(path.join(frontend,'src/data/seoPillarPages.ts')),spokes=require(path.join(frontend,'src/data/relocationSpokePages.ts')),contentGuides=require(path.join(frontend,'src/data/seoContentGuides.ts'));
  const retired=require(path.join(frontend,'src/config/retiredPublicRoutes.ts'));
- const groups={pillars:pillars.ALL_SEO_PILLAR_PAGES,relocation:spokes.ALL_RELOCATION_GUIDE_PAGES};
+ const groups={pillars:pillars.ALL_SEO_PILLAR_PAGES,relocation:spokes.ALL_RELOCATION_GUIDE_PAGES,content:contentGuides.ALL_SEO_CONTENT_GUIDE_PAGES};
  const redirects=Object.fromEntries(Object.values(groups).flat().filter(p=>retired.resolveRetiredPublicPath(p.path)).map(p=>[p.path,retired.resolveRetiredPublicPath(p.path)]));
  const output={...Object.fromEntries(Object.entries(groups).map(([key,entries])=>[key,entries.filter(p=>!redirects[p.path]).map(p=>{const normalized=pillars.seoPillarHubProps(p);const {visualPath,...rest}=normalized;return{path:visualPath,metaTitle:p.metaTitle,metaDescription:p.metaDescription,...rest,sections:rest.sections.map(s=>section(s,p.path))}})])),redirects};
  const content=JSON.stringify(output,null,2)+'\n',target=path.resolve(__dirname,'../data/editorialGuides.en.json');
  if(process.argv.includes('--check'))assert.equal(fs.readFileSync(target,'utf8'),content,'App English guides differ from the website. Run the sync command.');else {fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,content);}
- console.log(`${output.pillars.length+output.relocation.length} English guides synced; structured content preserved.`);
+ console.log(`${output.pillars.length+output.relocation.length+output.content.length} English guides synced; structured content preserved.`);
 }finally{Module._resolveFilename=resolve;if(extension)require.extensions['.ts']=extension;else delete require.extensions['.ts'];}

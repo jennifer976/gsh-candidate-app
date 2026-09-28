@@ -103,7 +103,7 @@ export default function BlogIndexScreen() {
             />
             <GshOutlineButton
               title={t("openGuides")}
-              onPress={() => router.push("/guides")}
+              onPress={() => router.push("/resources")}
               style={{ marginTop: 14 }}
             />
             <GshOutlineButton

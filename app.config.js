@@ -21,15 +21,15 @@ module.exports = () => {
     name: isStaging ? "Global Sponsor Hub Staging" : "Global Sponsor Hub",
     slug: "gsh-candidate-app",
     scheme: isStaging ? "gsh-candidate-staging" : "gsh-candidate",
-    version: "1.0.6",
+    version: "1.0.15",
     orientation: "portrait",
     icon: "./assets/brand-icon.png",
     userInterfaceStyle: "light",
     newArchEnabled: true,
     splash: {
-      image: "./assets/brand-mark-light.png",
+      image: "./assets/brand-mark-navy.png",
       resizeMode: "contain",
-      backgroundColor: "#0d194e",
+      backgroundColor: "#42e0e3",
     },
     ios: {
       supportsTablet: true,
@@ -55,19 +55,20 @@ module.exports = () => {
       softwareKeyboardLayoutMode: "resize",
     },
     androidStatusBar: {
-      backgroundColor: "#0d194e",
-      barStyle: "light-content",
-      translucent: true,
+      backgroundColor: "#ffffff",
+      barStyle: "dark-content",
+      translucent: false,
     },
     androidNavigationBar: {
-      backgroundColor: "#0d194e",
-      barStyle: "light-content",
+      backgroundColor: "#ffffff",
+      barStyle: "dark-content",
       enforceContrast: false,
     },
     web: {
       favicon: "./assets/brand-icon.png",
     },
     plugins: [
+      "expo-asset",
       "expo-router",
       "expo-secure-store",
       [
@@ -79,6 +80,16 @@ module.exports = () => {
         },
       ],
       "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          image: "./assets/brand-mark-navy.png",
+          // Android 12+ masks the splash icon to a 192dp circle; 176dp keeps the mark's corner shapes inside it.
+          imageWidth: 176,
+          resizeMode: "contain",
+          backgroundColor: "#42e0e3",
+        },
+      ],
       "expo-web-browser",
     ],
     extra: {

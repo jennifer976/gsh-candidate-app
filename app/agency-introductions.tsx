@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useQuery } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
@@ -6,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchMyApplyInvites } from "@/lib/api-client";
 import { colors, fontFamily, navHeader, radii } from "@/lib/theme";
 
-export default function AgencyIntroductionsScreen() {
+function AgencyIntroductionsScreen() {
   const ac = useAccountCopy();
   const router = useRouter();
   const query = useQuery({ queryKey: ["apply-invites", "mine"], queryFn: fetchMyApplyInvites });
@@ -55,4 +56,10 @@ const styles = StyleSheet.create({
   empty: { padding: 32, textAlign: "center", color: colors.textMuted, fontFamily: fontFamily.regular },
   error: { padding: 16, borderRadius: radii.md, backgroundColor: "#fef2f2" },
   errorText: { color: "#991b1b", textAlign: "center", fontFamily: fontFamily.medium },
+});
+
+export default withSignIn(AgencyIntroductionsScreen, {
+  icon: "people-outline",
+  title: "Introductions",
+  body: "Sign in to see roles that recruiters have introduced to you.",
 });

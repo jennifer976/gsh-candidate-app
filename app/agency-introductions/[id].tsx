@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams } from "expo-router";
@@ -6,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchApplyInvite, respondToApplyInvite } from "@/lib/api-client";
 import { colors, fontFamily, navHeader, radii } from "@/lib/theme";
 
-export default function ApplyInviteDetailScreen() {
+function ApplyInviteDetailScreen() {
   const ac = useAccountCopy();
   const { id } = useLocalSearchParams<{ id: string }>();
   const inviteId = String(id || "");
@@ -67,4 +68,10 @@ const styles = StyleSheet.create({
   buttonText: { color: colors.white, fontSize: 15, fontFamily: fontFamily.bold },
   decline: { minHeight: 48, alignItems: "center", justifyContent: "center", borderRadius: radii.pill, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.white },
   declineText: { color: colors.navy, fontSize: 15, fontFamily: fontFamily.bold },
+});
+
+export default withSignIn(ApplyInviteDetailScreen, {
+  icon: "people-outline",
+  title: "Introductions",
+  body: "Sign in to see roles that recruiters have introduced to you.",
 });

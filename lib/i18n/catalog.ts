@@ -8,7 +8,7 @@ import nl from "./messages/nl.json";
 import pl from "./messages/pl.json";
 
 export const APP_LANGUAGES = [
-  { code: "en", name: "English" },
+  { code: "en", name: "English (UK)" },
   { code: "fr", name: "Français" },
   { code: "de", name: "Deutsch" },
   { code: "es", name: "Español" },
@@ -35,6 +35,13 @@ export function normalizeAppLanguage(value: unknown): AppLanguage {
   return (
     APP_LANGUAGES.find((language) => language.code === primary)?.code ?? "en"
   );
+}
+
+/** British English for dates, numbers, and region names (plain `en` is US on most devices). */
+export function toIntlLocale(locale: AppLanguage | string): string {
+  const primary = locale.toLowerCase().split(/[-_]/)[0];
+  if (primary === "en") return "en-GB";
+  return normalizeAppLanguage(locale);
 }
 /** Only call with explicit UI message keys, never with job or profile content. */
 export function appCopy(

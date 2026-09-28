@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -24,7 +25,7 @@ import { colors, fontFamily, radii } from "@/lib/theme";
 const TYPES = ["feature", "issue", "update", "request"] as const;
 const PRIOS = ["low", "medium", "high"] as const;
 
-export default function FeedbackScreen() {
+function FeedbackScreen() {
   const ac = useAccountCopy();
 
   const router = useRouter();
@@ -218,4 +219,10 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   area: { minHeight: 140, marginBottom: 4 },
+});
+
+export default withSignIn(FeedbackScreen, {
+  icon: "chatbox-ellipses-outline",
+  title: "Send feedback",
+  body: "Sign in to send feedback to the Global Sponsor Hub team.",
 });

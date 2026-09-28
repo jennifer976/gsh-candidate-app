@@ -5,6 +5,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import {
   appCopy,
   normalizeAppLanguage,
+  toIntlLocale,
   type AppCopyKey,
   type AppLanguage,
 } from "./catalog";
@@ -34,10 +35,12 @@ export const useAppLanguage = create<LanguageState>()(
 );
 export function useAppCopy() {
   const locale = useAppLanguage((state) => state.locale);
+  const intlLocale = toIntlLocale(locale);
   const t = useCallback(
     (key: AppCopyKey, values?: Record<string, string | number>) =>
       appCopy(locale, key, values),
     [locale],
   );
-  return { t, locale };
+  return { t, locale, intlLocale };
 }
+export { toIntlLocale };

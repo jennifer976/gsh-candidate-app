@@ -62,6 +62,7 @@ Implemented in the isolated Phase 7 mobile worktree; this status does not mean a
 
 | App version / commit | Date | What shipped |
 |----------------------|------|--------------|
+| `1.0.14` / Android `21` | 2026-09-26 | Native-first Home redesign, Saved tab, destination/category search, specialist requests, CV quality checker, richer application tracking, and expanded website deep-link parity. |
 | `1.0.2` (this worktree) | 2026-09-12 | Find → Move home, Direct / External / Agency listed jobs, matching nudge, blog/guides/specialists on Home, light candidate chrome. |
 | `1.0.1` / `30941a9` | 2026-07 | Visual review: All jobs / Curated roles, Filter while searching, chart colours, FAQ/tools/a11y polish. |
 | `5e1c73c` (include in next Play upload) | 2026-07-21 | Company sponsor checker gated as **Coming soon**; labels clarified vs Visa Wizard. |

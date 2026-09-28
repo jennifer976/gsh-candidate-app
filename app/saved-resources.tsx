@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -27,7 +28,7 @@ import {
   radii,
 } from "@/lib/theme";
 
-export default function SavedResourcesScreen() {
+function SavedResourcesScreen() {
   const ac = useAccountCopy();
 
   const router = useRouter();
@@ -210,4 +211,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brand,
   },
   browseText: { fontFamily: fontFamily.bold, color: colors.white },
+});
+
+export default withSignIn(SavedResourcesScreen, {
+  icon: "bookmark-outline",
+  title: "Saved resources",
+  body: "Sign in to keep the templates and checklists you want to come back to.",
 });

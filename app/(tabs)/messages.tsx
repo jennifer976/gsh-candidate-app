@@ -1,35 +1,32 @@
-import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
-import { useAppCopy, useAppLanguage } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  Pressable,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useState } from "react";
+import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { GshMessengerTip } from "@/components/gsh-ui-kit";
 import { GshScreenShell } from "@/components/GshScreenShell";
-import { GshTabStickyHeader } from "@/components/GshTabStickyHeader";
-import { brandMark } from "@/lib/brand-assets";
+import { SignInPanel } from "@/components/SignInGate";
+import {
+  BrandStatePanel,
+  DecorRing,
+  DepthPressable,
+  DepthSurface,
+  Eyebrow,
+  IconBadge,
+  PosterTitle,
+  posterParts,
+  SegmentTabs,
+} from "@/components/gsh-brand";
+import { tabBarBottomPadding } from "@/lib/android-insets";
 import { fetchConversations } from "@/lib/api-client";
-import { colors, fontFamily, radii } from "@/lib/theme";
+import { useAuthStore } from "@/lib/auth-store";
+import { useAppCopy } from "@/lib/i18n";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
+import { jobAgeLabel } from "@/lib/job-presentation";
+import { colors, fontFamily } from "@/lib/theme";
 import type { ConversationSummary } from "@/types/models";
 
-function formatWhen(iso: string, locale: string) {
-  try {
-    const d = new Date(iso);
-    return d.toLocaleDateString(locale, { month: "short", day: "numeric" });
-  } catch {
-    return "";
-  }
-}
+type Filter = "all" | "unread";
 
 function initialsFromLabel(label: string): string {
   const parts = label.trim().split(/\s+/).filter(Boolean);
@@ -38,207 +35,197 @@ function initialsFromLabel(label: string): string {
   return `${parts[0][0] ?? ""}${parts[1][0] ?? ""}`.toUpperCase();
 }
 
+function unreadOf(row: ConversationSummary): number {
+  return Math.max(0, row.unreadCount ?? (row.read === false ? 1 : 0));
+}
+
 export default function MessagesScreen() {
   const ac = useAccountCopy();
-  const { t } = useAppCopy();
-  const locale = useAppLanguage((s) => s.locale);
+  const { locale } = useAppCopy();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const signedIn = Boolean(useAuthStore((s) => s.token));
+  const [filter, setFilter] = useState<Filter>("all");
 
   const query = useQuery({
     queryKey: ["message-conversations"],
     queryFn: fetchConversations,
+    enabled: signedIn,
   });
 
-  const rows = query.data ?? [];
+  const all = query.data ?? [];
+  const unreadTotal = all.filter((row) => unreadOf(row) > 0).length;
+  const rows = filter === "unread" ? all.filter((row) => unreadOf(row) > 0) : all;
 
-  if (query.isLoading) {
-    return (
-      <GshScreenShell constrainTabletWidth style={styles.shell}>
-        <GshTabStickyHeader
-          title={t("messages")}
-          subtitle={ac("Messages about your job search")}
-          paddingTop={Math.max(insets.top, 12) + 4}
+  const header = (
+    <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 14 }]}>
+      <DecorRing size={220} thickness={30} color="rgba(66,224,227,0.18)" style={{ top: -100, right: -90 }} />
+      <Eyebrow>{ac("Inbox")}</Eyebrow>
+      <PosterTitle {...posterParts(ac("Your|messages."))} size={38} style={styles.title} />
+      {signedIn ? (
+        <SegmentTabs
+          value={filter}
+          onChange={setFilter}
+          options={[
+            { id: "all", label: ac("All") },
+            { id: "unread", label: unreadTotal > 0 ? `${ac("Unread")} (${unreadTotal})` : ac("Unread") },
+          ]}
+          style={styles.segment}
         />
-        <View style={styles.center}>
-          <ActivityIndicator size="large" color={colors.cyan} />
-          <Text style={styles.muted}>{ac("Loading conversations…")}</Text>
-        </View>
+      ) : (
+        <Text style={styles.body}>{ac("Talk to employers and agencies about your applications.")}</Text>
+      )}
+    </View>
+  );
+
+  if (!signedIn) {
+    return (
+      <GshScreenShell constrainTabletWidth>
+        <FlatList
+          data={[]}
+          renderItem={null}
+          ListHeaderComponent={header}
+          ListFooterComponent={
+            <SignInPanel
+              returnTo="/(tabs)/messages"
+              icon="chatbubbles-outline"
+              title="Your messages"
+              body="Sign in to read and reply to messages from employers."
+            />
+          }
+          contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 16 }}
+        />
       </GshScreenShell>
     );
   }
 
-  if (query.isError) {
-    return (
-      <GshScreenShell constrainTabletWidth style={styles.shell}>
-        <GshTabStickyHeader
-          title={t("messages")}
-          subtitle={ac("Messages about your job search")}
-          paddingTop={Math.max(insets.top, 12) + 4}
-        />
-        <View style={styles.center}>
-          <Ionicons name="alert-circle-outline" size={40} color={colors.error} />
-          <Text style={styles.err}>{ac("Could not load messages.")}</Text>
-          <Pressable
-            onPress={() => void query.refetch()}
-            accessibilityRole="button"
-            style={styles.retryBtn}
-          >
-            <Text style={styles.retryBtnText}>{ac("Try again")}</Text>
-          </Pressable>
-        </View>
-      </GshScreenShell>
-    );
-  }
+  const empty = query.isLoading ? (
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={colors.navy} />
+    </View>
+  ) : query.isError ? (
+    <BrandStatePanel
+      icon="cloud-offline-outline"
+      title={ac("Could not load")}
+      body={ac("Check your connection and try again.")}
+      primary={{ label: ac("Try again"), onPress: () => void query.refetch(), icon: "refresh" }}
+    />
+  ) : filter === "unread" && all.length > 0 ? (
+    <BrandStatePanel
+      icon="checkmark-done-outline"
+      title={ac("All caught up")}
+      body={ac("You have read every message.")}
+      secondary={{ label: ac("Show all messages"), onPress: () => setFilter("all") }}
+    />
+  ) : (
+    <BrandStatePanel
+      icon="chatbubbles-outline"
+      title={ac("No messages yet")}
+      body={ac("When an employer or agency contacts you, the conversation will appear here.")}
+      primary={{ label: ac("Browse jobs"), onPress: () => router.push("/(tabs)/jobs") }}
+    />
+  );
 
   return (
-    <GshScreenShell constrainTabletWidth style={styles.shell}>
-      <GshTabStickyHeader
-        title={t("messages")}
-        subtitle={ac("Messages about your job search")}
-        paddingTop={Math.max(insets.top, 12) + 4}
-      />
+    <GshScreenShell constrainTabletWidth>
       <FlatList
-        data={rows}
-        keyExtractor={(item: ConversationSummary) => item.id ?? item._id}
-        style={styles.listFlex}
-        ListHeaderComponent={
-          <View style={styles.tipWrap}>
-            <GshMessengerTip>
-              {ac("Reply when an employer or agency starts a conversation.")}
-            </GshMessengerTip>
-          </View>
+        data={query.isError ? [] : rows}
+        keyExtractor={(item) => item.id ?? item._id}
+        ListHeaderComponent={header}
+        ListEmptyComponent={empty}
+        ListFooterComponent={
+          rows.length > 0 ? (
+            <DepthSurface face={colors.navy} depthColor={colors.navyDeep} depth={5} radius={20} style={styles.tip}>
+              <View style={styles.tipInner}>
+                <IconBadge icon="bulb-outline" size={36} radius={11} />
+                <Text style={styles.tipText}>
+                  {ac("Reply when an employer or agency starts a conversation.")}
+                </Text>
+              </View>
+            </DepthSurface>
+          ) : null
         }
         refreshControl={
-          <RefreshControl
-            refreshing={query.isFetching}
-            onRefresh={() => query.refetch()}
-            tintColor={colors.cyan}
-          />
+          <RefreshControl refreshing={query.isRefetching} onRefresh={() => void query.refetch()} tintColor={colors.navy} />
         }
-        contentContainerStyle={[
-          styles.listPad,
-          rows.length === 0 && styles.listPadGrow,
-        ]}
+        contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 16 }}
         renderItem={({ item }) => {
-          const unread = Math.max(
-            0,
-            item.unreadCount ?? (item.read === false ? 1 : 0),
-          );
+          const unread = unreadOf(item);
+          const when = jobAgeLabel(item.lastMessageAt, locale);
           return (
-            <Pressable
-              style={[styles.card, unread > 0 && styles.cardUnread]}
-              onPress={() =>
-                router.push(`/conversation/${item.id ?? item._id}`)
-              }
-              accessibilityRole="button"
+            <DepthPressable
+              onPress={() => router.push(`/conversation/${item.id ?? item._id}`)}
+              face={unread > 0 ? colors.unreadBg : colors.white}
+              depthColor={unread > 0 ? colors.navy : colors.border}
+              depth={4}
+              radius={20}
+              borderWidth={2}
+              borderColor={unread > 0 ? colors.navy : colors.border}
+              accessibilityLabel={`${item.counterpartyLabel}. ${item.jobTitle}`}
+              style={styles.cardGap}
+              innerStyle={styles.card}
             >
               <View style={styles.avatar}>
-                <Text style={styles.avatarText}>
-                  {initialsFromLabel(item.counterpartyLabel || "?")}
-                </Text>
+                <Text style={styles.avatarText}>{initialsFromLabel(item.counterpartyLabel || "?")}</Text>
               </View>
               <View style={styles.cardMid}>
                 <View style={styles.rowTop}>
-                  <Text style={styles.counterparty} numberOfLines={1}>
+                  <Text style={[styles.counterparty, unread > 0 && styles.bold]} numberOfLines={1}>
                     {item.counterpartyLabel}
                   </Text>
-                  <Text style={styles.when}>
-                    {formatWhen(item.lastMessageAt, locale)}
-                  </Text>
+                  {when ? <Text style={styles.when}>{when}</Text> : null}
                 </View>
-                <Text style={styles.jobTitle} numberOfLines={1}>
-                  {item.jobTitle}
-                </Text>
-                <Text style={styles.preview} numberOfLines={2}>
-                  {item.lastMessagePreview || ac("No messages yet")}
-                </Text>
-                <View style={styles.cardFoot}>
+                {item.jobTitle ? (
+                  <Text style={styles.jobTitle} numberOfLines={1}>
+                    {item.jobTitle}
+                  </Text>
+                ) : null}
+                <View style={styles.previewRow}>
+                  <Text style={[styles.preview, unread > 0 && styles.previewUnread]} numberOfLines={2}>
+                    {item.lastMessagePreview || ac("No messages yet")}
+                  </Text>
                   {unread > 0 ? (
-                    <View style={styles.unreadBadge}>
-                      <Text style={styles.unreadBadgeText}>
-                        {unread > 99 ? "99+" : unread}
-                      </Text>
+                    <View style={styles.badge}>
+                      <Text style={styles.badgeText}>{unread > 99 ? "99+" : unread}</Text>
                     </View>
                   ) : (
-                    <View />
+                    <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
                   )}
-                  <View style={styles.openRow}>
-                    <Text style={styles.open}>{ac("Open conversation")}</Text>
-                    <View style={styles.openArrow}>
-                      <Ionicons name="arrow-forward" size={14} color={colors.navy} />
-                    </View>
-                  </View>
                 </View>
               </View>
-            </Pressable>
+            </DepthPressable>
           );
         }}
-        ListEmptyComponent={
-          <View style={styles.emptyWrap}>
-            <View style={styles.emptyMarkWell}>
-              <Image source={brandMark} style={styles.emptyMark} resizeMode="contain" />
-            </View>
-            <Text style={styles.empty}>{ac("No messages yet")}</Text>
-            <Text style={styles.emptySub}>
-              {ac(
-                "Your conversations will appear here. Manage who can find and contact you in your profile.",
-              )}
-            </Text>
-            <Pressable
-              style={styles.emptyCta}
-              onPress={() => router.push("/(tabs)/profile")}
-              accessibilityRole="button"
-            >
-              <Text style={styles.emptyCtaText}>{t("profile")}</Text>
-              <Ionicons name="arrow-forward" size={16} color={colors.navy} />
-            </Pressable>
-          </View>
-        }
       />
     </GshScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  shell: { backgroundColor: colors.pale },
-  listFlex: { flex: 1 },
-  tipWrap: { marginBottom: 4 },
-  listPad: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 40, gap: 12 },
-  listPadGrow: { flexGrow: 1 },
-  card: {
-    flexDirection: "row",
-    gap: 12,
-    padding: 16,
-    borderRadius: radii.lg,
-    backgroundColor: colors.white,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
+  header: { paddingHorizontal: 20, paddingBottom: 18, overflow: "hidden" },
+  title: { marginTop: 8 },
+  body: {
+    marginTop: 14,
+    fontFamily: fontFamily.medium,
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.textSecondary,
   },
-  cardUnread: {
-    borderColor: colors.unreadBorder,
-    backgroundColor: colors.unreadBg,
-  },
+  segment: { marginTop: 18 },
+  loading: { paddingVertical: 48, alignItems: "center" },
+  cardGap: { marginHorizontal: 20, marginBottom: 12 },
+  card: { flexDirection: "row", gap: 12, padding: 14 },
   avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
+    width: 48,
+    height: 48,
+    borderRadius: 14,
     backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
   },
-  avatarText: {
-    fontSize: 16,
-    fontFamily: fontFamily.heading,
-    color: colors.cyan,
-  },
+  avatarText: { fontSize: 15, fontFamily: fontFamily.heading, color: colors.cyan },
   cardMid: { flex: 1, minWidth: 0 },
-  rowTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: 8,
-  },
+  rowTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 },
   counterparty: {
     flex: 1,
     fontSize: 16,
@@ -246,125 +233,23 @@ const styles = StyleSheet.create({
     color: colors.navy,
     letterSpacing: -0.2,
   },
-  when: {
-    fontSize: 12,
-    fontFamily: fontFamily.medium,
-    color: colors.placeholder,
-  },
-  jobTitle: {
-    marginTop: 4,
-    fontSize: 13,
-    fontFamily: fontFamily.semiBold,
-    color: colors.textSecondary,
-  },
-  preview: {
-    marginTop: 6,
-    fontSize: 14,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-    lineHeight: 20,
-  },
-  cardFoot: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 12,
-    gap: 8,
-  },
-  unreadBadge: {
-    minWidth: 22,
-    alignItems: "center",
+  bold: { fontFamily: fontFamily.headingStrong },
+  when: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textMuted },
+  jobTitle: { marginTop: 2, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
+  previewRow: { marginTop: 6, flexDirection: "row", alignItems: "center", gap: 10 },
+  preview: { flex: 1, fontSize: 14, lineHeight: 20, fontFamily: fontFamily.regular, color: colors.textMuted },
+  previewUnread: { fontFamily: fontFamily.semiBold, color: colors.navy },
+  badge: {
+    minWidth: 24,
+    height: 24,
     paddingHorizontal: 7,
-    paddingVertical: 3,
-    borderRadius: radii.pill,
-    backgroundColor: colors.cyan,
-  },
-  unreadBadgeText: {
-    fontSize: 11,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-  },
-  openRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  open: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy },
-  openArrow: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.cyan,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 24,
-    gap: 12,
-  },
-  muted: {
-    color: colors.textMuted,
-    fontSize: 15,
-    fontFamily: fontFamily.medium,
-  },
-  err: {
-    color: colors.error,
-    textAlign: "center",
-    fontFamily: fontFamily.medium,
-  },
-  retryBtn: {
-    marginTop: 4,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: radii.pill,
+    borderRadius: 12,
     backgroundColor: colors.navy,
-  },
-  retryBtnText: {
-    color: colors.white,
-    fontFamily: fontFamily.semiBold,
-    fontSize: 15,
-  },
-  emptyWrap: {
-    alignItems: "center",
-    marginTop: 36,
-    paddingHorizontal: 24,
-    gap: 10,
-  },
-  emptyMarkWell: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: colors.brandSoft,
     alignItems: "center",
     justifyContent: "center",
   },
-  emptyMark: { width: 40, height: 40 },
-  empty: {
-    fontFamily: fontFamily.heading,
-    fontSize: 18,
-    color: colors.navy,
-    textAlign: "center",
-  },
-  emptySub: {
-    textAlign: "center",
-    color: colors.textMuted,
-    fontFamily: fontFamily.regular,
-    fontSize: 15,
-    lineHeight: 22,
-  },
-  emptyCta: {
-    marginTop: 8,
-    minHeight: 48,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: radii.pill,
-    backgroundColor: colors.cyan,
-  },
-  emptyCtaText: {
-    fontSize: 15,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-  },
+  badgeText: { fontSize: 11, fontFamily: fontFamily.extraBold, color: colors.cyan },
+  tip: { marginHorizontal: 20, marginTop: 8 },
+  tipInner: { flexDirection: "row", alignItems: "center", gap: 12, padding: 16 },
+  tipText: { flex: 1, fontFamily: fontFamily.medium, fontSize: 14, lineHeight: 20, color: colors.white },
 });

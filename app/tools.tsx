@@ -1,167 +1,201 @@
 import { useAppCopy } from "@/lib/i18n";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import toolkitCopy from "@/data/candidateToolkitCopy.json";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Stack, useRouter } from "expo-router";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BrandTopBar } from "@/components/BrandTopBar";
 import {
-  GshLinkRow,
-  GshScreenIntro,
-  GshSectionTitle,
-} from "@/components/gsh-ui-kit";
-import { GshScreenBackground } from "@/components/GshScreenBackground";
-import { stackScrollContentStyle } from "@/lib/screen-layout";
-import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
-
+  BrandLinkRow,
+  DecorRing,
+  DepthPressable,
+  DepthSurface,
+  Eyebrow,
+  PosterTitle,
+  SectionHeading,
+} from "@/components/gsh-brand";
+import { colors, fontFamily } from "@/lib/theme";
 
 export default function ToolsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { t, locale } = useAppCopy();
+  const ac = useAccountCopy();
   const copy = toolkitCopy[locale];
   const TIPS = [copy.tip1, copy.tip2, copy.tip3, copy.tip4, copy.tip5];
 
   return (
-    <GshScreenBackground>
-      <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <ScrollView
-          contentContainerStyle={styles.pad}
-          showsVerticalScrollIndicator={false}
-        >
-          <GshScreenIntro
-            eyebrow={copy.career.toLocaleLowerCase(locale)}
-            title={copy.title}
-            subtitle={copy.intro}
-            style={{ marginBottom: 12 }}
+    <View style={styles.root}>
+      <Stack.Screen options={{ title: t("screenCareertoolkit"), headerShown: false }} />
+      <ScrollView
+        contentContainerStyle={[styles.pad, { paddingBottom: Math.max(insets.bottom, 16) + 32 }]}
+        showsVerticalScrollIndicator={false}
+      >
+        <DecorRing size={240} thickness={30} color="rgba(66,224,227,0.18)" style={{ top: -110, right: -100 }} />
+        <BrandTopBar fallback="/tools-resources" />
+
+        <View style={styles.hero}>
+          <Eyebrow>{copy.career}</Eyebrow>
+          <PosterTitle highlight={copy.title} size={32} />
+          <Text style={styles.intro}>{copy.intro}</Text>
+        </View>
+
+        <View style={styles.section}>
+          <BrandLinkRow
+            icon="person-circle-outline"
+            label={copy.openProfile}
+            hint={copy.profileHelp}
+            onPress={() => router.push("/(tabs)/profile")}
           />
+        </View>
 
-          <View style={styles.accentBar} />
+        <View style={styles.section}>
+          <SectionHeading title={copy.cvApplications} />
+          <Text style={styles.hint}>{copy.cvHelp}</Text>
+          <View style={styles.rows}>
+            <BrandLinkRow
+              icon="document-text-outline"
+              label={ac("CV quality check")}
+              hint={ac("Check structure, contact details, dates, and measurable results.")}
+              onPress={() => router.push("/cv-quality-checker")}
+            />
+            <DepthPressable
+              onPress={() => router.push("/ats-assistant")}
+              face={colors.navy}
+              depthColor={colors.cyan}
+              depth={5}
+              radius={20}
+              accessibilityLabel={`${copy.ats}. ${copy.atsHelp}`}
+              innerStyle={styles.atsCard}
+            >
+              <View style={styles.atsIcon}>
+                <Ionicons name="git-compare-outline" size={20} color={colors.navy} />
+              </View>
+              <View style={{ flex: 1, minWidth: 0 }}>
+                <Text style={styles.atsTitle}>{copy.ats}</Text>
+                <Text style={styles.atsBody}>{copy.atsHelp}</Text>
+              </View>
+              <Ionicons name="arrow-forward" size={20} color={colors.cyan} />
+            </DepthPressable>
+          </View>
+        </View>
 
-          <Pressable onPress={() => router.push("/(tabs)/profile")} accessibilityRole="button" style={styles.scoreCard}>
-            <Text style={styles.scoreLabel}>{copy.profileHelp}</Text>
-            <Text style={styles.link}>{copy.openProfile}</Text>
-          </Pressable>
-
-          <GshSectionTitle
-            title={copy.cvApplications}
-            hint={copy.cvHelp}
-          />
-
-          <GshSectionTitle title={copy.quickTips} topSpacing="sm" />
-          {TIPS.map((tip) => (
-            <View key={tip} style={styles.tip}>
-              <Text style={styles.bullet}>•</Text>
-              <Text style={styles.tipText}>{tip}</Text>
-            </View>
-          ))}
-
-          <Pressable
-            style={[styles.primaryBtnOuter, styles.primaryBtn, styles.atsBtn]}
-            onPress={() => router.push("/ats-assistant")}
+        <View style={styles.section}>
+          <SectionHeading title={copy.quickTips} />
+          <DepthSurface
+            depth={4}
+            radius={20}
+            borderWidth={2}
+            borderColor={colors.navy}
+            style={styles.tipsCard}
+            innerStyle={styles.tipsInner}
           >
-            <Text style={styles.primaryBtnText}>{copy.ats}</Text>
-            <Text style={styles.primarySub}>
-              {copy.atsHelp}
-            </Text>
-          </Pressable>
+            {TIPS.map((tip, index) => (
+              <View key={tip} style={styles.tip}>
+                <View style={styles.tipNumber}>
+                  <Text style={styles.tipNumberText}>{index + 1}</Text>
+                </View>
+                <Text style={styles.tipText}>{tip}</Text>
+              </View>
+            ))}
+          </DepthSurface>
+        </View>
 
-          <GshLinkRow
-            title={copy.guides}
-            subtitle={copy.guidesHelp}
-            icon="book-outline"
-            accent="teal"
-            onPress={() => router.push("/guides")}
-          />
-          <GshLinkRow
-            title={copy.sponsor}
-            subtitle={copy.comingSoon}
-            icon="shield-checkmark-outline"
-            accent="teal"
-            onPress={() => router.push("/visa-checker")}
-          />
-          <GshLinkRow
-            title={copy.worksheets}
-            subtitle={copy.worksheetsHelp}
-            icon="clipboard-outline"
-            accent="ocean"
-            onPress={() => router.push("/relocation-worksheets")}
-          />
-          <GshLinkRow
-            title={copy.resources}
-            subtitle={copy.resourcesHelp}
-            icon="grid-outline"
-            accent="purple"
-            onPress={() => router.push("/tools-resources")}
-          />
-        </ScrollView>
-      </SafeAreaView>
-    </GshScreenBackground>
+        <View style={styles.section}>
+          <SectionHeading title={t("resourcesMove")} />
+          <View style={styles.rows}>
+            <BrandLinkRow
+              icon="earth-outline"
+              label={ac("Countries")}
+              hint={ac("Visa routes, hiring sectors and everyday life, destination by destination.")}
+              onPress={() => router.push("/countries")}
+            />
+            <BrandLinkRow
+              icon="shield-checkmark-outline"
+              label={copy.sponsor}
+              hint={ac("Search the company directory for employers and their sponsorship signals.")}
+              onPress={() => router.push("/companies")}
+            />
+            <BrandLinkRow
+              icon="cash-outline"
+              label={ac("Currency converter")}
+              hint={ac("Compare salaries and living costs in your own currency.")}
+              onPress={() => router.push("/currency-converter")}
+            />
+            <BrandLinkRow
+              icon="clipboard-outline"
+              label={copy.worksheets}
+              hint={copy.worksheetsHelp}
+              onPress={() => router.push("/relocation-worksheets")}
+            />
+            <BrandLinkRow
+              icon="grid-outline"
+              label={copy.resources}
+              hint={copy.resourcesHelp}
+              onPress={() => router.push("/tools-resources")}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
-  pad: { ...stackScrollContentStyle, paddingBottom: 40 },
-  accentBar: { height: 3, backgroundColor: colors.teal, marginBottom: 18 },
-  scoreCard: {
-    borderRadius: radii.lg,
-    padding: 16,
-    marginBottom: 4,
+  root: { flex: 1, backgroundColor: colors.white },
+  pad: { overflow: "hidden" },
+  hero: { paddingHorizontal: 20, paddingTop: 20, gap: 10 },
+  intro: {
+    marginTop: 2,
+    fontSize: 15,
+    lineHeight: 22,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
   },
-  scoreLabel: {
+  section: { marginTop: 24, paddingHorizontal: 16 },
+  hint: {
+    marginTop: 4,
     fontSize: 13,
-    fontFamily: fontFamily.semiBold,
+    lineHeight: 19,
+    fontFamily: fontFamily.regular,
     color: colors.textMuted,
   },
-  scoreVal: {
-    fontSize: 36,
-    fontFamily: fontFamily.extraBold,
-    color: colors.accent,
+  rows: { gap: 10, marginTop: 12 },
+  atsCard: { flexDirection: "row", alignItems: "center", gap: 12, padding: 16 },
+  atsIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  atsTitle: { fontSize: 16, fontFamily: fontFamily.heading, color: colors.white },
+  atsBody: {
     marginTop: 4,
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: fontFamily.regular,
+    color: "rgba(255,255,255,0.78)",
   },
-  link: {
-    marginTop: 10,
-    color: colors.brand,
-    fontFamily: fontFamily.semiBold,
-    fontSize: 15,
+  tipsCard: { marginTop: 12 },
+  tipsInner: { padding: 16, gap: 12 },
+  tip: { flexDirection: "row", gap: 12, alignItems: "flex-start" },
+  tipNumber: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: colors.navy,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  tip: { flexDirection: "row", gap: 8, marginBottom: 10, paddingRight: 8 },
-  bullet: {
-    fontSize: 16,
-    color: colors.accent,
-    fontFamily: fontFamily.extraBold,
-  },
+  tipNumberText: { fontSize: 12, fontFamily: fontFamily.extraBold, color: colors.cyan },
   tipText: {
     flex: 1,
     fontSize: 14,
+    lineHeight: 20,
     fontFamily: fontFamily.regular,
     color: colors.textSecondary,
-    lineHeight: 20,
-  },
-  primaryBtnOuter: {
-    minHeight: 52,
-    marginTop: 0,
-    marginBottom: 4,
-    borderRadius: radii.md,
-    overflow: "hidden",
-  },
-  atsBtn: { marginTop: 14 },
-  primaryBtn: {
-    borderRadius: radii.md,
-    padding: 16,
-    backgroundColor: colors.navy,
-  },
-  primaryBtnRow: { flexDirection: "row", alignItems: "center", gap: 14 },
-  primaryBtnTextCol: { flex: 1 },
-  primaryBtnText: {
-    color: colors.white,
-    fontFamily: fontFamily.extraBold,
-    fontSize: 17,
-  },
-  primarySub: {
-    color: "rgba(255,255,255,0.88)",
-    fontSize: 13,
-    marginTop: 6,
-    fontFamily: fontFamily.regular,
-    lineHeight: 18,
   },
 });

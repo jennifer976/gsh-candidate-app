@@ -10,11 +10,6 @@ export default function GuidesLayout() {
         ...navHeader,
       }}
     >
-      <Stack.Screen name="index" options={{ title: t("guideTitle") }} />
-      <Stack.Screen
-        name="country/[slug]"
-        options={{ title: t("resourcesGuides") }}
-      />
       <Stack.Screen name="topic" options={{ title: t("guideTitle") }} />
     </Stack>
   );

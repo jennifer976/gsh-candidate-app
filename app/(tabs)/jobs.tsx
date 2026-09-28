@@ -1,10 +1,10 @@
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
-import { appCopy, type AppLanguage } from "@/lib/i18n/catalog";
 import { useAppCopy } from "@/lib/i18n";
 import {
   jobChipLabel,
   jobCountryLabel,
   jobMatchLabel,
+  jobSalaryLabel,
 } from "@/lib/job-presentation";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,7 +20,6 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Image,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -30,6 +29,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { tabBarBottomPadding } from "@/lib/android-insets";
 import {
   DiscoverListingInfoModal,
   DiscoverTopicsFilterModal,
@@ -40,8 +40,16 @@ import { JobCardSkeleton } from "@/components/SkeletonLoader";
 import { GshDarkFeedHeading } from "@/components/GshDarkFeedHeading";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { GshSwipeAction } from "@/components/GshSwipeAction";
-import { GshTabStickyHeader } from "@/components/GshTabStickyHeader";
-import { brandMark } from "@/lib/brand-assets";
+import {
+  BrandChip,
+  BrandStatePanel,
+  DecorRing,
+  DepthPressable,
+  DepthSurface,
+  Eyebrow,
+  PosterTitle,
+  posterParts,
+} from "@/components/gsh-brand";
 import {
   fetchPublicExternalJobListings,
   fetchPublicJobs,
@@ -52,6 +60,7 @@ import {
 } from "@/lib/api-client";
 import { compatibilityFirst, directJobIds } from "@/lib/compatibility";
 import { hapticLight } from "@/lib/haptics";
+import { useSignInPrompt } from "@/lib/useSignInPrompt";
 import {
   getEmployerSponsorBadge,
   getJobEmployerLabel,
@@ -63,27 +72,13 @@ import {
   addRecentJobSearch,
   loadRecentJobSearches,
 } from "@/lib/recent-job-searches";
-import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
+import { colors, fontFamily, radii } from "@/lib/theme";
 import type { ExternalJobListingPublic, Job } from "@/types/models";
 import type { CompatibilityResult } from "@/types/mobility";
 
 const COMPATIBILITY_ORDER_KEY = "@gsh_compatibility_first_v1";
 
-function formatSalary(job: Job, locale: AppLanguage): string {
-  const cur = job.salaryCurrency || "GBP";
-  const sym =
-    cur === "GBP" ? "£" : cur === "EUR" ? "€" : cur === "USD" ? "$" : `${cur} `;
-  if (job.minSalary != null && job.maxSalary != null) {
-    return `${sym}${job.minSalary.toLocaleString(locale)}–${job.maxSalary.toLocaleString(locale)}`;
-  }
-  if (job.minSalary != null)
-    return appCopy(locale, "jobsSalaryFrom", {
-      amount: `${sym}${job.minSalary.toLocaleString(locale)}`,
-    });
-  return "";
-}
-
-const CHIP_CAP = 2;
+const CHIP_CAP = 3;
 
 function HubJobCard({
   job,
@@ -116,7 +111,9 @@ function HubJobCard({
     [metaLine, job.jobType]
       .filter((x) => typeof x === "string" && x.length > 0)
       .join(" · ") || "";
-  const sal = formatSalary(job, locale);
+  const sal = jobSalaryLabel(job, locale);
+  const appliesOnPlatform =
+    (!job.listingKind || job.listingKind === "direct") && !job.externalListingId;
 
   return (
     <GshSwipeAction
@@ -128,8 +125,7 @@ function HubJobCard({
         },
       ]}
     >
-    <View style={[styles.card, feedCardStyle()]}>
-      <View style={styles.cardAccentStrip} />
+    <DepthSurface depth={5} radius={20} borderWidth={2} borderColor={colors.navy} innerStyle={styles.card}>
       <Pressable
         onPress={onPress}
         style={styles.cardMainHit}
@@ -181,6 +177,11 @@ function HubJobCard({
               </Text>
             </View>
           ) : null}
+          {sal ? (
+            <Text style={styles.cardSalaryInline} numberOfLines={1}>
+              {sal}
+            </Text>
+          ) : null}
           {chips.length > 0 ? (
             <View style={styles.chipWrap}>
               {chips.map((c) => {
@@ -220,22 +221,25 @@ function HubJobCard({
           {bookmarkLoading ? (
             <ActivityIndicator size="small" color={colors.cyan} />
           ) : (
-            <Ionicons
-              name={savedRowId ? "bookmark" : "bookmark-outline"}
-              size={22}
-              color={savedRowId ? colors.cyan : colors.textMuted}
-            />
+            <View style={[styles.bookmarkDisc, savedRowId ? styles.bookmarkDiscOn : null]}>
+              <Ionicons
+                name={savedRowId ? "bookmark" : "bookmark-outline"}
+                size={18}
+                color={colors.navy}
+              />
+            </View>
           )}
         </Pressable>
       </Pressable>
       <Pressable onPress={onPress} accessibilityRole="button">
         <View style={styles.cardFooter}>
-          {sal ? (
-            <Text style={styles.cardSalary} numberOfLines={1}>
-              {sal}
-            </Text>
+          {appliesOnPlatform ? (
+            <View style={styles.easyApplyRow}>
+              <Ionicons name="flash" size={14} color={colors.navy} />
+              <Text style={styles.easyApplyText}>{t("jobsEasyApply")}</Text>
+            </View>
           ) : (
-            <View style={styles.cardSalarySpacer} />
+            <View />
           )}
           <View style={styles.cardFooterCta}>
             <Text style={styles.cardCta}>{t("jobsView")}</Text>
@@ -245,7 +249,7 @@ function HubJobCard({
           </View>
         </View>
       </Pressable>
-    </View>
+    </DepthSurface>
     </GshSwipeAction>
   );
 }
@@ -266,7 +270,13 @@ export default function JobsTabScreen() {
   const [topicsModalOpen, setTopicsModalOpen] = useState(false);
   const [listingInfoOpen, setListingInfoOpen] = useState(false);
   const ac = useAccountCopy();
-  const params = useLocalSearchParams<{ location?: string; benefit?: string; workMode?: string }>();
+  const { signedIn, openSignIn } = useSignInPrompt();
+  const params = useLocalSearchParams<{
+    q?: string;
+    location?: string;
+    benefit?: string;
+    workMode?: string;
+  }>();
   const [workModeFilter, setWorkModeFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [mobilityFilter, setMobilityFilter] = useState("");
@@ -276,12 +286,13 @@ export default function JobsTabScreen() {
 
   useEffect(() => {
     // Expo Router already decodes parameters. Empty values intentionally clear an old linked filter.
+    if (typeof params.q === "string") setQ(params.q.trim());
     if (typeof params.location === "string") setLocationFilter(params.location.trim());
     if (typeof params.benefit === "string") setMobilityFilter(params.benefit.trim());
     if (typeof params.workMode === "string") {
       setWorkModeFilter(["remote", "hybrid", "onsite"].includes(params.workMode) ? params.workMode : "");
     }
-  }, [params.location, params.benefit, params.workMode]);
+  }, [params.q, params.location, params.benefit, params.workMode]);
 
   const qc = useQueryClient();
 
@@ -394,6 +405,7 @@ export default function JobsTabScreen() {
   const savedJobsQuery = useQuery({
     queryKey: ["saved-jobs"],
     queryFn: fetchSavedJobs,
+    enabled: signedIn,
     staleTime: 60_000,
   });
 
@@ -436,7 +448,7 @@ export default function JobsTabScreen() {
   const compatibilityQuery = useQuery({
     queryKey: ["compatibility", "jobs", compatibilityIds],
     queryFn: () => fetchMyJobsCompatibilityBatch(compatibilityIds),
-    enabled: compatibilityIds.length > 0,
+    enabled: signedIn && compatibilityIds.length > 0,
     retry: false,
     staleTime: 60_000,
   });
@@ -527,12 +539,85 @@ export default function JobsTabScreen() {
       hubJobsQuery.refetch(),
       curatedJobsQuery.refetch(),
       connectedJobsQuery.refetch(),
-      savedJobsQuery.refetch(),
+      ...(signedIn ? [savedJobsQuery.refetch()] : []),
     ]).finally(() => setPullRefreshing(false));
-  }, [hubJobsQuery, curatedJobsQuery, connectedJobsQuery, savedJobsQuery]);
+  }, [hubJobsQuery, curatedJobsQuery, connectedJobsQuery, savedJobsQuery, signedIn]);
+
+  const filterCount = activeStructuredFilters.length + (locationFilter ? 1 : 0);
 
   const listHeader = (
     <>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 12 }]}>
+        <DecorRing size={220} thickness={30} color="rgba(66,224,227,0.18)" style={{ top: -100, right: -90 }} />
+        <View style={styles.headerTop}>
+          <Eyebrow>{t("jobs")}</Eyebrow>
+          <Pressable
+            onPress={() => router.push("/alerts")}
+            style={styles.roundButton}
+            accessibilityRole="button"
+            accessibilityLabel={ac("Job alerts")}
+          >
+            <Ionicons name="notifications-outline" size={20} color={colors.navy} />
+          </Pressable>
+        </View>
+        <PosterTitle {...posterParts(ac("Find your|next move."))} size={34} />
+        <View style={styles.searchRow}>
+          <DepthSurface
+            depth={4}
+            radius={18}
+            borderWidth={2}
+            borderColor={colors.navy}
+            style={styles.searchWrap}
+            innerStyle={styles.searchCapsule}
+          >
+            <Ionicons name="search" size={20} color={colors.navy} style={styles.heroSearchIcon} />
+            <TextInput
+              style={styles.heroSearchInput}
+              placeholder={
+                feedTab === "direct"
+                  ? t("jobsSearchDirect")
+                  : feedTab === "connected"
+                    ? t("jobsSearchConnected")
+                    : t("jobsSearchExternal")
+              }
+              placeholderTextColor={colors.placeholder}
+              value={q}
+              onChangeText={setQ}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="search"
+              accessibilityLabel={t("jobsSearch")}
+            />
+            {q.length > 0 ? (
+              <Pressable
+                onPress={() => setQ("")}
+                hitSlop={12}
+                accessibilityRole="button"
+                accessibilityLabel={t("jobsClear")}
+              >
+                <Ionicons name="close-circle" size={20} color={colors.textMuted} />
+              </Pressable>
+            ) : null}
+          </DepthSurface>
+          <DepthPressable
+            onPress={() => setTopicsModalOpen(true)}
+            face={colors.navy}
+            depthColor={colors.navyDeep}
+            depth={4}
+            radius={18}
+            accessibilityLabel={t("jobsOpenFilters")}
+            innerStyle={styles.filterButton}
+          >
+            <Ionicons name="options-outline" size={22} color={colors.cyan} />
+            {filterCount > 0 ? (
+              <View style={styles.filterBadge}>
+                <Text style={styles.filterBadgeText}>{filterCount}</Text>
+              </View>
+            ) : null}
+          </DepthPressable>
+        </View>
+      </View>
+
       {/* ── Feed controls ── */}
       <View style={styles.feedControls}>
         <View style={styles.segmentHost}>
@@ -600,7 +685,7 @@ export default function JobsTabScreen() {
             </Text>
           </Pressable>
         </View>
-        {feedTab === "direct" && hubJobs.length > 1 ? (
+        {signedIn && feedTab === "direct" && hubJobs.length > 1 ? (
           <View>
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
@@ -666,6 +751,59 @@ export default function JobsTabScreen() {
           </View>
         ) : null}
       </View>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.pillFilterScroll}
+      >
+        {(
+          [
+            {
+              id: "remote",
+              label: t("jobsPillRemote"),
+              active: workModeFilter === "remote",
+              onPress: () =>
+                setWorkModeFilter((v) => (v === "remote" ? "" : "remote")),
+            },
+            {
+              id: "hybrid",
+              label: t("jobsPillHybrid"),
+              active: workModeFilter === "hybrid",
+              onPress: () =>
+                setWorkModeFilter((v) => (v === "hybrid" ? "" : "hybrid")),
+            },
+            {
+              id: "sponsorship",
+              label: t("jobsPillSponsorship"),
+              active: mobilityFilter === "Visa Sponsorship",
+              onPress: () =>
+                setMobilityFilter((v) =>
+                  v === "Visa Sponsorship" ? "" : "Visa Sponsorship",
+                ),
+            },
+            {
+              id: "relocation",
+              label: t("jobsPillRelocation"),
+              active: mobilityFilter === "Relocation Support",
+              onPress: () =>
+                setMobilityFilter((v) =>
+                  v === "Relocation Support" ? "" : "Relocation Support",
+                ),
+            },
+          ] as const
+        ).map((pill) => (
+          <BrandChip
+            key={pill.id}
+            label={pill.label}
+            selected={pill.active}
+            onPress={() => {
+              void hapticLight();
+              pill.onPress();
+            }}
+          />
+        ))}
+      </ScrollView>
 
       {activeStructuredFilters.length > 0 ? (
         <View style={styles.activeFiltersOuter}>
@@ -779,112 +917,53 @@ export default function JobsTabScreen() {
       <JobCardSkeleton />
     </View>
   ) : activeError ? (
-    <View style={styles.emptyWrap}>
-      <Ionicons
-        name="cloud-offline-outline"
-        size={44}
-        color={colors.textMuted}
-      />
-      <Text style={styles.errTitle}>{t("jobsError")}</Text>
-      <Text style={styles.errSub}>{t("newsErrorHelp")}</Text>
-      <Pressable
-        style={styles.retryBtn}
-        onPress={() =>
+    <BrandStatePanel
+      icon="cloud-offline-outline"
+      title={t("jobsError")}
+      body={t("newsErrorHelp")}
+      primary={{
+        label: t("retry"),
+        icon: "refresh",
+        onPress: () =>
           void (feedTab === "direct"
             ? hubJobsQuery.refetch()
             : feedTab === "connected"
               ? connectedJobsQuery.refetch()
-              : curatedJobsQuery.refetch())
-        }
-        accessibilityRole="button"
-      >
-        <Text style={styles.retryBtnText}>{t("retry")}</Text>
-      </Pressable>
-    </View>
+              : curatedJobsQuery.refetch()),
+      }}
+      style={styles.statePanel}
+    />
   ) : listRows.length === 0 ? (
-    <View style={styles.emptyWrap}>
-      <View style={styles.emptyMarkWell}>
-        <Image source={brandMark} style={styles.emptyMark} resizeMode="contain" />
-      </View>
-      <Text style={styles.empty}>
-        {debouncedQ ? t("jobsNoMatches") : t("jobsEmpty")}
-      </Text>
-      {debouncedQ ? (
-        <Pressable
-          style={styles.retryBtn}
-          onPress={() => setQ("")}
-          accessibilityRole="button"
-        >
-          <Text style={styles.retryBtnText}>{t("jobsClear")}</Text>
-        </Pressable>
-      ) : feedTab === "direct" ? (
-        <Pressable
-          style={styles.secondaryCta}
-          onPress={() => {
-            void hapticLight();
-            setFeedTab("curated");
-          }}
-          accessibilityRole="button"
-        >
-          <Text style={styles.secondaryCtaText}>{t("jobsTryExternal")}</Text>
-        </Pressable>
-      ) : null}
-    </View>
+    <BrandStatePanel
+      icon={debouncedQ ? "search-outline" : "briefcase-outline"}
+      title={debouncedQ ? t("jobsNoMatches") : t("jobsEmpty")}
+      body={
+        debouncedQ
+          ? ac("Try a different word, or clear your filters.")
+          : ac("New roles are added every week. Set up an alert and we'll tell you.")
+      }
+      primary={
+        debouncedQ
+          ? { label: t("jobsClear"), icon: "close", onPress: () => setQ("") }
+          : { label: ac("Set up a job alert"), icon: "notifications-outline", onPress: () => router.push("/alerts") }
+      }
+      secondary={
+        !debouncedQ && feedTab === "direct"
+          ? {
+              label: t("jobsTryExternal"),
+              onPress: () => {
+                void hapticLight();
+                setFeedTab("curated");
+              },
+            }
+          : undefined
+      }
+      style={styles.statePanel}
+    />
   ) : null;
 
   return (
     <GshScreenShell constrainTabletWidth style={styles.shell}>
-      <GshTabStickyHeader
-        title={t("jobs")}
-        subtitle={t("jobsTagline")}
-        paddingTop={Math.max(insets.top, 12) + 4}
-      >
-        <View style={styles.searchCapsule}>
-          <Ionicons
-            name="search"
-            size={20}
-            color={colors.navy}
-            style={styles.heroSearchIcon}
-          />
-          <TextInput
-            style={styles.heroSearchInput}
-            placeholder={
-              feedTab === "direct"
-                ? t("jobsSearchDirect")
-                : feedTab === "connected"
-                  ? t("jobsSearchConnected")
-                  : t("jobsSearchExternal")
-            }
-            placeholderTextColor={colors.placeholder}
-            value={q}
-            onChangeText={setQ}
-            autoCapitalize="none"
-            autoCorrect={false}
-            returnKeyType="search"
-            accessibilityLabel={t("jobsSearch")}
-          />
-          {q.length > 0 ? (
-            <Pressable
-              onPress={() => setQ("")}
-              hitSlop={12}
-              accessibilityRole="button"
-              accessibilityLabel={t("jobsClear")}
-            >
-              <Ionicons name="close-circle" size={20} color={colors.textMuted} />
-            </Pressable>
-          ) : null}
-          <Pressable
-            onPress={() => setTopicsModalOpen(true)}
-            hitSlop={8}
-            style={styles.heroFilterBtn}
-            accessibilityRole="button"
-            accessibilityLabel={t("jobsOpenFilters")}
-          >
-            <Ionicons name="options-outline" size={18} color={colors.navy} />
-            <Text style={styles.heroFilterLabel}>{t("jobsFilter")}</Text>
-          </Pressable>
-        </View>
-      </GshTabStickyHeader>
       <FlatList
         data={activeError ? [] : listRows}
         keyExtractor={(item) => item._id}
@@ -900,6 +979,7 @@ export default function JobsTabScreen() {
         }
         contentContainerStyle={[
           styles.listPad,
+          { paddingBottom: tabBarBottomPadding(insets.bottom) },
           listRows.length === 0 && !listBootloading && styles.listPadGrow,
         ]}
         keyboardShouldPersistTaps="handled"
@@ -919,6 +999,10 @@ export default function JobsTabScreen() {
                 }
                 onToggleBookmark={() => {
                   const j = item as Job;
+                  if (!signedIn) {
+                    openSignIn("/(tabs)/jobs", { kind: "save_job", targetId: j._id });
+                    return;
+                  }
                   const sid = savedJobIdByListingId.get(j._id);
                   if (sid) unsaveJobMut.mutate(sid);
                   else saveJobMut.mutate(j._id);
@@ -978,20 +1062,66 @@ export default function JobsTabScreen() {
 }
 
 const styles = StyleSheet.create({
-  shell: { backgroundColor: colors.pale },
+  shell: { backgroundColor: colors.white },
   listFlex: { flex: 1 },
-  searchCapsule: {
-    marginTop: 12,
+  header: {
+    paddingHorizontal: 16,
+    paddingBottom: 6,
+    overflow: "hidden",
+  },
+  headerTop: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 6,
+  },
+  roundButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 2,
+    borderColor: colors.navy,
     backgroundColor: colors.white,
-    borderRadius: radii.pill,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.borderStrong,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  searchRow: {
+    marginTop: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  searchWrap: { flex: 1, minWidth: 0 },
+  searchCapsule: {
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 14,
-    paddingVertical: 2,
     minHeight: 52,
   },
+  filterButton: {
+    width: 56,
+    height: 52,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  filterBadge: {
+    position: "absolute",
+    top: 6,
+    right: 6,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    paddingHorizontal: 4,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  filterBadgeText: {
+    fontSize: 11,
+    fontFamily: fontFamily.extraBold,
+    color: colors.navy,
+  },
+  statePanel: { marginHorizontal: 16, marginTop: 12 },
   heroSearchIcon: { marginRight: 8 },
   heroSearchInput: {
     flex: 1,
@@ -1002,36 +1132,16 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.regular,
     color: colors.navy,
   },
-  heroFilterBtn: {
-    minHeight: 36,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: radii.pill,
-    backgroundColor: colors.brandSoft,
-  },
-  heroFilterLabel: {
-    fontSize: 13,
-    fontFamily: fontFamily.semiBold,
-    color: colors.navy,
-  },
-  emptyMarkWell: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: colors.brandSoft,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 4,
-  },
-  emptyMark: { width: 40, height: 40 },
-
   feedControls: {
     paddingTop: 12,
     paddingBottom: 4,
     paddingHorizontal: 16,
+  },
+  pillFilterScroll: {
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 6,
   },
   compatibilityOrder: {
     minHeight: 52,
@@ -1060,37 +1170,31 @@ const styles = StyleSheet.create({
   activeFiltersOuter: { paddingTop: 8, paddingHorizontal: 16 },
   segmentHost: {
     flexDirection: "row",
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radii.md,
-    padding: 3,
-    borderWidth: 1,
-    borderColor: colors.border,
+    backgroundColor: colors.pale,
+    borderRadius: 16,
+    padding: 4,
+    borderWidth: 2,
+    borderColor: colors.navy,
   },
   segmentCell: {
     flex: 1,
     minHeight: 44,
     paddingVertical: 9,
+    paddingHorizontal: 4,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
+    borderRadius: 12,
   },
-  segmentCellOn: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-  },
-  segmentCellOnCurated: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-  },
+  segmentCellOn: { backgroundColor: colors.navy },
+  segmentCellOnCurated: { backgroundColor: colors.navy },
   segmentText: {
     fontSize: 13,
-    fontFamily: fontFamily.semiBold,
-    color: colors.textMuted,
+    fontFamily: fontFamily.bold,
+    color: "rgba(13,25,78,0.6)",
+    textAlign: "center",
   },
-  segmentTextOn: { color: colors.navy },
-  segmentTextOnCurated: { color: colors.navy },
+  segmentTextOn: { fontFamily: fontFamily.extraBold, color: colors.cyan },
+  segmentTextOnCurated: { fontFamily: fontFamily.extraBold, color: colors.cyan },
 
   // Recent
   recentOuter: { paddingTop: 12, paddingHorizontal: 16 },
@@ -1137,7 +1241,7 @@ const styles = StyleSheet.create({
   },
 
   /** No horizontal pad here — hero is full-bleed like Home; rows use listRow. */
-  listPad: { paddingBottom: 110, gap: 10 },
+  listPad: { gap: 10 },
   listRow: { paddingHorizontal: 16 },
   listPadGrow: { flexGrow: 1 },
   paginationLoader: { paddingVertical: 22, alignItems: "center", gap: 8 },
@@ -1148,21 +1252,20 @@ const styles = StyleSheet.create({
   },
   card: {
     paddingVertical: 16,
-    paddingRight: 14,
-    paddingLeft: 18,
-    position: "relative",
-    overflow: "hidden",
+    paddingHorizontal: 14,
     minHeight: 148,
-    borderRadius: radii.lg,
   },
-  cardAccentStrip: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    width: 4,
-    backgroundColor: colors.cyan,
+  bookmarkDisc: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    borderWidth: 2,
+    borderColor: colors.navy,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
   },
+  bookmarkDiscOn: { backgroundColor: colors.cyan },
   cardMainHit: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -1244,6 +1347,12 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     lineHeight: 18,
   },
+  cardSalaryInline: {
+    marginTop: 4,
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+  },
   chipWrap: { marginTop: 8, flexDirection: "row", flexWrap: "wrap", gap: 6 },
   listChip: {
     paddingVertical: 4,
@@ -1275,6 +1384,20 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.border,
   },
+  easyApplyRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(66,224,227,0.22)",
+  },
+  easyApplyText: {
+    fontSize: 12,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+  },
   cardFooterEnd: { flexDirection: "row", alignItems: "center", gap: 4 },
   cardFooterCta: { flexDirection: "row", alignItems: "center", gap: 8 },
   cardSalary: {
@@ -1302,54 +1425,4 @@ const styles = StyleSheet.create({
 
   // Empty/error
   skeletonList: { paddingHorizontal: 16, paddingTop: 12, gap: 0 },
-  emptyWrap: {
-    alignItems: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 40,
-    gap: 12,
-  },
-  loadingHint: {
-    fontFamily: fontFamily.medium,
-    fontSize: 15,
-    color: colors.textMuted,
-  },
-  errTitle: {
-    fontFamily: fontFamily.semiBold,
-    fontSize: 17,
-    color: colors.navy,
-  },
-  errSub: {
-    fontFamily: fontFamily.regular,
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: "center",
-    lineHeight: 20,
-  },
-  retryBtn: {
-    minHeight: 44,
-    justifyContent: "center",
-    marginTop: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: radii.md,
-    backgroundColor: colors.brand,
-  },
-  retryBtnText: {
-    fontFamily: fontFamily.semiBold,
-    fontSize: 15,
-    color: colors.white,
-  },
-  secondaryCta: { minHeight: 44, marginTop: 4, justifyContent: "center" },
-  secondaryCtaText: {
-    fontFamily: fontFamily.semiBold,
-    fontSize: 15,
-    color: colors.brand,
-  },
-  empty: {
-    textAlign: "center",
-    color: colors.textMuted,
-    fontSize: 15,
-    fontFamily: fontFamily.regular,
-    lineHeight: 22,
-  },
 });

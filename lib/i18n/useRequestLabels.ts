@@ -1,5 +1,6 @@
+import { countryDisplayName } from "@/lib/countries";
 import { RELOCATION_SERVICE_LABELS } from "@/lib/relocationServices";
-import { useAppLanguage } from "@/lib/i18n";
+import { useAppLanguage, toIntlLocale } from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 const labels: Record<string, string> = {
   planning: "Exploring my options",
@@ -23,18 +24,11 @@ const labels: Record<string, string> = {
 export function useRequestLabels() {
   const ac = useAccountCopy();
   const locale = useAppLanguage((s) => s.locale);
+  const intlLocale = toIntlLocale(locale);
   return {
-    locale,
+    locale: intlLocale,
     label: (value: string) =>
       ac(labels[value] || RELOCATION_SERVICE_LABELS[value] || "Unavailable"),
-    country: (code: string) => {
-      try {
-        return (
-          new Intl.DisplayNames([locale], { type: "region" }).of(code) || code
-        );
-      } catch {
-        return code;
-      }
-    },
+    country: (code: string) => countryDisplayName(code, locale),
   };
 }

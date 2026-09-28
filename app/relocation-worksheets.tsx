@@ -63,7 +63,7 @@ function safeScore(value: unknown): number {
 }
 
 export default function RelocationWorksheetsScreen() {
-  const { locale } = useAppCopy();
+  const { locale, intlLocale } = useAppCopy();
   const copy = worksheetCopy[locale];
   const tools = toolkitCopy[locale];
   const [tab, setTab] = useState<Tab>("scorecard");
@@ -126,7 +126,7 @@ export default function RelocationWorksheetsScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           <GshScreenIntro
-            eyebrow={tools.mobility.toLocaleLowerCase(locale)}
+            eyebrow={tools.mobility.toLocaleLowerCase(intlLocale)}
             title={tools.worksheets}
             subtitle={tools.worksheetsHelp}
             style={{ marginBottom: 10 }}
@@ -200,7 +200,7 @@ export default function RelocationWorksheetsScreen() {
               <Text style={styles.cardTitle}>{copy.budgetTitle}</Text>
               <View style={styles.totalBox}>
                 <Text style={styles.totalLabel}>{budgetSummary.missingCount ? copy.subtotal : copy.total}</Text>
-                <Text style={styles.totalValue}>{budgetSummary.total === null ? "—" : `${state.currency} ${budgetSummary.total.toLocaleString(locale, { maximumFractionDigits: 2 })}`}</Text>
+                <Text style={styles.totalValue}>{budgetSummary.total === null ? "—" : `${state.currency} ${budgetSummary.total.toLocaleString(intlLocale, { maximumFractionDigits: 2 })}`}</Text>
               </View>
               {budgetSummary.invalid ? <Text accessibilityRole="alert" style={styles.progress}>{copy.invalid}</Text> : budgetSummary.missingCount ? <Text style={styles.progress}>{copy.missing.replace("{count}", String(budgetSummary.missingCount))}</Text> : null}
               <Text style={styles.progress}>{copy.hint}</Text>

@@ -14,6 +14,7 @@ import {
 } from "@/components/gsh-ui-kit";
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { COMPARE_COUNTRY_DESTINATIONS } from "@/lib/compareCountries/destinations";
+import { getPublicCountry } from "@/lib/publicResources";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
@@ -87,8 +88,8 @@ export default function CompareCountriesScreen() {
                 key={dest.slug}
                 label={country(canonicalCountryCode(dest.label) || dest.label)}
                 onPress={() => {
-                  if (dest.guideSlug) {
-                    router.push(`/guides/country/${dest.guideSlug}`);
+                  if (getPublicCountry(dest.slug)) {
+                    router.push(`/country/${dest.slug}`);
                   } else {
                     router.push({
                       pathname: "/(tabs)/jobs",
@@ -113,13 +114,13 @@ export default function CompareCountriesScreen() {
               onPress={() => router.push("/currency-converter")}
             />
             <GshLinkRow
-              title={ac("Guides and resources")}
+              title={ac("Countries")}
               subtitle={ac(
                 "Read a country guide, then search jobs that fit your plans.",
               )}
-              icon="map-outline"
+              icon="earth-outline"
               accent="teal"
-              onPress={() => router.push("/guides")}
+              onPress={() => router.push("/countries")}
             />
           </View>
         </ScrollView>

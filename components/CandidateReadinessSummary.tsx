@@ -1,4 +1,4 @@
-import { canonicalCountryCode } from "@/lib/countries";
+import { canonicalCountryCode, countryDisplayName } from "@/lib/countries";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useAppLanguage } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,9 +28,7 @@ export function CandidateReadinessSummary({
   const readiness = useMemo(() => computeCandidateReadiness(profile, accountEmail), [accountEmail, profile]);
   const preview = useMemo(() => buildCandidateEmployerPreview(profile), [profile]);
 
-  const countryName = (code: string) => {
-    try { return new Intl.DisplayNames([locale], {type: "region"}).of(code) || code; } catch { return code; }
-  };
+  const countryName = (code: string) => countryDisplayName(code, locale);
   const registrationPreview = (Array.isArray(profile?.professionalRegistrations) ? profile.professionalRegistrations : []).map(raw => {
     const row = raw as Record<string, unknown>;
     if (!row || typeof row !== "object") return "";

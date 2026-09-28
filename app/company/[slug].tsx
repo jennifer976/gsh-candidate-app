@@ -1,4 +1,4 @@
-import { useAppLanguage } from "@/lib/i18n";
+import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
@@ -19,7 +19,7 @@ import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
 export default function CompanyDetailScreen() {
   const ac = useAccountCopy();
-  const locale = useAppLanguage((s) => s.locale);
+  const locale = toIntlLocale(useAppLanguage((s) => s.locale));
 
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const query = useQuery({

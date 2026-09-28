@@ -1,5 +1,6 @@
+import { withSignIn } from "@/components/SignInGate";
 import { parseBudgetCost } from "@/lib/relocationBudget";
-import { useAppLanguage } from "@/lib/i18n";
+import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -44,9 +45,9 @@ import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { JobSearchAlertDto } from "@/types/models";
 
-export default function AlertsScreen() {
+function AlertsScreen() {
   const ac = useAccountCopy();
-  const locale = useAppLanguage((s) => s.locale);
+  const locale = toIntlLocale(useAppLanguage((s) => s.locale));
   const [actionError, setActionError] = useState<string | null>(null);
   const actionFailed = () =>
     setActionError("Could not save this change. Refresh before trying again.");
@@ -966,4 +967,10 @@ const styles = StyleSheet.create({
   },
   routeChipTextActive: { color: colors.navy },
   disabled: { opacity: 0.55 },
+});
+
+export default withSignIn(AlertsScreen, {
+  icon: "notifications-outline",
+  title: "Get job alerts",
+  body: "Sign in to hear about new sponsored jobs that match your search.",
 });

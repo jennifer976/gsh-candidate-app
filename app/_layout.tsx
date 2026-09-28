@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 import "@/lib/register-api-auth";
 import { useAppCopy } from "@/lib/i18n";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -25,6 +26,15 @@ import { useAuthStore } from "@/lib/auth-store";
 import { colors, navHeader } from "@/lib/theme";
 
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
+// setOptions is sync (returns void) — never chain .catch() or production crashes at module load.
+try {
+  SplashScreen.setOptions({
+    duration: 220,
+    fade: true,
+  });
+} catch {
+  /* Expo Go / missing native module */
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,9 +48,10 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   const { t } = useAppCopy();
+  const ac = useAccountCopy();
   const [hydrated, setHydrated] = useState(useAuthStore.persist.hasHydrated());
   const [sessionChecked, setSessionChecked] = useState(false);
-  const [fontsLoaded] = useFonts({
+  const [fontsTimedOut, setFontsTimedOut] = useState(false);  const [fontsLoaded] = useFonts({
     Montserrat_600SemiBold: require("../assets/fonts/Montserrat_600SemiBold.ttf"),
     Montserrat_700Bold: require("../assets/fonts/Montserrat_700Bold.ttf"),
     Montserrat_800ExtraBold: require("../assets/fonts/Montserrat_800ExtraBold.ttf"),
@@ -73,6 +84,12 @@ export default function RootLayout() {
       setSessionChecked(true);
       return;
     }
+
+    // Never leave the user on the branded splash if the network hangs.
+    const timeoutId = setTimeout(() => {
+      if (!cancelled) setSessionChecked(true);
+    }, 8000);
+
     void fetchAuthSession()
       .then((session) => {
         if (cancelled) return;
@@ -88,21 +105,41 @@ export default function RootLayout() {
         if (!cancelled) clearAuth();
       })
       .finally(() => {
-        if (!cancelled) setSessionChecked(true);
+        if (!cancelled) {
+          clearTimeout(timeoutId);
+          setSessionChecked(true);
+        }
       });
     return () => {
       cancelled = true;
+      clearTimeout(timeoutId);
     };
   }, [hydrated]);
 
+  // Fonts can fail silently on some devices — don't block launch forever.
   useEffect(() => {
-    if (hydrated && sessionChecked && fontsLoaded) {
-      hideNativeSplash();
-    }
-  }, [hydrated, sessionChecked, fontsLoaded, hideNativeSplash]);
+    if (fontsLoaded) return;
+    const t = setTimeout(() => setFontsTimedOut(true), 4000);
+    return () => clearTimeout(t);
+  }, [fontsLoaded]);
 
-  if (!hydrated || !sessionChecked || !fontsLoaded) {
-    return <BrandedLaunchSplash />;
+  const appReady = hydrated && sessionChecked && (fontsLoaded || fontsTimedOut);
+
+  // Fallback if branded onLayout never fires (should be rare).
+  useEffect(() => {
+    if (appReady) return;
+    const t = setTimeout(hideNativeSplash, 2500);
+    return () => clearTimeout(t);
+  }, [appReady, hideNativeSplash]);
+
+  // Keep the cyan branded layer up until fonts + auth are ready.
+  // Native splash is dismissed as soon as that layer paints (same cyan, same mark) — no black/white flash.
+  if (!appReady) {
+    return (
+      <SafeAreaProvider>
+        <BrandedLaunchSplash onReady={hideNativeSplash} />
+      </SafeAreaProvider>
+    );
   }
 
   return (
@@ -124,11 +161,11 @@ export default function RootLayout() {
           <Stack.Screen name="ui-preview" options={{ headerShown: false }} />
           <Stack.Screen
             name="register"
-            options={{ title: t("screenCreateaccount") }}
+            options={{ title: t("screenCreateaccount"), headerShown: false }}
           />
           <Stack.Screen
             name="verify"
-            options={{ title: t("screenVerifyemail") }}
+            options={{ title: t("screenVerifyemail"), headerShown: false }}
           />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
@@ -204,9 +241,16 @@ export default function RootLayout() {
             options={{ title: t("screenFollowedemployers") }}
           />
           <Stack.Screen
-            name="resources"
+            name="resources/index"
             options={{ title: t("screenPracticalresources") }}
           />
+          <Stack.Screen name="resources/[slug]" options={{ title: t("screenResources") }} />
+          <Stack.Screen name="resources/articles/[slug]" options={{ title: t("screenResources") }} />
+          <Stack.Screen name="countries" options={{ title: ac("Countries") }} />
+          <Stack.Screen name="country/[slug]" options={{ title: "" }} />
+          <Stack.Screen name="guide/[slug]" options={{ title: t("guideTitle") }} />
+          <Stack.Screen name="relocating/[slug]" options={{ title: t("guideTitle") }} />
+          <Stack.Screen name="trust/how-we-label-jobs" options={{ title: ac("How jobs are labelled") }} />
           <Stack.Screen
             name="saved-resources"
             options={{ title: t("screenSavedresources") }}
@@ -273,6 +317,10 @@ export default function RootLayout() {
           <Stack.Screen
             name="ats-assistant"
             options={{ title: t("screenATSassistant") }}
+          />
+          <Stack.Screen
+            name="cv-quality-checker"
+            options={{ title: "CV quality check" }}
           />
           <Stack.Screen
             name="forgot-password"

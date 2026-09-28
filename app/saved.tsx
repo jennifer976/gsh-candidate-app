@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -28,7 +29,7 @@ import { stackListLeadStyle } from "@/lib/screen-layout";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 import type { Job, SavedJobPopulated } from "@/types/models";
 
-export default function SavedJobsScreen() {
+function SavedJobsScreen() {
   const ac = useAccountCopy();
 
   const router = useRouter();
@@ -350,4 +351,10 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     paddingHorizontal: 12,
   },
+});
+
+export default withSignIn(SavedJobsScreen, {
+  icon: "bookmark-outline",
+  title: "Save jobs for later",
+  body: "Sign in to keep a list of the jobs you like and come back to them.",
 });

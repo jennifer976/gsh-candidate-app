@@ -1,7 +1,7 @@
 import { useAppCopy } from "@/lib/i18n";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useQuery } from "@tanstack/react-query";
-import { Redirect, useRouter } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import {
   Badge,
   Icon,
@@ -9,9 +9,11 @@ import {
   NativeTabs,
   VectorIcon,
 } from "expo-router/unstable-native-tabs";
-import { useEffect, useRef, useState } from "react";
-import { Alert, Platform } from "react-native";
+import { useEffect, useRef, useState, type ComponentProps } from "react";
+import { Alert, Platform, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CandidateOnboardingModal } from "@/components/CandidateOnboardingModal";
+import { androidTabBarMetrics } from "@/lib/android-insets";
 import {
   isCandidateOnboardingComplete,
   markCandidateOnboardingComplete,
@@ -23,11 +25,15 @@ import {
   fetchUnreadNotificationCount,
 } from "@/lib/api-client";
 import { resumeCandidateReturnIntent } from "@/lib/candidate-return-intent";
-import { colors } from "@/lib/theme";
+import { colors, fontFamily } from "@/lib/theme";
 
-type IonName = keyof typeof Ionicons.glyphMap;
+type IonName = ComponentProps<typeof Ionicons>["name"];
 
-function TabIcon({
+function badgeText(n: number): string {
+  return n > 99 ? "99+" : String(n);
+}
+
+function NativeTabIcon({
   sfDefault,
   sfSelected,
   outline,
@@ -54,18 +60,31 @@ function TabIcon({
   );
 }
 
-function badgeText(n: number): string {
-  return n > 99 ? "99+" : String(n);
+/** Android tab icon: the selected tab sits in a cyan pill, as in the app designs. */
+function PillTabIcon({
+  focused,
+  color,
+  outline,
+  filled,
+}: {
+  focused: boolean;
+  color: string;
+  outline: IonName;
+  filled: IonName;
+}) {
+  return (
+    <View style={[tabPill.wrap, focused && tabPill.on]}>
+      <Ionicons name={focused ? filled : outline} size={focused ? 21 : 23} color={focused ? colors.navy : color} />
+    </View>
+  );
 }
 
-export default function TabsLayout() {
-  const { t } = useAppCopy();
-  const router = useRouter();
-  const token = useAuthStore((s) => s.token);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [onboardingReady, setOnboardingReady] = useState(false);
-  const resumingIntent = useRef(false);
+const tabPill = StyleSheet.create({
+  wrap: { width: 56, height: 30, borderRadius: 15, alignItems: "center", justifyContent: "center" },
+  on: { backgroundColor: colors.cyan },
+});
 
+function useTabBadges(token: string | null) {
   const matchesBadge = useQuery({
     queryKey: ["candidate", "job-matches", "badge"],
     queryFn: () => fetchJobMatches({ unread: true, limit: 1 }),
@@ -89,8 +108,18 @@ export default function TabsLayout() {
       total + Math.max(0, row.unreadCount ?? (row.read === false ? 1 : 0)),
     0,
   );
-  const matchesCount = matchesBadge.data?.unreadCount ?? 0;
-  const notifCount = notificationsBadge.data?.unreadCount ?? 0;
+  return {
+    matchesCount: matchesBadge.data?.unreadCount ?? 0,
+    notifCount: notificationsBadge.data?.unreadCount ?? 0,
+    unreadMessages,
+  };
+}
+
+function useOnboardingGate(token: string | null) {
+  const router = useRouter();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingReady, setOnboardingReady] = useState(false);
+  const resumingIntent = useRef(false);
 
   useEffect(() => {
     if (!token) {
@@ -131,19 +160,163 @@ export default function TabsLayout() {
       });
   }, [onboardingReady, router, showOnboarding, token]);
 
-  if (!token) return <Redirect href="/login" />;
+  return { showOnboarding, onboardingReady, finishOnboarding };
+}
+
+function OnboardingHost({
+  onboardingReady,
+  showOnboarding,
+  finishOnboarding,
+}: {
+  onboardingReady: boolean;
+  showOnboarding: boolean;
+  finishOnboarding: () => void;
+}) {
+  if (!onboardingReady) return null;
+  return (
+    <CandidateOnboardingModal
+      visible={showOnboarding}
+      onComplete={finishOnboarding}
+    />
+  );
+}
+
+/**
+ * Android release builds often show blank NativeTabs icons (VectorIcon not bundled).
+ * Use JS Tabs on Android so icons/labels always render; keep NativeTabs on iOS.
+ */
+function AndroidTabs() {
+  const { t } = useAppCopy();
+  const insets = useSafeAreaInsets();
+  const tabBar = androidTabBarMetrics(insets.bottom);
+  const token = useAuthStore((s) => s.token);
+  const { matchesCount, notifCount, unreadMessages } = useTabBadges(token);
+  const { showOnboarding, onboardingReady, finishOnboarding } =
+    useOnboardingGate(token);
+
+  return (
+    <>
+      <Tabs
+        // We pad the bar ourselves so icons clear gesture/3-button nav.
+        safeAreaInsets={{ top: 0, right: 0, bottom: 0, left: 0 }}
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: colors.navy,
+          tabBarInactiveTintColor: colors.textMuted,
+          tabBarActiveBackgroundColor: "transparent",
+          tabBarStyle: {
+            backgroundColor: colors.white,
+            borderTopColor: colors.border,
+            borderTopWidth: StyleSheet.hairlineWidth,
+            height: tabBar.height,
+            paddingBottom: tabBar.paddingBottom,
+            paddingTop: tabBar.paddingTop,
+          },
+          tabBarLabelStyle: {
+            fontSize: 10,
+            fontFamily: fontFamily.semiBold,
+            marginBottom: 2,
+          },
+          tabBarItemStyle: { paddingTop: 2 },
+          tabBarBadgeStyle: {
+            backgroundColor: colors.cyan,
+            color: colors.navy,
+            fontSize: 10,
+            fontFamily: fontFamily.bold,
+          },
+        }}
+      >
+        <Tabs.Screen
+          name="home"
+          options={{
+            title: t("home"),
+            tabBarIcon: ({ color, focused }) => (
+              <PillTabIcon focused={focused} color={color} outline="home-outline" filled="home" />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="jobs"
+          options={{
+            title: t("jobs"),
+            tabBarBadge: matchesCount > 0 ? badgeText(matchesCount) : undefined,
+            tabBarIcon: ({ color, focused }) => (
+              <PillTabIcon focused={focused} color={color} outline="briefcase-outline" filled="briefcase" />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="saved"
+          options={{
+            title: t("saved"),
+            tabBarIcon: ({ color, focused }) => (
+              <PillTabIcon focused={focused} color={color} outline="bookmark-outline" filled="bookmark" />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="messages"
+          options={{
+            title: t("messages"),
+            tabBarBadge:
+              unreadMessages > 0 ? badgeText(unreadMessages) : undefined,
+            tabBarIcon: ({ color, focused }) => (
+              <PillTabIcon focused={focused} color={color} outline="chatbubbles-outline" filled="chatbubbles" />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: t("profile"),
+            tabBarBadge: notifCount > 0 ? badgeText(notifCount) : undefined,
+            tabBarIcon: ({ color, focused }) => (
+              <PillTabIcon focused={focused} color={color} outline="person-outline" filled="person" />
+            ),
+          }}
+        />
+        <Tabs.Screen name="index" options={{ href: null }} />
+        <Tabs.Screen name="applications" options={{ href: null }} />
+        <Tabs.Screen name="more" options={{ href: null }} />
+      </Tabs>
+      <OnboardingHost
+        onboardingReady={onboardingReady}
+        showOnboarding={showOnboarding}
+        finishOnboarding={finishOnboarding}
+      />
+    </>
+  );
+}
+
+function IosNativeTabs() {
+  const { t } = useAppCopy();
+  const token = useAuthStore((s) => s.token);
+  const { matchesCount, notifCount, unreadMessages } = useTabBadges(token);
+  const { showOnboarding, onboardingReady, finishOnboarding } =
+    useOnboardingGate(token);
 
   return (
     <>
       <NativeTabs
         tintColor={colors.navy}
-        labelStyle={{ fontSize: 10, fontWeight: "600" }}
-        minimizeBehavior={Platform.OS === "ios" ? "onScrollDown" : undefined}
-        blurEffect={Platform.OS === "ios" ? "systemDefault" : undefined}
+        iconColor={{
+          default: colors.textMuted,
+          selected: colors.navy,
+        }}
+        labelStyle={{
+          default: { fontSize: 10, fontWeight: "600", color: colors.textMuted },
+          selected: { fontSize: 10, fontWeight: "700", color: colors.navy },
+        }}
+        backgroundColor={colors.white}
+        badgeBackgroundColor={colors.cyan}
+        shadowColor="rgba(13,25,78,0.12)"
+        disableTransparentOnScrollEdge
+        minimizeBehavior="onScrollDown"
+        blurEffect="systemChromeMaterialLight"
       >
         <NativeTabs.Trigger name="home">
           <Label>{t("home")}</Label>
-          <TabIcon
+          <NativeTabIcon
             sfDefault="house"
             sfSelected="house.fill"
             outline="home-outline"
@@ -153,7 +326,7 @@ export default function TabsLayout() {
 
         <NativeTabs.Trigger name="jobs">
           <Label>{t("jobs")}</Label>
-          <TabIcon
+          <NativeTabIcon
             sfDefault="briefcase"
             sfSelected="briefcase.fill"
             outline="briefcase-outline"
@@ -162,30 +335,32 @@ export default function TabsLayout() {
           {matchesCount > 0 ? <Badge>{badgeText(matchesCount)}</Badge> : null}
         </NativeTabs.Trigger>
 
-        <NativeTabs.Trigger name="applications">
-          <Label>{t("applications")}</Label>
-          <TabIcon
-            sfDefault="paperplane"
-            sfSelected="paperplane.fill"
-            outline="send-outline"
-            filled="send"
+        <NativeTabs.Trigger name="saved">
+          <Label>{t("saved")}</Label>
+          <NativeTabIcon
+            sfDefault="bookmark"
+            sfSelected="bookmark.fill"
+            outline="bookmark-outline"
+            filled="bookmark"
           />
         </NativeTabs.Trigger>
 
         <NativeTabs.Trigger name="messages">
           <Label>{t("messages")}</Label>
-          <TabIcon
+          <NativeTabIcon
             sfDefault="bubble.left.and.bubble.right"
             sfSelected="bubble.left.and.bubble.right.fill"
             outline="chatbubbles-outline"
             filled="chatbubbles"
           />
-          {unreadMessages > 0 ? <Badge>{badgeText(unreadMessages)}</Badge> : null}
+          {unreadMessages > 0 ? (
+            <Badge>{badgeText(unreadMessages)}</Badge>
+          ) : null}
         </NativeTabs.Trigger>
 
         <NativeTabs.Trigger name="profile">
           <Label>{t("profile")}</Label>
-          <TabIcon
+          <NativeTabIcon
             sfDefault="person.crop.circle"
             sfSelected="person.crop.circle.fill"
             outline="person-circle-outline"
@@ -194,13 +369,15 @@ export default function TabsLayout() {
           {notifCount > 0 ? <Badge>{badgeText(notifCount)}</Badge> : null}
         </NativeTabs.Trigger>
       </NativeTabs>
-
-      {onboardingReady ? (
-        <CandidateOnboardingModal
-          visible={showOnboarding}
-          onComplete={finishOnboarding}
-        />
-      ) : null}
+      <OnboardingHost
+        onboardingReady={onboardingReady}
+        showOnboarding={showOnboarding}
+        finishOnboarding={finishOnboarding}
+      />
     </>
   );
+}
+
+export default function TabsLayout() {
+  return Platform.OS === "ios" ? <IosNativeTabs /> : <AndroidTabs />;
 }

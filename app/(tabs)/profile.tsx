@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Image,
   Modal,
   Platform,
   Pressable,
@@ -23,7 +24,8 @@ import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton"
 import { CandidateReadinessSummary } from "@/components/CandidateReadinessSummary";
 import { GshLinkRow } from "@/components/gsh-ui-kit";
 import { GshScreenShell } from "@/components/GshScreenShell";
-import { GshTabStickyHeader } from "@/components/GshTabStickyHeader";
+import { GuestProfileHub } from "@/components/GuestProfileHub";
+import { DecorRing, DepthButton, DepthSurface, Eyebrow } from "@/components/gsh-brand";
 import { GshToolTile } from "@/components/GshToolTile";
 import { fetchOwnProfile, recordCandidateJourneyStart, updateProfile, uploadFileFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -31,6 +33,7 @@ import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
 import { getCandidateCompletionBreakdown } from "@/lib/profile-completion";
 import { getAllSkillsSorted } from "@/lib/skills-data";
 import { useRelocationPerksNav } from "@/lib/use-relocation-perks-nav";
+import { tabBarBottomPadding } from "@/lib/android-insets";
 import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
 
 const ALL_SKILLS = getAllSkillsSorted();
@@ -127,7 +130,7 @@ const STATIC_MORE_TOOLS_LINKS = [
   { title: "Work and move preferences", subtitle: "Choose who can find and contact you", icon: "earth-outline" as const, accent: "teal" as const, href: "/mobility-profile" },
   { title: "Plan the move", subtitle: "Guides, worksheets and partners", icon: "navigate-outline" as const, accent: "ocean" as const, href: "/relocation-help" },
   { title: "Invites to apply", subtitle: "Review employer and agency invites", icon: "people-circle-outline" as const, accent: "purple" as const, href: "/agency-introductions" },
-  { title: "Country guides", subtitle: "Country guides", icon: "map-outline" as const, accent: "purple" as const, href: "/guides" },
+  { title: "Countries", subtitle: "Visa routes, hiring sectors and everyday life, destination by destination.", icon: "earth-outline" as const, accent: "purple" as const, href: "/countries" },
   { title: "Job alerts", subtitle: "Match preferences", icon: "flash-outline" as const, accent: "ocean" as const, href: "/alerts" },
   { title: "Tools and resources", subtitle: "Blog, FAQs and contact", icon: "layers-outline" as const, accent: "purple" as const, href: "/tools-resources" },
   { title: "Saved roles", subtitle: "Open saved jobs", icon: "bookmark-outline" as const, accent: "teal" as const, href: "/saved" },
@@ -136,7 +139,12 @@ const STATIC_MORE_TOOLS_LINKS = [
   { title: "Feedback", subtitle: "Report an issue", icon: "chatbox-ellipses-outline" as const, accent: "ocean" as const, href: "/feedback" },
 ] as const;
 
-export default function ProfileScreen() {
+export default function ProfileTab() {
+  const signedIn = Boolean(useAuthStore((s) => s.token));
+  return signedIn ? <ProfileScreen /> : <GuestProfileHub />;
+}
+
+function ProfileScreen() {
  const ac = useAccountCopy();
  const { t } = useAppCopy();
  const locale = useAppLanguage(s => s.locale);
@@ -334,16 +342,22 @@ export default function ProfileScreen() {
 
   const p = profileQuery.data;
   const profileErrCopy = profileQuery.isError;
-  const completion = typeof p?.profileCompletion === "number" ? p.profileCompletion : null;
   const completionBreakdown = getCandidateCompletionBreakdown(p, locale);
   const resumeUrl = typeof p?.resume === "string" ? p.resume : "";
   const displayName = [firstName, lastName].filter(Boolean).join(" ") || user?.email || ac("Your profile");
   const initials = [firstName.charAt(0), lastName.charAt(0)].filter(Boolean).join("").toUpperCase() || "?";
+  const avatarUrl = typeof p?.profile_picture === "string" ? p.profile_picture.trim() : "";
+  const openToRelocate =
+    relocationReadiness === "Ready to relocate" || relocationReadiness === "Can relocate with employer support";
+
+  function scrollToForm() {
+    scrollRef.current?.scrollTo({ y: contentSectionY.current + formSectionY.current, animated: true });
+  }
 
   function logout() {
-    Alert.alert("Sign out", "You will need to sign in again.", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Sign out", style: "destructive", onPress: () => { qc.clear(); clearAuth(); router.replace("/login"); } },
+    Alert.alert(ac("Sign out"), ac("You can keep browsing jobs without an account."), [
+      { text: ac("Cancel"), style: "cancel" },
+      { text: ac("Sign out"), style: "destructive", onPress: () => { qc.clear(); clearAuth(); router.navigate("/(tabs)/home"); } },
     ]);
   }
 
@@ -357,46 +371,89 @@ export default function ProfileScreen() {
     );
   }
 
-  const completionPct = completion ?? 0;
-  const profileReady = completionPct >= 100;
-
   return (
     <GshScreenShell constrainTabletWidth style={styles.shell}>
       <ScrollView
         ref={scrollRef}
         style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: tabBarBottomPadding(insets.bottom) },
+        ]}
         keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator
+        nestedScrollEnabled
+        bounces
       >
-        <GshTabStickyHeader
-          title={t("profile")}
-          subtitle={ac("Account settings")}
-          paddingTop={Math.max(insets.top, 12) + 4}
-        />
-        <View style={styles.identityCard}>
-          <View style={styles.avatarRing}>
-            <View style={styles.avatarInner}>
-              <Text style={styles.profileAvatarText}>{initials}</Text>
+        <View style={[styles.hero, { paddingTop: Math.max(insets.top, 12) + 10 }]}>
+          <DecorRing size={260} thickness={36} color="rgba(255,255,255,0.3)" style={{ top: -110, right: -100 }} />
+          <View style={styles.heroTop}>
+            <Eyebrow color={colors.navy}>{t("profile")}</Eyebrow>
+            <Pressable
+              onPress={() => router.push("/settings")}
+              style={styles.settingsButton}
+              accessibilityRole="button"
+              accessibilityLabel={ac("Settings")}
+            >
+              <Ionicons name="settings-outline" size={21} color={colors.navy} />
+            </Pressable>
+          </View>
+          <View style={styles.identity}>
+            <View style={styles.avatarRing}>
+              <View style={styles.avatarInner}>
+                {avatarUrl ? (
+                  <Image source={{ uri: avatarUrl }} style={styles.avatarImage} />
+                ) : (
+                  <Text style={styles.profileAvatarText}>{initials}</Text>
+                )}
+              </View>
+              <View style={styles.percentBadge}>
+                <Text style={styles.percentText}>{completionBreakdown.percent}%</Text>
+              </View>
+            </View>
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <Text style={styles.profileName} numberOfLines={2}>{displayName}</Text>
+              {currentJobTitle ? (
+                <Text style={styles.profileHeadline} numberOfLines={1}>{currentJobTitle}</Text>
+              ) : null}
+              <Text style={styles.profileEmail} numberOfLines={1}>{user?.email ?? ""}</Text>
+              {openToRelocate ? (
+                <View style={styles.relocatePill}>
+                  <Ionicons name="airplane" size={12} color={colors.cyan} />
+                  <Text style={styles.relocateText}>{ac("Open to relocate")}</Text>
+                </View>
+              ) : null}
             </View>
           </View>
-          <View style={{ flex: 1, minWidth: 0 }}>
-            <Text style={styles.profileName}>{displayName}</Text>
-            <Text style={styles.profileEmail}>{user?.email ?? ""}</Text>
-          </View>
         </View>
+
         <View style={styles.editCtaPad}>
-          <GshGradientPrimaryButton
-            title={ac("Edit profile")}
-            tone="cyan"
-            onPress={() =>
-              scrollRef.current?.scrollTo({
-                y: contentSectionY.current + formSectionY.current,
-                animated: true,
-              })
-            }
-            containerStyle={styles.completeCta}
-          />
+          {completionBreakdown.missing.length > 0 ? (
+            <DepthSurface face={colors.navy} depthColor={colors.navyDeep} depth={6} radius={24}>
+              <View style={styles.finishCard}>
+                <Eyebrow onDark>{ac("Your next step")}</Eyebrow>
+                <Text style={styles.finishTitle}>{ac("Finish your profile")}</Text>
+                <View style={styles.progressTrack}>
+                  <View style={[styles.progressFill, { width: `${Math.max(4, completionBreakdown.percent)}%` }]} />
+                </View>
+                {completionBreakdown.missing.slice(0, 3).map((item) => (
+                  <View key={item.path} style={styles.finishRow}>
+                    <Ionicons name="ellipse-outline" size={16} color={colors.cyan} />
+                    <Text style={styles.finishRowText} numberOfLines={1}>{item.label}</Text>
+                  </View>
+                ))}
+                <DepthButton
+                  title={ac("Edit profile")}
+                  onPress={scrollToForm}
+                  variant="cyanOnNavy"
+                  size="md"
+                  style={{ marginTop: 16 }}
+                />
+              </View>
+            </DepthSurface>
+          ) : (
+            <DepthButton title={ac("Edit profile")} onPress={scrollToForm} variant="navyOnLight" icon="create-outline" />
+          )}
         </View>
 
         <View style={styles.content} onLayout={event => {contentSectionY.current = event.nativeEvent.layout.y;}}>
@@ -695,47 +752,94 @@ const styles = StyleSheet.create({
   loadingWrap: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
   scroll: { flex: 1 },
   scrollContent: { paddingBottom: 24 },
-  identityCard: {
-    marginHorizontal: 16,
-    marginTop: 14,
-    flexDirection: "row",
-    gap: 14,
-    alignItems: "center",
-    padding: 16,
-    borderRadius: radii.lg,
-    backgroundColor: colors.white,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
+  hero: {
+    backgroundColor: colors.cyan,
+    paddingHorizontal: 20,
+    paddingBottom: 24,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+    overflow: "hidden",
   },
-  editCtaPad: { paddingHorizontal: 16, paddingTop: 12 },
-  avatarRing: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+  heroTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  settingsButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     borderWidth: 2,
-    borderColor: colors.cyan,
+    borderColor: colors.navy,
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
   },
-  avatarRingIncomplete: { borderColor: "rgba(255,255,255,0.35)" },
+  identity: { marginTop: 14, flexDirection: "row", alignItems: "center", gap: 16 },
+  editCtaPad: { paddingHorizontal: 16, paddingTop: 18 },
+  avatarRing: {
+    width: 92,
+    height: 92,
+    borderRadius: 46,
+    borderWidth: 3,
+    borderColor: colors.navy,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   avatarInner: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
+    width: 76,
+    height: 76,
+    borderRadius: 38,
     backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
-  profileAvatarText: { fontSize: 22, fontFamily: fontFamily.extraBold, color: colors.cyan },
-  profileName: { fontSize: 22, fontFamily: fontFamily.headingStrong, color: colors.navy, letterSpacing: -0.4 },
-  profileEmail: { marginTop: 4, fontSize: 13, fontFamily: fontFamily.regular, color: colors.textSecondary },
-  completionShort: {
+  avatarImage: { width: "100%", height: "100%" },
+  percentBadge: {
+    position: "absolute",
+    bottom: -8,
+    alignSelf: "center",
+    paddingHorizontal: 9,
+    paddingVertical: 3,
+    borderRadius: 999,
+    backgroundColor: colors.navy,
+    borderWidth: 2,
+    borderColor: colors.white,
+  },
+  percentText: { fontFamily: fontFamily.extraBold, fontSize: 11, color: colors.cyan },
+  profileAvatarText: { fontSize: 26, fontFamily: fontFamily.extraBold, color: colors.cyan },
+  profileName: { fontSize: 22, lineHeight: 26, fontFamily: fontFamily.headingStrong, color: colors.navy, letterSpacing: -0.5 },
+  profileHeadline: { marginTop: 2, fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.navy },
+  profileEmail: { marginTop: 2, fontSize: 13, fontFamily: fontFamily.regular, color: "rgba(13,25,78,0.7)" },
+  relocatePill: {
+    alignSelf: "flex-start",
     marginTop: 8,
-    fontSize: 14,
-    fontFamily: fontFamily.semiBold,
-    color: "rgba(255,255,255,0.75)",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: colors.navy,
   },
-  completeCta: { marginTop: 0, alignSelf: "stretch", minWidth: 150 },
+  relocateText: { fontFamily: fontFamily.bold, fontSize: 11, color: colors.white },
+  finishCard: { padding: 20 },
+  finishTitle: {
+    marginTop: 4,
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 22,
+    letterSpacing: -0.5,
+    color: colors.white,
+  },
+  progressTrack: {
+    marginTop: 14,
+    marginBottom: 6,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "rgba(255,255,255,0.14)",
+    overflow: "hidden",
+  },
+  progressFill: { height: "100%", borderRadius: 5, backgroundColor: colors.cyan },
+  finishRow: { minHeight: 36, flexDirection: "row", alignItems: "center", gap: 10 },
+  finishRowText: { flex: 1, fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.white },
   content: { paddingHorizontal: 16, paddingTop: 16, gap: 14 },
   tileGrid: { gap: 10, marginBottom: 4 },
   tileRow: { flexDirection: "row", gap: 10 },

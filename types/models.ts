@@ -443,11 +443,17 @@ export interface CandidateTrackedApplication {
   roleTitle: string;
   destination?: string;
   roleUrl?: string;
+  source?: string;
   stage: TrackedApplicationStage;
-  sponsorshipSignal?: "yes" | "no" | "case-by-case" | "unclear";
-  relocationSignal?: "yes" | "no" | "case-by-case" | "unclear";
+  appliedAt?: string | null;
+  sponsorshipSignal?: "yes" | "no" | "case_by_case" | "case-by-case" | "unclear";
+  relocationSignal?: "yes" | "no" | "case_by_case" | "case-by-case" | "unclear";
+  contactName?: string;
+  contactEmail?: string;
   notes?: string;
+  outcome?: string;
   followUpAt?: string | null;
+  createdAt?: string;
   updatedAt?: string;
 }
 
@@ -474,6 +480,7 @@ export interface ReferralCodesListResponse {
 export interface RelocationPerkItem {
   id?: string;
   _id?: string;
+  placementId?: string;
   title: string;
   description: string;
   logoUrl?: string;
@@ -532,6 +539,8 @@ export interface RelocationPerksDashboardResponse {
 
 export interface BenefitOfferView {
   id: string;
+  /** Needed to record a click; offers without one are shown but not tracked. */
+  placementId: string | null;
   title: string;
   description: string;
   category?: string;

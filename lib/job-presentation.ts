@@ -1,4 +1,9 @@
-import { appCopy, type AppLanguage, type AppCopyKey } from "@/lib/i18n/catalog";
+import {
+  appCopy,
+  toIntlLocale,
+  type AppLanguage,
+  type AppCopyKey,
+} from "@/lib/i18n/catalog";
 import countries from "@/data/countryGuideTranslations.json";
 
 const mobility: Record<string, AppCopyKey> = {
@@ -39,6 +44,19 @@ export function jobCountryLabel(value: string, locale: AppLanguage): string {
   return code && locale !== "en" ? countries[locale].countries[code] : value;
 }
 
+export function jobLocationLabel(
+  job: { locationCity?: string; locationCountry?: string; location?: string },
+  locale: AppLanguage,
+): string {
+  return (
+    [job.locationCity, jobCountryLabel(job.locationCountry || "", locale)]
+      .filter(Boolean)
+      .join(", ") ||
+    job.location ||
+    ""
+  );
+}
+
 const matches: Record<string, AppCopyKey> = {
   compatible: "jobsCompatible",
   potentially_compatible: "jobsPotential",
@@ -47,6 +65,24 @@ const matches: Record<string, AppCopyKey> = {
 };
 export function jobMatchLabel(status: string, locale: AppLanguage): string {
   return appCopy(locale, matches[status] ?? "jobsMoreInfo");
+}
+
+export function jobSalaryLabel(
+  job: { salaryCurrency?: string; minSalary?: number; maxSalary?: number },
+  locale: AppLanguage,
+): string {
+  const intl = toIntlLocale(locale);
+  const cur = job.salaryCurrency || "GBP";
+  const sym =
+    cur === "GBP" ? "£" : cur === "EUR" ? "€" : cur === "USD" ? "$" : `${cur} `;
+  if (job.minSalary != null && job.maxSalary != null) {
+    return `${sym}${job.minSalary.toLocaleString(intl)}–${job.maxSalary.toLocaleString(intl)}`;
+  }
+  if (job.minSalary != null)
+    return appCopy(locale, "jobsSalaryFrom", {
+      amount: `${sym}${job.minSalary.toLocaleString(intl)}`,
+    });
+  return "";
 }
 
 export function jobAgeLabel(
@@ -59,19 +95,15 @@ export function jobAgeLabel(
     difference = now - date.getTime();
   if (!Number.isFinite(difference) || difference < 0) return null;
   const days = Math.floor(difference / 86400000);
+  // Hermes lacks Intl.RelativeTimeFormat, so relative ages use bundled copy.
+  if (days === 0) return appCopy(locale, "jobAgeToday");
+  if (days === 1) return appCopy(locale, "jobAgeYesterday");
+  if (days < 7) return appCopy(locale, "jobAgeDays", { count: days });
+  if (days < 30) return appCopy(locale, "jobAgeWeeks", { count: Math.floor(days / 7) });
+  const intl = toIntlLocale(locale);
   try {
-    if (days < 7)
-      return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(
-        -days,
-        "day",
-      );
-    if (days < 30)
-      return new Intl.RelativeTimeFormat(locale, {
-        numeric: "always",
-        style: "short",
-      }).format(-Math.floor(days / 7), "week");
-    return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
+    return date.toLocaleDateString(intl, { month: "short", day: "numeric" });
   } catch {
-    return date.toLocaleDateString(locale);
+    return date.toLocaleDateString(intl);
   }
 }

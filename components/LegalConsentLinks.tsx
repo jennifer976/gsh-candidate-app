@@ -7,28 +7,27 @@ import { colors, fontFamily } from "@/lib/theme";
 /**
  * In-app links to bundled legal screens (readable before sign-in).
  */
-export function LegalConsentRegisterNote() {
+export function LegalConsentRegisterNote({ onDark = false }: { onDark?: boolean }) {
   const ac = useAuthCopy();
-  const router = useRouter();
 
   return (
     <View>
-      <Text style={styles.consent}>
+      <Text style={[styles.consent, onDark && styles.mutedOnDark]}>
         {ac("By continuing, you agree to our Terms. Read our Privacy Policy.")}
       </Text>
-      <LegalConsentFooterRow />
+      <LegalConsentFooterRow onDark={onDark} />
     </View>
   );
 }
 
-export function LegalConsentFooterRow() {
+export function LegalConsentFooterRow({ onDark = false }: { onDark?: boolean }) {
   const ac = useAuthCopy();
   const router = useRouter();
 
   const mk = (path: string, label: string) => (
     <Text
       accessibilityRole="link"
-      style={styles.footerLink}
+      style={[styles.footerLink, onDark && styles.linkOnDark]}
       onPress={() => router.push(path)}
     >
       {label}
@@ -38,9 +37,9 @@ export function LegalConsentFooterRow() {
   return (
     <View style={styles.footerRow}>
       {mk(LEGAL_IN_APP.terms, ac("Terms"))}
-      <Text style={styles.footerSep}> · </Text>
+      <Text style={[styles.footerSep, onDark && styles.mutedOnDark]}> · </Text>
       {mk(LEGAL_IN_APP.privacy, ac("Privacy"))}
-      <Text style={styles.footerSep}> · </Text>
+      <Text style={[styles.footerSep, onDark && styles.mutedOnDark]}> · </Text>
       {mk(LEGAL_IN_APP.cookies, ac("Cookies"))}
     </View>
   );
@@ -55,11 +54,6 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     textAlign: "center",
     paddingHorizontal: 8,
-  },
-  link: {
-    fontFamily: fontFamily.semiBold,
-    color: colors.brand,
-    textDecorationLine: "underline",
   },
   footerRow: {
     flexDirection: "row",
@@ -79,4 +73,6 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.brand,
   },
+  mutedOnDark: { color: "rgba(255,255,255,0.6)" },
+  linkOnDark: { color: colors.cyan },
 });

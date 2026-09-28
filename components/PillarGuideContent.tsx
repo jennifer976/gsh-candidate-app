@@ -1,14 +1,11 @@
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
-import { useAppLanguage } from "@/lib/i18n";
+import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import * as Linking from "expo-linking";
 import type { Router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Markdown from "react-native-markdown-display";
 import { getMarketingSiteUrl } from "@/lib/config";
-import { resolveJobsCountryHubPath } from "@/lib/guides/countryHubInApp";
-import { navigateMarketingPath } from "@/lib/guides/marketingPathInApp";
 import { navigateGuideLink } from "@/lib/guides/navigateGuideLink";
-import { getPillarPageByPath } from "@/lib/guides/seo/getPillarByPath";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
 import type { SeoPillarAppendixTable, SeoPillarPageConfig } from "@/lib/guides/seo/seoPillarTypes";
 import { colors, fontFamily, radii } from "@/lib/theme";
@@ -53,25 +50,7 @@ function handleGuideLink(url: string, router: Router): boolean {
     return false;
   }
 
-  const path = url.split("#")[0] ?? url;
-  const hub = resolveJobsCountryHubPath(path);
-  if (hub) {
-    if (hub.kind === "appGuide") {
-      router.push(`/guides/country/${hub.slug}`);
-    } else {
-      router.push("/(tabs)/jobs");
-    }
-    return false;
-  }
-  if (getPillarPageByPath(path)) {
-    router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(path) } });
-    return false;
-  }
-  if (path.startsWith("/jobs") || path.startsWith("/partners") || path === "/specialists") {
-    navigateGuideLink(router, path);
-    return false;
-  }
-  navigateMarketingPath(router, path);
+  navigateGuideLink(router, url);
   return false;
 }
 
@@ -95,7 +74,7 @@ function AppendixTable({ table }: { table: SeoPillarAppendixTable }) {
 
 export function PillarGuideContent({ config, router }: { config: SeoPillarPageConfig; router: Router }) {
   const ac = useAccountCopy();
-  const locale = useAppLanguage((s) => s.locale);
+  const locale = toIntlLocale(useAppLanguage((s) => s.locale));
   const onLink = (url: string) => handleGuideLink(url, router);
 
   return (
@@ -146,7 +125,7 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
 
       <Pressable
         style={styles.cta}
-        onPress={() => navigateMarketingPath(router, config.browseHref)}
+        onPress={() => navigateGuideLink(router, config.browseHref)}
         accessibilityRole="button"
       >
         <Text style={styles.ctaText}>{config.browseLabel}</Text>
@@ -159,22 +138,7 @@ export function PillarGuideContent({ config, router }: { config: SeoPillarPageCo
             <Pressable
               key={r.href}
               style={styles.relatedBtn}
-              onPress={() => {
-                if (getPillarPageByPath(r.href)) {
-                  router.push({ pathname: "/guides/topic", params: { q: encodeURIComponent(r.href) } });
-                  return;
-                }
-                const rHub = resolveJobsCountryHubPath(r.href);
-                if (rHub) {
-                  if (rHub.kind === "appGuide") {
-                    router.push(`/guides/country/${rHub.slug}`);
-                  } else {
-                    router.push("/(tabs)/jobs");
-                  }
-                  return;
-                }
-                navigateMarketingPath(router, r.href);
-              }}
+              onPress={() => navigateGuideLink(router, r.href)}
               accessibilityRole="button"
             >
               <Text style={styles.relatedText}>{r.label}</Text>

@@ -52,7 +52,12 @@ if (!pushSource.includes("resolvePublicRoute")) errors.push("push navigation doe
 const firstMatch = (path) => manifest.routes.find((row) => new RegExp(row.pattern, "i").test(path));
 const samples = [
   ["/resources", "native", "/resources"],
-  ["/resources/job-offer-scam-checklist", "fallback", undefined],
+  ["/resources/job-offer-scam-checklist", "native", "/resources/$1"],
+  ["/resources/authors/example", "fallback", undefined],
+  ["/guides", "native", "/countries"],
+  ["/jobs/country/switzerland", "native", "/country/$1"],
+  ["/trust/how-we-label-jobs", "native", "/trust/how-we-label-jobs"],
+  ["/best-visa-sponsorship-job-sites", "native", "/guide/$1"],
   ["/grow-your-network", "fallback", undefined],
   ["/companies/acme-ltd", "native", "/company/$1"],
   ["/partners/directory/507f1f77bcf86cd799439011", "native", "/partner/$1"],

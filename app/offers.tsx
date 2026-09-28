@@ -1,4 +1,5 @@
-import { useAppLanguage } from "@/lib/i18n";
+import { withSignIn } from "@/components/SignInGate";
+import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
@@ -21,9 +22,9 @@ import { stackFlatListHeadWrapStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 import type { CandidateOfferItem } from "@/types/models";
 
-export default function OffersScreen() {
+function OffersScreen() {
   const ac = useAccountCopy();
-  const locale = useAppLanguage((s) => s.locale);
+  const locale = toIntlLocale(useAppLanguage((s) => s.locale));
 
   const query = useQuery({
     queryKey: ["referral-codes", "candidate"],
@@ -219,4 +220,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.white,
   },
+});
+
+export default withSignIn(OffersScreen, {
+  icon: "ribbon-outline",
+  title: "Your offers",
+  body: "Sign in to see job offers from employers.",
 });

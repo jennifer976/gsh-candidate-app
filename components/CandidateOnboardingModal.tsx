@@ -2,51 +2,51 @@ import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useReducedMotion } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import {
-  FlatList,
   Modal,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
-import { GshNavyHero } from "@/components/GshNavyHero";
+import { modalFooterPad } from "@/lib/android-insets";
 import { hapticLight } from "@/lib/haptics";
-import { colors, feedCardStyle, fontFamily, radii } from "@/lib/theme";
+import { colors, fontFamily, radii } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
-type Step = {
+type GoalId = "find" | "found" | "move";
+
+type Goal = {
+  id: GoalId;
   icon: IonName;
-  iconBg: string;
   title: string;
   body: string;
 };
 
-const STEPS: Step[] = [
+const GOALS: Goal[] = [
   {
-    icon: "compass",
-    iconBg: colors.brandSoft,
-    title: "Find work",
-    body: "Browse direct, external and agency-listed jobs. Each listing shows the mobility offer the employer stated.",
+    id: "find",
+    icon: "briefcase-outline",
+    title: "Find sponsored jobs",
+    body: "Browse roles with clear visa and relocation labels.",
   },
   {
-    icon: "people",
-    iconBg: colors.tealDim,
-    title: "Be found — if you want",
-    body: "Fill in your profile. Employers and agencies can find you only if you turn that on under Who can find and contact you?",
+    id: "found",
+    icon: "people-outline",
+    title: "Be found by employers",
+    body: "Fill your profile — discovery stays off until you turn it on.",
   },
   {
-    icon: "airplane",
-    iconBg: colors.surfaceMuted,
-    title: "Plan the move",
-    body: "Need visa, housing or relocation help? Request an independent specialist. You stay free. We do not run the move.",
+    id: "move",
+    icon: "airplane-outline",
+    title: "Plan a move",
+    body: "Independent specialists for visas and housing. You stay free.",
   },
 ];
 
@@ -55,158 +55,246 @@ type Props = {
   onComplete: () => void;
 };
 
+/**
+ * Immersive welcome — Blinkist/Headway progress + Glassdoor sticky CTA.
+ * Scrollable goals; cyan CTA always visible above system nav.
+ */
 export function CandidateOnboardingModal({ visible, onComplete }: Props) {
   const ac = useAccountCopy();
   const reduceMotion = useReducedMotion();
-  const { width } = useWindowDimensions();
-  const listRef = useRef<FlatList<Step>>(null);
-  const [index, setIndex] = useState(0);
-  const [slideHeight, setSlideHeight] = useState(0);
-
-  const onScrollEnd = useCallback(
-    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const next = Math.round(e.nativeEvent.contentOffset.x / width);
-      if (next !== index) {
-        setIndex(next);
-        void hapticLight();
-      }
-    },
-    [index, width]
-  );
-
-  const goNext = useCallback(() => {
-    if (index >= STEPS.length - 1) {
-      onComplete();
-      return;
-    }
-    const next = index + 1;
-    listRef.current?.scrollToIndex({ index: next, animated: !reduceMotion });
-    setIndex(next);
-    void hapticLight();
-  }, [index, onComplete, reduceMotion]);
+  const insets = useSafeAreaInsets();
+  const [goalId, setGoalId] = useState<GoalId | null>(null);
 
   const skip = useCallback(() => {
     void hapticLight();
     onComplete();
   }, [onComplete]);
 
-  const isLast = index === STEPS.length - 1;
+  const finish = useCallback(() => {
+    if (!goalId) return;
+    void hapticLight();
+    onComplete();
+  }, [goalId, onComplete]);
 
   return (
-    <Modal visible={visible} animationType={reduceMotion ? "none" : "fade"} presentationStyle="fullScreen" onRequestClose={skip}>
-      <View style={styles.root}>
-        <GshNavyHero variant="full" style={styles.hero}>
-          <SafeAreaView edges={["top"]} style={styles.safeTop}>
-            <View style={styles.topBar}>
-              <Text style={styles.brandEyebrow}>{ac("Welcome to Global Sponsor Hub")}</Text>
-              <Pressable onPress={skip} hitSlop={12} accessibilityRole="button" accessibilityLabel={ac("Skip intro")}>
-                <Text style={styles.skip}>{ac("Skip")}</Text>
-              </Pressable>
-            </View>
-          </SafeAreaView>
-        </GshNavyHero>
+    <Modal
+      visible={visible}
+      animationType={reduceMotion ? "none" : "fade"}
+      presentationStyle="fullScreen"
+      onRequestClose={skip}
+      statusBarTranslucent
+    >
+      <LinearGradient
+        colors={["#9aeeee", "#e8fafb", "#ffffff"]}
+        locations={[0, 0.28, 0.55]}
+        style={[styles.root, { paddingTop: Math.max(insets.top, 12) }]}
+      >
+        <View style={styles.progressTrack}>
+          <View style={styles.progressFill} />
+        </View>
+        <Text style={styles.stepLabel}>{ac("STEP 1 OF 1")}</Text>
 
-        <FlatList
-          ref={listRef}
-          style={styles.slider}
-          contentContainerStyle={styles.pages}
-          onLayout={(event) => setSlideHeight(event.nativeEvent.layout.height)}
-          data={STEPS}
-          keyExtractor={(item) => item.title}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={onScrollEnd}
-          onScrollToIndexFailed={() => undefined}
-          getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
-          renderItem={({ item }) => (
-            <View style={[styles.slide, { width, minHeight: slideHeight }]}>
-              <View style={[styles.card, feedCardStyle()]}>
-                <View style={[styles.iconTile, { backgroundColor: item.iconBg }]}>
-                  <Ionicons name={item.icon} size={36} color={colors.navy} />
-                </View>
-                <Text style={styles.cardTitle}>{ac(item.title)}</Text>
-                <Text style={styles.cardBody}>{ac(item.body)}</Text>
-              </View>
-            </View>
-          )}
-        />
-
-        <SafeAreaView edges={["bottom"]} style={styles.footer}>
-          <View style={styles.dots}>
-            {STEPS.map((_, i) => (
-              <View key={i} style={[styles.dot, i === index && styles.dotOn]} />
-            ))}
+        <View style={styles.topBar}>
+          <View style={styles.brandChip}>
+            <Text style={styles.brandChipText}>Global Sponsor Hub</Text>
           </View>
+          <Pressable
+            onPress={skip}
+            hitSlop={14}
+            accessibilityRole="button"
+            accessibilityLabel={ac("Skip intro")}
+            style={styles.skipHit}
+          >
+            <Text style={styles.skip}>{ac("Skip")}</Text>
+          </Pressable>
+        </View>
+
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          bounces
+        >
+          <Text style={styles.heading}>{ac("What's your main goal?")}</Text>
+          <Text style={styles.lead}>
+            {ac("Pick one to personalise your start. You can change focus anytime.")}
+          </Text>
+
+          <View style={styles.goalList}>
+            {GOALS.map((goal) => {
+              const on = goalId === goal.id;
+              return (
+                <Pressable
+                  key={goal.id}
+                  style={[styles.goalRow, on && styles.goalRowOn]}
+                  onPress={() => {
+                    void hapticLight();
+                    setGoalId(goal.id);
+                  }}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: on }}
+                >
+                  <View style={[styles.goalIcon, on && styles.goalIconOn]}>
+                    <Ionicons
+                      name={goal.icon}
+                      size={22}
+                      color={on ? colors.navy : colors.navy}
+                    />
+                  </View>
+                  <View style={styles.goalCopy}>
+                    <Text style={styles.goalTitle}>{ac(goal.title)}</Text>
+                    <Text style={styles.goalBody}>{ac(goal.body)}</Text>
+                  </View>
+                  <Ionicons
+                    name={on ? "checkmark-circle" : "ellipse-outline"}
+                    size={26}
+                    color={on ? colors.cyan : colors.borderStrong}
+                  />
+                </Pressable>
+              );
+            })}
+          </View>
+        </ScrollView>
+
+        <View
+          style={[
+            styles.footer,
+            { paddingBottom: modalFooterPad(insets.bottom) },
+          ]}
+        >
           <GshGradientPrimaryButton
-            title={ac(isLast ? "Get started" : "Next")}
-            onPress={goNext}
+            title={ac("Get started")}
+            tone="cyan"
+            onPress={finish}
+            disabled={!goalId}
             containerStyle={styles.cta}
           />
-
-        </SafeAreaView>
-      </View>
+        </View>
+      </LinearGradient>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.white },
-  hero: { paddingBottom: 8 },
-  safeTop: { paddingHorizontal: 20 },
+  root: {
+    flex: 1,
+  },
+  progressTrack: {
+    marginHorizontal: 20,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: "rgba(13,25,78,0.12)",
+    overflow: "hidden",
+  },
+  progressFill: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: colors.cyan,
+    borderRadius: 2,
+  },
+  stepLabel: {
+    marginTop: 8,
+    marginHorizontal: 20,
+    fontSize: 11,
+    fontFamily: fontFamily.bold,
+    color: colors.textMuted,
+    letterSpacing: 0.8,
+  },
   topBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     gap: 12,
-    paddingTop: 8,
-    paddingBottom: 12,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 8,
   },
-  brandEyebrow: {
+  brandChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: radii.pill,
+    backgroundColor: colors.cyan,
+  },
+  brandChipText: {
     fontSize: 13,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+  },
+  skipHit: { minHeight: 44, justifyContent: "center", paddingHorizontal: 4 },
+  skip: {
+    fontSize: 16,
     fontFamily: fontFamily.semiBold,
-    color: colors.accent,
-    flex: 1,
-    letterSpacing: 0.6,
-    textTransform: "lowercase",
+    color: colors.navy,
   },
-  skip: { fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.teal },
-  slider: { flex: 1 },
-  pages: { flexGrow: 1, alignItems: "stretch" },
-  slide: { paddingHorizontal: 20, justifyContent: "center", paddingBottom: 12 },
-  card: {
-    paddingVertical: 32,
-    paddingHorizontal: 24,
+  scroll: { flex: 1 },
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 24,
+  },
+  heading: {
+    fontSize: 28,
+    lineHeight: 34,
+    fontFamily: fontFamily.headingStrong,
+    color: colors.navy,
+    letterSpacing: -0.6,
+  },
+  lead: {
+    marginTop: 8,
+    marginBottom: 20,
+    fontSize: 15,
+    lineHeight: 22,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
+  },
+  goalList: { gap: 10 },
+  goalRow: {
+    flexDirection: "row",
     alignItems: "center",
+    gap: 12,
+    minHeight: 92,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
     borderRadius: radii.lg,
+    borderWidth: 2,
+    borderColor: colors.border,
+    backgroundColor: colors.white,
   },
-  iconTile: {
-    width: 80,
-    height: 80,
-    borderRadius: 24,
+  goalRowOn: {
+    borderColor: colors.cyan,
+    backgroundColor: "rgba(66,224,227,0.16)",
+  },
+  goalIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: colors.pale,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
   },
-  cardTitle: {
-    fontSize: 22,
-    fontFamily: fontFamily.extraBold,
-    color: colors.navy,
-    textAlign: "center",
-    letterSpacing: -0.4,
-    marginBottom: 10,
+  goalIconOn: {
+    backgroundColor: colors.cyan,
   },
-  cardBody: {
+  goalCopy: { flex: 1, minWidth: 0 },
+  goalTitle: {
     fontSize: 16,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+    marginBottom: 4,
+  },
+  goalBody: {
+    fontSize: 13,
+    lineHeight: 18,
     fontFamily: fontFamily.regular,
     color: colors.textMuted,
-    textAlign: "center",
-    lineHeight: 24,
-    maxWidth: 300,
   },
-  footer: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 12, backgroundColor: colors.white },
-  dots: { flexDirection: "row", justifyContent: "center", gap: 8, marginBottom: 16 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.borderStrong },
-  dotOn: { width: 22, backgroundColor: colors.navy },
-  cta: { marginBottom: 8 },
+  footer: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+    backgroundColor: colors.white,
+  },
+  cta: { width: "100%" },
 });

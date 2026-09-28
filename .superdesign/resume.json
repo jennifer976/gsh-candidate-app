@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "/home": {
+      "targetKind": "existing-ui",
+      "projectId": "0e6c9951-5b54-4bc8-8c5e-2d79ee99bb95",
+      "baselineDraftId": "8d71e372-6b0a-4e68-9686-535f25d6792c",
+      "activeDraftId": "21d3f536-c325-4fe6-9650-45b619be3d5a",
+      "designSystemPath": ".superdesign/design-system.md",
+      "referenceIds": [
+        "a61b2bf6-41d4-4c16-be22-cc3aa4343847",
+        "bfe7de32-7b94-44b7-963d-ae3d9f51efff",
+        "41031bf0-1656-494a-9ed4-3197a3513f82",
+        "733e4194-132b-46a7-a034-5adbf4ad5431",
+        "assets-brand-logo.png"
+      ],
+      "brandAssets": {
+        "logo": {
+          "assetKey": "assets-brand-logo.png",
+          "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/0e6c9951-5b54-4bc8-8c5e-2d79ee99bb95/brand-assets/assets-brand-logo.png/brand-logo.png",
+          "sourcePath": "assets/brand-logo.png"
+        }
+      },
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        ".superdesign/init/theme.md",
+        "components/CandidateHomeScreen.tsx",
+        "app/(tabs)/_layout.tsx",
+        "components/GshHomeDestinationRail.tsx",
+        "components/DashboardHubJobPreview.tsx",
+        "components/GshChromeIconButton.tsx",
+        "components/GshPressable.tsx",
+        "components/GshTabStickyHeader.tsx",
+        "components/SkeletonLoader.tsx",
+        "app/guides/index.tsx",
+        "app/blog/index.tsx",
+        "app/tools-resources.tsx",
+        "app/resources.tsx",
+        "app/tools.tsx",
+        "lib/theme.ts"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "ae43d1bdab25d1330cd8b53808909025d5c1a61b88af215c678539f746b65f5b",
+        ".superdesign/init/theme.md": "948542f854463c18ce753528807e39fd0315aa3c7fc1c7553d597b039b3f25f1",
+        "components/CandidateHomeScreen.tsx": "43fa91bd8a10b0c79236073a4a3166bd43de673278e1e7a6cc2947b718fe0358",
+        "app/(tabs)/_layout.tsx": "88b7e8b5e6335824d30891785beb51dc8bc592337585355b1e75d9cf2f033dfa",
+        "components/GshHomeDestinationRail.tsx": "a066e752c020110b79d2a4e429462fe2e09986c36e5355b6abee26483dcefb03",
+        "components/DashboardHubJobPreview.tsx": "eb9f6246a0caeb0844d7c9a0035e98a8a1438e7650a4c90d6d5d5a748dc1d0ec",
+        "components/GshChromeIconButton.tsx": "9acf047a4855ccc3f915c43d413991906cf761797bdbf044d41034d8362198a0",
+        "components/GshPressable.tsx": "d1c840a1844db9cd68d3b634cb100b019d2459e4ec3f3b2671a04814b627245d",
+        "components/GshTabStickyHeader.tsx": "3e91791b24b50717fd66de882f98edf507a6d3b752dea64685488a6f664c0e1a",
+        "components/SkeletonLoader.tsx": "ac0b5acf8b0ea6678879287eb6d5f74cb98349a31646df3f082b3f38a9606111",
+        "app/guides/index.tsx": "6f219683dde167617f78693db3992e1e9c729221919e80439de93b6013da673b",
+        "app/blog/index.tsx": "1baf1034d48527fd144e4a9f215e14b645a219f2d2b24bdc7b483f99dcf48249",
+        "app/tools-resources.tsx": "b672aaf6f1fe22dcdb77b00922ddbeb291a8ef508b7e2707e397036d9013b30d",
+        "app/resources.tsx": "fc9e143ff742d3cb03711e73a3e1e9cee8dedefca695283766395f75e7112849",
+        "app/tools.tsx": "6aa38979139a12f31cf4865a9ba196873cb55914a38719e9938bf2a8ef054216",
+        "lib/theme.ts": "3387bddafa8f72b15202859b52795907acaf801de8641469126e2f8225943526"
+      },
+      "components": [
+        {
+          "name": "CandidateTabBar",
+          "id": "3b4acd68-056f-4af2-9457-288599db90a8",
+          "sourcePath": "app/(tabs)/_layout.tsx"
+        }
+      ],
+      "drafts": {
+        "8d71e372-6b0a-4e68-9686-535f25d6792c": {
+          "title": "Current Candidate Home",
+          "visualDirection": "faithful reproduction of current app",
+          "currentVersion": 1
+        },
+        "59059b2d-e851-4351-abf0-61e827c340ef": {
+          "title": "Reference-led Native Home",
+          "visualDirection": "close to supplied reference with native app chrome",
+          "parentDraftId": "8d71e372-6b0a-4e68-9686-535f25d6792c",
+          "currentVersion": 1
+        },
+        "21d3f536-c325-4fe6-9650-45b619be3d5a": {
+          "title": "Premium Candidate Home",
+          "visualDirection": "bold cyan website-branded app feed (Duolingo/Deel energy): cyan hero with 'Your talent moves.' poster type, chunky depth buttons, navy/cyan tiles, jobs, move quest, tools, destinations, guides, blog and resources",
+          "parentDraftId": "8d71e372-6b0a-4e68-9686-535f25d6792c",
+          "currentVersion": 3
+        }
+      },
+      "updatedAt": "2026-09-26T12:00:00.000Z"
+    },
+    "/onboarding": {
+      "targetKind": "new-flow",
+      "projectId": "0e6c9951-5b54-4bc8-8c5e-2d79ee99bb95",
+      "designSystemPath": ".superdesign/design-system.md",
+      "visualDirection": "bold alternating backgrounds (cyan, white, navy, cyan, white, navy), Duolingo-style progress bar, chunky depth buttons, website poster type",
+      "drafts": {
+        "6d17b633-31d2-4a87-a850-118c0d778ace": { "title": "Onboarding 1 - Splash (cyan)", "sourceHtml": ".superdesign/tmp/onboarding-01-splash.html", "currentVersion": 1 },
+        "a96d0a91-c619-4b65-bc51-fc68640eba9a": { "title": "Onboarding 2 - Walkthrough (white)", "sourceHtml": ".superdesign/tmp/onboarding-02-walkthrough.html", "currentVersion": 1 },
+        "eff98d2c-07d2-4b51-a41c-3aef9d7b0f6b": { "title": "Onboarding 3 - Sign up / Log in (navy)", "sourceHtml": ".superdesign/tmp/onboarding-03-signup.html", "currentVersion": 1 },
+        "f9ac931c-b6eb-4bd0-81d8-036e9ab63f81": { "title": "Onboarding 4 - Verification (cyan)", "sourceHtml": ".superdesign/tmp/onboarding-04-verify.html", "currentVersion": 1 },
+        "25f831ce-ceb8-4dca-a0d7-4a3120a1f158": { "title": "Onboarding 5 - Account setup (white)", "sourceHtml": ".superdesign/tmp/onboarding-05-setup.html", "currentVersion": 1 },
+        "16ac1983-6292-48b4-9e03-57a873e30e3e": { "title": "Onboarding 6 - Quick start guide (navy)", "sourceHtml": ".superdesign/tmp/onboarding-06-quickstart.html", "currentVersion": 2 },
+        "bd56bb82-809e-4b11-855c-2fb2851542d1": { "title": "Walkthrough idea A - Open stage (white)", "sourceHtml": ".superdesign/tmp/onboarding-02a-open-stage.html", "currentVersion": 1 },
+        "23734eb7-2317-4d80-b34f-976b36e89a29": { "title": "Walkthrough idea B - Job card deck (white)", "sourceHtml": ".superdesign/tmp/onboarding-02b-card-deck.html", "currentVersion": 1 },
+        "0299be01-fbc7-48c6-a4cf-98d800cc2c91": { "title": "Walkthrough idea C - Journey route (white)", "sourceHtml": ".superdesign/tmp/onboarding-02c-journey.html", "currentVersion": 1 }
+      },
+      "notes": "Headings use Montserrat one step lighter than v1 (poster = 800, section titles = 700). hero-walking-cyan-v5.webp has an opaque white background: place it directly on white, or inside a white circle on cyan/navy.",
+      "updatedAt": "2026-09-27T22:55:00.000Z"
+    },
+    "/app-rhythm": {
+      "targetKind": "existing-ui",
+      "projectId": "0e6c9951-5b54-4bc8-8c5e-2d79ee99bb95",
+      "designSystemPath": ".superdesign/design-system.md",
+      "visualDirection": "cyan = you & momentum (Home, Saved, Profile); white = browse & read (Jobs, Guides, Messages); navy = decide & act (Job detail, Tools, Apply)",
+      "drafts": {
+        "900276af-70ea-40f3-8bb1-246197e21689": { "title": "App style guide - Colour rhythm", "sourceHtml": ".superdesign/tmp/app-00-style-guide.html", "currentVersion": 1 },
+        "21d3f536-c325-4fe6-9650-45b619be3d5a": { "title": "Home (cyan)", "sourceHtml": ".superdesign/tmp/premium-candidate-home-v2.html", "currentVersion": 3 },
+        "0ce1085a-f7af-4df6-b386-68fc3b02931f": { "title": "App - Jobs (white)", "sourceHtml": ".superdesign/tmp/app-02-jobs.html", "currentVersion": 1 },
+        "e5327be0-7092-41db-960e-c26e33ff3a85": { "title": "App - Job detail (navy)", "sourceHtml": ".superdesign/tmp/app-03-job-detail.html", "currentVersion": 1 },
+        "ab6dba2c-003f-416b-9ab7-1d3df06da3fb": { "title": "App - Saved and applications (cyan)", "sourceHtml": ".superdesign/tmp/app-04-saved.html", "currentVersion": 1 },
+        "f121ba81-b7a7-4025-b843-42302a82ad48": { "title": "App - Guides and blog (white)", "sourceHtml": ".superdesign/tmp/app-05-guides.html", "currentVersion": 1 },
+        "deeb51e1-f871-4cf7-a754-8f03ac2ae1c7": { "title": "App - Tools (navy)", "sourceHtml": ".superdesign/tmp/app-06-tools.html", "currentVersion": 1 },
+        "e0e94360-b2ba-45a7-993f-ee8d4eafe7ee": { "title": "App - Profile (cyan)", "sourceHtml": ".superdesign/tmp/app-07-profile.html", "currentVersion": 3 },
+        "c8407d09-2c21-41f7-82dc-97accf5f2f63": { "title": "App - Messages (white)", "sourceHtml": ".superdesign/tmp/app-08-messages.html", "currentVersion": 1 },
+        "4e8afba2-c3b7-4a37-b423-c2a361c9cf2d": { "title": "App - Empty and error states", "sourceHtml": ".superdesign/tmp/app-09-empty-states.html", "currentVersion": 1 }
+      },
+      "updatedAt": "2026-09-27T23:40:00.000Z"
+    },
+    "/flow-board": {
+      "targetKind": "new-flow",
+      "projectId": "0e6c9951-5b54-4bc8-8c5e-2d79ee99bb95",
+      "drafts": {
+        "381ead47-1a73-4f25-b517-06a205ceb3ff": { "title": "START HERE - App user flow (all screens)", "sourceHtml": ".superdesign/tmp/app-flow-board.html", "currentVersion": 1 }
+      },
+      "notes": "Generated by `node .superdesign/tmp/build-flow.mjs` from the final screen HTML files. Rebuild and re-import with --into after changing any screen. Logos: brand-assets/brand-lockup-navy (cyan/white surfaces) and brand-lockup-white (navy surfaces).",
+      "updatedAt": "2026-09-27T23:40:00.000Z"
+    }
+  }
+}

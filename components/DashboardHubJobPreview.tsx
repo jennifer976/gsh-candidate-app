@@ -158,6 +158,11 @@ export function DashboardHubJobPreview({
           {meta}
         </Text>
       ) : null}
+      {salary ? (
+        <Text style={styles.cardSalary} numberOfLines={1}>
+          {salary}
+        </Text>
+      ) : null}
       <View style={styles.cardFooter}>
         {visaChip ? (
           <View style={styles.visaPill}>
@@ -166,7 +171,10 @@ export function DashboardHubJobPreview({
             </Text>
           </View>
         ) : (
-          <View />
+          <View style={styles.easyApplyMini}>
+            <Ionicons name="flash" size={12} color={colors.navy} />
+            <Text style={styles.easyApplyMiniText}>Easy apply</Text>
+          </View>
         )}
         <View style={styles.viewRow}>
           <Text style={styles.viewLabel}>{viewLabel}</Text>
@@ -313,6 +321,20 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.navy,
   },
+  easyApplyMini: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: radii.pill,
+    backgroundColor: "rgba(66,224,227,0.22)",
+  },
+  easyApplyMiniText: {
+    fontSize: 11,
+    fontFamily: fontFamily.bold,
+    color: colors.navy,
+  },
   viewRow: { flexDirection: "row", alignItems: "center", gap: 4 },
   viewLabel: {
     fontSize: 13,
@@ -346,5 +368,11 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: fontFamily.regular,
     color: colors.textMuted,
+  },
+  cardSalary: {
+    marginTop: 4,
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
   },
 });

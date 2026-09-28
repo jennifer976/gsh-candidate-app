@@ -1,6 +1,6 @@
 {
   "name": "gsh-candidate-app",
-  "version": "1.0.6",
+  "version": "1.0.15",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -11,7 +11,8 @@
     "validate:route-parity": "node scripts/validate-route-parity.mjs",
     "validate:phase7-parity": "node scripts/validate-phase7-parity.mjs",
     "validate:staging-config": "node scripts/validate-staging-config.mjs",
-    "test:release-parity": "npm run typecheck && npm run validate:route-parity && npm run validate:phase7-parity && npm run validate:staging-config"
+    "validate:country-names": "node scripts/sync-country-names.cjs --check",
+    "test:release-parity": "npm run typecheck && npm run validate:route-parity && npm run validate:phase7-parity && npm run validate:staging-config && npm run validate:country-names"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
@@ -21,7 +22,7 @@
     "@tanstack/react-query": "^5.100.9",
     "babel-preset-expo": "~54.0.10",
     "expo": "~54.0.37",
-    "expo-av": "~16.0.8",
+    "expo-asset": "~12.0.13",
     "expo-blur": "~15.0.8",
     "expo-clipboard": "~8.0.8",
     "expo-constants": "~18.0.14",

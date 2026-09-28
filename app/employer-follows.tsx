@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -23,7 +24,7 @@ import {
   radii,
 } from "@/lib/theme";
 
-export default function EmployerFollowsScreen() {
+function EmployerFollowsScreen() {
   const ac = useAccountCopy();
 
   const router = useRouter();
@@ -216,4 +217,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.brand,
   },
   browseText: { fontFamily: fontFamily.bold, color: colors.white },
+});
+
+export default withSignIn(EmployerFollowsScreen, {
+  icon: "business-outline",
+  title: "Follow employers",
+  body: "Sign in to follow employers and hear when they post new jobs.",
 });

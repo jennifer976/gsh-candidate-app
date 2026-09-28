@@ -141,6 +141,13 @@ export async function registerCandidatePushToken(
   });
 }
 
+export async function resendSignupOtp(userId: string, email: string) {
+  return apiFetchJson<{ message?: string }>("/auth/resend-signup-otp", {
+    method: "POST",
+    body: JSON.stringify({ userId, email }),
+  });
+}
+
 export async function verifyOtpRequest(userId: string, code: string) {
   return apiFetchJson<import("@/types/models").AuthResponse>(
     "/auth/verify-otp",
@@ -673,7 +680,17 @@ export async function createTrackedApplication(body: {
   companyName: string;
   roleTitle: string;
   destination?: string;
+  roleUrl?: string;
+  source?: string;
   stage?: import("@/types/models").TrackedApplicationStage;
+  appliedAt?: string | null;
+  followUpAt?: string | null;
+  sponsorshipSignal?: import("@/types/models").CandidateTrackedApplication["sponsorshipSignal"];
+  relocationSignal?: import("@/types/models").CandidateTrackedApplication["relocationSignal"];
+  contactName?: string;
+  contactEmail?: string;
+  notes?: string;
+  outcome?: string;
 }) {
   return apiFetchJson<import("@/types/models").CandidateTrackedApplication>(
     "/candidate-tools/tracked-applications",
@@ -760,6 +777,13 @@ export async function fetchRelocationPerks(
   return apiFetchJson<
     import("@/types/models").RelocationPerksDashboardResponse
   >(`/relocation-perks?audience=${audience}`);
+}
+
+export async function recordRelocationPerkClick(offerId: string, placementId: string) {
+  return apiFetchJson<{ data: { id: string; destinationUrl: string } }>(
+    `/relocation-perks/${encodeURIComponent(offerId)}/click`,
+    { method: "POST", body: JSON.stringify({ placementId }) },
+  );
 }
 
 // —— ATS assistant ——

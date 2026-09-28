@@ -145,6 +145,7 @@ export function candidateBenefitOffers(
     const termsUrl = clean(item.termsUrl);
     return [{
       id: clean(item.id) || clean(item._id),
+      placementId: clean(item.placementId) || null,
       title: item.title,
       description: item.description,
       category: item.category,

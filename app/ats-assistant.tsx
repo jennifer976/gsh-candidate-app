@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
@@ -18,8 +19,8 @@ type Analysis = {
   gapAnalysis: {term: string; type: string; suggestion: string}[];
   sectionFeedback: {section: string; issue: string; improvedPhrase: string}[];
 };
-export default function AtsAssistantScreen() {
-  const { t, locale } = useAppCopy();
+function AtsAssistantScreen() {
+  const { t, locale, intlLocale } = useAppCopy();
   const copy = reviewCopy[locale];
   const [cvText, setCvText] = useState("");
   const [profileJson, setProfileJson] = useState<Record<string, unknown> | null>(null);
@@ -56,7 +57,7 @@ export default function AtsAssistantScreen() {
       <SafeAreaView style={styles.safe} edges={["bottom"]}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{flex:1}}>
           <ScrollView contentContainerStyle={styles.pad} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-            <GshScreenIntro eyebrow={copy.atsBadge.toLocaleLowerCase(locale)} title={copy.atsHeading} subtitle={copy.atsLead} style={{marginBottom:12}} />
+            <GshScreenIntro eyebrow={copy.atsBadge.toLocaleLowerCase(intlLocale)} title={copy.atsHeading} subtitle={copy.atsLead} style={{marginBottom:12}} />
             <View style={styles.accentBar} />
             <Text style={styles.resultBody}>{copy.atsDisclaimer}</Text>
             <GshSectionTitle title={copy.atsCvPasteLabel} />
@@ -79,10 +80,10 @@ export default function AtsAssistantScreen() {
             }} loading={analyzeMut.isPending} disabled={!profileJson || !jobDescription.trim() || analyzeMut.isPending || parseMut.isPending} containerStyle={{marginTop:10}} />
             {analysis ? <View style={[cardSurfaceStyle(false),styles.result]}>
               <GshSectionTitle title={copy.atsOverallMatch} topSpacing="none" />
-              <Text style={styles.resultBody}>{analysis.score.toLocaleString(locale)}/100</Text>
+              <Text style={styles.resultBody}>{analysis.score.toLocaleString(intlLocale)}/100</Text>
               <Text style={styles.resultBody}>{copy.atsScoresHint}</Text>
               {([['keywordMatch','atsMetricKeywords'],['formatScore','atsMetricFormat'],['marketFit','atsMetricMarket'],['recruiterFit','atsMetricRecruiter']] as const).map(([key,label]) =>
-                <Text key={key} style={styles.resultBody}>{copy[label]}: {analysis[key].toLocaleString(locale)}/100</Text>)}
+                <Text key={key} style={styles.resultBody}>{copy[label]}: {analysis[key].toLocaleString(intlLocale)}/100</Text>)}
               {([['matched','atsMatched'],['missing','atsMissing'],['risks','atsRisks'],['actions','atsActions']] as const).map(([key,label]) => analysis[key].length ?
                 <View key={key}><GshSectionTitle title={copy[label]} />{analysis[key].map((text,index) => <Text key={index} style={styles.resultBody}>• {text}</Text>)}</View> : null)}
               {analysis.gapAnalysis.length ? <View><GshSectionTitle title={copy.atsGapAnalysis} />{analysis.gapAnalysis.map((row,index) =>
@@ -129,4 +130,10 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
   },
   resultBody: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 22 },
+});
+
+export default withSignIn(AtsAssistantScreen, {
+  icon: "scan-outline",
+  title: "CV and job comparison",
+  body: "Sign in to compare your CV with a job description.",
 });

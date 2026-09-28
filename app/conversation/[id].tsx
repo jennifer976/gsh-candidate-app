@@ -1,5 +1,6 @@
+import { withSignIn } from "@/components/SignInGate";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
-import { useAppLanguage } from "@/lib/i18n";
+import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -23,9 +24,9 @@ import { useAuthStore } from "@/lib/auth-store";
 import { colors, fontFamily, radii } from "@/lib/theme";
 import { authUserId, type ThreadMessage } from "@/types/models";
 
-export default function ConversationScreen() {
+function ConversationScreen() {
   const ac = useAccountCopy();
-  const locale = useAppLanguage((s) => s.locale);
+  const locale = toIntlLocale(useAppLanguage((s) => s.locale));
   const { id } = useLocalSearchParams<{ id: string }>();
   const conversationId = String(id || "").trim();
   const router = useRouter();
@@ -363,4 +364,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   sendDisabled: { opacity: 0.45 },
+});
+
+export default withSignIn(ConversationScreen, {
+  icon: "chatbubbles-outline",
+  title: "Your messages",
+  body: "Sign in to read and reply to messages from employers.",
 });

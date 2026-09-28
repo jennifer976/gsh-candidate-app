@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { useAppCopy } from "@/lib/i18n";
 import { applicationStatusLabel } from "@/lib/i18n/catalog";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,21 +8,35 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Image,
   Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from "react-native";
+import { useMemo, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshScreenShell } from "@/components/GshScreenShell";
-import { GshTabStickyHeader } from "@/components/GshTabStickyHeader";
-import { brandMark } from "@/lib/brand-assets";
+import { BrandTopBar } from "@/components/BrandTopBar";
+import {
+  BrandChip,
+  BrandStatePanel,
+  DecorRing,
+  DepthSurface,
+  Eyebrow,
+  PosterTitle,
+  posterParts,
+} from "@/components/gsh-brand";
+import { tabBarBottomPadding } from "@/lib/android-insets";
 import { fetchApplications, withdrawApplication } from "@/lib/api-client";
 import { colors, fontFamily, radii } from "@/lib/theme";
 import type { Application, ApplicationJobRef } from "@/types/models";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
+
+type ApplicationFilter = "all" | "active" | "interviewing" | "archived";
 
 function isClosedOrPausedJob(job: ApplicationJobRef | undefined): boolean {
   const status = job?.status?.toLowerCase();
@@ -75,11 +90,14 @@ function formatInterviewDate(
   }
 }
 
-export default function ApplicationsScreen() {
-  const { t, locale } = useAppCopy();
+function ApplicationsScreen() {
+  const { t, locale, intlLocale } = useAppCopy();
+  const ac = useAccountCopy();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<ApplicationFilter>("all");
 
   const query = useQuery({
     queryKey: ["applications"],
@@ -112,15 +130,57 @@ export default function ApplicationsScreen() {
   }
 
   const rows = query.data ?? [];
+  const stats = useMemo(() => {
+    const interviewing = rows.filter((row) =>
+      String(row.status).toLowerCase().includes("interview"),
+    ).length;
+    const archived = rows.filter((row) =>
+      ["rejected", "withdrawn", "hired", "closed"].includes(
+        String(row.status).toLowerCase(),
+      ),
+    ).length;
+    return {
+      all: rows.length,
+      active: Math.max(0, rows.length - archived),
+      interviewing,
+      archived,
+    };
+  }, [rows]);
+  const filteredRows = useMemo(() => {
+    const needle = search.trim().toLowerCase();
+    return rows.filter((row) => {
+      const job = row.jobId as ApplicationJobRef | undefined;
+      const status = String(row.status).toLowerCase();
+      const archived = ["rejected", "withdrawn", "hired", "closed"].includes(status);
+      const filterMatch =
+        filter === "all" ||
+        (filter === "active" && !archived) ||
+        (filter === "interviewing" && status.includes("interview")) ||
+        (filter === "archived" && archived);
+      if (!filterMatch) return false;
+      if (!needle) return true;
+      return [job?.title, job?.companyName, job?.location, status]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(needle));
+    });
+  }, [filter, rows, search]);
+
+  const header = (
+    <View style={styles.header}>
+      <DecorRing size={220} thickness={30} color="rgba(13,25,78,0.08)" style={{ top: -90, right: -80 }} />
+      <BrandTopBar fallback="/(tabs)/saved" />
+      <View style={styles.headerBody}>
+        <Eyebrow color={colors.navy}>{t("applications")}</Eyebrow>
+        <PosterTitle {...posterParts(ac("Your|applications."))} size={34} />
+        <Text style={styles.headerSub}>{t("applicationUpdates")}</Text>
+      </View>
+    </View>
+  );
 
   if (query.isLoading) {
     return (
       <GshScreenShell constrainTabletWidth style={styles.shell}>
-        <GshTabStickyHeader
-          title={t("applications")}
-          subtitle={t("applicationUpdates")}
-          paddingTop={Math.max(insets.top, 12) + 4}
-        />
+        {header}
         <View style={styles.center}>
           <ActivityIndicator size="large" color={colors.cyan} />
           <Text style={styles.muted}>{t("applicationLoading")}</Text>
@@ -132,35 +192,22 @@ export default function ApplicationsScreen() {
   if (query.isError) {
     return (
       <GshScreenShell constrainTabletWidth style={styles.shell}>
-        <GshTabStickyHeader
-          title={t("applications")}
-          subtitle={t("applicationUpdates")}
-          paddingTop={Math.max(insets.top, 12) + 4}
+        {header}
+        <BrandStatePanel
+          icon="cloud-offline-outline"
+          title={t("applicationLoadError")}
+          body={t("retrySupport")}
+          primary={{ label: t("retry"), icon: "refresh", onPress: () => void query.refetch() }}
+          style={styles.statePanel}
         />
-        <View style={styles.center}>
-          <Ionicons name="alert-circle-outline" size={40} color={colors.error} />
-          <Text style={styles.err}>{t("applicationLoadError")}</Text>
-          <Pressable
-            onPress={() => void query.refetch()}
-            accessibilityRole="button"
-            style={styles.retryBtn}
-          >
-            <Text style={styles.retryBtnText}>{t("retry")}</Text>
-          </Pressable>
-        </View>
       </GshScreenShell>
     );
   }
 
   return (
     <GshScreenShell constrainTabletWidth style={styles.shell}>
-      <GshTabStickyHeader
-        title={t("applications")}
-        subtitle={t("applicationUpdates")}
-        paddingTop={Math.max(insets.top, 12) + 4}
-      />
       <FlatList
-        data={rows}
+        data={filteredRows}
         keyExtractor={(item) => item.id ?? item._id}
         style={styles.listFlex}
         refreshControl={
@@ -172,8 +219,64 @@ export default function ApplicationsScreen() {
         }
         contentContainerStyle={[
           styles.listPad,
-          rows.length === 0 && styles.listPadGrow,
+          { paddingBottom: tabBarBottomPadding(insets.bottom) },
+          filteredRows.length === 0 && styles.listPadGrow,
         ]}
+        ListHeaderComponent={
+          <>
+          {header}
+          <View style={styles.workspace}>
+            <DepthSurface depth={4} radius={18} borderWidth={2} borderColor={colors.navy} innerStyle={styles.searchBox}>
+              <Ionicons name="search-outline" size={20} color={colors.textMuted} />
+              <TextInput
+                value={search}
+                onChangeText={setSearch}
+                placeholder={ac("Search applications")}
+                placeholderTextColor={colors.placeholder}
+                style={styles.searchInput}
+              />
+              {search ? (
+                <Pressable
+                  onPress={() => setSearch("")}
+                  accessibilityRole="button"
+                  accessibilityLabel={ac("Clear search")}
+                >
+                  <Ionicons name="close-circle" size={20} color={colors.textMuted} />
+                </Pressable>
+              ) : null}
+            </DepthSurface>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.filters}
+            >
+              {(
+                [
+                  ["all", ac("All"), stats.all],
+                  ["active", ac("Active"), stats.active],
+                  ["interviewing", ac("Interviewing"), stats.interviewing],
+                  ["archived", ac("Archived"), stats.archived],
+                ] as const
+              ).map(([id, label, count]) => (
+                <BrandChip
+                  key={id}
+                  label={`${label} · ${count}`}
+                  selected={filter === id}
+                  onPress={() => setFilter(id)}
+                />
+              ))}
+            </ScrollView>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryText}>
+                {ac("{count} applications", { count: filteredRows.length })}
+              </Text>
+              <Pressable onPress={() => router.push("/application-tracker")}>
+                <Text style={styles.trackerLink}>{ac("Track external applications")}</Text>
+              </Pressable>
+            </View>
+          </View>
+          </>
+        }
         renderItem={({ item }) => {
           const job = item.jobId as ApplicationJobRef | undefined;
           const jid = job?._id;
@@ -191,13 +294,19 @@ export default function ApplicationsScreen() {
           const interviewDate = formatInterviewDate(
             item.interviewSchedule?.scheduledAt,
             item.interviewSchedule?.timezone,
-            locale,
+            intlLocale,
           );
           const meta = [job?.location, job?.jobType].filter(Boolean).join(" · ");
 
           return (
-            <View style={styles.card}>
-              <View style={styles.accent} />
+            <DepthSurface
+              depth={5}
+              radius={20}
+              borderWidth={2}
+              borderColor={colors.navy}
+              style={styles.cardOuter}
+              innerStyle={styles.card}
+            >
               <Pressable
                 onPress={() => jid && router.push(`/job/${jid}`)}
                 disabled={!jid}
@@ -276,7 +385,7 @@ export default function ApplicationsScreen() {
                     </View>
                   ) : null}
                 </View>
-                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                <Ionicons name="chevron-forward" size={18} color={colors.navy} />
               </Pressable>
               {lockedByJobLifecycle ? (
                 <View style={styles.lifecycleNote}>
@@ -299,24 +408,32 @@ export default function ApplicationsScreen() {
                   <Text style={styles.withdrawText}>{t("applicationWithdraw")}</Text>
                 </Pressable>
               ) : null}
-            </View>
+            </DepthSurface>
           );
         }}
         ListEmptyComponent={
-          <View style={styles.emptyWrap}>
-            <View style={styles.emptyMarkWell}>
-              <Image source={brandMark} style={styles.emptyMark} resizeMode="contain" />
-            </View>
-            <Text style={styles.empty}>{t("applicationEmpty")}</Text>
-            <Pressable
-              style={styles.emptyCta}
-              onPress={() => router.push("/(tabs)/jobs")}
-              accessibilityRole="button"
-            >
-              <Text style={styles.emptyCtaText}>{t("homeBrowse")}</Text>
-              <Ionicons name="arrow-forward" size={16} color={colors.navy} />
-            </Pressable>
-          </View>
+          <BrandStatePanel
+            icon={rows.length ? "search-outline" : "document-text-outline"}
+            title={rows.length ? ac("No applications match these filters") : t("applicationEmpty")}
+            body={
+              rows.length
+                ? ac("Try a different word, or clear your filters.")
+                : ac("When you apply for a job, it shows up here with every update.")
+            }
+            primary={
+              rows.length
+                ? {
+                    label: ac("Clear filters"),
+                    icon: "close",
+                    onPress: () => {
+                      setSearch("");
+                      setFilter("all");
+                    },
+                  }
+                : { label: t("homeBrowse"), onPress: () => router.push("/(tabs)/jobs") }
+            }
+            style={styles.statePanel}
+          />
         }
       />
     </GshScreenShell>
@@ -324,33 +441,66 @@ export default function ApplicationsScreen() {
 }
 
 const styles = StyleSheet.create({
-  shell: { backgroundColor: colors.pale },
+  shell: { backgroundColor: colors.white },
   listFlex: { flex: 1 },
-  listPad: { paddingHorizontal: 16, paddingTop: 14, paddingBottom: 40, gap: 12 },
+  listPad: { gap: 14 },
   listPadGrow: { flexGrow: 1 },
-  card: {
-    backgroundColor: colors.white,
-    borderRadius: radii.lg,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
-    overflow: "hidden",
-    position: "relative",
-  },
-  accent: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 4,
+  header: {
     backgroundColor: colors.cyan,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
+    paddingBottom: 24,
+    overflow: "hidden",
   },
+  headerBody: { paddingHorizontal: 20, paddingTop: 16, gap: 10 },
+  headerSub: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: fontFamily.medium,
+    color: "rgba(13,25,78,0.78)",
+  },
+  workspace: { gap: 12, marginTop: 18, marginBottom: 2, paddingHorizontal: 16 },
+  searchBox: {
+    minHeight: 50,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 9,
+    paddingHorizontal: 14,
+  },
+  searchInput: {
+    flex: 1,
+    minWidth: 0,
+    minHeight: 46,
+    fontFamily: fontFamily.regular,
+    fontSize: 15,
+    color: colors.navy,
+  },
+  filters: { gap: 8, paddingRight: 4, paddingBottom: 4 },
+  summaryRow: {
+    minHeight: 40,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
+  },
+  summaryText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 12,
+    color: colors.textMuted,
+  },
+  trackerLink: {
+    fontFamily: fontFamily.bold,
+    fontSize: 12,
+    color: colors.navy,
+    textDecorationLine: "underline",
+  },
+  cardOuter: { marginHorizontal: 16 },
+  card: { overflow: "hidden" },
   cardMain: {
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    paddingLeft: 18,
+    padding: 16,
   },
   cardMid: { flex: 1, minWidth: 0, gap: 4 },
   company: {
@@ -374,52 +524,51 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginTop: 6,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 4,
     borderRadius: radii.pill,
-    backgroundColor: colors.brandSoft,
+    borderWidth: 1.5,
+    borderColor: colors.navy,
+    backgroundColor: colors.pale,
   },
-  statusPillGood: { backgroundColor: "rgba(21,128,61,0.12)" },
-  statusPillBad: { backgroundColor: "rgba(185,28,28,0.1)" },
+  statusPillGood: { backgroundColor: colors.cyan },
+  statusPillBad: { backgroundColor: colors.white, borderColor: colors.borderStrong },
   statusPillText: {
     fontSize: 12,
-    fontFamily: fontFamily.semiBold,
+    fontFamily: fontFamily.bold,
     color: colors.navy,
   },
-  statusPillTextGood: { color: "#15803d" },
-  statusPillTextBad: { color: colors.error },
+  statusPillTextGood: { color: colors.navy },
+  statusPillTextBad: { color: colors.textMuted },
   interviewCard: {
     marginTop: 10,
     padding: 12,
     gap: 4,
-    borderRadius: radii.md,
-    backgroundColor: colors.pale,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
+    borderRadius: 14,
+    backgroundColor: colors.navy,
   },
   interviewTitle: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-    letterSpacing: 0.4,
+    fontSize: 11,
+    fontFamily: fontFamily.extraBold,
+    color: colors.cyan,
+    letterSpacing: 1,
     textTransform: "uppercase",
   },
   interviewDetail: {
     fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: colors.textSecondary,
+    fontFamily: fontFamily.semiBold,
+    color: colors.white,
     lineHeight: 18,
   },
   interviewNotes: {
     marginTop: 2,
     fontSize: 13,
     fontFamily: fontFamily.regular,
-    color: colors.textMuted,
+    color: "rgba(255,255,255,0.7)",
     lineHeight: 18,
   },
   lifecycleNote: {
     paddingHorizontal: 16,
     paddingBottom: 14,
-    paddingLeft: 18,
   },
   lifecycleNoteText: {
     fontSize: 13,
@@ -430,18 +579,17 @@ const styles = StyleSheet.create({
   withdraw: {
     marginHorizontal: 16,
     marginBottom: 14,
-    marginLeft: 18,
-    minHeight: 40,
+    minHeight: 44,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: radii.pill,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "rgba(185,28,28,0.28)",
-    backgroundColor: "rgba(185,28,28,0.04)",
+    borderWidth: 1.5,
+    borderColor: "rgba(185,28,28,0.35)",
+    backgroundColor: colors.white,
   },
   withdrawText: {
     fontSize: 14,
-    fontFamily: fontFamily.semiBold,
+    fontFamily: fontFamily.bold,
     color: colors.error,
   },
   center: {
@@ -456,59 +604,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: fontFamily.medium,
   },
-  err: {
-    color: colors.error,
-    textAlign: "center",
-    fontFamily: fontFamily.medium,
-  },
-  retryBtn: {
-    marginTop: 4,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: radii.pill,
-    backgroundColor: colors.navy,
-  },
-  retryBtnText: {
-    color: colors.white,
-    fontFamily: fontFamily.semiBold,
-    fontSize: 15,
-  },
-  emptyWrap: {
-    alignItems: "center",
-    marginTop: 36,
-    paddingHorizontal: 24,
-    gap: 12,
-  },
-  emptyMarkWell: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: colors.brandSoft,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  emptyMark: { width: 40, height: 40 },
-  empty: {
-    fontFamily: fontFamily.heading,
-    fontSize: 18,
-    color: colors.navy,
-    textAlign: "center",
-    letterSpacing: -0.2,
-  },
-  emptyCta: {
-    marginTop: 4,
-    minHeight: 48,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: radii.pill,
-    backgroundColor: colors.cyan,
-  },
-  emptyCtaText: {
-    fontSize: 15,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-  },
+  statePanel: { marginHorizontal: 16, marginTop: 16 },
+});
+
+export default withSignIn(ApplicationsScreen, {
+  icon: "document-text-outline",
+  title: "Track your applications",
+  body: "Sign in to see every job you have applied for and where it stands.",
 });

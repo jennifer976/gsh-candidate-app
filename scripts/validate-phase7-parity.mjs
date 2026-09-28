@@ -99,7 +99,9 @@ if (
   errors.push("extraction review fixture must decide every suggestion exactly once");
 }
 
-const relocationDetail = source("app/relocation-help/[id].tsx");
+const relocationDetail =
+  source("app/relocation-help/[id].tsx") +
+  source("components/RelocationHelpRequestDetailScreen.tsx");
 if (!relocationDetail.includes("fetchMyRelocationHelpRequest")) {
   errors.push("relocation detail must use the candidate-owned detail endpoint");
 }

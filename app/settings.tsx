@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { AppLanguageSetting } from "@/components/AppLanguageSetting";
 import { useAppCopy } from "@/lib/i18n";
 import { Ionicons } from "@expo/vector-icons";
@@ -30,7 +31,7 @@ import { LEGAL_IN_APP } from "@/lib/legal/inAppRoutes";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
-export default function SettingsScreen() {
+function SettingsScreen() {
   const { t } = useAppCopy();
   const router = useRouter();
   const clearAuth = useAuthStore((s) => s.clearAuth);
@@ -388,4 +389,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.error,
   },
+});
+
+export default withSignIn(SettingsScreen, {
+  icon: "settings-outline",
+  title: "Account settings",
+  body: "Sign in to manage your account, notifications and privacy.",
 });

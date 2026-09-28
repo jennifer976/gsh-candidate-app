@@ -1,0 +1,2466 @@
+{
+  "countries": [
+    {
+      "slug": "australia",
+      "name": "Australia",
+      "title": "Visa sponsorship jobs in Australia",
+      "iso2": "au",
+      "blurb": "Employer-nominated and skilled routes, with labelled listings.",
+      "mainRoute": "Skills in Demand (482) or points-tested skilled",
+      "pathType": "Mixed",
+      "workLanguage": "English",
+      "currencyCode": "AUD",
+      "hiringSectors": [
+        "Healthcare",
+        "Engineering and resources",
+        "Technology",
+        "Education"
+      ],
+      "familyNote": "Family applicants must meet the conditions for the relevant visa stream.",
+      "bestIf": "Your occupation is listed and you can meet English / skills assessment rules",
+      "watchOut": "Check the visa stream, occupation, assessment and nomination requirements.",
+      "visaGuideSlug": "australia-skilled-visa-jobs",
+      "faqs": [
+        {
+          "question": "Can I apply from outside Australia?",
+          "answer": "Many employers hire candidates who are overseas, but visa eligibility and timing depend on the specific visa and role. Check each listing and official visa guidance. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Does Global Sponsor Hub guarantee a visa?",
+          "answer": "No. Global Sponsor Hub helps you find opportunities. The responsible government authority decides visa applications. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "What if a role is marked “relocation support”?",
+          "answer": "Benefit labels describe what employers choose to advertise. Details vary. Confirm what is included directly with the hiring team. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "Department of Home Affairs — Immigration & citizenship",
+          "href": "https://immi.homeaffairs.gov.au/"
+        },
+        {
+          "label": "Home Affairs — Visas — Working in Australia",
+          "href": "https://immi.homeaffairs.gov.au/visas/working-in-australia"
+        },
+        {
+          "label": "Confirm the employer-sponsored route · smartmoveaustralia.gov.au",
+          "href": "https://www.smartmoveaustralia.gov.au/visa-pathways/skills-demand-visa"
+        },
+        {
+          "label": "Confirm the employer-sponsored route · immi.homeaffairs.gov.au",
+          "href": "https://immi.homeaffairs.gov.au/Visa-subsite/Pages/work/skills-in-demand-482-landing.aspx"
+        },
+        {
+          "label": "Check salary and occupation requirements · immi.homeaffairs.gov.au",
+          "href": "https://immi.homeaffairs.gov.au/visas/employing-and-sponsoring-someone/sponsoring-workers/nominating-a-position/salary-requirements"
+        },
+        {
+          "label": "Check your skills evidence · immi.homeaffairs.gov.au",
+          "href": "https://immi.homeaffairs.gov.au/visas/working-in-australia/skills-assessment"
+        },
+        {
+          "label": "Treat permanent residence as a separate application · immi.homeaffairs.gov.au",
+          "href": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/employer-nomination-scheme-186/temporary-residence-transition-stream"
+        },
+        {
+          "label": "Arrange health cover · servicesaustralia.gov.au",
+          "href": "https://www.servicesaustralia.gov.au/enrolling-medicare?context=60092"
+        },
+        {
+          "label": "Compare the full offer · my.gov.au",
+          "href": "https://my.gov.au/en/services/living-arrangements/coming-to-australia/coming-to-australia-to-work/tax-and-superannuation-as-a-visa-holder"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in",
+          "atCountry": "Australia",
+          "toPrefix": "to",
+          "toCountry": "Australia"
+        },
+        "fr": {
+          "atPrefix": "en",
+          "atCountry": "Australie",
+          "toPrefix": "en",
+          "toCountry": "Australie"
+        },
+        "de": {
+          "atPrefix": "in",
+          "atCountry": "Australien",
+          "toPrefix": "nach",
+          "toCountry": "Australien"
+        },
+        "es": {
+          "atPrefix": "en",
+          "atCountry": "Australia",
+          "toPrefix": "a",
+          "toCountry": "Australia"
+        },
+        "pt": {
+          "atPrefix": "na",
+          "atCountry": "Austrália",
+          "toPrefix": "para a",
+          "toCountry": "Austrália"
+        },
+        "it": {
+          "atPrefix": "in",
+          "atCountry": "Australia",
+          "toPrefix": "in",
+          "toCountry": "Australia"
+        },
+        "nl": {
+          "atPrefix": "in",
+          "atCountry": "Australië",
+          "toPrefix": "naar",
+          "toCountry": "Australië"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Australii",
+          "toPrefix": "do",
+          "toCountry": "Australii"
+        }
+      }
+    },
+    {
+      "slug": "canada",
+      "name": "Canada",
+      "title": "Visa sponsorship jobs in Canada",
+      "iso2": "ca",
+      "blurb": "Employer-labelled roles, plus federal and provincial routes to research.",
+      "mainRoute": "Express Entry / employer work permits",
+      "pathType": "Mixed",
+      "workLanguage": "English and French",
+      "currencyCode": "CAD",
+      "hiringSectors": [
+        "Healthcare",
+        "Technology",
+        "Skilled trades",
+        "Engineering"
+      ],
+      "familyNote": "Family work permits have separate requirements; a worker’s permit does not automatically cover a spouse.",
+      "bestIf": "You want PR options and can score competitively — or have employer support",
+      "watchOut": "Work permits and permanent residence have separate criteria.",
+      "visaGuideSlug": "canada-work-permit-jobs",
+      "faqs": [
+        {
+          "question": "Do all jobs on Global Sponsor Hub include visa sponsorship?",
+          "answer": "No. Each listing shows what the employer offers (for example visa sponsorship or relocation support). Always read the job details and confirm with the employer. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Is a job offer the same as a work permit?",
+          "answer": "No. A job offer is not a work permit. You must have the work authorisation required for your circumstances before starting the job. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Who can use Global Sponsor Hub?",
+          "answer": "Candidates exploring international roles, employers hiring across borders, and specialists can all use the platform for their side of the hiring journey. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "IRCC — Immigration and citizenship",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship.html"
+        },
+        {
+          "label": "IRCC — Work in Canada (temp permits & programmes)",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html"
+        },
+        {
+          "label": "IRCC — Immigrate to Canada (Express Entry & pathways)",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada.html"
+        },
+        {
+          "label": "ESDC — Labour Market Impact Assessment",
+          "href": "https://www.canada.ca/en/employment-social-development/services/foreign-workers.html"
+        },
+        {
+          "label": "Check if you need a work permit · canada.ca",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/need-permit.html"
+        },
+        {
+          "label": "Open work permits · canada.ca",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/open-work-permit.html"
+        },
+        {
+          "label": "Work permit documents · canada.ca",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-outside/forms-documents.html"
+        },
+        {
+          "label": "Applying from outside Canada · canada.ca",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/application-forms-guides/guide-5487-applying-work-permit-outside-canada.html"
+        },
+        {
+          "label": "Keep permanent residence separate · canada.ca",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/job-offer.html"
+        },
+        {
+          "label": "Check professional registration · ircc.canada.ca",
+          "href": "https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=683&top="
+        },
+        {
+          "label": "Check professional registration · canada.ca",
+          "href": "https://www.canada.ca/content/dam/ircc/documents/pdf/english/corporate/publications-manuals/welcome_to_canada_employment_e.pdf"
+        },
+        {
+          "label": "Health care in Canada · canada.ca",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/settle-canada/health-care.html"
+        },
+        {
+          "label": "After applying for a work permit · canada.ca",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada/permit-inside/after-apply.html"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in",
+          "atCountry": "Canada",
+          "toPrefix": "to",
+          "toCountry": "Canada"
+        },
+        "fr": {
+          "atPrefix": "au",
+          "atCountry": "Canada",
+          "toPrefix": "au",
+          "toCountry": "Canada"
+        },
+        "de": {
+          "atPrefix": "in",
+          "atCountry": "Kanada",
+          "toPrefix": "nach",
+          "toCountry": "Kanada"
+        },
+        "es": {
+          "atPrefix": "en",
+          "atCountry": "Canadá",
+          "toPrefix": "a",
+          "toCountry": "Canadá"
+        },
+        "pt": {
+          "atPrefix": "no",
+          "atCountry": "Canadá",
+          "toPrefix": "para o",
+          "toCountry": "Canadá"
+        },
+        "it": {
+          "atPrefix": "in",
+          "atCountry": "Canada",
+          "toPrefix": "in",
+          "toCountry": "Canada"
+        },
+        "nl": {
+          "atPrefix": "in",
+          "atCountry": "Canada",
+          "toPrefix": "naar",
+          "toCountry": "Canada"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Kanadzie",
+          "toPrefix": "do",
+          "toCountry": "Kanady"
+        }
+      }
+    },
+    {
+      "slug": "germany",
+      "name": "Germany",
+      "title": "Visa sponsorship jobs in Germany",
+      "iso2": "de",
+      "blurb": "EU Blue Card context and employer-labelled roles.",
+      "mainRoute": "EU Blue Card / skilled worker routes",
+      "pathType": "Employer-led",
+      "workLanguage": "German (English in some teams)",
+      "currencyCode": "EUR",
+      "hiringSectors": [
+        "Engineering",
+        "Manufacturing",
+        "Software",
+        "Healthcare"
+      ],
+      "familyNote": "Family members can apply under the relevant reunification rules; timing and approval are not automatic.",
+      "bestIf": "You have a qualifying offer and meet the job, qualification and pay rules",
+      "watchOut": "Check qualification recognition, pay, job requirements and registration steps.",
+      "visaGuideSlug": "germany-eu-blue-card-jobseekers",
+      "faqs": [
+        {
+          "question": "Do I need German fluency for every role?",
+          "answer": "Language requirements vary by role, employer and profession. Check the listing and ask which level of German is needed; do not infer it from the job title. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Are salaries shown net or gross?",
+          "answer": "Employers may display compensation differently. Confirm currency, period (month vs year), and gross vs net with the employer. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Where can I verify visa types?",
+          "answer": "See official guidance from German immigration authorities and, if needed, a qualified immigration adviser. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "Make-it-in-Germany (Federal government portal)",
+          "href": "https://www.make-it-in-germany.com/en/"
+        },
+        {
+          "label": "Federal Foreign Office — Visa service",
+          "href": "https://www.auswaertiges-amt.de/en/visa-service"
+        },
+        {
+          "label": "Working in Germany",
+          "href": "https://www.make-it-in-germany.com/en/visa-residence/types/eu-blue-card"
+        },
+        {
+          "label": "Start with the right work route · make-it-in-germany.com",
+          "href": "https://www.make-it-in-germany.com/en/visa-residence/types/work-qualified-professionals"
+        },
+        {
+          "label": "Check the Blue Card salary rules · arbeitsagentur.de",
+          "href": "https://www.arbeitsagentur.de/vor-ort/zav/working-and-living-in-germany/iss-en/issue-03-2026/blue-card"
+        },
+        {
+          "label": "Check recognition and professional permission · make-it-in-germany.com",
+          "href": "https://www.make-it-in-germany.com/en/working-in-germany/recognition/who-needs"
+        },
+        {
+          "label": "Looking before you have an offer · make-it-in-germany.com",
+          "href": "https://www.make-it-in-germany.com/en/visa-residence/opportunity-card/job-search"
+        },
+        {
+          "label": "Plan family arrangements separately · make-it-in-germany.com",
+          "href": "https://www.make-it-in-germany.com/en/visa-residence/family-reunification/spouses-joining-citizens-non-eu"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in",
+          "atCountry": "Germany",
+          "toPrefix": "to",
+          "toCountry": "Germany"
+        },
+        "fr": {
+          "atPrefix": "en",
+          "atCountry": "Allemagne",
+          "toPrefix": "en",
+          "toCountry": "Allemagne"
+        },
+        "de": {
+          "atPrefix": "in",
+          "atCountry": "Deutschland",
+          "toPrefix": "nach",
+          "toCountry": "Deutschland"
+        },
+        "es": {
+          "atPrefix": "en",
+          "atCountry": "Alemania",
+          "toPrefix": "a",
+          "toCountry": "Alemania"
+        },
+        "pt": {
+          "atPrefix": "na",
+          "atCountry": "Alemanha",
+          "toPrefix": "para a",
+          "toCountry": "Alemanha"
+        },
+        "it": {
+          "atPrefix": "in",
+          "atCountry": "Germania",
+          "toPrefix": "in",
+          "toCountry": "Germania"
+        },
+        "nl": {
+          "atPrefix": "in",
+          "atCountry": "Duitsland",
+          "toPrefix": "naar",
+          "toCountry": "Duitsland"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Niemczech",
+          "toPrefix": "do",
+          "toCountry": "Niemiec"
+        }
+      }
+    },
+    {
+      "slug": "ireland",
+      "name": "Ireland",
+      "title": "Visa sponsorship jobs in Ireland",
+      "iso2": "ie",
+      "blurb": "Critical Skills context and employer-labelled listings.",
+      "mainRoute": "Critical Skills / employment permits",
+      "pathType": "Employer-led",
+      "workLanguage": "English",
+      "currencyCode": "EUR",
+      "hiringSectors": [
+        "Technology",
+        "Biopharma",
+        "Finance",
+        "Shared services"
+      ],
+      "familyNote": "Check family joining and work conditions for your permit type.",
+      "bestIf": "Your role sits on critical skills lists with a qualifying salary",
+      "watchOut": "Check the occupation, salary, permit and residence registration requirements.",
+      "visaGuideSlug": "ireland-employment-permits-job-search",
+      "faqs": [
+        {
+          "question": "Can I move with family?",
+          "answer": "Family options depend on your permit and each person’s circumstances. Check the official rules for joining you and working before making plans. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "How fast can I start?",
+          "answer": "Timelines vary by permit type, documentation, and processing backlogs. Treat employer estimates as guidance, not guarantees. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Is Global Sponsor Hub only for tech?",
+          "answer": "No. You can filter by industry to surface healthcare, finance, operations, and other sectors. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "Irish Immigration Service — Immigration service delivery",
+          "href": "https://www.irishimmigration.ie/"
+        },
+        {
+          "label": "Department of Enterprise, Trade & Employment — Employment permits",
+          "href": "https://enterprise.gov.ie/en/What-We-Do/Workplace-and-Skills/Employment-Permits/"
+        },
+        {
+          "label": "Irish employment permits",
+          "href": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/critical-skills-employment-permit/"
+        },
+        {
+          "label": "Start with your work rights · irishimmigration.ie",
+          "href": "https://www.irishimmigration.ie/coming-to-work-in-ireland/"
+        },
+        {
+          "label": "Check the permit for this job · enterprise.gov.ie",
+          "href": "https://enterprise.gov.ie/en/what-we-do/workplace-and-skills/employment-permits/permit-types/general-employment-permit/"
+        },
+        {
+          "label": "Confirm pay and employer requirements · enterprise.gov.ie",
+          "href": "https://www.enterprise.gov.ie/en/what-we-do/workplace-and-skills/economic-migration-policy/minimum-annual-remuneration/"
+        },
+        {
+          "label": "Plan for anyone moving with you · irishimmigration.ie",
+          "href": "https://www.irishimmigration.ie/coming-to-join-family-in-ireland/frequently-asked-questions-for-joining-family/"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in",
+          "atCountry": "Ireland",
+          "toPrefix": "to",
+          "toCountry": "Ireland"
+        },
+        "fr": {
+          "atPrefix": "en",
+          "atCountry": "Irlande",
+          "toPrefix": "en",
+          "toCountry": "Irlande"
+        },
+        "de": {
+          "atPrefix": "in",
+          "atCountry": "Irland",
+          "toPrefix": "nach",
+          "toCountry": "Irland"
+        },
+        "es": {
+          "atPrefix": "en",
+          "atCountry": "Irlanda",
+          "toPrefix": "a",
+          "toCountry": "Irlanda"
+        },
+        "pt": {
+          "atPrefix": "na",
+          "atCountry": "Irlanda",
+          "toPrefix": "para a",
+          "toCountry": "Irlanda"
+        },
+        "it": {
+          "atPrefix": "in",
+          "atCountry": "Irlanda",
+          "toPrefix": "in",
+          "toCountry": "Irlanda"
+        },
+        "nl": {
+          "atPrefix": "in",
+          "atCountry": "Ierland",
+          "toPrefix": "naar",
+          "toCountry": "Ierland"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Irlandii",
+          "toPrefix": "do",
+          "toCountry": "Irlandii"
+        }
+      }
+    },
+    {
+      "slug": "netherlands",
+      "name": "Netherlands",
+      "title": "Visa sponsorship jobs in Netherlands",
+      "iso2": "nl",
+      "blurb": "Highly Skilled Migrant context and labelled roles.",
+      "mainRoute": "Highly Skilled Migrant / orientation year",
+      "pathType": "Mixed",
+      "workLanguage": "Dutch (English common in many roles)",
+      "currencyCode": "EUR",
+      "hiringSectors": [
+        "Logistics",
+        "Technology",
+        "Agrifood",
+        "Finance"
+      ],
+      "familyNote": "Family permission depends on the sponsor’s permit and the applicable family rules.",
+      "bestIf": "You have a recognised sponsor or a graduate orientation-year window",
+      "watchOut": "Check the recognised sponsor, salary category and your permit requirements.",
+      "visaGuideSlug": "netherlands-highly-skilled-migrant-jobs",
+      "faqs": [
+        {
+          "question": "Do I need a diploma evaluation?",
+          "answer": "Qualification checks depend on the work route and profession. Check whether a diploma evaluation or professional recognition is required; nationality alone does not decide this. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Is Dutch mandatory?",
+          "answer": "Depends on the role. Customer-facing roles often require Dutch; many tech teams operate in English. Verify per listing. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Where are official visa rules?",
+          "answer": "Check the Immigration and Naturalisation Service (IND) for authoritative requirements. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "IND — Immigration & Naturalisation Service",
+          "href": "https://ind.nl/en"
+        },
+        {
+          "label": "Graduate orientation year — IND",
+          "href": "https://ind.nl/en/residence-permits/work/residence-permit-for-orientation-year"
+        },
+        {
+          "label": "Dutch highly skilled migrant permit",
+          "href": "https://ind.nl/en/residence-permits/work/highly-skilled-migrant"
+        },
+        {
+          "label": "Check the recognised sponsor · ind.nl",
+          "href": "https://ind.nl/en/public-register-recognised-sponsors"
+        },
+        {
+          "label": "Compare the correct salary figure · ind.nl",
+          "href": "https://ind.nl/en/required-amounts-income-requirements"
+        },
+        {
+          "label": "Consider the EU Blue Card separately · ind.nl",
+          "href": "https://ind.nl/en/residence-permits/work/european-blue-card-residence-permit"
+        },
+        {
+          "label": "Keep tax relief separate from work permission · belastingdienst.nl",
+          "href": "https://www.belastingdienst.nl/wps/wcm/connect/en/individuals/content/coming-to-work-in-the-netherlands-30-percent-facility"
+        },
+        {
+          "label": "Prepare for arrival · government.nl",
+          "href": "https://www.government.nl/faq/what-do-i-need-to-arrange-if-im-moving-to-the-netherlands"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in the",
+          "atCountry": "Netherlands",
+          "toPrefix": "to the",
+          "toCountry": "Netherlands"
+        },
+        "fr": {
+          "atPrefix": "aux",
+          "atCountry": "Pays-Bas",
+          "toPrefix": "aux",
+          "toCountry": "Pays-Bas"
+        },
+        "de": {
+          "atPrefix": "in den",
+          "atCountry": "Niederlanden",
+          "toPrefix": "in die",
+          "toCountry": "Niederlande"
+        },
+        "es": {
+          "atPrefix": "en los",
+          "atCountry": "Países Bajos",
+          "toPrefix": "a los",
+          "toCountry": "Países Bajos"
+        },
+        "pt": {
+          "atPrefix": "nos",
+          "atCountry": "Países Baixos",
+          "toPrefix": "para os",
+          "toCountry": "Países Baixos"
+        },
+        "it": {
+          "atPrefix": "nei",
+          "atCountry": "Paesi Bassi",
+          "toPrefix": "nei",
+          "toCountry": "Paesi Bassi"
+        },
+        "nl": {
+          "atPrefix": "in",
+          "atCountry": "Nederland",
+          "toPrefix": "naar",
+          "toCountry": "Nederland"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Holandii",
+          "toPrefix": "do",
+          "toCountry": "Holandii"
+        }
+      }
+    },
+    {
+      "slug": "new-zealand",
+      "name": "New Zealand",
+      "title": "Visa sponsorship jobs in New Zealand",
+      "iso2": "nz",
+      "blurb": "Accredited-employer context and labelled listings.",
+      "mainRoute": "Accredited Employer Work Visa (AEWV)",
+      "pathType": "Employer-led",
+      "workLanguage": "English",
+      "currencyCode": "NZD",
+      "hiringSectors": [
+        "Healthcare",
+        "Infrastructure",
+        "Agriculture",
+        "Tourism"
+      ],
+      "familyNote": "Family options depend on the worker’s visa, pay and other applicable conditions.",
+      "bestIf": "An accredited employer will hire you and lifestyle fit matters",
+      "watchOut": "Check employer accreditation, job requirements and your visa conditions.",
+      "visaGuideSlug": "new-zealand-accredited-employer-jobs",
+      "faqs": [
+        {
+          "question": "Is a skills assessment always required?",
+          "answer": "Requirements depend on visa type and occupation. Official INZ guidance and regulated bodies define what applies to you. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Can I take a New Zealand job as a visitor?",
+          "answer": "You need permission that allows the New Zealand job. Visitor rules can allow remote work for an overseas employer or client, but this is different from working for a New Zealand employer. Check your visa conditions before starting. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Does Global Sponsor Hub replace an immigration lawyer?",
+          "answer": "No. Use qualified advisers where your case is complex; use Global Sponsor Hub to discover opportunities and apply. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "Immigration New Zealand",
+          "href": "https://www.immigration.govt.nz/"
+        },
+        {
+          "label": "New Zealand Accredited Employer Work Visa",
+          "href": "https://www.immigration.govt.nz/visas/accredited-employer-work-visa/"
+        },
+        {
+          "label": "Read the work conditions · immigration.govt.nz",
+          "href": "https://www.immigration.govt.nz/visit/checking-or-changing-the-conditions-of-your-visitor-visa-or-nzeta/working-remotely-in-new-zealand-on-a-visitor-visa/"
+        },
+        {
+          "label": "Check residence separately · immigration.govt.nz",
+          "href": "https://www.immigration.govt.nz/live/resident-visas-to-live-in-new-zealand/skilled-residence-pathways-in-new-zealand/green-list-pathway-to-residence/"
+        },
+        {
+          "label": "Check each family member’s options · immigration.govt.nz",
+          "href": "https://www.immigration.govt.nz/process-to-apply/once-you-have-a-visa/bringing-family-to-new-zealand/bringing-family-if-you-have-a-work-visa/bringing-family-if-you-have-an-accredited-employer-work-visa-aewv/"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in",
+          "atCountry": "New Zealand",
+          "toPrefix": "to",
+          "toCountry": "New Zealand"
+        },
+        "fr": {
+          "atPrefix": "en",
+          "atCountry": "Nouvelle-Zélande",
+          "toPrefix": "en",
+          "toCountry": "Nouvelle-Zélande"
+        },
+        "de": {
+          "atPrefix": "in",
+          "atCountry": "Neuseeland",
+          "toPrefix": "nach",
+          "toCountry": "Neuseeland"
+        },
+        "es": {
+          "atPrefix": "en",
+          "atCountry": "Nueva Zelanda",
+          "toPrefix": "a",
+          "toCountry": "Nueva Zelanda"
+        },
+        "pt": {
+          "atPrefix": "na",
+          "atCountry": "Nova Zelândia",
+          "toPrefix": "para a",
+          "toCountry": "Nova Zelândia"
+        },
+        "it": {
+          "atPrefix": "in",
+          "atCountry": "Nuova Zelanda",
+          "toPrefix": "in",
+          "toCountry": "Nuova Zelanda"
+        },
+        "nl": {
+          "atPrefix": "in",
+          "atCountry": "Nieuw-Zeeland",
+          "toPrefix": "naar",
+          "toCountry": "Nieuw-Zeeland"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Nowej Zelandii",
+          "toPrefix": "do",
+          "toCountry": "Nowej Zelandii"
+        }
+      }
+    },
+    {
+      "slug": "singapore",
+      "name": "Singapore",
+      "title": "Visa sponsorship jobs in Singapore",
+      "iso2": "sg",
+      "blurb": "Employment Pass context and employer-labelled roles.",
+      "mainRoute": "Employment Pass (COMPASS)",
+      "pathType": "Employer-led",
+      "workLanguage": "English",
+      "currencyCode": "SGD",
+      "hiringSectors": [
+        "Finance",
+        "Technology",
+        "Trade and maritime",
+        "Biomedical"
+      ],
+      "familyNote": "Family pass eligibility and work rights are separate from your own Employment Pass.",
+      "bestIf": "You have an EP-eligible offer in finance, tech, or regional HQ roles",
+      "watchOut": "Check salary for your age and sector, COMPASS and the employer’s application.",
+      "visaGuideSlug": "singapore-employment-pass-jobs",
+      "faqs": [
+        {
+          "question": "Are contract roles eligible for passes?",
+          "answer": "It depends on the pass, pay and employment arrangement. Ask the employer which pass it proposes and check the Ministry of Manpower requirements. The employer does not decide pass approval. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Does every listing include a salary range?",
+          "answer": "Not always. When missing, ask early so you can assess pass feasibility. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Can specialists help with Singapore passes?",
+          "answer": "Browse specialists by service and country. Check their relevant registration and experience before requesting help. A directory listing does not guarantee pass approval. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "Ministry of Manpower — Work passes & permits",
+          "href": "https://www.mom.gov.sg/passes-and-permits"
+        },
+        {
+          "label": "Singapore Employment Pass",
+          "href": "https://www.mom.gov.sg/passes-and-permits/employment-pass/eligibility"
+        },
+        {
+          "label": "Confirm the employer’s application · mom.gov.sg",
+          "href": "https://www.mom.gov.sg/passes-and-permits/employment-pass"
+        },
+        {
+          "label": "Treat S Pass as a different route · mom.gov.sg",
+          "href": "https://www.mom.gov.sg/passes-and-permits/s-pass/eligibility"
+        },
+        {
+          "label": "Check the step that allows you to start · mom.gov.sg",
+          "href": "https://www.mom.gov.sg/passes-and-permits/employment-pass/apply-for-a-pass"
+        },
+        {
+          "label": "Dependant’s Pass requirements · mom.gov.sg",
+          "href": "https://www.mom.gov.sg/passes-and-permits/dependants-pass/eligibility"
+        },
+        {
+          "label": "Working with a Dependant’s Pass · mom.gov.sg",
+          "href": "https://www.mom.gov.sg/passes-and-permits/dependants-pass/working-in-singapore"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in",
+          "atCountry": "Singapore",
+          "toPrefix": "to",
+          "toCountry": "Singapore"
+        },
+        "fr": {
+          "atPrefix": "à",
+          "atCountry": "Singapour",
+          "toPrefix": "à",
+          "toCountry": "Singapour"
+        },
+        "de": {
+          "atPrefix": "in",
+          "atCountry": "Singapur",
+          "toPrefix": "nach",
+          "toCountry": "Singapur"
+        },
+        "es": {
+          "atPrefix": "en",
+          "atCountry": "Singapur",
+          "toPrefix": "a",
+          "toCountry": "Singapur"
+        },
+        "pt": {
+          "atPrefix": "em",
+          "atCountry": "Singapura",
+          "toPrefix": "para",
+          "toCountry": "Singapura"
+        },
+        "it": {
+          "atPrefix": "a",
+          "atCountry": "Singapore",
+          "toPrefix": "a",
+          "toCountry": "Singapore"
+        },
+        "nl": {
+          "atPrefix": "in",
+          "atCountry": "Singapore",
+          "toPrefix": "naar",
+          "toCountry": "Singapore"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Singapurze",
+          "toPrefix": "do",
+          "toCountry": "Singapuru"
+        }
+      }
+    },
+    {
+      "slug": "switzerland",
+      "name": "Switzerland",
+      "title": "Visa sponsorship jobs in Switzerland",
+      "iso2": "ch",
+      "blurb": "Permit quotas and employer-labelled listings.",
+      "mainRoute": "Cantonal work permit (quota-sensitive for many non-EU)",
+      "pathType": "Employer-led",
+      "workLanguage": "German, French, or Italian by canton",
+      "currencyCode": "CHF",
+      "hiringSectors": [
+        "Pharma",
+        "Finance",
+        "Precision manufacturing",
+        "Science"
+      ],
+      "familyNote": "Family permission depends on nationality, permit and the applicable requirements.",
+      "bestIf": "A Swiss employer supports the application and the household budget works",
+      "watchOut": "Check nationality-specific rules, cantonal approval and any applicable limits.",
+      "visaGuideSlug": null,
+      "faqs": [
+        {
+          "question": "Is Switzerland the same as the EU for work?",
+          "answer": "No. Switzerland participates in some agreements but maintains distinct permit rules, especially for non-EU nationals. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Are salaries always high?",
+          "answer": "Gross pay can be strong, but cost of living, especially housing, varies by city. Evaluate total compensation carefully. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Can Global Sponsor Hub show quota status?",
+          "answer": "No. Check current limits and the application process with the Swiss authorities and the employer. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "SEM",
+          "href": "https://www.sem.admin.ch/sem/en/home/themen/arbeit/nicht-eu_efta-angehoerige/grundlagen_zur_arbeitsmarktzulassung.html"
+        },
+        {
+          "label": "Work in Switzerland (official portal)",
+          "href": "https://www.ch.ch/en/foreign-nationals-in-switzerland/working-in-switzerland/"
+        },
+        {
+          "label": "Working in Switzerland",
+          "href": "https://www.sem.admin.ch/sem/en/home/overview-arbeit.html"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in",
+          "atCountry": "Switzerland",
+          "toPrefix": "to",
+          "toCountry": "Switzerland"
+        },
+        "fr": {
+          "atPrefix": "en",
+          "atCountry": "Suisse",
+          "toPrefix": "en",
+          "toCountry": "Suisse"
+        },
+        "de": {
+          "atPrefix": "in der",
+          "atCountry": "Schweiz",
+          "toPrefix": "in die",
+          "toCountry": "Schweiz"
+        },
+        "es": {
+          "atPrefix": "en",
+          "atCountry": "Suiza",
+          "toPrefix": "a",
+          "toCountry": "Suiza"
+        },
+        "pt": {
+          "atPrefix": "na",
+          "atCountry": "Suíça",
+          "toPrefix": "para a",
+          "toCountry": "Suíça"
+        },
+        "it": {
+          "atPrefix": "in",
+          "atCountry": "Svizzera",
+          "toPrefix": "in",
+          "toCountry": "Svizzera"
+        },
+        "nl": {
+          "atPrefix": "in",
+          "atCountry": "Zwitserland",
+          "toPrefix": "naar",
+          "toCountry": "Zwitserland"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Szwajcarii",
+          "toPrefix": "do",
+          "toCountry": "Szwajcarii"
+        }
+      }
+    },
+    {
+      "slug": "uae",
+      "name": "United Arab Emirates",
+      "title": "Visa sponsorship jobs in the UAE",
+      "iso2": "ae",
+      "blurb": "Employer-labelled roles in a sponsorship-led labour market.",
+      "mainRoute": "Employment-linked residence (mainland / free zone)",
+      "pathType": "Employer-led",
+      "workLanguage": "English and Arabic",
+      "currencyCode": "AED",
+      "hiringSectors": [
+        "Hospitality",
+        "Aviation and logistics",
+        "Finance",
+        "Technology"
+      ],
+      "familyNote": "Check family residence requirements and health cover separately for each person.",
+      "bestIf": "The complete offer and the work route fit your circumstances",
+      "watchOut": "Confirm the employing entity, work permit and residence arrangements.",
+      "visaGuideSlug": "uae-work-visa-jobs",
+      "faqs": [
+        {
+          "question": "Is Dubai the same visa system as Abu Dhabi?",
+          "answer": "Both are UAE, but processes and authorities can differ. Follow the employer’s guidance and official UAE government sources for your situation. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Are probation periods common?",
+          "answer": "Many UAE contracts include probation. Read offer letters carefully and understand notice and visa implications. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Does Global Sponsor Hub process visas?",
+          "answer": "No. Global Sponsor Hub helps people find jobs and independent specialists. It does not file visa applications or decide eligibility. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "MOHRE (Ministry of Human Resources & Emiratisation)",
+          "href": "https://www.mohre.gov.ae/en/home.aspx"
+        },
+        {
+          "label": "UAE Government Portal — Visas and Emirates ID",
+          "href": "https://u.ae/en/information-and-services/visa-and-emirates-id"
+        },
+        {
+          "label": "UAE working guidance",
+          "href": "https://u.ae/en/information-and-services/jobs"
+        },
+        {
+          "label": "Verify the offer · u.ae",
+          "href": "https://u.ae/en/information-and-services/moving-to-the-uae/expatriates-working-in-the-uae/employment-of-expatriates-in-privately-held-companies"
+        },
+        {
+          "label": "Check work permission before starting · u.ae",
+          "href": "https://u.ae/en/information-and-services/visa-and-emirates-id/tips-to-avoid-labour-and-visa-fraud"
+        },
+        {
+          "label": "Know which costs belong to the employer · u.ae",
+          "href": "https://u.ae/-/media/Documents-2021/MOHRE_Brochure_A6_V4_Preview-GP-comments-%282%29.pdf"
+        },
+        {
+          "label": "Check self-sponsored options separately · icp.gov.ae",
+          "href": "https://icp.gov.ae/en/services/uae-green-residency/"
+        },
+        {
+          "label": "Check self-sponsored options separately · u.ae",
+          "href": "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/job-offers-and-work-permits-and-contracts/work-permits"
+        },
+        {
+          "label": "Plan family residence and health cover · u.ae",
+          "href": "https://u.ae/en/information-and-services/health-and-fitness/getting-a-health-insurance"
+        },
+        {
+          "label": "Plan family residence and health cover · mohre.gov.ae",
+          "href": "https://www.mohre.gov.ae/en/guidance-and-awareness-portal-new/the-basic-health-insurance-scheme"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in the",
+          "atCountry": "United Arab Emirates",
+          "toPrefix": "to the",
+          "toCountry": "United Arab Emirates"
+        },
+        "fr": {
+          "atPrefix": "aux",
+          "atCountry": "Émirats arabes unis",
+          "toPrefix": "aux",
+          "toCountry": "Émirats arabes unis"
+        },
+        "de": {
+          "atPrefix": "in den",
+          "atCountry": "Vereinigten Arabischen Emiraten",
+          "toPrefix": "in die",
+          "toCountry": "Vereinigten Arabischen Emirate"
+        },
+        "es": {
+          "atPrefix": "en los",
+          "atCountry": "Emiratos Árabes Unidos",
+          "toPrefix": "a los",
+          "toCountry": "Emiratos Árabes Unidos"
+        },
+        "pt": {
+          "atPrefix": "nos",
+          "atCountry": "Emirados Árabes Unidos",
+          "toPrefix": "para os",
+          "toCountry": "Emirados Árabes Unidos"
+        },
+        "it": {
+          "atPrefix": "negli",
+          "atCountry": "Emirati Arabi Uniti",
+          "toPrefix": "negli",
+          "toCountry": "Emirati Arabi Uniti"
+        },
+        "nl": {
+          "atPrefix": "in de",
+          "atCountry": "Verenigde Arabische Emiraten",
+          "toPrefix": "naar de",
+          "toCountry": "Verenigde Arabische Emiraten"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Zjednoczonych Emiratach Arabskich",
+          "toPrefix": "do",
+          "toCountry": "Zjednoczonych Emiratów Arabskich"
+        }
+      }
+    },
+    {
+      "slug": "uk",
+      "name": "United Kingdom",
+      "title": "Visa sponsorship jobs in the UK",
+      "iso2": "gb",
+      "blurb": "Licensed-sponsor context and employer-labelled roles.",
+      "mainRoute": "Skilled Worker (sponsor licence + CoS)",
+      "pathType": "Employer-led",
+      "workLanguage": "English",
+      "currencyCode": "GBP",
+      "hiringSectors": [
+        "Healthcare",
+        "Software and data",
+        "Engineering",
+        "Finance"
+      ],
+      "familyNote": "Family eligibility depends on occupation and immigration history; restrictions and exceptions apply.",
+      "bestIf": "You can secure an offer from a licensed UK sponsor",
+      "watchOut": "Check sponsor licence, occupation code, pay and your own eligibility.",
+      "visaGuideSlug": "uk-skilled-worker-and-sponsored-jobs",
+      "faqs": [
+        {
+          "question": "Does every employer on Global Sponsor Hub sponsor visas?",
+          "answer": "No. Each listing shows what the employer has indicated they offer — look for the 'Visa Sponsorship' label. Always confirm directly with the employer and check the Home Office Register of Licensed Sponsors. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "What is the minimum salary for a UK Skilled Worker visa?",
+          "answer": "For most new applications, the higher of £41,700/year (standard general threshold from 22 July 2025) or the going rate for your SOC code. Lower options exist in defined cases. Always check current Home Office guidance — thresholds are reviewed periodically. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Can I bring my family on a Skilled Worker visa?",
+          "answer": "Your partner or children may be able to apply if the current dependant rules allow it. Restrictions and exceptions apply to some occupations and immigration histories. Check each person’s eligibility, work conditions and any health surcharge on GOV.UK. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "GOV.UK — Skilled Worker visa",
+          "href": "https://www.gov.uk/skilled-worker-visa"
+        },
+        {
+          "label": "Home Office — Register of licensed sponsors",
+          "href": "https://www.gov.uk/government/publications/register-of-licensed-sponsors-workers"
+        },
+        {
+          "label": "GOV.UK — Skilled Worker going rates",
+          "href": "https://www.gov.uk/government/publications/skilled-worker-visa-going-rates-for-eligible-occupations"
+        },
+        {
+          "label": "UK work visas",
+          "href": "https://www.gov.uk/browse/visas-immigration/work-visas"
+        },
+        {
+          "label": "Check the salary and occupation code · gov.uk",
+          "href": "https://www.gov.uk/skilled-worker-visa/your-job"
+        },
+        {
+          "label": "Prepare proof of English · gov.uk",
+          "href": "https://www.gov.uk/skilled-worker-visa/knowledge-of-english"
+        },
+        {
+          "label": "Skilled Worker visa costs · gov.uk",
+          "href": "https://www.gov.uk/skilled-worker-visa/how-much-it-costs"
+        },
+        {
+          "label": "Bringing your partner and children · gov.uk",
+          "href": "https://www.gov.uk/skilled-worker-visa/your-partner-and-children"
+        },
+        {
+          "label": "Changing jobs later · gov.uk",
+          "href": "https://www.gov.uk/skilled-worker-visa/update-your-visa-if-you-change-job-or-employer"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in the",
+          "atCountry": "United Kingdom",
+          "toPrefix": "to the",
+          "toCountry": "United Kingdom"
+        },
+        "fr": {
+          "atPrefix": "au",
+          "atCountry": "Royaume-Uni",
+          "toPrefix": "au",
+          "toCountry": "Royaume-Uni"
+        },
+        "de": {
+          "atPrefix": "im",
+          "atCountry": "Vereinigten Königreich",
+          "toPrefix": "in das",
+          "toCountry": "Vereinigte Königreich"
+        },
+        "es": {
+          "atPrefix": "en el",
+          "atCountry": "Reino Unido",
+          "toPrefix": "al",
+          "toCountry": "Reino Unido"
+        },
+        "pt": {
+          "atPrefix": "no",
+          "atCountry": "Reino Unido",
+          "toPrefix": "para o",
+          "toCountry": "Reino Unido"
+        },
+        "it": {
+          "atPrefix": "nel",
+          "atCountry": "Regno Unito",
+          "toPrefix": "nel",
+          "toCountry": "Regno Unito"
+        },
+        "nl": {
+          "atPrefix": "in het",
+          "atCountry": "Verenigd Koninkrijk",
+          "toPrefix": "naar het",
+          "toCountry": "Verenigd Koninkrijk"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Zjednoczonym Królestwie",
+          "toPrefix": "do",
+          "toCountry": "Zjednoczonego Królestwa"
+        }
+      }
+    },
+    {
+      "slug": "usa",
+      "name": "United States",
+      "title": "Visa sponsorship jobs in the USA",
+      "iso2": "us",
+      "blurb": "Employer-labelled sponsorship where the listing says so.",
+      "mainRoute": "Employer petition (e.g. H-1B and related)",
+      "pathType": "Employer-led",
+      "workLanguage": "English",
+      "currencyCode": "USD",
+      "hiringSectors": [
+        "Technology",
+        "Healthcare",
+        "Finance",
+        "Research"
+      ],
+      "familyNote": "Family status and work permission depend on the visa category and individual circumstances.",
+      "bestIf": "An employer will petition and timelines fit your risk tolerance",
+      "watchOut": "Check the proposed category, cap-selection rules and petition timing.",
+      "visaGuideSlug": "usa-work-visa-jobs",
+      "faqs": [
+        {
+          "question": "Are H-1B jobs labelled separately?",
+          "answer": "Employers may describe sponsorship in different ways. Read each job’s benefits and description, and ask the employer which visa route they intend where it is not explicit. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Can students use Global Sponsor Hub?",
+          "answer": "Yes, if you are looking for full roles. Always maintain lawful status and follow school and government rules for work authorization. Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        },
+        {
+          "question": "Is this legal advice?",
+          "answer": "Immigration rules change often. This page is general information only (not legal advice). Confirm requirements with an official source or qualified adviser."
+        }
+      ],
+      "officialLinks": [
+        {
+          "label": "USCIS",
+          "href": "https://www.uscis.gov/"
+        },
+        {
+          "label": "US Department of Labor — Foreign Labor Certification (PERM / LCA context)",
+          "href": "https://www.dol.gov/agencies/eta/foreign-labor"
+        },
+        {
+          "label": "Travel.State.gov — visas (consular orientation)",
+          "href": "https://travel.state.gov/content/travel/en/us-visas.html"
+        },
+        {
+          "label": "US employment visas",
+          "href": "https://travel.state.gov/content/travel/en/us-visas/employment.html"
+        },
+        {
+          "label": "Confirm employer support · usa.gov",
+          "href": "https://www.usa.gov/temporary-work-visa"
+        },
+        {
+          "label": "Check pay, fees and timing · dol.gov",
+          "href": "https://www.dol.gov/agencies/whd/immigration/h1b"
+        },
+        {
+          "label": "Confirm permission before starting · travel.state.gov",
+          "href": "https://travel.state.gov/content/travel/en/us-visas/employment/temporary-worker-visas.html"
+        },
+        {
+          "label": "Review permanent residence separately · travel.state.gov",
+          "href": "https://travel.state.gov/content/travel/en/us-visas/immigrate/employment-based-immigrant-visas.html"
+        },
+        {
+          "label": "Compare benefits and living costs · healthcare.gov",
+          "href": "https://www.healthcare.gov/have-job-based-coverage/"
+        }
+      ],
+      "lastReviewed": "2026-09-11",
+      "phrases": {
+        "en": {
+          "atPrefix": "in the",
+          "atCountry": "United States",
+          "toPrefix": "to the",
+          "toCountry": "United States"
+        },
+        "fr": {
+          "atPrefix": "aux",
+          "atCountry": "États-Unis",
+          "toPrefix": "aux",
+          "toCountry": "États-Unis"
+        },
+        "de": {
+          "atPrefix": "in den",
+          "atCountry": "Vereinigten Staaten",
+          "toPrefix": "in die",
+          "toCountry": "Vereinigten Staaten"
+        },
+        "es": {
+          "atPrefix": "en",
+          "atCountry": "Estados Unidos",
+          "toPrefix": "a",
+          "toCountry": "Estados Unidos"
+        },
+        "pt": {
+          "atPrefix": "nos",
+          "atCountry": "Estados Unidos",
+          "toPrefix": "para os",
+          "toCountry": "Estados Unidos"
+        },
+        "it": {
+          "atPrefix": "negli",
+          "atCountry": "Stati Uniti",
+          "toPrefix": "negli",
+          "toCountry": "Stati Uniti"
+        },
+        "nl": {
+          "atPrefix": "in de",
+          "atCountry": "Verenigde Staten",
+          "toPrefix": "naar de",
+          "toCountry": "Verenigde Staten"
+        },
+        "pl": {
+          "atPrefix": "w",
+          "atCountry": "Stanach Zjednoczonych",
+          "toPrefix": "do",
+          "toCountry": "Stanów Zjednoczonych"
+        }
+      }
+    }
+  ],
+  "switzerland": {
+    "en": {
+      "intro": "Working in Switzerland depends on your nationality, job and existing permission. Check the route that applies to you before planning the move.",
+      "sections": [
+        {
+          "h2": "EU and EFTA nationals",
+          "body": "EU/EFTA nationals have a different route from other nationalities. Check registration and permit requirements before starting work. Short employment can use a notification procedure; do not assume that no steps are needed."
+        },
+        {
+          "h2": "Other nationalities",
+          "body": "Admission is generally limited to managers, specialists and other qualified workers. The employer normally applies and must show why a suitable worker with priority could not be recruited. Quotas and exceptions apply; an offer alone is not permission."
+        },
+        {
+          "h2": "Confirm the conditions before you start",
+          "body": "Get the duties, pay, hours and workplace in writing. Check professional recognition where relevant. Confirm required approval and registration with the responsible canton. Check family members’ residence and work rights separately."
+        },
+        {
+          "h2": "Compare the whole move",
+          "body": "Compare take-home pay with local housing, health insurance, transport and childcare costs. Check the job’s language needs. Living across a border creates separate permit, tax and insurance questions; do not assume the same rules apply."
+        }
+      ]
+    },
+    "fr": {
+      "intro": "Travailler en Suisse dépend de votre nationalité, du poste et de vos autorisations actuelles. Vérifiez la voie qui vous concerne avant de préparer votre déménagement.",
+      "sections": [
+        {
+          "h2": "Ressortissants de l’UE et de l’AELE",
+          "body": "Les ressortissants UE/AELE suivent une voie différente des autres nationalités. Vérifiez l’inscription et les permis avant de travailler. Un emploi court peut relever d’une procédure d’annonce ; ne supposez pas qu’aucune démarche n’est nécessaire."
+        },
+        {
+          "h2": "Autres nationalités",
+          "body": "L’admission vise généralement les cadres, spécialistes et autres travailleurs qualifiés. L’employeur fait normalement la demande et doit expliquer pourquoi aucun travailleur prioritaire approprié n’a été recruté. Des quotas et exceptions s’appliquent ; une offre n’est pas une autorisation."
+        },
+        {
+          "h2": "Confirmez les conditions avant de commencer",
+          "body": "Obtenez par écrit les tâches, le salaire, les horaires et le lieu. Vérifiez la reconnaissance professionnelle si nécessaire. Confirmez autorisation et inscription auprès du canton compétent. Vérifiez séparément les droits de séjour et de travail de vos proches."
+        },
+        {
+          "h2": "Comparez l’ensemble du déménagement",
+          "body": "Comparez le salaire net au logement, à l’assurance maladie, aux transports et à la garde d’enfants. Vérifiez les langues du poste. Vivre de l’autre côté d’une frontière soulève d’autres questions de permis, d’impôt et d’assurance."
+        }
+      ]
+    },
+    "de": {
+      "intro": "Arbeiten in der Schweiz hängt von Staatsangehörigkeit, Stelle und bestehender Bewilligung ab. Prüfe deinen möglichen Weg, bevor du den Umzug planst.",
+      "sections": [
+        {
+          "h2": "Staatsangehörige der EU und EFTA",
+          "body": "Für EU/EFTA-Angehörige gelten andere Regeln als für andere Staatsangehörige. Prüfe Anmeldung und Bewilligung vor Arbeitsbeginn. Kurze Beschäftigungen können unter das Meldeverfahren fallen; gehe nicht davon aus, dass keine Schritte nötig sind."
+        },
+        {
+          "h2": "Andere Staatsangehörigkeiten",
+          "body": "Zugelassen werden grundsätzlich Führungskräfte, Spezialisten und andere qualifizierte Arbeitskräfte. Der Arbeitgeber stellt normalerweise den Antrag und muss die erfolglose Suche nach geeigneten bevorrechtigten Arbeitskräften belegen. Kontingente und Ausnahmen gelten; ein Angebot ist keine Bewilligung."
+        },
+        {
+          "h2": "Kläre die Bedingungen vor Arbeitsbeginn",
+          "body": "Lass Aufgaben, Gehalt, Arbeitszeit und Arbeitsort schriftlich festhalten. Prüfe gegebenenfalls die Berufsanerkennung. Kläre Bewilligung und Anmeldung mit dem zuständigen Kanton. Prüfe Aufenthalts- und Arbeitsrechte deiner Familie gesondert."
+        },
+        {
+          "h2": "Vergleiche den gesamten Umzug",
+          "body": "Vergleiche Nettogehalt mit örtlichen Kosten für Wohnen, Krankenversicherung, Verkehr und Kinderbetreuung. Prüfe die Sprachanforderungen. Grenzüberschreitendes Wohnen wirft eigene Bewilligungs-, Steuer- und Versicherungsfragen auf."
+        }
+      ]
+    },
+    "es": {
+      "intro": "Trabajar en Suiza depende de tu nacionalidad, empleo y permiso actual. Revisa la vía que te corresponde antes de planificar la mudanza.",
+      "sections": [
+        {
+          "h2": "Ciudadanos de la UE y la AELC",
+          "body": "Los ciudadanos UE/AELC siguen una vía distinta de otras nacionalidades. Comprueba el registro y los permisos antes de trabajar. Un empleo breve puede usar un procedimiento de notificación; no supongas que no hay trámites."
+        },
+        {
+          "h2": "Otras nacionalidades",
+          "body": "La admisión suele limitarse a directivos, especialistas y otros profesionales cualificados. La empresa normalmente solicita el permiso y debe justificar por qué no pudo contratar a un trabajador adecuado con prioridad. Hay cupos y excepciones; una oferta no es un permiso."
+        },
+        {
+          "h2": "Confirma las condiciones antes de empezar",
+          "body": "Obtén por escrito funciones, sueldo, horas y lugar. Revisa el reconocimiento profesional si corresponde. Confirma autorización y registro con el cantón competente. Comprueba por separado los derechos de residencia y trabajo de la familia."
+        },
+        {
+          "h2": "Compara el traslado completo",
+          "body": "Compara el sueldo neto con vivienda, seguro médico, transporte y cuidado infantil. Revisa los idiomas del puesto. Vivir al otro lado de la frontera plantea cuestiones propias de permisos, impuestos y seguros."
+        }
+      ]
+    },
+    "pt": {
+      "intro": "Trabalhar na Suíça depende da nacionalidade, do emprego e da autorização atual. Verifique a via aplicável antes de planear a mudança.",
+      "sections": [
+        {
+          "h2": "Cidadãos da UE e da EFTA",
+          "body": "Os cidadãos UE/EFTA seguem uma via diferente de outras nacionalidades. Verifique registo e autorizações antes de trabalhar. Empregos curtos podem usar um procedimento de notificação; não presuma que não há formalidades."
+        },
+        {
+          "h2": "Outras nacionalidades",
+          "body": "A admissão limita-se geralmente a dirigentes, especialistas e outros trabalhadores qualificados. A empresa normalmente apresenta o pedido e deve justificar por que não contratou um trabalhador adequado com prioridade. Há quotas e exceções; uma oferta não é autorização."
+        },
+        {
+          "h2": "Confirme as condições antes de começar",
+          "body": "Obtenha por escrito funções, salário, horário e local. Verifique o reconhecimento profissional quando aplicável. Confirme autorização e registo junto do cantão competente. Verifique separadamente os direitos de residência e trabalho da família."
+        },
+        {
+          "h2": "Compare toda a mudança",
+          "body": "Compare o salário líquido com habitação, seguro de saúde, transportes e cuidados infantis. Verifique os idiomas da função. Viver do outro lado da fronteira levanta questões próprias de autorizações, impostos e seguros."
+        }
+      ]
+    },
+    "it": {
+      "intro": "Lavorare in Svizzera dipende da nazionalità, lavoro e permesso attuale. Verifica il percorso che ti riguarda prima di organizzare il trasferimento.",
+      "sections": [
+        {
+          "h2": "Cittadini UE e AELS",
+          "body": "I cittadini UE/AELS seguono un percorso diverso dalle altre nazionalità. Verifica registrazione e permessi prima di lavorare. Un impiego breve può rientrare nella procedura di notifica; non presumere che non servano formalità."
+        },
+        {
+          "h2": "Altre nazionalità",
+          "body": "L’ammissione è generalmente limitata a dirigenti, specialisti e altri lavoratori qualificati. Di norma il datore presenta la domanda e dimostra di non aver trovato un lavoratore idoneo con priorità. Si applicano quote ed eccezioni; un’offerta non è un permesso."
+        },
+        {
+          "h2": "Conferma le condizioni prima di iniziare",
+          "body": "Ottieni per iscritto mansioni, paga, orari e sede. Verifica il riconoscimento professionale se necessario. Conferma autorizzazione e registrazione con il cantone competente. Controlla separatamente i diritti di soggiorno e lavoro dei familiari."
+        },
+        {
+          "h2": "Valuta l’intero trasferimento",
+          "body": "Confronta lo stipendio netto con alloggio, assicurazione sanitaria, trasporti e cura dei figli. Verifica le lingue richieste. Vivere oltre confine pone questioni specifiche su permessi, imposte e assicurazione."
+        }
+      ]
+    },
+    "nl": {
+      "intro": "Werken in Zwitserland hangt af van nationaliteit, baan en bestaande toestemming. Controleer jouw route voordat je de verhuizing plant.",
+      "sections": [
+        {
+          "h2": "Burgers van de EU en EVA",
+          "body": "Voor EU/EVA-burgers gelden andere regels dan voor andere nationaliteiten. Controleer registratie en vergunningen voordat je begint. Kort werk kan onder een meldprocedure vallen; neem niet aan dat geen stappen nodig zijn."
+        },
+        {
+          "h2": "Andere nationaliteiten",
+          "body": "Toelating is doorgaans beperkt tot managers, specialisten en andere gekwalificeerde werknemers. De werkgever dient meestal de aanvraag in en toont waarom geen geschikte werknemer met voorrang is gevonden. Quota en uitzonderingen gelden; een aanbod is geen toestemming."
+        },
+        {
+          "h2": "Bevestig de voorwaarden voordat je begint",
+          "body": "Leg taken, loon, uren en werkplek schriftelijk vast. Controleer zo nodig erkenning van beroepskwalificaties. Bevestig toestemming en registratie bij het bevoegde kanton. Controleer de verblijfs- en werkrechten van gezinsleden apart."
+        },
+        {
+          "h2": "Vergelijk de hele verhuizing",
+          "body": "Vergelijk nettoloon met wonen, zorgverzekering, vervoer en kinderopvang. Controleer de taaleisen. Wonen over de grens roept aparte vragen op over vergunningen, belasting en verzekering."
+        }
+      ]
+    },
+    "pl": {
+      "intro": "Praca w Szwajcarii zależy od obywatelstwa, stanowiska i obecnego pozwolenia. Sprawdź swoją ścieżkę przed planowaniem przeprowadzki.",
+      "sections": [
+        {
+          "h2": "Obywatele UE i EFTA",
+          "body": "Obywatele UE/EFTA mają inną ścieżkę niż pozostałe obywatelstwa. Sprawdź rejestrację i pozwolenia przed pracą. Krótkie zatrudnienie może podlegać zgłoszeniu; nie zakładaj braku formalności."
+        },
+        {
+          "h2": "Inne obywatelstwa",
+          "body": "Przyjęcie zwykle ogranicza się do kadry kierowniczej, specjalistów i innych wykwalifikowanych pracowników. Pracodawca zazwyczaj składa wniosek i wykazuje brak odpowiedniego pracownika z pierwszeństwem. Obowiązują limity i wyjątki; oferta nie jest pozwoleniem."
+        },
+        {
+          "h2": "Potwierdź warunki przed rozpoczęciem",
+          "body": "Uzyskaj pisemne obowiązki, płacę, godziny i miejsce pracy. W razie potrzeby sprawdź uznanie kwalifikacji. Potwierdź zgodę i rejestrację we właściwym kantonie. Osobno sprawdź prawa rodziny do pobytu i pracy."
+        },
+        {
+          "h2": "Oceń całą przeprowadzkę",
+          "body": "Porównaj pensję netto z kosztami mieszkania, ubezpieczenia zdrowotnego, transportu i opieki nad dziećmi. Sprawdź wymagania językowe. Mieszkanie za granicą rodzi osobne kwestie zezwoleń, podatków i ubezpieczenia."
+        }
+      ]
+    }
+  },
+  "templates": [
+    {
+      "slug": "visa-sponsorship-cover-letter-template",
+      "title": "Visa Sponsorship Cover Letter Template",
+      "description": "A sponsor-aware cover letter structure that leads with role fit, then states mobility needs clearly — without sounding apologetic or giving legal advice.",
+      "category": "Application",
+      "cta": "Use this before applying to roles where sponsorship is labelled, unclear, or case-by-case.",
+      "sections": [
+        {
+          "heading": "What good looks like",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Hiring managers skim. Lead with why you can do the job. Put mobility in one clean paragraph so they can route you to HR/immigration without drama."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Open with role fit and one proof point — not your visa story."
+                },
+                {
+                  "text": "State current location, destination openness, and that you understand sponsorship is employer- and role-dependent."
+                },
+                {
+                  "text": "Offer document readiness (degree scans, employment letters) without dumping your full immigration history."
+                },
+                {
+                  "text": "Keep the letter under one page. Visa law belongs in a later conversation with the right owner."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Opening paragraph (adapt)",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Keep it short. Show role fit first, then make your mobility situation easy to understand."
+            },
+            {
+              "type": "callout",
+              "callout": {
+                "variant": "example",
+                "title": "Copy and adapt",
+                "body": "I’m applying for [Role] because my background in [skill/domain] matches [specific requirement in the posting].\n\nI’m currently based in [country] and open to relocating to [destination city/country] for the right opportunity.\n\nI understand any sponsorship or work-authorisation pathway depends on role eligibility and employer policy, and I’m happy to discuss timing, documents, and realistic start-date ranges."
+              }
+            }
+          ]
+        },
+        {
+          "heading": "Proof paragraph",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Use evidence, not enthusiasm alone."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Mention one measurable result from a current or previous role (metric, scope, or delivery)."
+                },
+                {
+                  "text": "Connect that result to the employer’s stated problem or product."
+                },
+                {
+                  "text": "If the role is regulated (health, teaching, finance), note your recognition status in one line — ‘eligible / in progress / needs assessment’."
+                },
+                {
+                  "text": "Avoid long explanations of visa categories in the cover letter."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Closing and attachments",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Make the next step easy."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Confirm interview availability across time zones if relevant."
+                },
+                {
+                  "text": "List what you can share quickly: CV, degree certificate, references, right-to-work documents you already hold."
+                },
+                {
+                  "text": "Do not apologise for needing sponsorship. Clarity beats apology."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "format": "Template",
+      "estimatedMinutes": 10
+    },
+    {
+      "slug": "employer-verification-email-template",
+      "title": "Employer Verification Email Template",
+      "description": "A polite email to send before sharing sensitive documents, paying fees, or resigning — so you confirm the employer, entity, and sponsorship route.",
+      "category": "Verification",
+      "cta": "Send this when an offer or process feels promising but the sponsorship route is not yet clear in writing.",
+      "sections": [
+        {
+          "heading": "When to send it",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Use after a serious interview or written offer outline — before passport scans, deposits, or resignation."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "The domain on emails doesn’t match the company careers site."
+                },
+                {
+                  "text": "Sponsorship was mentioned verbally but not on the offer."
+                },
+                {
+                  "text": "You’re asked to pay a third party for ‘visa processing’."
+                },
+                {
+                  "text": "The employing entity name differs from the brand that interviewed you."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Copy-paste email",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Subject: Confirming role details and sponsorship route"
+            },
+            {
+              "type": "callout",
+              "callout": {
+                "variant": "example",
+                "title": "Email copy",
+                "body": "Thank you for progressing my application for [Role]. Before I share further personal documents, could you please confirm the official company domain and hiring contact for this process?\n\nCould you also confirm whether this specific role is eligible for [visa / work-permit route] sponsorship, and which legal entity would act as employer/sponsor?\n\nIf there is a public sponsor register, licence number, or official portal I should check, please send the link to the primary government source.\n\nFinally, could you share who owns immigration filings internally (HR / counsel / external adviser) and a planning-level timeline range — not a guaranteed start date?"
+              }
+            }
+          ]
+        },
+        {
+          "heading": "Red flags in the reply",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Pause if the reply avoids basic verification."
+            },
+            {
+              "type": "callout",
+              "callout": {
+                "variant": "warning",
+                "title": "Pause and verify",
+                "body": "They insist on free email (Gmail/Hotmail) for ‘official’ hiring steps without a clear reason.\n\nThey ask for payment before a formal contract or government process.\n\nThey pressure passport scans before you can verify the employer.\n\nThey guarantee a visa outcome in writing — no employer can honestly do that.\n\nThey refuse to name the employing entity or sponsor licence/accreditation."
+              }
+            }
+          ]
+        }
+      ],
+      "format": "Template",
+      "estimatedMinutes": 5
+    },
+    {
+      "slug": "job-offer-scam-checklist",
+      "title": "Job Offer Scam Checklist",
+      "description": "A practical checklist to run before you pay anyone, share documents, resign, or book flights for a cross-border job offer.",
+      "category": "Verification",
+      "cta": "Run this checklist before you send money or sensitive documents.",
+      "sections": [
+        {
+          "heading": "Before you trust the offer",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "A real employer should be easy to verify through independent channels."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Sender uses the employer’s official domain; hover-check display names."
+                },
+                {
+                  "text": "Role appears on the employer’s careers page or known ATS — or HR confirms why it doesn’t yet."
+                },
+                {
+                  "text": "Company exists in official registries for that country (companies house / trade licence equivalents)."
+                },
+                {
+                  "text": "If sponsorship is claimed, check the relevant public sponsor / accredited employer register where one exists."
+                },
+                {
+                  "text": "Search exact phrases from the offer letter — scam templates get reused."
+                },
+                {
+                  "text": "Video interview faces and LinkedIn profiles are consistent with the company."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Before you pay anything",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Be especially careful with urgency and fees."
+            },
+            {
+              "type": "callout",
+              "callout": {
+                "variant": "warning",
+                "title": "Stop before sending money",
+                "body": "Do not pay recruitment, certificate, embassy, medical, or accommodation fees to an unknown third party.\n\nAsk why the fee exists and whether it appears in official government guidance for that route.\n\nLegitimate government fees are usually paid on official portals — not to a recruiter’s personal account.\n\nGet a second opinion from a regulated adviser or trusted contact before resigning or booking one-way flights."
+              }
+            }
+          ]
+        },
+        {
+          "heading": "Document hygiene",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Share the minimum needed at each stage."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Watermark early passport copies if you must share them (‘for X company interview only’)."
+                },
+                {
+                  "text": "Never share banking passwords, one-time codes, or crypto ‘deposit’ requests."
+                },
+                {
+                  "text": "Keep a log of who asked for what and when."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "format": "Checklist",
+      "estimatedMinutes": 8
+    },
+    {
+      "slug": "relocation-budget-checklist",
+      "title": "Relocation Budget Checklist",
+      "description": "A working budget checklist covering visas, flights, housing, healthcare, documents, family costs, and an emergency buffer — before you accept.",
+      "category": "Relocation",
+      "cta": "Use this before accepting an offer so the move does not surprise you financially.",
+      "sections": [
+        {
+          "heading": "One-off move costs (build a spreadsheet)",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "These are the costs candidates often forget until the offer is real. Estimate high and low."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Visa / work-permit fees for you (and dependants if included)."
+                },
+                {
+                  "text": "Immigration Health Surcharge or local equivalents where they exist (UK IHS is a common example — confirm current rates)."
+                },
+                {
+                  "text": "Medicals, police certificates, translations, credential recognition fees."
+                },
+                {
+                  "text": "Flights, excess luggage, pet relocation, and transit hotels."
+                },
+                {
+                  "text": "Temporary accommodation (2–8 weeks is common while searching)."
+                },
+                {
+                  "text": "Rental deposit, first month’s rent, agency fees, utility setup, SIM/phone."
+                },
+                {
+                  "text": "Basic furniture / kitchen setup if the place is unfurnished."
+                },
+                {
+                  "text": "Local transport until you have a routine (airport runs, first-week taxis)."
+                },
+                {
+                  "text": "Emergency buffer for delays, failed housing checks, or start-date slips (many people aim for 1–3 months of living costs)."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Ongoing month-1 realities",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Your first full month abroad is rarely ‘steady state’."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Rent + utilities at local prices (not home-country mental maths)."
+                },
+                {
+                  "text": "Health insurance top-ups if employer cover is thin."
+                },
+                {
+                  "text": "Childcare / school deposits if relocating with family."
+                },
+                {
+                  "text": "Tax withholding surprises — ask payroll for a sample payslip."
+                },
+                {
+                  "text": "Currency transfer fees if you’re still paid partly abroad."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Employer package questions (get answers in writing)",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Ask these before assuming the relocation package covers everything."
+            },
+            {
+              "type": "bullets",
+              "title": "Questions to ask",
+              "items": [
+                {
+                  "text": "Which costs are reimbursed vs paid upfront vs not covered?"
+                },
+                {
+                  "text": "Are dependants included — and which costs?"
+                },
+                {
+                  "text": "Is there a clawback if you leave within 6–24 months? Cap and schedule?"
+                },
+                {
+                  "text": "Who pays government fees and counsel — employer or you?"
+                },
+                {
+                  "text": "What happens financially if the visa is refused or delayed?"
+                },
+                {
+                  "text": "Is temporary housing nights capped? What after the cap?"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "format": "Checklist",
+      "estimatedMinutes": 20
+    },
+    {
+      "slug": "first-90-days-relocation-checklist",
+      "title": "First 90 Days Relocation Checklist",
+      "description": "Week-by-week admin after arrival: right-to-work, housing, banking, healthcare, local registration, probation, and support networks.",
+      "category": "Relocation",
+      "cta": "Use this after accepting an offer and again in your first week abroad.",
+      "sections": [
+        {
+          "heading": "Before you fly",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Reduce day-1 chaos."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Confirm start-date range and what happens if the visa slips."
+                },
+                {
+                  "text": "Pack digital + paper copies of passport, visa/permit, offer, degrees, and insurance."
+                },
+                {
+                  "text": "Book temporary housing that you can extend by a week."
+                },
+                {
+                  "text": "Ask HR for day-1 checklist: IT, badge, payroll forms, right-to-work appointment."
+                },
+                {
+                  "text": "Save emergency contacts: HR, manager, landlord, embassy/consulate, local emergency number."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "First week",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Handle the essentials before work gets busy."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Complete right-to-work / onboarding identity checks."
+                },
+                {
+                  "text": "Get phone data and a local number if required for banking/2FA."
+                },
+                {
+                  "text": "Start housing search with documents employers/landlords usually want (payslips, offer letter)."
+                },
+                {
+                  "text": "Open or schedule bank account / tax ID steps as required locally."
+                },
+                {
+                  "text": "Register address where mandatory (e.g. Anmeldung in Germany) — appointments can be the bottleneck."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "First month",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Move from survival mode to a repeatable routine."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "GP / health registration and understand employer insurance cover."
+                },
+                {
+                  "text": "Clarify payroll deductions on your first payslip."
+                },
+                {
+                  "text": "Set calendar reminders for visa/permit expiry and any reporting duties."
+                },
+                {
+                  "text": "Meet your buddy / manager expectations for the first 30 days."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Days 31–90",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Stabilise — and protect probation."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Track probation dates and any sponsorship conditions tied to the role."
+                },
+                {
+                  "text": "Revisit budget with real local costs."
+                },
+                {
+                  "text": "Build a support list: landlord, payroll, HR, doctor, school, community."
+                },
+                {
+                  "text": "If something in the offer was promised verbally, get it confirmed before probation ends."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "format": "Checklist",
+      "estimatedMinutes": 15,
+      "isProcedural": true
+    },
+    {
+      "slug": "visa-sponsorship-interview-questions",
+      "title": "Visa Sponsorship Interview Questions",
+      "description": "Questions to ask about sponsorship eligibility, timelines, fees, dependants, relocation, probation, and who owns immigration — without derailing the interview.",
+      "category": "Interview",
+      "cta": "Use these when the employer is interested but the mobility process is still vague.",
+      "sections": [
+        {
+          "heading": "How to ask without killing the interview",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Fit first, mobility second. Save detailed immigration ops for HR after mutual interest is clear — unless they raise it first."
+            },
+            {
+              "type": "steps",
+              "items": [
+                {
+                  "text": "In early screens: one clarifying question on sponsorship eligibility for this role."
+                },
+                {
+                  "text": "In later stages: timeline ranges, fee ownership, dependants, and start-date flexibility."
+                },
+                {
+                  "text": "Never demand a visa guarantee — ask about process ownership and planning ranges."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Sponsorship clarity",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Ask calmly and early enough to avoid wasting everyone’s time."
+            },
+            {
+              "type": "bullets",
+              "title": "Questions to take with you",
+              "items": [
+                {
+                  "text": "Is this specific role eligible for sponsorship / a work permit pathway?"
+                },
+                {
+                  "text": "Which route have you used for similar hires before?"
+                },
+                {
+                  "text": "Which legal entity would employ and sponsor me?"
+                },
+                {
+                  "text": "Who manages the immigration process — internal HR, counsel, or an external adviser?"
+                },
+                {
+                  "text": "Is sponsorship confirmed for this requisition, or case-by-case after offer?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Timeline and money",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Protect yourself from ‘immediate start’ fiction."
+            },
+            {
+              "type": "bullets",
+              "title": "Questions to take with you",
+              "items": [
+                {
+                  "text": "What start-date range should I plan for if the petition/permit is approved normally?"
+                },
+                {
+                  "text": "Who pays government fees, medicals, and counsel?"
+                },
+                {
+                  "text": "Does the company cover Immigration Health Surcharge / equivalent costs?"
+                },
+                {
+                  "text": "What happens to the offer if processing is delayed or refused?"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Relocation and family",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "A package is only useful if you know what it covers."
+            },
+            {
+              "type": "bullets",
+              "title": "Questions to take with you",
+              "items": [
+                {
+                  "text": "Which relocation costs are covered for me — and for dependants?"
+                },
+                {
+                  "text": "Is temporary accommodation included, and for how many nights?"
+                },
+                {
+                  "text": "Can my partner work, and on what basis?"
+                },
+                {
+                  "text": "Are there clawbacks if I leave within a set period?"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "format": "Question set",
+      "estimatedMinutes": 10
+    },
+    {
+      "slug": "international-application-tracker-template",
+      "title": "International Application Tracker Template",
+      "description": "A lightweight tracker for company, role, destination, visa signal, status, follow-ups, red flags, and outcomes — so you stop losing the thread.",
+      "category": "Tracking",
+      "cta": "Use this weekly so you only chase roles that are actually accessible to you.",
+      "sections": [
+        {
+          "heading": "Columns to track (spreadsheet or notes app)",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Keep it simple enough that you will actually update it."
+            },
+            {
+              "type": "table",
+              "table": {
+                "caption": "Recommended fields for your application tracker",
+                "columns": [
+                  "Tracker field"
+                ],
+                "rows": [
+                  [
+                    "Company / employing entity (if known)"
+                  ],
+                  [
+                    "Role title + link"
+                  ],
+                  [
+                    "Country / city + work mode (onsite / hybrid / remote countries)"
+                  ],
+                  [
+                    "Visa / sponsorship signal (yes / no / case-by-case / unclear)"
+                  ],
+                  [
+                    "Relocation support signal"
+                  ],
+                  [
+                    "Source (Global Sponsor Hub, LinkedIn, agency, referral)"
+                  ],
+                  [
+                    "Date applied + stage (screen / interview / offer / closed)"
+                  ],
+                  [
+                    "Follow-up date + next action owner (you / them)"
+                  ],
+                  [
+                    "Contact person + email domain"
+                  ],
+                  [
+                    "Red flags / notes"
+                  ],
+                  [
+                    "Outcome + lesson"
+                  ]
+                ],
+                "firstColumnIsRowHeader": true
+              }
+            }
+          ]
+        },
+        {
+          "heading": "Weekly review ritual (15 minutes)",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "International search dies from admin, not from lack of effort."
+            },
+            {
+              "type": "steps",
+              "items": [
+                {
+                  "text": "Close roles with no reply past your follow-up rule (e.g. 10 business days)."
+                },
+                {
+                  "text": "Promote roles with clear sponsorship labelling and realistic salary bands."
+                },
+                {
+                  "text": "Demote ‘visa support’ vagueness unless HR clarifies."
+                },
+                {
+                  "text": "Log every document request and fee ask."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "What Global Sponsor Hub adds",
+          "blocks": [
+            {
+              "type": "prose",
+              "body": "Your profile and saved jobs reduce manual admin — they don’t replace verification."
+            },
+            {
+              "type": "checklist",
+              "items": [
+                {
+                  "text": "Save roles you want to compare later."
+                },
+                {
+                  "text": "Track application status when applying on Global Sponsor Hub."
+                },
+                {
+                  "text": "Use sponsorship / relocation filters, then still confirm with the employer in writing."
+                },
+                {
+                  "text": "Cross-link promising roles to the matching country guide before you invest interview time."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "format": "Tracker",
+      "estimatedMinutes": 15
+    }
+  ],
+  "howWeLabelJobs": {
+    "en": {
+      "metaTitle": "How we label employer-posted jobs | Global Sponsor Hub",
+      "metaDescription": "What job-source, sponsorship and relocation labels mean, and where each application is completed.",
+      "breadcrumbHome": "Home",
+      "breadcrumbCurrent": "Employer job labels",
+      "eyebrow": "Trust & clarity",
+      "h1": "How we label job sources",
+      "intro": "Every role uses one of three plain-language source labels so you can see where it came from and where to apply.",
+      "s1Title": "On-platform vs source-site applications",
+      "s1p1": "A On-platform direct role accepts applications and candidate details on Global Sponsor Hub.",
+      "s1p2": "Agency-submitted roles and external/source-site roles take you to the employer, recruiter or source website. Complete the application there; Global Sponsor Hub does not receive it.",
+      "s2Title": "What mobility labels mean (and what they are not)",
+      "s2p1": "Employers can signal intent with structured labels such as visa sponsorship, relocation support, remote-friendly hiring, and similar options. Labels reflect what the employer chose to publish — they are not a government decision or a guarantee of eligibility.",
+      "s2p2": "Visa outcomes depend on your nationality, role, salary, employer licence status, and current immigration rules. Use labels to shortlist realistic conversations, then confirm every requirement with the employer and official government sources.",
+      "s3Title": "What we review vs what you must verify",
+      "s3p1": "We provide workflow tools, checks to reduce misuse, and clear limits on what we verify. We do not replace legal advice, sponsor licence checks, or your own diligence on an offer.",
+      "s3p2": "If something in a listing looks inconsistent, use reporting or contact paths in the product. For regulated immigration decisions, work with a qualified adviser and the employer’s own HR or mobility team.",
+      "s4Title": "Role source labels",
+      "s4Intro": "Global Sponsor Hub may show roles in three ways:",
+      "s4p1": "On-platform direct role: posted on Global Sponsor Hub, where the application is completed.",
+      "s4p2": "Agency-submitted role: submitted by a recruiter or agency; apply on the recruiter, client or source website.",
+      "s4p3": "External/source-site role: listed from an employer careers site, hiring system, community board or other source; apply on that source website.",
+      "s5Title": "Sponsorship and mobility labels",
+      "s5p1": "Sponsorship, sponsor-licence, visa and relocation labels are employer- or source-provided unless a specific platform check is stated. They do not guarantee eligibility or support; confirm details with the employer and official sources.",
+      "footerNote": "This page summarises product behaviour in plain English. It is not legal advice and may be updated as the product evolves.",
+      "ctaJobs": "Search employer-posted jobs",
+      "ctaGuides": "Guides hub",
+      "ctaExternal": "External roles",
+      "ctaContact": "Contact"
+    },
+    "fr": {
+      "metaTitle": "Comment nous étiquetons les emplois publiés par les employeurs | Global Sponsor Hub",
+      "metaDescription": "Ce que signifient les étiquettes de parrainage et de relocalisation sur Global Sponsor Hub, ce que les employeurs contrôlent, et comment les rôles externes sélectionnés diffèrent des candidatures sur la plateforme.",
+      "breadcrumbHome": "Accueil",
+      "breadcrumbCurrent": "Étiquettes des emplois des employeurs",
+      "eyebrow": "Confiance & clarté",
+      "h1": "Comment nous étiquetons les emplois publiés par les employeurs",
+      "intro": "Global Sponsor Hub est conçu pour la mobilité internationale. Les étiquettes et types de listes existent pour que vous puissiez filtrer en toute confiance — et pour que nous ne brouillons jamais la ligne entre une annonce d'employeur ici et un lien qui vous mène ailleurs.",
+      "s1Title": "Emplois publiés par l'employeur vs liens sortants",
+      "s1p1": "Les rôles que vous recherchez et pour lesquels vous postulez sur ce site sont publiés par les employeurs (ou leur équipe autorisée) dans notre produit d'emploi. Les candidatures et mises à jour de statut pour ces rôles restent sur Global Sponsor Hub à moins que l'employeur ne vous dirige ailleurs dans le processus d'embauche.",
+      "s1p2": "Les rôles externes sélectionnés et les annonces externes soumises par des agences se trouvent sur un centre séparé. Les cartes sont étiquetées à la source et vous dirigent vers le site qui détient la candidature. Elles ne sont pas mélangées dans les résultats de recherche des employeurs comme si elles étaient des publications natives.",
+      "s2Title": "Ce que signifient les étiquettes de mobilité (et ce qu'elles ne sont pas)",
+      "s2p1": "Les employeurs peuvent signaler leur intention avec des étiquettes structurées telles que parrainage de visa, soutien à la relocalisation, embauche compatible avec le télétravail, et options similaires. Les étiquettes reflètent ce que l'employeur a choisi de publier — elles ne sont pas une décision gouvernementale ou une garantie d'éligibilité.",
+      "s2p2": "Les résultats de visa dépendent de votre nationalité, rôle, salaire, statut de licence de l'employeur, et des règles d'immigration actuelles. Utilisez les étiquettes pour présélectionner des conversations réalistes, puis confirmez chaque exigence avec l'employeur et les sources gouvernementales officielles.",
+      "s3Title": "Ce que nous examinons vs ce que vous devez vérifier",
+      "s3p1": "Nous fournissons des outils de flux de travail, des signaux anti-abus, et des limites de produit claires. Nous ne remplaçons pas les conseils juridiques, les vérifications de licence de parrainage, ou votre propre diligence sur une offre.",
+      "s3p2": "Si quelque chose dans une annonce semble incohérent, utilisez les chemins de signalement ou de contact dans le produit. Pour les décisions d'immigration réglementées, travaillez avec un conseiller qualifié et l'équipe RH ou de mobilité de l'employeur.",
+      "s4Title": "Étiquettes de source de rôle",
+      "s4Intro": "Global Sponsor Hub peut afficher les rôles de trois manières :",
+      "s4p1": "Publié par l'employeur : L'employeur ou son équipe autorisée a publié le rôle directement sur Global Sponsor Hub.",
+      "s4p2": "ATS d'employeur vérifié : Importé directement depuis le système de suivi des candidatures (ATS) d'un employeur vérifié ou sa page carrière. Vous postulez sur leur site officiel.",
+      "s4p3": "Rôle externe sélectionné : Global Sponsor Hub a trouvé le rôle à partir de sources publiques et dirige les candidats vers le site de l'employeur. L'employeur peut ne pas avoir revendiqué ou approuvé le profil.",
+      "s5Title": "Étiquettes de parrainage et de mobilité",
+      "s5p1": "Les étiquettes de parrainage, de relocalisation, et d'embauche mondiale sont basées sur les informations fournies par l'employeur, les informations de source connectée, les signaux de source publique, ou un examen manuel. Ces étiquettes ne sont pas une décision gouvernementale et ne garantissent pas le parrainage de visa. Les candidats doivent confirmer les détails de parrainage directement avec l'employeur avant de se fier à un rôle.",
+      "footerNote": "Cette page résume le comportement du produit en termes simples. Ce n'est pas un conseil juridique et peut être mis à jour à mesure que le produit évolue.",
+      "ctaJobs": "Rechercher des emplois publiés par les employeurs",
+      "ctaGuides": "Centre de guides",
+      "ctaExternal": "Rôles externes",
+      "ctaContact": "Contact"
+    },
+    "de": {
+      "metaTitle": "Wie wir von Arbeitgebern veröffentlichte Jobs kennzeichnen | Global Sponsor Hub",
+      "metaDescription": "Was Sponsoring- und Umzugskennzeichnungen auf Global Sponsor Hub bedeuten, was Arbeitgeber kontrollieren und wie kuratierte externe Rollen sich von Plattform-Bewerbungen unterscheiden.",
+      "breadcrumbHome": "Startseite",
+      "breadcrumbCurrent": "Arbeitgeber-Jobkennzeichnungen",
+      "eyebrow": "Vertrauen & Klarheit",
+      "h1": "Wie wir von Arbeitgebern veröffentlichte Jobs kennzeichnen",
+      "intro": "Global Sponsor Hub ist für internationale Mobilität konzipiert. Kennzeichnungen und Listentypen existieren, damit Sie mit Vertrauen filtern können — und damit wir niemals die Grenze zwischen einem hier veröffentlichten Arbeitgeber und einem Link, der Sie woanders hinführt, verwischen.",
+      "s1Title": "Vom Arbeitgeber veröffentlicht vs. ausgehende Links",
+      "s1p1": "Rollen, die Sie auf dieser Seite suchen und für die Sie sich bewerben, werden von Arbeitgebern (oder ihrem autorisierten Team) in unser Jobprodukt eingestellt. Bewerbungen und Statusaktualisierungen für diese Rollen bleiben auf Global Sponsor Hub, es sei denn, der Arbeitgeber leitet Sie im Einstellungsprozess woanders hin.",
+      "s1p2": "Kuratierte externe Rollen und von Agenturen eingereichte externe Listen befinden sich in einem separaten Hub. Karten sind mit der Quelle gekennzeichnet und führen Sie zu der Seite, die die Bewerbung besitzt. Sie werden nicht in die Arbeitgeber-Suchergebnisse gemischt, als wären sie native Beiträge.",
+      "s2Title": "Was Mobilitätskennzeichnungen bedeuten (und was sie nicht sind)",
+      "s2p1": "Arbeitgeber können Absichten mit strukturierten Kennzeichnungen wie Visumsponsoring, Umzugsunterstützung, remote-freundliche Einstellung und ähnlichen Optionen signalisieren. Kennzeichnungen spiegeln wider, was der Arbeitgeber zu veröffentlichen gewählt hat — sie sind keine Regierungsentscheidung oder Garantie der Berechtigung.",
+      "s2p2": "Visumsergebnisse hängen von Ihrer Staatsangehörigkeit, Rolle, Gehalt, dem Status der Arbeitgeberlizenz und den aktuellen Einwanderungsregeln ab. Verwenden Sie Kennzeichnungen, um realistische Gespräche zu priorisieren, und bestätigen Sie dann alle Anforderungen mit dem Arbeitgeber und offiziellen Regierungsquellen.",
+      "s3Title": "Was wir überprüfen vs. was Sie verifizieren müssen",
+      "s3p1": "Wir bieten Workflow-Tools, Missbrauchssignale und klare Produktgrenzen. Wir ersetzen keine Rechtsberatung, keine Überprüfung der Sponsorlizenz oder Ihre eigene Sorgfaltspflicht bei einem Angebot.",
+      "s3p2": "Wenn etwas in einer Liste inkonsistent erscheint, verwenden Sie die Melde- oder Kontaktwege im Produkt. Für regulierte Einwanderungsentscheidungen arbeiten Sie mit einem qualifizierten Berater und dem eigenen HR- oder Mobilitätsteam des Arbeitgebers zusammen.",
+      "s4Title": "Rollenquellenkennzeichnungen",
+      "s4Intro": "Global Sponsor Hub kann Rollen auf drei Arten anzeigen:",
+      "s4p1": "Vom Arbeitgeber veröffentlicht: Der Arbeitgeber oder sein autorisiertes Team hat die Rolle direkt auf Global Sponsor Hub veröffentlicht.",
+      "s4p2": "Connected from employer careers page: The employer has approved Global Sponsor Hub using their careers page or ATS source. Candidates normally apply through the employer’s existing application process.",
+      "s4p3": "Kuratierte externe Rolle: Global Sponsor Hub hat die Rolle aus öffentlichen Quellen gefunden und verlinkt Kandidaten auf die Seite des Arbeitgebers. Der Arbeitgeber hat das Profil möglicherweise nicht beansprucht oder genehmigt.",
+      "s5Title": "Sponsoring- und Mobilitätskennzeichnungen",
+      "s5p1": "Sponsoring-, Umzugs- und globale Einstellungskennzeichnungen basieren auf vom Arbeitgeber bereitgestellten Informationen, verbundenen Quelleninformationen, öffentlichen Quellensignalen oder manueller Überprüfung. Diese Kennzeichnungen sind keine Regierungsentscheidung und garantieren keine Visumsponsoring. Kandidaten sollten Sponsoring-Details direkt mit dem Arbeitgeber bestätigen, bevor sie sich auf eine Rolle verlassen.",
+      "footerNote": "Diese Seite fasst das Produktverhalten in einfachem Englisch zusammen. Es ist keine Rechtsberatung und kann aktualisiert werden, wenn sich das Produkt weiterentwickelt.",
+      "ctaJobs": "Nach von Arbeitgebern veröffentlichten Jobs suchen",
+      "ctaGuides": "Leitfaden-Zentrale",
+      "ctaExternal": "Externe Stellen",
+      "ctaContact": "Kontakt"
+    },
+    "es": {
+      "metaTitle": "Cómo etiquetamos los trabajos publicados por empleadores | Global Sponsor Hub",
+      "metaDescription": "Qué significan las etiquetas de patrocinio y reubicación en Global Sponsor Hub, qué controlan los empleadores y cómo difieren los roles externos seleccionados de las aplicaciones en la plataforma.",
+      "breadcrumbHome": "Inicio",
+      "breadcrumbCurrent": "Etiquetas de trabajos de empleadores",
+      "eyebrow": "Confianza y claridad",
+      "h1": "Cómo etiquetamos los trabajos publicados por empleadores",
+      "intro": "Global Sponsor Hub está diseñado para la movilidad internacional. Las etiquetas y tipos de listados existen para que puedas filtrar con confianza, y para que nunca confundamos una publicación de un empleador aquí con un enlace que te lleva a otro lugar.",
+      "s1Title": "Publicaciones de empleadores vs enlaces externos",
+      "s1p1": "Los roles que buscas y solicitas en este sitio son publicados por empleadores (o su equipo autorizado) en nuestro producto de empleo. Las solicitudes y actualizaciones de estado para esos roles permanecen en Global Sponsor Hub a menos que el empleador te dirija a otro lugar en el proceso de contratación.",
+      "s1p2": "Los roles externos seleccionados y las listas externas enviadas por agencias se encuentran en un centro separado. Las tarjetas están etiquetadas con la fuente y te llevan al sitio que posee la solicitud. No se mezclan en los resultados de búsqueda de empleadores como si fueran publicaciones nativas.",
+      "s2Title": "Qué significan las etiquetas de movilidad (y qué no son)",
+      "s2p1": "Los empleadores pueden señalar su intención con etiquetas estructuradas como patrocinio de visa, apoyo a la reubicación, contratación amigable con el teletrabajo y opciones similares. Las etiquetas reflejan lo que el empleador eligió publicar; no son una decisión gubernamental ni una garantía de elegibilidad.",
+      "s2p2": "Los resultados de las visas dependen de tu nacionalidad, rol, salario, estado de la licencia del empleador y las reglas de inmigración actuales. Usa las etiquetas para acortar conversaciones realistas, luego confirma cada requisito con el empleador y fuentes gubernamentales oficiales.",
+      "s3Title": "Lo que revisamos vs lo que debes verificar",
+      "s3p1": "Proporcionamos herramientas de flujo de trabajo, señales anti-abuso y límites claros del producto. No reemplazamos el asesoramiento legal, las verificaciones de licencias de patrocinador ni tu propia diligencia sobre una oferta.",
+      "s3p2": "Si algo en un listado parece inconsistente, utiliza las rutas de informe o contacto en el producto. Para decisiones de inmigración reguladas, trabaja con un asesor calificado y el propio equipo de RRHH o movilidad del empleador.",
+      "s4Title": "Etiquetas de fuente de roles",
+      "s4Intro": "Global Sponsor Hub puede mostrar roles de tres maneras:",
+      "s4p1": "Publicado por el empleador: El empleador o su equipo autorizado publicó el rol directamente en Global Sponsor Hub.",
+      "s4p2": "ATS de Empleador Verificado: Importado directamente del Sistema de Seguimiento de Candidatos (ATS) de un empleador verificado o página de carreras. Aplicas en su sitio oficial.",
+      "s4p3": "Rol externo seleccionado: Global Sponsor Hub encontró el rol en fuentes públicas y enlaza a los candidatos al sitio del empleador. El empleador puede no haber reclamado o aprobado el perfil.",
+      "s5Title": "Etiquetas de patrocinio y movilidad",
+      "s5p1": "Las etiquetas de patrocinio, reubicación y contratación global se basan en información proporcionada por el empleador, información de fuente conectada, señales de fuentes públicas o revisión manual. Estas etiquetas no son una decisión gubernamental y no garantizan el patrocinio de visa. Los candidatos deben confirmar los detalles del patrocinio directamente con el empleador antes de confiar en un rol.",
+      "footerNote": "Esta página resume el comportamiento del producto en inglés sencillo. No es un asesoramiento legal y puede actualizarse a medida que el producto evoluciona.",
+      "ctaJobs": "Buscar trabajos publicados por empleadores",
+      "ctaGuides": "Centro de guías",
+      "ctaExternal": "Roles externos",
+      "ctaContact": "Contacto"
+    },
+    "pt": {
+      "metaTitle": "Como rotulamos empregos publicados por empregadores | Global Sponsor Hub",
+      "metaDescription": "O que significam os rótulos de patrocínio e relocação no Global Sponsor Hub, o que os empregadores controlam e como os cargos externos curados diferem das candidaturas na plataforma.",
+      "breadcrumbHome": "Início",
+      "breadcrumbCurrent": "Rótulos de empregos de empregadores",
+      "eyebrow": "Confiança e clareza",
+      "h1": "Como rotulamos empregos publicados por empregadores",
+      "intro": "O Global Sponsor Hub foi criado para a mobilidade internacional. Os rótulos e tipos de listagem existem para que você possa filtrar com confiança — e para que nunca confundamos uma publicação de empregador aqui com um link que o leva para outro lugar.",
+      "s1Title": "Empregos publicados por empregadores vs links externos",
+      "s1p1": "As funções que você pesquisa e para as quais se candidata neste site são publicadas por empregadores (ou sua equipe autorizada) no nosso produto de empregos. As candidaturas e atualizações de status para essas funções permanecem no Global Sponsor Hub, a menos que o empregador o direcione para outro lugar no processo de contratação.",
+      "s1p2": "Funções externas curadas e listagens externas submetidas por agências estão em um hub separado. Os cartões são rotulados com a fonte e levam você ao site que detém a candidatura. Eles não são misturados nos resultados de busca de empregadores como se fossem publicações nativas.",
+      "s2Title": "O que significam os rótulos de mobilidade (e o que não são)",
+      "s2p1": "Os empregadores podem sinalizar intenções com rótulos estruturados, como patrocínio de visto, apoio à relocação, contratação amigável ao trabalho remoto e opções semelhantes. Os rótulos refletem o que o empregador escolheu publicar — não são uma decisão governamental ou uma garantia de elegibilidade.",
+      "s2p2": "Os resultados de vistos dependem da sua nacionalidade, função, salário, status de licença do empregador e regras de imigração atuais. Use os rótulos para selecionar conversas realistas e depois confirme todos os requisitos com o empregador e fontes governamentais oficiais.",
+      "s3Title": "O que revisamos vs o que você deve verificar",
+      "s3p1": "Fornecemos ferramentas de fluxo de trabalho, sinais anti-abuso e limites claros de produto. Não substituímos aconselhamento jurídico, verificações de licença de patrocínio ou sua própria diligência sobre uma oferta.",
+      "s3p2": "Se algo em uma listagem parecer inconsistente, use os caminhos de denúncia ou contato no produto. Para decisões de imigração regulamentadas, trabalhe com um consultor qualificado e a própria equipe de RH ou mobilidade do empregador.",
+      "s4Title": "Rótulos de fonte de função",
+      "s4Intro": "O Global Sponsor Hub pode mostrar funções de três maneiras:",
+      "s4p1": "Publicado por empregador: O empregador ou sua equipe autorizada publicou a função diretamente no Global Sponsor Hub.",
+      "s4p2": "ATS de Empregador Verificado: Importado diretamente do Sistema de Rastreamento de Candidatos (ATS) de um empregador verificado ou página de carreiras. Candidate-se no site oficial deles.",
+      "s4p3": "Função externa curada: O Global Sponsor Hub encontrou a função em fontes públicas e liga os candidatos ao site do empregador. O empregador pode não ter reivindicado ou aprovado o perfil.",
+      "s5Title": "Rótulos de patrocínio e mobilidade",
+      "s5p1": "Os rótulos de patrocínio, relocação e contratação global são baseados em informações fornecidas pelo empregador, informações de fonte conectada, sinais de fontes públicas ou revisão manual. Esses rótulos não são uma decisão governamental e não garantem patrocínio de visto. Os candidatos devem confirmar os detalhes do patrocínio diretamente com o empregador antes de confiar em uma função.",
+      "footerNote": "Esta página resume o comportamento do produto em linguagem simples. Não é aconselhamento jurídico e pode ser atualizada à medida que o produto evolui.",
+      "ctaJobs": "Pesquisar empregos publicados por empregadores",
+      "ctaGuides": "Centro de guias",
+      "ctaExternal": "Funções externas",
+      "ctaContact": "Contato"
+    },
+    "it": {
+      "metaTitle": "Come etichettiamo i lavori pubblicati dai datori di lavoro | Global Sponsor Hub",
+      "metaDescription": "Cosa significano le etichette di sponsorizzazione e trasferimento su Global Sponsor Hub, cosa controllano i datori di lavoro e come i ruoli esterni curati differiscono dalle candidature sulla piattaforma.",
+      "breadcrumbHome": "Home",
+      "breadcrumbCurrent": "Etichette dei lavori dei datori di lavoro",
+      "eyebrow": "Fiducia e chiarezza",
+      "h1": "Come etichettiamo i lavori pubblicati dai datori di lavoro",
+      "intro": "Global Sponsor Hub è costruito per la mobilità internazionale. Le etichette e i tipi di annunci esistono affinché tu possa filtrare con fiducia — e affinché non confondiamo mai un annuncio di un datore di lavoro qui con un link che ti porta altrove.",
+      "s1Title": "Lavori pubblicati dai datori di lavoro vs link esterni",
+      "s1p1": "I ruoli che cerchi e per cui ti candidi su questo sito sono pubblicati dai datori di lavoro (o dal loro team autorizzato) nel nostro prodotto di lavoro. Le candidature e gli aggiornamenti di stato per quei ruoli rimangono su Global Sponsor Hub a meno che il datore di lavoro non ti indirizzi altrove nel processo di assunzione.",
+      "s1p2": "I ruoli esterni curati e gli annunci esterni inviati dalle agenzie vivono in un hub separato. Le schede sono etichettate con la fonte e ti portano al sito che possiede la candidatura. Non sono mescolati nei risultati di ricerca dei datori di lavoro come se fossero post nativi.",
+      "s2Title": "Cosa significano le etichette di mobilità (e cosa non sono)",
+      "s2p1": "I datori di lavoro possono segnalare l'intenzione con etichette strutturate come sponsorizzazione del visto, supporto al trasferimento, assunzione compatibile con il lavoro a distanza e opzioni simili. Le etichette riflettono ciò che il datore di lavoro ha scelto di pubblicare — non sono una decisione governativa o una garanzia di idoneità.",
+      "s2p2": "Gli esiti dei visti dipendono dalla tua nazionalità, ruolo, stipendio, stato della licenza del datore di lavoro e dalle attuali normative sull'immigrazione. Usa le etichette per selezionare conversazioni realistiche, quindi conferma ogni requisito con il datore di lavoro e le fonti governative ufficiali.",
+      "s3Title": "Cosa rivediamo noi vs cosa devi verificare tu",
+      "s3p1": "Forniamo strumenti di flusso di lavoro, segnali anti-abuso e confini di prodotto chiari. Non sostituiamo consulenze legali, controlli delle licenze sponsor o la tua diligenza su un'offerta.",
+      "s3p2": "Se qualcosa in un annuncio sembra incoerente, usa i percorsi di segnalazione o contatto nel prodotto. Per decisioni di immigrazione regolamentate, lavora con un consulente qualificato e il team HR o di mobilità del datore di lavoro.",
+      "s4Title": "Etichette di origine del ruolo",
+      "s4Intro": "Global Sponsor Hub può mostrare i ruoli in tre modi:",
+      "s4p1": "Pubblicato dal datore di lavoro: Il datore di lavoro o il suo team autorizzato ha pubblicato il ruolo direttamente su Global Sponsor Hub.",
+      "s4p2": "ATS del Datore di Lavoro Verificato: Importato direttamente dal sistema di tracciamento delle candidature (ATS) di un datore di lavoro verificato o dalla pagina delle carriere. Ti candidi sul loro sito ufficiale.",
+      "s4p3": "Ruolo esterno curato: Global Sponsor Hub ha trovato il ruolo da fonti pubbliche e collega i candidati al sito del datore di lavoro. Il datore di lavoro potrebbe non aver rivendicato o approvato il profilo.",
+      "s5Title": "Etichette di sponsorizzazione e mobilità",
+      "s5p1": "Le etichette di sponsorizzazione, trasferimento e assunzione globale si basano su informazioni fornite dai datori di lavoro, informazioni di origine collegate, segnali di fonti pubbliche o revisione manuale. Queste etichette non sono una decisione governativa e non garantiscono la sponsorizzazione del visto. I candidati dovrebbero confermare i dettagli della sponsorizzazione direttamente con il datore di lavoro prima di fare affidamento su un ruolo.",
+      "footerNote": "Questa pagina riassume il comportamento del prodotto in inglese semplice. Non è una consulenza legale e potrebbe essere aggiornata man mano che il prodotto evolve.",
+      "ctaJobs": "Cerca lavori pubblicati dai datori di lavoro",
+      "ctaGuides": "Hub delle guide",
+      "ctaExternal": "Ruoli esterni",
+      "ctaContact": "Contatta"
+    },
+    "nl": {
+      "metaTitle": "Hoe we door werkgevers geplaatste vacatures labelen | Global Sponsor Hub",
+      "metaDescription": "Wat sponsor- en relocatielabels betekenen op Global Sponsor Hub, wat werkgevers controleren en hoe samengestelde externe functies verschillen van applicaties op het platform.",
+      "breadcrumbHome": "Home",
+      "breadcrumbCurrent": "Werkgeversvacaturelabels",
+      "eyebrow": "Vertrouwen & duidelijkheid",
+      "h1": "Hoe we door werkgevers geplaatste banen labelen",
+      "intro": "Global Sponsor Hub is gebouwd voor internationale mobiliteit. Labels en lijsttypen bestaan zodat je met vertrouwen kunt filteren — en zodat we nooit de lijn vervagen tussen een hier geplaatste vacature door een werkgever en een link die je ergens anders naartoe brengt.",
+      "s1Title": "Door werkgevers geplaatste vacatures vs uitgaande links",
+      "s1p1": "Functies die je op deze site zoekt en waarvoor je solliciteert, worden door werkgevers (of hun gemachtigde team) in ons vacatureproduct geplaatst. Sollicitaties en statusupdates voor die functies blijven op Global Sponsor Hub, tenzij de werkgever je elders in het wervingsproces naartoe stuurt.",
+      "s1p2": "Geselecteerde externe functies en door bureaus ingediende externe vermeldingen bevinden zich op een apart platform. Kaarten zijn voorzien van een bronlabel en brengen je naar de site die de sollicitatie beheert. Ze worden niet gemengd in de zoekresultaten van werkgevers alsof het native berichten zijn.",
+      "s2Title": "Wat mobiliteitslabels betekenen (en wat ze niet zijn)",
+      "s2p1": "Werkgevers kunnen intenties aangeven met gestructureerde labels zoals visumsponsoring, relocatieondersteuning, remote-vriendelijke werving en soortgelijke opties. Labels weerspiegelen wat de werkgever heeft gekozen om te publiceren — ze zijn geen overheidsbeslissing of garantie van geschiktheid.",
+      "s2p2": "Visumuitkomsten hangen af van je nationaliteit, functie, salaris, status van de werkgeverslicentie en de huidige immigratieregels. Gebruik labels om realistische gesprekken te selecteren en bevestig vervolgens elke vereiste met de werkgever en officiële overheidsbronnen.",
+      "s3Title": "Wat wij controleren vs wat je zelf moet verifiëren",
+      "s3p1": "Wij bieden workflowtools, signalen tegen misbruik en duidelijke productgrenzen. Wij vervangen geen juridisch advies, sponsorlicentiecontroles of je eigen zorgvuldigheid bij een aanbod.",
+      "s3p2": "Als iets in een vermelding inconsistent lijkt, gebruik dan de rapportage- of contactmogelijkheden in het product. Voor gereguleerde immigratiebeslissingen, werk samen met een gekwalificeerde adviseur en het eigen HR- of mobiliteitsteam van de werkgever.",
+      "s4Title": "Bronlabels voor functies",
+      "s4Intro": "Global Sponsor Hub kan functies op drie manieren tonen:",
+      "s4p1": "Door werkgever geplaatst: De werkgever of hun gemachtigde team heeft de functie direct op Global Sponsor Hub geplaatst.",
+      "s4p2": "Connected from employer careers page: The employer has approved Global Sponsor Hub using their careers page or ATS source. Candidates normally apply through the employer’s existing application process.",
+      "s4p3": "Geselecteerde externe functie: Global Sponsor Hub heeft de functie gevonden uit openbare bronnen en linkt kandidaten naar de site van de werkgever. De werkgever heeft het profiel mogelijk niet geclaimd of goedgekeurd.",
+      "s5Title": "Sponsoring- en mobiliteitslabels",
+      "s5p1": "Sponsoring-, relocatie- en wereldwijde wervingslabels zijn gebaseerd op door de werkgever verstrekte informatie, gekoppelde broninformatie, signalen uit openbare bronnen of handmatige beoordeling. Deze labels zijn geen overheidsbeslissing en garanderen geen visumsponsoring. Kandidaten moeten de sponsorgegevens rechtstreeks met de werkgever bevestigen voordat ze op een functie vertrouwen.",
+      "footerNote": "Deze pagina vat productgedrag samen in eenvoudig Nederlands. Het is geen juridisch advies en kan worden bijgewerkt naarmate het product evolueert.",
+      "ctaJobs": "Zoek door werkgevers geplaatste banen",
+      "ctaGuides": "Gidsen hub",
+      "ctaExternal": "Externe functies",
+      "ctaContact": "Contact"
+    },
+    "pl": {
+      "metaTitle": "Jak oznaczamy oferty pracy pracodawców | Global Sponsor Hub",
+      "metaDescription": "Co oznaczają etykiety sponsorowania i relokacji na Global Sponsor Hub, co kontrolują pracodawcy i jak różnią się wyselekcjonowane role zewnętrzne od aplikacji na platformie.",
+      "breadcrumbHome": "Strona główna",
+      "breadcrumbCurrent": "Etykiety ofert pracy pracodawców",
+      "eyebrow": "Zaufanie i jasność",
+      "h1": "Jak oznaczamy oferty pracy pracodawców",
+      "intro": "Global Sponsor Hub jest stworzony dla międzynarodowej mobilności. Etykiety i typy ofert istnieją, abyś mógł filtrować z pewnością — i abyśmy nigdy nie zacierali granicy między ofertą pracodawcy tutaj a linkiem prowadzącym gdzie indziej.",
+      "s1Title": "Oferty pracodawców vs linki zewnętrzne",
+      "s1p1": "Role, które wyszukujesz i na które aplikujesz na tej stronie, są publikowane przez pracodawców (lub ich upoważniony zespół) w naszym produkcie ofert pracy. Aplikacje i aktualizacje statusu dla tych ról pozostają na Global Sponsor Hub, chyba że pracodawca skieruje cię gdzie indziej w procesie rekrutacji.",
+      "s1p2": "Wyselekcjonowane role zewnętrzne i oferty złożone przez agencje znajdują się w osobnym centrum. Karty są oznaczone źródłem i prowadzą do strony, która jest właścicielem aplikacji. Nie są mieszane z wynikami wyszukiwania pracodawców, jakby były natywnymi postami.",
+      "s2Title": "Co oznaczają etykiety mobilności (i czym nie są)",
+      "s2p1": "Pracodawcy mogą sygnalizować intencje za pomocą strukturalnych etykiet, takich jak sponsorowanie wiz, wsparcie relokacji, przyjazne dla pracy zdalnej zatrudnienie i podobne opcje. Etykiety odzwierciedlają to, co pracodawca zdecydował się opublikować — nie są decyzją rządu ani gwarancją kwalifikowalności.",
+      "s2p2": "Wyniki wizowe zależą od twojej narodowości, roli, wynagrodzenia, statusu licencji pracodawcy i aktualnych przepisów imigracyjnych. Używaj etykiet do tworzenia krótkiej listy realistycznych rozmów, a następnie potwierdź każdy wymóg z pracodawcą i oficjalnymi źródłami rządowymi.",
+      "s3Title": "Co sprawdzamy vs co musisz zweryfikować",
+      "s3p1": "Zapewniamy narzędzia do zarządzania przepływem pracy, sygnały antynadużyciowe i wyraźne granice produktu. Nie zastępujemy porad prawnych, kontroli licencji sponsora ani twojej własnej staranności przy ofercie.",
+      "s3p2": "Jeśli coś w ofercie wygląda niespójnie, użyj ścieżek raportowania lub kontaktu w produkcie. W przypadku regulowanych decyzji imigracyjnych współpracuj z wykwalifikowanym doradcą i zespołem HR lub mobilności pracodawcy.",
+      "s4Title": "Etykiety źródła roli",
+      "s4Intro": "Global Sponsor Hub może pokazywać role na trzy sposoby:",
+      "s4p1": "Opublikowane przez pracodawcę: Pracodawca lub jego upoważniony zespół opublikował rolę bezpośrednio na Global Sponsor Hub.",
+      "s4p2": "Zweryfikowany ATS pracodawcy: Importowane bezpośrednio z systemu śledzenia aplikacji (ATS) lub strony kariery zweryfikowanego pracodawcy. Aplikujesz na ich oficjalnej stronie.",
+      "s4p3": "Wyselekcjonowana rola zewnętrzna: Global Sponsor Hub znalazł rolę z publicznych źródeł i łączy kandydatów z witryną pracodawcy. Pracodawca może nie mieć roszczeń ani nie zatwierdził profilu.",
+      "s5Title": "Etykiety sponsorowania i mobilności",
+      "s5p1": "Etykiety sponsorowania, relokacji i globalnego zatrudnienia opierają się na informacjach dostarczonych przez pracodawcę, powiązanych informacjach źródłowych, sygnałach z publicznych źródeł lub ręcznej weryfikacji. Te etykiety nie są decyzją rządu i nie gwarantują sponsorowania wiz. Kandydaci powinni potwierdzić szczegóły sponsorowania bezpośrednio z pracodawcą przed poleganiem na roli.",
+      "footerNote": "Ta strona podsumowuje zachowanie produktu w prostym języku. Nie jest to porada prawna i może być aktualizowana wraz z rozwojem produktu.",
+      "ctaJobs": "Szukaj ofert pracy opublikowanych przez pracodawców",
+      "ctaGuides": "Centrum przewodników",
+      "ctaExternal": "Role zewnętrzne",
+      "ctaContact": "Kontakt"
+    }
+  }
+}

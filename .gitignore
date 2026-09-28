@@ -18,6 +18,8 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+*.aab
+*.apk
 
 # Metro
 .metro-health-check*
@@ -41,3 +43,10 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Superdesign temporary component templates
+.superdesign/tmp/
+
+# Local build QR codes and preview scratch files
+gsh-*-qr.png
+gsh-home-*-preview.*

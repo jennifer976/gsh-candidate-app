@@ -39,6 +39,11 @@ const SAFE_ROUTE_PREFIXES = [
   "/tools",
   "/tools-resources",
   "/guides",
+  "/countries",
+  "/country/",
+  "/guide/",
+  "/relocating/",
+  "/trust/",
   "/partners",
 ] as const;
 

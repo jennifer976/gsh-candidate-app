@@ -299,7 +299,7 @@ export function formatExternalListingAge(iso?: string): string | null {
     if (days === 1) return "Yesterday";
     if (days < 7) return `${days}d ago`;
     if (days < 30) return `${Math.floor(days / 7)}w ago`;
-    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    return d.toLocaleDateString("en-GB", { month: "short", day: "numeric" });
   } catch {
     return null;
   }

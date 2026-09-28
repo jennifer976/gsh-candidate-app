@@ -1,5 +1,5 @@
 import { useToolCopy } from "@/lib/i18n/useToolCopy";
-import { useAppLanguage } from "@/lib/i18n";
+import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import { parseBudgetCost } from "@/lib/relocationBudget";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -31,7 +31,7 @@ type PickerTarget = "from" | "to" | null;
 
 export default function CurrencyConverterScreen() {
  const ac = useToolCopy();
- const locale = useAppLanguage(s => s.locale);
+ const locale = toIntlLocale(useAppLanguage(s => s.locale));
   const router = useRouter();
   const [amount, setAmount] = useState("50000");
   const [from, setFrom] = useState("USD");

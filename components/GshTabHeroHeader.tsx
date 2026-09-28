@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import Animated, { useReducedMotion } from "react-native-reanimated";
 import { GshChromeIconButton } from "@/components/GshChromeIconButton";
 import { GshHeroWash } from "@/components/GshHeroWash";
-import { brandLockupLight, brandLogo } from "@/lib/brand-assets";
+import { brandLockupNavy, brandLockupWhite } from "@/lib/brand-assets";
 import {
   fetchConversations,
   fetchUnreadNotificationCount,
@@ -62,7 +62,7 @@ export function GshTabHeroHeader({
     >
       <View style={styles.topRow}>
         <Image
-          source={light ? brandLogo : brandLockupLight}
+          source={light ? brandLockupNavy : brandLockupWhite}
           style={styles.logo}
           resizeMode="contain"
           accessibilityIgnoresInvertColors
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     paddingTop: 12,
   },
-  logo: { width: 168, height: 36, maxWidth: "62%", flexShrink: 1 },
+  logo: { width: 168, height: 40, maxWidth: "62%", flexShrink: 1 },
   actions: { flexDirection: "row", gap: 8 },
   tagline: {
     fontSize: 11,

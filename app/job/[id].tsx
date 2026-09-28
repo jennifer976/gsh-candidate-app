@@ -1,6 +1,7 @@
 import { useAppCopy } from "@/lib/i18n";
 import { appCopy, type AppLanguage } from "@/lib/i18n/catalog";
-import { jobChipLabel } from "@/lib/job-presentation";
+import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
+import { jobAgeLabel, jobChipLabel, jobLocationLabel, jobSalaryLabel } from "@/lib/job-presentation";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -15,11 +16,16 @@ import {
   View,
 } from "react-native";
 import Animated, { FadeIn, FadeInUp, useReducedMotion } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { CandidateCompatibilityCard } from "@/components/CandidateCompatibilityCard";
-import { GshGradientPrimaryButton } from "@/components/GshGradientPrimaryButton";
-import { GshScreenBackground } from "@/components/GshScreenBackground";
+import {
+  BrandStatePanel,
+  DecorRing,
+  DepthButton,
+  DepthPressable,
+  DepthSurface,
+} from "@/components/gsh-brand";
 import { SkeletonBox } from "@/components/SkeletonLoader";
 import { applyToJob, fetchJobById, fetchOwnProfile, saveJob } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -36,20 +42,14 @@ import {
   stripHtmlToPlainText,
   visaRouteChips,
 } from "@/lib/job-display";
-import { STACK_HEADER_BODY_GAP } from "@/lib/screen-layout";
-import { colors, fontFamily, navHeader, radii } from "@/lib/theme";
+import { colors, fontFamily, radii } from "@/lib/theme";
 import type { Job, ScreeningAnswer } from "@/types/models";
+
+type IonName = keyof typeof Ionicons.glyphMap;
 
 function errMsg(e: unknown): string {
   if (e && typeof e === "object" && "message" in e) return String((e as { message: string }).message);
   return "Something went wrong.";
-}
-
-function formatSalary(minSalary?: number, maxSalary?: number, currency = "GBP", locale: AppLanguage = "en"): string {
-  const sym = currency === "GBP" ? "£" : currency === "EUR" ? "€" : currency === "USD" ? "$" : `${currency} `;
-  if (minSalary != null && maxSalary != null) return `${sym}${minSalary.toLocaleString(locale)}–${maxSalary.toLocaleString(locale)}`;
-  if (minSalary != null) return appCopy(locale, "jobsSalaryFrom", { amount: `${sym}${minSalary.toLocaleString(locale)}` });
-  return "";
 }
 
 function applicationUnavailableReason(job: Job, locale: AppLanguage): string | null {
@@ -68,46 +68,64 @@ function applicationUnavailableReason(job: Job, locale: AppLanguage): string | n
   return null;
 }
 
-function InfoRow({ icon, label }: { icon: string; label: string }) {
-  if (!label) return null;
-  return (
-    <View style={styles.infoRow}>
-      <Ionicons name={icon as any} size={16} color={colors.textMuted} />
-      <Text style={styles.infoLabel}>{label}</Text>
-    </View>
-  );
-}
-
 function SectionHeading({ title }: { title: string }) {
   return (
     <View style={styles.sectionHead}>
       <View style={styles.sectionRule} />
-      <Text style={styles.sectionTitle}>{title}</Text>
+      <Text style={styles.sectionTitle} accessibilityRole="header">{title}</Text>
     </View>
+  );
+}
+
+function HeroFact({ icon, label }: { icon: IonName; label: string }) {
+  if (!label) return null;
+  return (
+    <View style={styles.heroFact}>
+      <Ionicons name={icon} size={14} color={colors.cyan} />
+      <Text style={styles.heroFactText} numberOfLines={1}>{label}</Text>
+    </View>
+  );
+}
+
+function RoundButton({
+  icon,
+  onPress,
+  label,
+  active,
+  disabled,
+}: {
+  icon: IonName;
+  onPress: () => void;
+  label: string;
+  active?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      hitSlop={6}
+      style={[styles.roundButton, active && styles.roundButtonOn]}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ selected: Boolean(active), disabled: Boolean(disabled) }}
+    >
+      <Ionicons name={icon} size={20} color={active ? colors.navy : colors.white} />
+    </Pressable>
   );
 }
 
 function JobDetailSkeleton() {
   return (
     <View style={styles.skeletonPad}>
-      <View style={styles.skeletonHero}>
-        <SkeletonBox width={56} height={56} radius={14} />
-        <View style={{ flex: 1, gap: 10 }}>
-          <SkeletonBox width="80%" height={22} radius={7} />
-          <SkeletonBox width="55%" height={16} radius={6} />
-          <SkeletonBox width="65%" height={13} radius={5} />
-        </View>
-      </View>
-      <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
-        <SkeletonBox width={110} height={26} radius={99} />
-        <SkeletonBox width={90} height={26} radius={99} />
-      </View>
-      <SkeletonBox width="100%" height={1} radius={0} style={{ marginTop: 20, backgroundColor: colors.border }} />
-      <SkeletonBox width="40%" height={14} radius={5} style={{ marginTop: 20 }} />
-      <SkeletonBox width="100%" height={12} radius={5} style={{ marginTop: 12 }} />
+      <SkeletonBox width="40%" height={14} radius={5} />
+      <SkeletonBox width="100%" height={12} radius={5} style={{ marginTop: 14 }} />
       <SkeletonBox width="95%" height={12} radius={5} style={{ marginTop: 8 }} />
       <SkeletonBox width="85%" height={12} radius={5} style={{ marginTop: 8 }} />
       <SkeletonBox width="90%" height={12} radius={5} style={{ marginTop: 8 }} />
+      <SkeletonBox width="35%" height={14} radius={5} style={{ marginTop: 28 }} />
+      <SkeletonBox width="100%" height={48} radius={14} style={{ marginTop: 14 }} />
+      <SkeletonBox width="100%" height={48} radius={14} style={{ marginTop: 10 }} />
     </View>
   );
 }
@@ -116,7 +134,9 @@ export default function JobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const qc = useQueryClient();
-  const { t, locale } = useAppCopy();
+  const insets = useSafeAreaInsets();
+  const { t, locale, intlLocale } = useAppCopy();
+  const ac = useAccountCopy();
   const reducedMotion = useReducedMotion();
   const jobId = String(id || "");
   const [coverLetter, setCoverLetter] = useState("");
@@ -181,11 +201,16 @@ export default function JobDetailScreen() {
         [{ text: t("ok"), onPress: () => router.back() }]
       );
     },
-    onError: (e: unknown) => {
+    onError: () => {
       void hapticWarning();
       Alert.alert(t("detailApplyError"), t("detailApplyErrorHelp"));
     },
   });
+
+  function goBack() {
+    if (router.canGoBack()) router.back();
+    else router.replace("/(tabs)/jobs");
+  }
 
   function onApplyPress() {
     if (!token) {
@@ -248,398 +273,428 @@ export default function JobDetailScreen() {
     saveMut.mutate();
   }
 
-  // — Error / empty states —
-  if (!jobId.trim()) {
+  const screenOptions = <Stack.Screen options={{ title: t("detailTitle"), headerShown: false }} />;
+  const topBar = (showSave: boolean) => (
+    <View style={[styles.topBar, { paddingTop: Math.max(insets.top, 12) + 8 }]}>
+      <RoundButton icon="arrow-back" onPress={goBack} label={t("detailBack")} />
+      {showSave ? (
+        <RoundButton
+          icon={saved ? "bookmark" : "bookmark-outline"}
+          onPress={onSavePress}
+          label={saved ? t("detailSaved") : t("jobsSave")}
+          active={saved}
+          disabled={saveMut.isPending || saved}
+        />
+      ) : null}
+    </View>
+  );
+
+  if (!jobId.trim() || jobQuery.isError) {
+    const invalid = !jobId.trim();
     return (
-      <GshScreenBackground>
-        <View style={styles.center}>
-          <Ionicons name="link-outline" size={44} color={colors.borderStrong} />
-          <Text style={styles.errTitle}>{t("detailInvalid")}</Text>
-          <Pressable style={styles.ghostBtn} onPress={() => router.back()}>
-            <Text style={styles.ghostBtnText}>{t("detailBack")}</Text>
-          </Pressable>
+      <View style={styles.root}>
+        {screenOptions}
+        <DecorRing size={260} thickness={34} color="rgba(66,224,227,0.12)" style={{ top: -110, right: -110 }} />
+        {topBar(false)}
+        <View style={styles.stateWrap}>
+          <BrandStatePanel
+            tone="navy"
+            icon={invalid ? "link-outline" : "cloud-offline-outline"}
+            title={invalid ? t("detailInvalid") : t("detailLoadError")}
+            body={invalid ? ac("This link doesn't point to a job we can find.") : t("retrySupport")}
+            primary={
+              invalid
+                ? { label: t("detailBack"), icon: "arrow-back", onPress: goBack }
+                : { label: t("retry"), icon: "refresh", onPress: () => void jobQuery.refetch() }
+            }
+          />
         </View>
-      </GshScreenBackground>
+      </View>
     );
   }
 
-  if (jobQuery.isError) {
-    return (
-      <GshScreenBackground>
-        <View style={styles.center}>
-          <Ionicons name="cloud-offline-outline" size={44} color={colors.borderStrong} />
-          <Text style={styles.errTitle}>{t("detailLoadError")}</Text>
-          <Text style={styles.errSub}>{t("retrySupport")}</Text>
-          <Pressable style={styles.ghostBtn} onPress={() => void jobQuery.refetch()}>
-            <Text style={styles.ghostBtnText}>{t("retry")}</Text>
-          </Pressable>
-        </View>
-      </GshScreenBackground>
-    );
-  }
-
-  // — Skeleton while loading —
   if (jobQuery.isLoading) {
     return (
-      <GshScreenBackground>
-        <Stack.Screen options={{ title: t("detailTitle"), ...navHeader }} />
-        <SafeAreaView style={styles.safe} edges={["bottom"]}>
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPad}>
-            <View style={styles.skeletonHeroBand}>
-              <JobDetailSkeleton />
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </GshScreenBackground>
+      <View style={styles.root}>
+        {screenOptions}
+        <DecorRing size={260} thickness={34} color="rgba(66,224,227,0.12)" style={{ top: -110, right: -110 }} />
+        {topBar(false)}
+        <View style={styles.heroSkeleton}>
+          <SkeletonBox width={64} height={64} radius={18} />
+          <SkeletonBox width="80%" height={26} radius={8} style={{ marginTop: 18 }} />
+          <SkeletonBox width="55%" height={16} radius={6} style={{ marginTop: 10 }} />
+        </View>
+        <View style={[styles.sheet, styles.sheetFill]}>
+          <JobDetailSkeleton />
+        </View>
+      </View>
     );
   }
 
   const job = jobQuery.data!;
   const employer = getJobEmployerLabel(job, locale);
   const logoUrl = getJobLogoUrl(job);
-  const location = [job.locationCity, job.locationCountry].filter(Boolean).join(", ") || job.location || "";
-  const salary = formatSalary(job.minSalary, job.maxSalary, job.salaryCurrency, locale);
+  const location = jobLocationLabel(job, locale);
+  const salary = jobSalaryLabel(job, locale);
   const chips = hubListingChips(job, 6);
   const visaRoutes = visaRouteChips(job);
   const { mobility: mobilityItems, perks: perkItems } = splitMobilityAndPerks(job);
   const descriptionPlain = job.description ? stripHtmlToPlainText(job.description) : "";
   const jobTypeLabel = job.jobType ? String(job.jobType).replace(/-/g, " ") : "";
   const unavailableReason = applicationUnavailableReason(job, locale);
+  const postedLabel = jobAgeLabel(job.createdAt, locale);
 
   return (
-    <GshScreenBackground>
-      <Stack.Screen options={{ title: t("detailTitle"), ...navHeader }} />
-      <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollPad}>
-
-          {/* ── Hero ── */}
-          <Animated.View entering={reducedMotion ? undefined : FadeIn.duration(400)}>
-            <View style={styles.hero}>
-              <View style={styles.heroTop}>
-                <CompanyLogo logoUrl={logoUrl} companyName={employer} size={56} radius={14} />
-                <View style={styles.heroText}>
-                  <Text style={styles.heroTitle} numberOfLines={3}>{job.title}</Text>
-                  <Text style={styles.heroCompany} numberOfLines={1}>{employer}</Text>
-                </View>
-              </View>
-
-              <View style={styles.heroMeta}>
-                {location ? (
-                  <View style={styles.heroMetaRow}>
-                    <Ionicons name="location-outline" size={14} color="rgba(255,255,255,0.55)" />
-                    <Text style={styles.heroMetaText}>{location}</Text>
-                  </View>
-                ) : null}
-                {jobTypeLabel ? (
-                  <View style={styles.heroMetaRow}>
-                    <Ionicons name="briefcase-outline" size={14} color="rgba(255,255,255,0.55)" />
-                    <Text style={styles.heroMetaText}>{jobTypeLabel}</Text>
-                  </View>
-                ) : null}
-                {job.experienceLevel ? (
-                  <View style={styles.heroMetaRow}>
-                    <Ionicons name="trending-up-outline" size={14} color="rgba(255,255,255,0.55)" />
-                    <Text style={styles.heroMetaText}>{job.experienceLevel}</Text>
-                  </View>
-                ) : null}
-                {salary ? (
-                  <View style={styles.heroMetaRow}>
-                    <Ionicons name="cash-outline" size={14} color="rgba(255,255,255,0.55)" />
-                    <Text style={[styles.heroMetaText, styles.heroSalary]}>{salary}</Text>
-                  </View>
-                ) : null}
-              </View>
-
-              {/* Chips */}
-              {chips.length > 0 ? (
-                <View style={styles.chipRow}>
-                  {chips.map((c) => {
-                    
-                    return (
-                      <View key={c} style={[styles.chip, { backgroundColor: "rgba(255,255,255,0.14)", borderColor: "rgba(255,255,255,0.22)" }]}>
-                        <Text style={[styles.chipText, { color: "rgba(255,255,255,0.9)" }]} >{jobChipLabel(c, locale)}</Text>
-                      </View>
-                    );
-                  })}
-                </View>
-              ) : null}
-
+    <View style={styles.root}>
+      {screenOptions}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollPad}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.hero}>
+          <DecorRing size={260} thickness={34} color="rgba(66,224,227,0.12)" style={{ top: -110, right: -110 }} />
+          <DecorRing size={120} thickness={18} color="rgba(66,224,227,0.1)" style={{ bottom: 20, left: -60 }} />
+          {topBar(true)}
+          <Animated.View entering={reducedMotion ? undefined : FadeIn.duration(400)} style={styles.heroBody}>
+            <DepthSurface depth={4} radius={20} depthColor={colors.cyan} style={styles.logoSurface} innerStyle={styles.logoFace}>
+              <CompanyLogo logoUrl={logoUrl} companyName={employer} size={52} radius={14} />
+            </DepthSurface>
+            <Text style={styles.heroCompany} numberOfLines={1}>{employer}</Text>
+            <Text style={styles.heroTitle} numberOfLines={4} accessibilityRole="header">{job.title}</Text>
+            {salary ? <Text style={styles.heroSalary}>{salary}</Text> : null}
+            <View style={styles.heroFacts}>
+              <HeroFact icon="location-outline" label={location} />
+              <HeroFact icon="briefcase-outline" label={jobTypeLabel} />
+              <HeroFact icon="trending-up-outline" label={job.experienceLevel ?? ""} />
+              <HeroFact icon="time-outline" label={postedLabel ?? ""} />
             </View>
           </Animated.View>
+        </View>
 
-          {/* ── Body content ── */}
-          <Animated.View entering={reducedMotion ? undefined : FadeInUp.delay(150).duration(400)} style={styles.body}>
-
-            <CandidateCompatibilityCard jobId={jobId} />
-
-            {job.summary ? (
-              <>
-                <SectionHeading title={t("detailOverview")} />
-                <Text style={styles.bodyText}>{job.summary}</Text>
-              </>
-            ) : null}
-
-            {descriptionPlain ? (
-              <>
-                <SectionHeading title={t("detailAbout")} />
-                <Text style={styles.bodyText}>{descriptionPlain}</Text>
-              </>
-            ) : null}
-
-            {visaRoutes.length > 0 || mobilityItems.length > 0 ? (
-              <>
-                <SectionHeading title={t("detailSupport")} />
-                <View style={styles.mobilityList}>
-                  {visaRoutes.map((route) => (
-                    <View key={`visa-${route}`} style={styles.mobilityRow}>
-                      <Ionicons name="id-card-outline" size={18} color={colors.accent} />
-                      <Text style={styles.mobilityText}>{jobChipLabel(formatVisaRouteChip(route), locale)}</Text>
-                    </View>
-                  ))}
-                  {mobilityItems.map((m) => (
-                    <View key={m} style={styles.mobilityRow}>
-                      <Ionicons name="checkmark-circle" size={18} color={colors.accent} />
-                      <Text style={styles.mobilityText}>{jobChipLabel(m, locale)}</Text>
-                    </View>
-                  ))}
+        <Animated.View
+          entering={reducedMotion ? undefined : FadeInUp.delay(150).duration(400)}
+          style={styles.sheet}
+        >
+          {chips.length > 0 ? (
+            <View style={styles.chipRow}>
+              {chips.map((c) => (
+                <View key={c} style={styles.chip}>
+                  <Text style={styles.chipText}>{jobChipLabel(c, locale)}</Text>
                 </View>
-              </>
-            ) : null}
+              ))}
+            </View>
+          ) : null}
 
-            {perkItems.length > 0 ? (
-              <>
-                <SectionHeading title={t("detailPerks")} />
-                <View style={styles.mobilityList}>
-                  {perkItems.map((p) => (
-                    <View key={p} style={styles.mobilityRow}>
-                      <Ionicons name="gift-outline" size={18} color={colors.accent} />
-                      <Text style={styles.mobilityText}>{p}</Text>
+          <CandidateCompatibilityCard jobId={jobId} />
+
+          {job.summary ? (
+            <>
+              <SectionHeading title={t("detailOverview")} />
+              <Text style={styles.bodyText}>{job.summary}</Text>
+            </>
+          ) : null}
+
+          {descriptionPlain ? (
+            <>
+              <SectionHeading title={t("detailAbout")} />
+              <Text style={styles.bodyText}>{descriptionPlain}</Text>
+            </>
+          ) : null}
+
+          {visaRoutes.length > 0 || mobilityItems.length > 0 ? (
+            <>
+              <SectionHeading title={t("detailSupport")} />
+              <View style={styles.supportList}>
+                {visaRoutes.map((route) => (
+                  <View key={`visa-${route}`} style={styles.supportRow}>
+                    <View style={styles.supportIcon}>
+                      <Ionicons name="id-card-outline" size={16} color={colors.navy} />
                     </View>
-                  ))}
-                </View>
-              </>
-            ) : null}
+                    <Text style={styles.supportText}>{jobChipLabel(formatVisaRouteChip(route), locale)}</Text>
+                  </View>
+                ))}
+                {mobilityItems.map((m) => (
+                  <View key={m} style={styles.supportRow}>
+                    <View style={styles.supportIcon}>
+                      <Ionicons name="checkmark" size={16} color={colors.navy} />
+                    </View>
+                    <Text style={styles.supportText}>{jobChipLabel(m, locale)}</Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : null}
 
-            {job.expiresAt ? (
-              <>
-                <SectionHeading title={t("detailDeadline")} />
-                <Text style={styles.bodyText}>
-                  {new Date(job.expiresAt).toLocaleDateString(locale, {
+          {perkItems.length > 0 ? (
+            <>
+              <SectionHeading title={t("detailPerks")} />
+              <View style={styles.supportList}>
+                {perkItems.map((p) => (
+                  <View key={p} style={styles.supportRow}>
+                    <View style={styles.supportIcon}>
+                      <Ionicons name="gift-outline" size={16} color={colors.navy} />
+                    </View>
+                    <Text style={styles.supportText}>{p}</Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : null}
+
+          {job.expiresAt ? (
+            <>
+              <SectionHeading title={t("detailDeadline")} />
+              <View style={styles.deadlineRow}>
+                <Ionicons name="calendar-outline" size={18} color={colors.navy} />
+                <Text style={styles.deadlineText}>
+                  {new Date(job.expiresAt).toLocaleDateString(intlLocale, {
                     day: "2-digit",
                     month: "short",
                     year: "numeric",
                   })}
                 </Text>
-              </>
-            ) : null}
+              </View>
+            </>
+          ) : null}
 
-            {job.screeningQuestions?.length ? (
-              <>
-                <SectionHeading title={t("detailQuestions")} />
-                <View style={styles.screeningList}>
-                  {job.screeningQuestions.map((question) => (
-                    <View key={question.id} style={styles.screeningQuestion}>
-                      <Text style={styles.screeningLabel}>
-                        {question.question}
-                        {question.required !== false ? <Text style={styles.required}> *</Text> : null}
-                      </Text>
-                      {question.type === "yes_no" ? (
-                        <View style={styles.answerChoices}>
-                          {(["yes", "no"] as const).map((answer) => {
-                            const selected = screeningAnswers[question.id] === answer;
-                            return (
-                              <Pressable
-                                key={answer}
-                                style={[styles.answerChoice, selected && styles.answerChoiceSelected]}
-                                onPress={() => setScreeningAnswers((current) => ({ ...current, [question.id]: answer }))}
-                                accessibilityRole="radio"
-                                accessibilityState={{ selected }}
-                              >
-                                <Text style={[styles.answerChoiceText, selected && styles.answerChoiceTextSelected]}>
-                                  {answer === "yes" ? t("detailYes") : t("detailNo")}
-                                </Text>
-                              </Pressable>
-                            );
-                          })}
-                        </View>
-                      ) : (
-                        <TextInput
-                          style={styles.screeningInput}
-                          multiline
-                          placeholder={t("detailAnswer")}
-                          placeholderTextColor={colors.placeholder}
-                          value={screeningAnswers[question.id] ?? ""}
-                          onChangeText={(answer) => setScreeningAnswers((current) => ({ ...current, [question.id]: answer }))}
-                          maxLength={1000}
-                          textAlignVertical="top"
-                        />
-                      )}
-                    </View>
-                  ))}
-                </View>
-              </>
-            ) : null}
+          {job.screeningQuestions?.length ? (
+            <>
+              <SectionHeading title={t("detailQuestions")} />
+              <View style={styles.screeningList}>
+                {job.screeningQuestions.map((question) => (
+                  <View key={question.id} style={styles.screeningQuestion}>
+                    <Text style={styles.screeningLabel}>
+                      {question.question}
+                      {question.required !== false ? <Text style={styles.required}> *</Text> : null}
+                    </Text>
+                    {question.type === "yes_no" ? (
+                      <View style={styles.answerChoices}>
+                        {(["yes", "no"] as const).map((answer) => {
+                          const selected = screeningAnswers[question.id] === answer;
+                          return (
+                            <Pressable
+                              key={answer}
+                              style={[styles.answerChoice, selected && styles.answerChoiceSelected]}
+                              onPress={() => setScreeningAnswers((current) => ({ ...current, [question.id]: answer }))}
+                              accessibilityRole="radio"
+                              accessibilityState={{ selected }}
+                            >
+                              <Text style={[styles.answerChoiceText, selected && styles.answerChoiceTextSelected]}>
+                                {answer === "yes" ? t("detailYes") : t("detailNo")}
+                              </Text>
+                            </Pressable>
+                          );
+                        })}
+                      </View>
+                    ) : (
+                      <TextInput
+                        style={styles.screeningInput}
+                        multiline
+                        placeholder={t("detailAnswer")}
+                        placeholderTextColor={colors.placeholder}
+                        value={screeningAnswers[question.id] ?? ""}
+                        onChangeText={(answer) => setScreeningAnswers((current) => ({ ...current, [question.id]: answer }))}
+                        maxLength={1000}
+                        textAlignVertical="top"
+                      />
+                    )}
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : null}
 
-            {/* Cover letter */}
-            <SectionHeading title={t("detailNote")} />
-            <Text style={styles.coverHint}>
-              {t("detailNoteHelp")}
-            </Text>
-            <TextInput
-              style={styles.cover}
-              multiline
-              placeholder={t("detailNotePlaceholder")}
-              placeholderTextColor={colors.placeholder}
-              value={coverLetter}
-              onChangeText={setCoverLetter}
-              textAlignVertical="top"
-            />
-
-            {/* CV warning */}
-            {profileQuery.isSuccess && !resumeUrl ? (
-              <Pressable
-                style={styles.cvBanner}
-                onPress={() => router.push("/(tabs)/profile")}
-                accessibilityRole="button"
-              >
-                <Ionicons name="warning-outline" size={20} color="#92400e" />
-                <Text style={styles.cvBannerText}>
-                  {t("detailCvHelp")}{" "}
-                  <Text style={styles.cvBannerLink}>{t("detailAddCv")}</Text>
-                </Text>
-              </Pressable>
-            ) : null}
-
-            {/* Apply guidance; the action remains visible in the native bottom bar. */}
-            <View style={styles.actions}>
-              {unavailableReason ? (
-                <View style={styles.unavailableBanner}>
-                  <Ionicons name="lock-closed-outline" size={18} color="#92400e" />
-                  <Text style={styles.unavailableText}>{unavailableReason}</Text>
-                </View>
-              ) : null}
-              <Text style={styles.applyNote}>
-                {t("detailSharing")}
-              </Text>
-            </View>
-          </Animated.View>
-        </ScrollView>
-        <View style={styles.persistentBar}>
-          <Pressable
-            style={[styles.persistentSave, saved && styles.persistentSaveSaved]}
-            onPress={onSavePress}
-            disabled={saveMut.isPending || saved}
-            accessibilityRole="button"
-            accessibilityLabel={saved ? t("detailSaved") : t("jobsSave")}
-          >
-            <Ionicons name={saved ? "bookmark" : "bookmark-outline"} size={20} color={colors.navy} />
-            <Text style={styles.persistentSaveText}>{saved ? t("detailSaved") : t("detailSave")}</Text>
-          </Pressable>
-          <GshGradientPrimaryButton
-            title={unavailableReason ? t("detailUnavailable") : t("detailApply")}
-            onPress={onApplyPress}
-            loading={applyMut.isPending}
-            disabled={Boolean(unavailableReason) || profileQuery.isLoading}
-            containerStyle={styles.persistentApply}
+          <SectionHeading title={t("detailNote")} />
+          <Text style={styles.coverHint}>{t("detailNoteHelp")}</Text>
+          <TextInput
+            style={styles.cover}
+            multiline
+            placeholder={t("detailNotePlaceholder")}
+            placeholderTextColor={colors.placeholder}
+            value={coverLetter}
+            onChangeText={setCoverLetter}
+            textAlignVertical="top"
           />
-        </View>
-      </SafeAreaView>
-    </GshScreenBackground>
+
+          {profileQuery.isSuccess && !resumeUrl ? (
+            <DepthPressable
+              onPress={() => router.push("/(tabs)/profile")}
+              face={colors.navy}
+              depthColor={colors.cyan}
+              depth={4}
+              radius={18}
+              style={styles.cvCardWrap}
+              innerStyle={styles.cvCard}
+              accessibilityLabel={t("detailAddCv")}
+            >
+              <View style={styles.cvIcon}>
+                <Ionicons name="document-attach-outline" size={20} color={colors.navy} />
+              </View>
+              <View style={{ flex: 1, minWidth: 0 }}>
+                <Text style={styles.cvText}>{t("detailCvHelp")}</Text>
+                <Text style={styles.cvLink}>{t("detailAddCv")}</Text>
+              </View>
+              <Ionicons name="arrow-forward" size={18} color={colors.cyan} />
+            </DepthPressable>
+          ) : null}
+
+          <View style={styles.actions}>
+            {unavailableReason ? (
+              <View style={styles.unavailableBanner}>
+                <Ionicons name="lock-closed-outline" size={18} color={colors.navy} />
+                <Text style={styles.unavailableText}>{unavailableReason}</Text>
+              </View>
+            ) : null}
+            <Text style={styles.applyNote}>{t("detailSharing")}</Text>
+          </View>
+        </Animated.View>
+      </ScrollView>
+
+      <View style={[styles.persistentBar, { paddingBottom: Math.max(insets.bottom, 10) + 4 }]}>
+        <DepthPressable
+          onPress={onSavePress}
+          disabled={saveMut.isPending || saved}
+          face={saved ? colors.cyan : colors.white}
+          depthColor={colors.navy}
+          depth={4}
+          radius={18}
+          borderColor={colors.navy}
+          borderWidth={2}
+          accessibilityLabel={saved ? t("detailSaved") : t("jobsSave")}
+          innerStyle={styles.persistentSave}
+        >
+          <Ionicons name={saved ? "bookmark" : "bookmark-outline"} size={20} color={colors.navy} />
+          <Text style={styles.persistentSaveText}>{saved ? t("detailSaved") : t("detailSave")}</Text>
+        </DepthPressable>
+        <DepthButton
+          title={unavailableReason ? t("detailUnavailable") : t("detailApply")}
+          onPress={onApplyPress}
+          variant="cyan"
+          loading={applyMut.isPending}
+          disabled={Boolean(unavailableReason) || profileQuery.isLoading}
+          icon={unavailableReason ? null : "arrow-forward"}
+          style={styles.persistentApply}
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
-  scrollPad: { paddingBottom: 24 },
-  skeletonHeroBand: {
-    paddingHorizontal: 16,
-    paddingTop: STACK_HEADER_BODY_GAP,
-    paddingBottom: 8,
-  },
-  center: {
-    flex: 1,
-    justifyContent: "center",
+  root: { flex: 1, backgroundColor: colors.navy, overflow: "hidden" },
+  scrollPad: { flexGrow: 1, backgroundColor: colors.white },
+
+  topBar: {
+    flexDirection: "row",
     alignItems: "center",
-    padding: 32,
-    gap: 14,
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
   },
+  roundButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 2,
+    borderColor: "rgba(255,255,255,0.35)",
+    backgroundColor: "rgba(255,255,255,0.08)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  roundButtonOn: { backgroundColor: colors.cyan, borderColor: colors.cyan },
 
-  // Skeleton
-  skeletonPad: { paddingHorizontal: 16, paddingTop: 4, gap: 0 },
-  skeletonHero: { flexDirection: "row", gap: 14, alignItems: "flex-start" },
-
-  // Hero
   hero: {
     backgroundColor: colors.navy,
-    paddingTop: STACK_HEADER_BODY_GAP,
-    paddingBottom: 22,
-    paddingHorizontal: 16,
-    gap: 14,
+    paddingBottom: 44,
+    overflow: "hidden",
   },
-  heroTop: { flexDirection: "row", gap: 16, alignItems: "flex-start" },
-  heroText: { flex: 1, minWidth: 0 },
-  heroTitle: {
-    fontSize: 20,
-    fontFamily: fontFamily.heading,
-    color: colors.white,
-    letterSpacing: -0.4,
-    lineHeight: 26,
-  },
+  heroBody: { paddingHorizontal: 20, paddingTop: 18 },
+  logoSurface: { alignSelf: "flex-start" },
+  logoFace: { padding: 6 },
   heroCompany: {
-    marginTop: 6,
-    fontSize: 15,
-    fontFamily: fontFamily.semiBold,
-    color: "rgba(255,255,255,0.75)",
+    marginTop: 16,
+    fontSize: 12,
+    fontFamily: fontFamily.extraBold,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    color: colors.cyan,
   },
-  heroMeta: { gap: 8 },
-  heroMetaRow: { flexDirection: "row", alignItems: "center", gap: 7 },
-  heroMetaText: {
-    fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: "rgba(255,255,255,0.6)",
+  heroTitle: {
+    marginTop: 6,
+    fontSize: 28,
+    lineHeight: 32,
+    fontFamily: fontFamily.heading,
+    letterSpacing: -0.6,
+    color: colors.white,
   },
   heroSalary: {
-    fontFamily: fontFamily.bold,
-    color: colors.teal,
-    fontSize: 14,
+    marginTop: 10,
+    fontSize: 18,
+    fontFamily: fontFamily.extraBold,
+    color: colors.cyan,
   },
-  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  chip: {
-    paddingVertical: 5,
+  heroFacts: { marginTop: 16, flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  heroFact: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
     paddingHorizontal: 10,
+    paddingVertical: 6,
     borderRadius: radii.pill,
-    borderWidth: 1,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    maxWidth: "100%",
   },
-  chipText: { fontSize: 11, fontFamily: fontFamily.semiBold },
+  heroFactText: {
+    fontSize: 12,
+    fontFamily: fontFamily.semiBold,
+    color: "rgba(255,255,255,0.85)",
+    textTransform: "capitalize",
+    flexShrink: 1,
+  },
+  heroSkeleton: { paddingHorizontal: 20, paddingTop: 18, paddingBottom: 44 },
 
-  // Body
-  body: {
-    paddingHorizontal: 16,
-    paddingTop: 20,
-    paddingBottom: 8,
-    gap: 0,
+  sheet: {
+    marginTop: -28,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
     backgroundColor: colors.white,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border,
+    paddingHorizontal: 18,
+    paddingTop: 22,
+    paddingBottom: 24,
   },
+  sheetFill: { flex: 1, marginTop: 0 },
+  stateWrap: { flex: 1, justifyContent: "center", paddingHorizontal: 16, paddingBottom: 60 },
+  skeletonPad: { paddingTop: 4 },
+
+  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: 16 },
+  chip: {
+    paddingVertical: 6,
+    paddingHorizontal: 11,
+    borderRadius: radii.pill,
+    borderWidth: 2,
+    borderColor: colors.navy,
+    backgroundColor: colors.pale,
+  },
+  chipText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy },
+
   sectionHead: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
     marginBottom: 12,
-    marginTop: 24,
+    marginTop: 26,
   },
   sectionRule: {
-    width: 4,
-    height: 18,
-    borderRadius: 2,
-    backgroundColor: colors.teal,
+    width: 6,
+    height: 20,
+    borderRadius: 3,
+    backgroundColor: colors.cyan,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: fontFamily.heading,
     color: colors.navy,
-    letterSpacing: -0.2,
+    letterSpacing: -0.3,
   },
   bodyText: {
     fontSize: 15,
@@ -647,63 +702,73 @@ const styles = StyleSheet.create({
     color: colors.textMarketing,
     lineHeight: 24,
   },
-  mobilityList: { gap: 10 },
-  mobilityRow: {
+  supportList: { gap: 10 },
+  supportRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 12,
     paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: radii.md,
-    backgroundColor: colors.brandSoft,
-    borderWidth: 1,
-    borderColor: colors.teal,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: colors.navy,
+    backgroundColor: colors.white,
   },
-  mobilityText: {
+  supportIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  supportText: {
     flex: 1,
     fontSize: 14,
-    fontFamily: fontFamily.semiBold,
+    fontFamily: fontFamily.bold,
     color: colors.navy,
   },
+  deadlineRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  deadlineText: { fontSize: 15, fontFamily: fontFamily.bold, color: colors.navy },
 
   screeningList: { gap: 12 },
   screeningQuestion: {
     padding: 14,
     gap: 10,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: colors.navy,
     backgroundColor: colors.white,
   },
-  screeningLabel: { fontSize: 14, lineHeight: 20, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
+  screeningLabel: { fontSize: 14, lineHeight: 20, fontFamily: fontFamily.semiBold, color: colors.navy },
   required: { color: colors.error },
   answerChoices: { flexDirection: "row", gap: 9 },
   answerChoice: {
     minWidth: 76,
     minHeight: 44,
     alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 10,
     borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-    backgroundColor: colors.surfaceMuted,
+    borderWidth: 2,
+    borderColor: colors.navy,
+    backgroundColor: colors.white,
   },
-  answerChoiceSelected: { borderColor: colors.brand, backgroundColor: colors.brandSoft },
-  answerChoiceText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
-  answerChoiceTextSelected: { color: colors.brandDeep },
+  answerChoiceSelected: { backgroundColor: colors.navy },
+  answerChoiceText: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy },
+  answerChoiceTextSelected: { color: colors.cyan },
   screeningInput: {
     minHeight: 84,
     padding: 12,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surfaceMuted,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.pale,
     fontSize: 16,
     fontFamily: fontFamily.regular,
     color: colors.textPrimary,
   },
 
-  // Cover letter
   coverHint: {
     fontSize: 13,
     fontFamily: fontFamily.regular,
@@ -712,10 +777,10 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   cover: {
-    minHeight: 100,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radii.lg,
+    minHeight: 110,
+    borderWidth: 2,
+    borderColor: colors.navy,
+    borderRadius: 18,
     padding: 14,
     fontSize: 16,
     backgroundColor: colors.white,
@@ -724,43 +789,41 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
 
-  // CV banner
-  cvBanner: {
+  cvCardWrap: { marginTop: 18 },
+  cvCard: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 10,
-    marginTop: 16,
+    alignItems: "center",
+    gap: 12,
     padding: 14,
-    borderRadius: radii.md,
-    backgroundColor: "#fffbeb",
-    borderWidth: 1,
-    borderColor: "#fde68a",
   },
-  cvBannerText: {
-    flex: 1,
-    fontSize: 14,
+  cvIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cvText: {
+    fontSize: 13,
+    lineHeight: 18,
     fontFamily: fontFamily.medium,
-    color: "#92400e",
-    lineHeight: 20,
+    color: "rgba(255,255,255,0.85)",
   },
-  cvBannerLink: {
-    fontFamily: fontFamily.bold,
-    textDecorationLine: "underline",
-  },
+  cvLink: { marginTop: 2, fontSize: 14, fontFamily: fontFamily.extraBold, color: colors.cyan },
 
-  // Actions
-  actions: { marginTop: 28, gap: 12 },
+  actions: { marginTop: 24, gap: 12 },
   unavailableBanner: {
     flexDirection: "row",
     alignItems: "center",
     gap: 9,
     padding: 12,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: "#fed7aa",
-    backgroundColor: "#fff7ed",
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: colors.navy,
+    backgroundColor: colors.pale,
   },
-  unavailableText: { flex: 1, fontSize: 13, lineHeight: 18, fontFamily: fontFamily.semiBold, color: "#92400e" },
+  unavailableText: { flex: 1, fontSize: 13, lineHeight: 18, fontFamily: fontFamily.semiBold, color: colors.navy },
   applyNote: {
     fontSize: 12,
     fontFamily: fontFamily.regular,
@@ -768,61 +831,25 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 18,
   },
+
   persistentBar: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
     paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 8,
+    paddingTop: 12,
     backgroundColor: colors.white,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.border,
+    borderTopWidth: 2,
+    borderTopColor: colors.pale,
   },
   persistentSave: {
     minWidth: 76,
+    height: 52,
     paddingHorizontal: 12,
-    minHeight: 52,
     alignItems: "center",
     justifyContent: "center",
     gap: 2,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-    backgroundColor: colors.white,
   },
-  persistentSaveSaved: { backgroundColor: colors.brandSoft, borderColor: colors.teal },
-  persistentSaveText: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.navy },
+  persistentSaveText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy },
   persistentApply: { flex: 1 },
-
-  // Error / ghost
-  errTitle: {
-    fontSize: 18,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-    textAlign: "center",
-  },
-  errSub: {
-    fontSize: 14,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-    textAlign: "center",
-    lineHeight: 20,
-  },
-  ghostBtn: {
-    marginTop: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 99,
-    borderWidth: 1,
-    borderColor: colors.brand,
-  },
-  ghostBtnText: {
-    fontSize: 15,
-    fontFamily: fontFamily.semiBold,
-    color: colors.brand,
-    textAlign: "center",
-  },
-  infoRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-  infoLabel: { fontSize: 13, fontFamily: fontFamily.regular, color: colors.textMuted },
 });

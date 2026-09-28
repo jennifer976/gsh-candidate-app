@@ -1,4 +1,5 @@
-import { useAppLanguage } from "@/lib/i18n";
+import { withSignIn } from "@/components/SignInGate";
+import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -62,10 +63,10 @@ function displayValue(value: unknown): string {
   }
 }
 
-export default function ProfileExtractionReviewScreen() {
+function ProfileExtractionReviewScreen() {
   const ac = useAccountCopy();
 
-  const locale = useAppLanguage((s) => s.locale);
+  const locale = toIntlLocale(useAppLanguage((s) => s.locale));
   const [actionError, setActionError] = useState<string | null>(null);
   const router = useRouter();
   const qc = useQueryClient();
@@ -746,4 +747,10 @@ const styles = StyleSheet.create({
   },
   dangerText: { color: "#b91c1c", fontSize: 14, fontFamily: fontFamily.bold },
   disabled: { opacity: 0.5 },
+});
+
+export default withSignIn(ProfileExtractionReviewScreen, {
+  icon: "person-outline",
+  title: "Build your candidate profile",
+  body: "Sign in to add your skills, target countries and CV so employers can find you.",
 });

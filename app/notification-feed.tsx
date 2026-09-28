@@ -1,4 +1,5 @@
-import { useAppLanguage } from "@/lib/i18n";
+import { withSignIn } from "@/components/SignInGate";
+import {useAppLanguage, toIntlLocale} from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -31,9 +32,9 @@ import { navigateFromPushLink } from "@/lib/pushNavigate";
 import { stackFlatListHeadWrapStyle } from "@/lib/screen-layout";
 import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
 
-export default function NotificationFeedScreen() {
+function NotificationFeedScreen() {
   const ac = useAccountCopy();
-  const locale = useAppLanguage((s) => s.locale);
+  const locale = toIntlLocale(useAppLanguage((s) => s.locale));
 
   const router = useRouter();
   const qc = useQueryClient();
@@ -445,4 +446,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.white,
   },
+});
+
+export default withSignIn(NotificationFeedScreen, {
+  icon: "notifications-outline",
+  title: "Your notifications",
+  body: "Sign in to see updates on your applications, messages and alerts.",
 });

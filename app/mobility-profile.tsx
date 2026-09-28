@@ -1,3 +1,4 @@
+import { withSignIn } from "@/components/SignInGate";
 import { parseBudgetCost } from "@/lib/relocationBudget";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -230,7 +231,7 @@ function Records<T extends object>({
   );
 }
 
-export default function MobilityProfileScreen() {
+function MobilityProfileScreen() {
  const ac = useAccountCopy();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -682,7 +683,7 @@ export default function MobilityProfileScreen() {
             accessibilityRole="button"
             style={styles.linkButton}
           >
-            <Text style={styles.linkText}>{ac("CV suggestions — coming soon")}</Text>
+            <Text style={styles.linkText}>{ac("Review CV suggestions")}</Text>
           </Pressable>
         </ScrollView>
         <View style={styles.saveBar}>
@@ -893,4 +894,10 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   saveBarError: { color: colors.error },
+});
+
+export default withSignIn(MobilityProfileScreen, {
+  icon: "person-outline",
+  title: "Build your candidate profile",
+  body: "Sign in to add your skills, target countries and CV so employers can find you.",
 });
