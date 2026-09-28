@@ -11,7 +11,7 @@ export function AppErrorBoundary({retry}: ErrorBoundaryProps) {
   async function recover() { setBusy(true); try { await retry(); } catch { setFailed(true); } finally { setBusy(false); } }
   return <ScrollView contentContainerStyle={{flexGrow:1,justifyContent:"center",padding:28,backgroundColor:"#ffffff"}}>
     <View style={{width:"100%",maxWidth:560,alignSelf:"center"}} accessibilityRole="alert">
-      <Text style={{fontSize:12,fontWeight:"700",letterSpacing:2,color:"#42e0e3"}}>{ac("your next move")}</Text>
+      <Text style={{fontSize:12,fontWeight:"700",letterSpacing:2,color:"#42e0e3"}}>GLOBAL SPONSOR HUB</Text>
       <Text style={{marginTop:20,fontSize:32,fontWeight:"800",letterSpacing:-1,color:"#0d194e"}}>{ac("Let's try that again.")}</Text>
       <Text style={{marginTop:16,fontSize:16,lineHeight:25,color:"#475569"}}>{ac("This screen could not be opened. If you were saving something, check its status before repeating the action.")}</Text>
       {failed ? <Text accessibilityRole="alert" style={{marginTop:16,color:"#0d194e"}}>{ac("This screen still could not be opened. You can try again.")}</Text> : null}

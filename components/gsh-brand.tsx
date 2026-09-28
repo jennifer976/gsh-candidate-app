@@ -69,6 +69,7 @@ export function DepthPressable({
   style,
   innerStyle,
   disabled,
+  selected,
   accessibilityLabel,
   accessibilityRole = "button",
   children,
@@ -83,8 +84,9 @@ export function DepthPressable({
   style?: StyleProp<ViewStyle>;
   innerStyle?: StyleProp<ViewStyle>;
   disabled?: boolean;
+  selected?: boolean;
   accessibilityLabel?: string;
-  accessibilityRole?: "button" | "link";
+  accessibilityRole?: "button" | "link" | "radio";
   children: ReactNode;
 }) {
   return (
@@ -94,7 +96,7 @@ export function DepthPressable({
       disabled={disabled}
       accessibilityRole={accessibilityRole}
       accessibilityLabel={accessibilityLabel}
-      accessibilityState={{ disabled: Boolean(disabled) }}
+      accessibilityState={{ disabled: Boolean(disabled), selected, checked: accessibilityRole === "radio" ? Boolean(selected) : undefined }}
       style={style}
     >
       {({ pressed }) => (

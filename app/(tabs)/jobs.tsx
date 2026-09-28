@@ -489,7 +489,7 @@ export default function JobsTabScreen() {
         <DecorRing size={220} thickness={30} color="rgba(66,224,227,0.18)" style={{ top: -100, right: -90 }} />
         <View style={styles.headerTop}>
           <View style={{ flex: 1, minWidth: 0 }}>
-            <PosterTitle {...posterParts(ac("Find your|next move."))} size={34} />
+            <PosterTitle {...posterParts(ac("Find the|role."))} size={34} />
           </View>
           <Pressable
             onPress={() => router.push("/alerts")}

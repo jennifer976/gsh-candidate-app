@@ -582,7 +582,7 @@ export default function CandidateHomeScreen() {
           <DepthSurface face={colors.navy} depthColor={colors.cyan} depth={6} radius={26}>
             <View style={styles.closing}>
               <DecorRing size={200} thickness={30} color="rgba(66,224,227,0.16)" style={{ bottom: -90, right: -70 }} />
-              <PosterTitle {...posterParts(ac("Tools for|every move."))} onDark highlightTone="cyan" size={30} />
+              <PosterTitle {...posterParts(ac("Your career|toolkit."))} onDark highlightTone="cyan" size={30} />
               <Text style={styles.closingBody}>
                 {ac("Visa guides, templates, checklists and calculators to help you plan.")}
               </Text>

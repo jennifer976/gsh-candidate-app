@@ -120,6 +120,7 @@ function useOnboardingGate(token: string | null) {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [onboardingReady, setOnboardingReady] = useState(false);
   const resumingIntent = useRef(false);
+  const goalRoute = useRef<string | null>(null);
 
   useEffect(() => {
     if (!token) {
@@ -138,7 +139,8 @@ function useOnboardingGate(token: string | null) {
     };
   }, [token]);
 
-  const finishOnboarding = () => {
+  const finishOnboarding = (route?: string) => {
+    goalRoute.current = route ?? null;
     void markCandidateOnboardingComplete();
     setShowOnboarding(false);
   };
@@ -149,11 +151,14 @@ function useOnboardingGate(token: string | null) {
     resumingIntent.current = true;
     void resumeCandidateReturnIntent(router)
       .then((result) => {
+        const nextGoal = goalRoute.current;
+        goalRoute.current = null;
         if (result.error)
           Alert.alert(
             "Action not completed",
             `${result.error} You can retry from this screen.`,
           );
+        else if (!result.completed && nextGoal) router.push(nextGoal as never);
       })
       .finally(() => {
         resumingIntent.current = false;
@@ -170,7 +175,7 @@ function OnboardingHost({
 }: {
   onboardingReady: boolean;
   showOnboarding: boolean;
-  finishOnboarding: () => void;
+  finishOnboarding: (route?: string) => void;
 }) {
   if (!onboardingReady) return null;
   return (

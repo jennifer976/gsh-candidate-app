@@ -43,7 +43,7 @@ export default function BlogIndexScreen() {
   const header = (
     <View style={styles.header}>
       <Eyebrow>{t("resourcesBlog")}</Eyebrow>
-      <PosterTitle {...posterParts(ac("Fresh reads|for the move."))} size={34} />
+      <PosterTitle {...posterParts(ac("Latest from|the blog."))} size={34} />
       <Text style={styles.intro}>{t("blogIntro")}</Text>
     </View>
   );

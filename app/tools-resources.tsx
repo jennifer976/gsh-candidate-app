@@ -78,7 +78,7 @@ export default function ToolsAndResourcesScreen() {
 
         <View style={styles.hero}>
           <Eyebrow onDark>{ac("Free for candidates")}</Eyebrow>
-          <PosterTitle {...posterParts(ac("Tools for|every move."))} onDark highlightTone="cyan" size={36} />
+          <PosterTitle {...posterParts(ac("Your career|toolkit."))} onDark highlightTone="cyan" size={36} />
         </View>
 
         <DepthSurface face={colors.cyan} depthColor={colors.navyDeep} depth={6} radius={26} style={styles.feature} innerStyle={styles.featureInner}>

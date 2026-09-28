@@ -31,7 +31,7 @@ export function GuestProfileHub() {
         <View style={[styles.hero, { paddingTop: Math.max(insets.top, 12) + 14 }]}>
           <DecorRing size={260} thickness={36} color="rgba(255,255,255,0.3)" style={{ top: -110, right: -100 }} />
           <Eyebrow color={colors.navy}>{ac("Your account")}</Eyebrow>
-          <PosterTitle {...posterParts(ac("Start your|move."))} size={38} style={styles.title} />
+          <PosterTitle {...posterParts(ac("Create your|profile."))} size={38} style={styles.title} />
           <Text style={styles.body}>
             {ac("Create a free account to save jobs, apply and hear from employers.")}
           </Text>
