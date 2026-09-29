@@ -441,7 +441,10 @@ function ProfileScreen() {
       const res = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true, type: ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"] });
       if (res.canceled || !res.assets?.[0]) throw new Error("cancel");
       const a = res.assets[0];
-      const up = await uploadFileFromUri(a.uri, a.name || "cv.pdf", a.mimeType ?? "application/pdf");
+      const name = a.name || "cv.pdf";
+      if (!/\.(pdf|doc|docx)$/i.test(name)) throw new Error("bad-type");
+      if (typeof a.size === "number" && a.size > 10 * 1024 * 1024) throw new Error("too-large");
+      const up = await uploadFileFromUri(a.uri, name, a.mimeType ?? "application/pdf");
       await updateProfile({ resume: up.url });
       return up.url;
     },
@@ -451,7 +454,22 @@ function ProfileScreen() {
         qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] }),
       ]);
     },
-    onError: (e: unknown) => { if (e instanceof Error && e.message === "cancel") return; Alert.alert(ac("Upload failed"), ac("Your file could not be uploaded. Try again.")); },
+    onError: (e: unknown) => {
+      const raw =
+        e instanceof Error
+          ? e.message
+          : typeof e === "object" && e && "message" in e
+            ? String((e as { message: unknown }).message)
+            : "";
+      if (!raw || raw === "cancel") return;
+      const message =
+        raw === "too-large"
+          ? ac("This CV is too large. The limit is 10MB.")
+          : raw === "bad-type"
+            ? ac("Use a PDF, DOC, or DOCX file up to 10MB.")
+            : ac(raw);
+      Alert.alert(ac("Upload failed"), message);
+    },
   });
 
   const photoMut = useMutation({
@@ -623,7 +641,7 @@ function ProfileScreen() {
               </View>
               <View style={{ flex: 1, minWidth: 0 }}>
                 <Text style={styles.quickTitle} numberOfLines={1}>{resumeUrl ? ac("CV on file") : ac("No CV uploaded yet")}</Text>
-                <Text style={styles.quickHint} numberOfLines={1}>{resumeUrl ? ac("Tap below to replace") : ac("Upload PDF or Word")}</Text>
+                <Text style={styles.quickHint} numberOfLines={1}>{resumeUrl ? ac("Tap below to replace your CV") : ac("Upload your CV — PDF, DOC, or DOCX, up to 10MB")}</Text>
                 {lastCvCheck ? (
                   <Pressable onPress={() => router.push("/cv-quality-checker")} hitSlop={8} accessibilityRole="button">
                     <Text style={styles.quickScore}>{ac("Last score {score}/100", { score: lastCvCheck.score })}</Text>

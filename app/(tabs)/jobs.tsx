@@ -226,6 +226,7 @@ export default function JobsTabScreen() {
   const [workModeFilter, setWorkModeFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [mobilityFilter, setMobilityFilter] = useState("");
+  const [experienceFilter, setExperienceFilter] = useState("");
   const [visaRouteFilter, setVisaRouteFilter] = useState("");
   const [compatibilityFirstEnabled, setCompatibilityFirstEnabled] =
     useState(false);
@@ -271,6 +272,7 @@ export default function JobsTabScreen() {
       debouncedQ,
       locationFilter,
       mobilityFilter,
+      experienceFilter,
       workModeFilter,
       visaRouteFilter,
     ],
@@ -280,6 +282,7 @@ export default function JobsTabScreen() {
         q: debouncedQ || undefined,
         location: locationFilter.trim() || undefined,
         benefit: mobilityFilter.trim() || undefined,
+        experienceLevel: experienceFilter || undefined,
         workMode: workModeFilter || undefined,
         visaRoute: visaRouteFilter.trim() || undefined,
         page: pageParam,
@@ -299,6 +302,7 @@ export default function JobsTabScreen() {
       debouncedQ,
       locationFilter,
       mobilityFilter,
+      experienceFilter,
       workModeFilter,
     ],
     initialPageParam: 1,
@@ -307,6 +311,7 @@ export default function JobsTabScreen() {
         q: debouncedQ || undefined,
         location: locationFilter.trim() || undefined,
         benefit: mobilityFilter || undefined,
+        experienceLevel: experienceFilter || undefined,
         workMode: workModeFilter || undefined,
         sourceRelationship: "curated_external",
         page: pageParam,
@@ -327,6 +332,7 @@ export default function JobsTabScreen() {
       debouncedQ,
       locationFilter,
       mobilityFilter,
+      experienceFilter,
       workModeFilter,
     ],
     initialPageParam: 1,
@@ -335,6 +341,7 @@ export default function JobsTabScreen() {
         q: debouncedQ || undefined,
         location: locationFilter.trim() || undefined,
         benefit: mobilityFilter || undefined,
+        experienceLevel: experienceFilter || undefined,
         workMode: workModeFilter || undefined,
         sourceRelationship: "employer_connected",
         page: pageParam,
@@ -463,6 +470,9 @@ export default function JobsTabScreen() {
       : []),
     ...(feedTab === "direct" && visaRouteFilter
       ? [{ id: "visa", label: t("jobsVisaLabel", { route: visaRouteFilter }) }]
+      : []),
+    ...(experienceFilter
+      ? [{ id: "experience", label: t("jobsPillEntry") }]
       : []),
   ];
 
@@ -736,6 +746,26 @@ export default function JobsTabScreen() {
                   v === "Relocation Support" ? "" : "Relocation Support",
                 ),
             },
+            {
+              id: "entry",
+              label: t("jobsPillEntry"),
+              active: experienceFilter === "Entry Level",
+              onPress: () =>
+                setExperienceFilter((v) =>
+                  v === "Entry Level" ? "" : "Entry Level",
+                ),
+            },
+            {
+              id: "abroad",
+              label: t("jobsPillAbroad"),
+              active: mobilityFilter === "Open to applicants from abroad",
+              onPress: () =>
+                setMobilityFilter((v) =>
+                  v === "Open to applicants from abroad"
+                    ? ""
+                    : "Open to applicants from abroad",
+                ),
+            },
           ] as const
         ).map((pill) => (
           <BrandChip
@@ -765,6 +795,7 @@ export default function JobsTabScreen() {
                   if (id === "workMode") setWorkModeFilter("");
                   if (id === "mobility") setMobilityFilter("");
                   if (id === "visa") setVisaRouteFilter("");
+                  if (id === "experience") setExperienceFilter("");
                 }}
                 accessibilityRole="button"
               >
@@ -912,6 +943,7 @@ export default function JobsTabScreen() {
                 setQ("");
                 setLocationFilter("");
                 setMobilityFilter("");
+                setExperienceFilter("");
                 setWorkModeFilter("");
                 setVisaRouteFilter("");
               },

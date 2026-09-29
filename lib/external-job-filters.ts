@@ -3,6 +3,7 @@ export type PublicExternalJobFilters = {
   q?: string;
   location?: string;
   benefit?: string;
+  experienceLevel?: string;
   workMode?: string;
   page?: number;
   perPage?: number;
@@ -17,7 +18,7 @@ export function externalJobQuery(
   filters: PublicExternalJobFilters = {},
 ): string {
   const query = new URLSearchParams();
-  for (const key of ["sourceType", "q", "location", "benefit", "workMode"] as const) {
+  for (const key of ["sourceType", "q", "location", "benefit", "experienceLevel", "workMode"] as const) {
     const value = filters[key]?.trim();
     if (value) query.set(key, value);
   }

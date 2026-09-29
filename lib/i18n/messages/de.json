@@ -432,6 +432,8 @@
     "jobsPillRemote":  "Remote",
     "jobsPillSponsorship":  "Sponsoring",
     "jobsPillRelocation":  "Umzug",
+    "jobsPillEntry": "Einstieg",
+    "jobsPillAbroad": "Aus dem Ausland",
     "jobsPillHybrid":  "Hybrid",
     "homeSearchJobs":  "Ask about sponsored jobs…",
     "homeMissionTitle":  "Your mission",

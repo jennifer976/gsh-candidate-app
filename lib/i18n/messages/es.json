@@ -432,6 +432,8 @@
     "jobsPillRemote":  "Remoto",
     "jobsPillSponsorship":  "Patrocinio",
     "jobsPillRelocation":  "Traslado",
+    "jobsPillEntry": "Nivel inicial",
+    "jobsPillAbroad": "Desde el extranjero",
     "jobsPillHybrid":  "Híbrido",
     "homeSearchJobs":  "Ask about sponsored jobs…",
     "homeMissionTitle":  "Your mission",

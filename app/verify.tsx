@@ -228,7 +228,7 @@ export default function VerifyScreen() {
               <View style={styles.tipInner}>
                 <Ionicons name="bulb-outline" size={18} color={colors.navy} />
                 <Text style={styles.tipText}>
-                  {acc("Can't see it? Check your spam or promotions folder.")}
+                  {acc("Can't see it? Check spam, then send a new code. Codes last 60 minutes.")}
                 </Text>
               </View>
             </DepthSurface>
