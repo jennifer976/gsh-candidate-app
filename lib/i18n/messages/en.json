@@ -7,6 +7,8 @@
   "preferencesHelp": "Choose the updates you receive.",
   "deviceSettings": "Device notification settings",
   "deviceHelp": "Change permissions on this device.",
+  "vibration": "Vibration",
+  "vibrationHelp": "A short tap when you press a button. Turn this off if it is too much.",
   "inbox": "Notifications",
   "inboxHelp": "Application and account updates.",
   "resources": "Tools and resources",

@@ -7,6 +7,8 @@
     "preferencesHelp":  "Kies welke updates je ontvangt.",
     "deviceSettings":  "Meldingen op dit apparaat",
     "deviceHelp":  "Wijzig de rechten op dit apparaat.",
+    "vibration": "Trilling",
+    "vibrationHelp": "Een korte tik bij een druk op de knop. Zet dit uit als het te veel is.",
     "inbox":  "Meldingen",
     "inboxHelp":  "Updates over sollicitaties en je account.",
     "resources":  "Tools en informatie",

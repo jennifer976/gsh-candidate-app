@@ -2,7 +2,6 @@ import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps, ReactNode } from "react";
 import {
   ActivityIndicator,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -10,14 +9,13 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
-import * as Haptics from "expo-haptics";
+import { hapticLight } from "@/lib/haptics";
 import { colors, fontFamily } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
 function tick() {
-  if (Platform.OS === "web") return;
-  void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+  void hapticLight();
 }
 
 /** Solid bottom edge that reads as a pressable slab (website/Duolingo-style depth). */
@@ -221,7 +219,9 @@ export function PosterTitle({
   align?: "left" | "center";
   style?: StyleProp<ViewStyle>;
 }) {
-  const lineHeight = Math.round(size * 0.98);
+  const lineHeight = Math.round(size * 1.05);
+  const leadText = lead?.trim().toLocaleUpperCase("en-GB");
+  const highlightText = highlight.trim().toLocaleUpperCase("en-GB");
   const blockBg = highlightTone === "navy" ? colors.navy : colors.cyan;
   const blockText = highlightTone === "navy" ? colors.cyan : colors.navy;
   return (
@@ -229,20 +229,20 @@ export function PosterTitle({
       style={[{ alignItems: align === "center" ? "center" : "flex-start" }, style]}
       accessibilityRole="header"
       accessible
-      accessibilityLabel={[lead, highlight].filter(Boolean).join(" ")}
+      accessibilityLabel={[leadText, highlightText].filter(Boolean).join(" ")}
     >
-      {lead ? (
+      {leadText ? (
         <Text
           style={[
             styles.poster,
             { fontSize: size, lineHeight, color: onDark ? colors.white : colors.navy, textAlign: align },
           ]}
         >
-          {lead}
+          {leadText}
         </Text>
       ) : null}
-      <View style={[styles.posterBlock, { backgroundColor: blockBg, marginTop: lead ? 4 : 0 }]}>
-        <Text style={[styles.poster, { fontSize: size, lineHeight, color: blockText }]}>{highlight}</Text>
+      <View style={[styles.posterBlock, { backgroundColor: blockBg, marginTop: leadText ? 4 : 0 }]}>
+        <Text style={[styles.poster, { fontSize: size, lineHeight, color: blockText }]}>{highlightText}</Text>
       </View>
     </View>
   );
@@ -558,10 +558,10 @@ const styles = StyleSheet.create({
   },
   poster: {
     fontFamily: fontFamily.headingStrong,
-    textTransform: "uppercase",
-    letterSpacing: -1.2,
+    letterSpacing: -0.4,
+    paddingRight: 2,
   },
-  posterBlock: { paddingHorizontal: 8, paddingBottom: 3, paddingTop: 1 },
+  posterBlock: { alignSelf: "flex-start", paddingHorizontal: 8, paddingBottom: 4, paddingTop: 2 },
   eyebrow: {
     fontFamily: fontFamily.bold,
     fontSize: 10,

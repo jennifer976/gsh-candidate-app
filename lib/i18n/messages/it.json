@@ -7,6 +7,8 @@
     "preferencesHelp":  "Scegli quali aggiornamenti ricevere.",
     "deviceSettings":  "Notifiche del dispositivo",
     "deviceHelp":  "Modifica i permessi su questo dispositivo.",
+    "vibration": "Vibrazione",
+    "vibrationHelp": "Un breve tocco quando premi un pulsante. Disattivala se è troppo.",
     "inbox":  "Notifiche",
     "inboxHelp":  "Aggiornamenti su candidature e account.",
     "resources":  "Strumenti e risorse",

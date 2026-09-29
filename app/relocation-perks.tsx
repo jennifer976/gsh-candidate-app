@@ -69,6 +69,7 @@ function PerkCard({ item }: { item: BenefitOfferView }) {
           <Text style={styles.title}>{item.title}</Text>
         </View>
       </View>
+      {item.highlight ? <Text style={styles.highlight}>{item.highlight}</Text> : null}
       <Text style={styles.body}>{item.description}</Text>
       {item.disclosure ? (
         <Text style={styles.disclosure}>{item.disclosure}</Text>
@@ -297,6 +298,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 17,
     fontFamily: fontFamily.heading,
+    color: colors.navy,
+  },
+  highlight: {
+    marginTop: 10,
+    fontSize: 14,
+    fontFamily: fontFamily.semiBold,
     color: colors.navy,
   },
   body: {

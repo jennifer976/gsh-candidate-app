@@ -1,5 +1,5 @@
-import * as Haptics from "expo-haptics";
-import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { hapticLight } from "@/lib/haptics";
 import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withSpring } from "react-native-reanimated";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
@@ -18,8 +18,7 @@ type Props = {
 const spring = { damping: 18, stiffness: 380 };
 
 function lightTap() {
-  if (Platform.OS === "web") return;
-  void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  void hapticLight();
 }
 
 /** Primary CTA. The legacy name remains to avoid changing caller contracts. */

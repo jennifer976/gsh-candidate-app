@@ -14,8 +14,18 @@ const validDate = (value: unknown) => {
 };
 
 function audienceAllowsCandidate(value: unknown): boolean {
+  if (value == null || value === "") return true;
   if (Array.isArray(value)) return value.includes("candidate") || value.includes("all");
   return ["candidate", "both", "all"].includes(clean(value));
+}
+
+function hasPartnerContract(item: RelocationPerkItem): boolean {
+  return Boolean(
+    clean(item.benefitPartnerId) ||
+      clean(item.agreementId) ||
+      item.benefitPartner ||
+      item.agreement,
+  );
 }
 
 function allowedHttpsUrl(url: string, hosts: string[]): boolean {
@@ -80,9 +90,10 @@ export function validateCandidateBenefitOffer(
     issues.push("missing_contract");
   }
   if (
-    item.eligibility?.eligible !== true ||
-    item.eligibility?.source !== "server" ||
-    ["invalid", "expired", "withdrawn", "ineligible"].includes(clean(item.eligibility?.status).toLowerCase())
+    item.eligibility &&
+    (item.eligibility.eligible !== true ||
+      item.eligibility.source !== "server" ||
+      ["invalid", "expired", "withdrawn", "ineligible"].includes(clean(item.eligibility.status).toLowerCase()))
   ) {
     issues.push("not_eligible");
   }
@@ -133,13 +144,41 @@ export function validateCandidateBenefitOffer(
   return [...new Set(issues)];
 }
 
+function legacyCandidateOffer(item: RelocationPerkItem): BenefitOfferView | null {
+  if (hasPartnerContract(item)) return null;
+  if (item.status && item.status !== "active") return null;
+  if (!clean(item.title) || !clean(item.description)) return null;
+  if (!audienceAllowsCandidate(item.audience)) return null;
+  const destinationUrl = clean(item.destinationUrl) || clean(item.affiliateUrl);
+  if (!safeHttpsUrl(destinationUrl)) return null;
+  const highlight = clean(item.offerHighlight);
+  return {
+    id: clean(item.id) || clean(item._id),
+    placementId: clean(item.placementId) || null,
+    title: item.title,
+    description: item.description,
+    category: item.category,
+    logoUrl: item.logoUrl,
+    disclosure: clean(item.disclosure),
+    termsUrl: null,
+    validUntil: item.validUntil ?? null,
+    redemptionKind: "external_offer",
+    destinationUrl,
+    redemptionCode: clean(item.redemptionCode) || clean(item.promoCode) || null,
+    highlight: highlight || null,
+  };
+}
+
 export function candidateBenefitOffers(
   response?: RelocationPerksDashboardResponse,
   now = new Date(),
 ): BenefitOfferView[] {
   const rows = response?.perks ?? response?.data ?? [];
   return rows.flatMap((item) => {
-    if (validateCandidateBenefitOffer(item, now).length > 0) return [];
+    if (validateCandidateBenefitOffer(item, now).length > 0) {
+      const legacy = legacyCandidateOffer(item);
+      return legacy ? [legacy] : [];
+    }
     const destinationUrl = clean(item.destinationUrl) || clean(item.affiliateUrl);
     const redemptionCode = clean(item.redemptionCode) || clean(item.promoCode);
     const termsUrl = clean(item.termsUrl);
@@ -156,6 +195,7 @@ export function candidateBenefitOffers(
       redemptionKind: (clean(item.redemptionKind) || (destinationUrl ? "external_offer" : "code")) as "external_offer" | "code",
       destinationUrl: destinationUrl || null,
       redemptionCode: redemptionCode || null,
+      highlight: null,
     }];
   });
 }

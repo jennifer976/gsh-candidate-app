@@ -13,6 +13,7 @@ import {
   Platform,
   Pressable,
   ScrollView,
+  Switch,
   StyleSheet,
   Text,
   TextInput,
@@ -28,6 +29,7 @@ import {
 import { GshScreenBackground } from "@/components/GshScreenBackground";
 import { changePassword, deleteCandidateAccount } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
+import { useHapticsPreference } from "@/lib/haptics";
 import { stackScrollContentStyle } from "@/lib/screen-layout";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
@@ -42,6 +44,8 @@ function SettingsScreen() {
   const [deletePassword, setDeletePassword] = useState("");
   const [deleteReason, setDeleteReason] = useState("");
   const [deleteConfirmed, setDeleteConfirmed] = useState(false);
+  const hapticsEnabled = useHapticsPreference((s) => s.enabled);
+  const setHapticsEnabled = useHapticsPreference((s) => s.setEnabled);
 
   const deleteMut = useMutation({
     mutationFn: () =>
@@ -126,6 +130,19 @@ function SettingsScreen() {
             {Platform.OS !== "web" ? (
               <>
                 <GshSectionTitle title={t("notifications")} topSpacing="none" />
+                <View style={styles.hapticsRow}>
+                  <View style={styles.hapticsCopy}>
+                    <Text style={styles.hapticsTitle}>{t("vibration")}</Text>
+                    <Text style={styles.hapticsHelp}>{t("vibrationHelp")}</Text>
+                  </View>
+                  <Switch
+                    accessibilityLabel={t("vibration")}
+                    value={hapticsEnabled}
+                    onValueChange={setHapticsEnabled}
+                    trackColor={{ false: "#cbd5e1", true: colors.cyan }}
+                    thumbColor={colors.white}
+                  />
+                </View>
                 <GshLinkRow
                   title={t("deviceSettings")}
                   subtitle={t("deviceHelp")}
@@ -262,6 +279,20 @@ function SettingsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
+  hapticsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    backgroundColor: colors.white,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 14,
+    marginBottom: 10,
+  },
+  hapticsCopy: { flex: 1, gap: 4 },
+  hapticsTitle: { fontFamily: fontFamily.semiBold, fontSize: 16, color: colors.navy },
+  hapticsHelp: { fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 18, color: colors.textMarketing },
   pad: { ...stackScrollContentStyle, paddingBottom: 40 },
   sectionHint: {
     fontFamily: fontFamily.regular,

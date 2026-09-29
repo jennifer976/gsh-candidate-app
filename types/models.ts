@@ -486,6 +486,7 @@ export interface RelocationPerkItem {
   logoUrl?: string;
   affiliateUrl?: string;
   promoCode?: string;
+  offerHighlight?: string;
   category?: string;
   audience?: string;
   sortOrder?: number;
@@ -551,6 +552,7 @@ export interface BenefitOfferView {
   redemptionKind: "external_offer" | "code";
   destinationUrl: string | null;
   redemptionCode: string | null;
+  highlight?: string | null;
 }
 
 /** Curated / external listings (`GET /external-job-listings/public`). */

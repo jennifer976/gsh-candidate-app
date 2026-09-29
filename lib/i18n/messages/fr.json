@@ -7,6 +7,8 @@
     "preferencesHelp":  "Choisissez les informations à recevoir.",
     "deviceSettings":  "Notifications de l’appareil",
     "deviceHelp":  "Modifiez les autorisations sur cet appareil.",
+  "vibration": "Vibration",
+  "vibrationHelp": "Une brève vibration quand vous appuyez. Désactivez-la si c’est trop.",
     "inbox":  "Notifications",
     "inboxHelp":  "Suivi des candidatures et du compte.",
     "resources":  "Outils et ressources",
