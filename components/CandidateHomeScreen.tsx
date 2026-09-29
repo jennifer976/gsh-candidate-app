@@ -486,12 +486,17 @@ export default function CandidateHomeScreen() {
         {rolesLoading || roles.length > 0 || rolesError ? (
           <View style={styles.sectionFlush}>
             <SectionHeading
-              eyebrow={ac("Fresh roles")}
-              title={ac("Latest jobs")}
+              eyebrow={noDirectJobs ? ac("Apply on their site") : ac("Fresh roles")}
+              title={noDirectJobs ? ac("External roles") : ac("Latest jobs")}
               actionLabel={ac("See all")}
               onAction={() => router.push("/(tabs)/jobs")}
               style={styles.headingInset}
             />
+            {noDirectJobs ? (
+              <Text style={styles.externalNote}>
+                {ac("No roles to apply for in the app right now, so these open on the employer’s site.")}
+              </Text>
+            ) : null}
             {rolesError && roles.length === 0 ? (
               <Pressable onPress={retryRoles} style={styles.inlineRetry} accessibilityRole="button">
                 <Ionicons name="refresh" size={16} color={colors.navy} />
@@ -695,6 +700,15 @@ const styles = StyleSheet.create({
   sectionFlush: { marginTop: 28 },
   headingGap: { marginBottom: 12 },
   headingInset: { paddingHorizontal: 20, marginBottom: 12 },
+  externalNote: {
+    marginTop: -4,
+    marginBottom: 12,
+    paddingHorizontal: 20,
+    fontFamily: fontFamily.medium,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.textSecondary,
+  },
   nextCard: { padding: 20, overflow: "hidden" },
   nextLoading: { minHeight: 150, alignItems: "center", justifyContent: "center" },
   nextHead: { flexDirection: "row", alignItems: "flex-end", gap: 12 },

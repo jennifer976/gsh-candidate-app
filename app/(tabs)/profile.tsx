@@ -15,6 +15,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   View,
@@ -265,9 +266,10 @@ function SelectedChips({ items, onRemove }: { items: readonly string[]; onRemove
 }
 
 const ACCOUNT_LINKS = [
-  { title: "Work and move preferences", subtitle: "Choose who can find and contact you", icon: "earth-outline" as const, href: "/mobility-profile" },
+  { title: "Relocation perks", subtitle: "Offers that help with the move", icon: "airplane-outline" as const, href: "/relocation-perks" },
+  { title: "Career toolkit", subtitle: "CV check, country guides, calculators", icon: "construct-outline" as const, href: "/tools-resources" },
+  { title: "Work and move preferences", subtitle: "Countries, visa status and who can contact you", icon: "earth-outline" as const, href: "/mobility-profile" },
   { title: "Invites to apply", subtitle: "Review employer and agency invites", icon: "people-circle-outline" as const, href: "/agency-introductions" },
-  { title: "Partner offers and codes", subtitle: "Partner discount codes", icon: "gift-outline" as const, href: "/offers" },
 ] as const;
 
 export default function ProfileTab() {
@@ -471,6 +473,15 @@ function ProfileScreen() {
   const consentOn = (field: string) =>
     p?.talent_pool_visible !== false && (p?.[field] as { enabled?: unknown } | undefined)?.enabled === true;
   const employerDiscoveryOn = consentOn("employerDiscoveryConsent");
+  const discoveryMut = useMutation({
+    mutationFn: (enabled: boolean) =>
+      updateProfile({
+        employerDiscoveryConsent: { enabled },
+        talent_pool_visible: enabled ? true : p?.talent_pool_visible,
+      }),
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ["profile", "me"] }),
+    onError: () => Alert.alert(ac("Could not save"), ac("Could not save settings. Try again.")),
+  });
   const agencyDiscoveryOn = consentOn("agencyDiscoveryConsent");
   const discoveryHint =
     employerDiscoveryOn && agencyDiscoveryOn
@@ -657,6 +668,26 @@ function ProfileScreen() {
           </DepthSurface>
 
           <CandidateReadinessSummary profile={p} accountEmail={user?.email} />
+
+          <DepthSurface face={employerDiscoveryOn ? colors.navy : colors.white} depthColor={colors.cyan} depth={5} radius={22} borderWidth={2} borderColor={colors.navy} innerStyle={styles.optInCard}>
+            <View style={styles.optInCopy}>
+              <Text style={[styles.optInEyebrow, employerDiscoveryOn && styles.optInEyebrowOn]}>{ac("Be found")}</Text>
+              <Text style={[styles.optInTitle, employerDiscoveryOn && styles.optInTitleOn]}>{ac("Let employers find you")}</Text>
+              <Text style={[styles.optInBody, employerDiscoveryOn && styles.optInBodyOn]}>
+                {employerDiscoveryOn
+                  ? ac("Subscribed employers can see your profile when they search. You can switch this off any time.")
+                  : ac("Switch this on if you want subscribed employers to discover your profile. You stay in control.")}
+              </Text>
+            </View>
+            <Switch
+              accessibilityLabel={ac("Let employers find you")}
+              value={employerDiscoveryOn}
+              disabled={discoveryMut.isPending}
+              onValueChange={(enabled) => discoveryMut.mutate(enabled)}
+              trackColor={{ false: "#cbd5e1", true: "#059669" }}
+              thumbColor={colors.white}
+            />
+          </DepthSurface>
 
           <View
             style={styles.formBlock}
@@ -1029,6 +1060,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.navy,
   },
   relocateText: { fontFamily: fontFamily.bold, fontSize: 11, color: colors.white },
+  optInCard: { flexDirection: "row", alignItems: "center", gap: 12, padding: 16 },
+  optInCopy: { flex: 1, minWidth: 0 },
+  optInEyebrow: { fontFamily: fontFamily.extraBold, fontSize: 11, letterSpacing: 1.2, textTransform: "uppercase", color: "#047857" },
+  optInEyebrowOn: { color: "#6ee7b7" },
+  optInTitle: { marginTop: 4, fontFamily: fontFamily.headingStrong, fontSize: 18, color: colors.navy, letterSpacing: -0.3 },
+  optInTitleOn: { color: colors.white },
+  optInBody: { marginTop: 4, fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 18, color: colors.textMuted },
+  optInBodyOn: { color: "rgba(255,255,255,0.78)" },
   finishCard: { padding: 20 },
   finishTitle: {
     marginTop: 4,

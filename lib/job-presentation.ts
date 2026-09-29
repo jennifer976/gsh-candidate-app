@@ -17,6 +17,14 @@ const mobility: Record<string, AppCopyKey> = {
   "no sponsorship available": "jobNoSponsor",
 };
 /** Translate presentation only, after chip ordering and status styling. */
+/** Sponsorship claims use their own colour so they are not lost in the brand navy and cyan. */
+export function sponsorshipTone(value: string): "yes" | "no" | null {
+  const v = value.trim().toLowerCase();
+  if (v.includes("no sponsorship")) return "no";
+  if (v.includes("sponsorship") || v.includes("sponsor licence") || v.includes("sponsor license")) return "yes";
+  return null;
+}
+
 export function jobChipLabel(value: string, locale: AppLanguage): string {
   const key = mobility[value.trim().toLowerCase()];
   if (key) return appCopy(locale, key);

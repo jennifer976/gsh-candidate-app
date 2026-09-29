@@ -18,7 +18,16 @@ function shouldProxyEmployerLogoHost(hostname: string): boolean {
     host === "crustdata-media.s3.us-east-2.amazonaws.com" ||
     host === "crustdata-media.s3.amazonaws.com" ||
     host.endsWith(".crustdata-media.s3.us-east-2.amazonaws.com") ||
-    host.endsWith(".crustdata-media.s3.amazonaws.com")
+    host.endsWith(".crustdata-media.s3.amazonaws.com") ||
+    host === "production-job-board-public.s3.amazonaws.com" ||
+    host === "workablehr.s3.amazonaws.com" ||
+    host === "images.teamtailor-cdn.com" ||
+    host === "images4.bamboohr.com" ||
+    host === "assets.cdn.personio.de" ||
+    host === "recruiting.paylocity.com" ||
+    host === "app.ashbyhq.com" ||
+    host === "media.licdn.com" ||
+    host === "static.licdn.com"
   );
 }
 

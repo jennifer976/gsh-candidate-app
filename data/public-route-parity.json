@@ -29,7 +29,7 @@
     { "pattern": "^/candidate/resources/?$", "mode": "native", "target": "/resources" },
     { "pattern": "^/candidate/saved-resources/?$", "mode": "native", "target": "/saved-resources" },
     { "pattern": "^/candidate/application-tracker/?$", "mode": "native", "target": "/application-tracker" },
-    { "pattern": "^/candidate/profile(?:/edit)?/?$", "mode": "native", "target": "/mobility-profile" },
+    { "pattern": "^/candidate/profile(?:/edit)?/?$", "mode": "native", "target": "/(tabs)/profile" },
     { "pattern": "^/candidate/settings/?$", "mode": "native", "target": "/settings" },
     { "pattern": "^/candidate/offers/?$", "mode": "native", "target": "/offers" },
     { "pattern": "^/candidate/feedback/?$", "mode": "native", "target": "/feedback" },

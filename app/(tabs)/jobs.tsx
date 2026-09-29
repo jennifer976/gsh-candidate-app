@@ -5,6 +5,7 @@ import {
   jobCountryLabel,
   jobMatchLabel,
   jobSalaryLabel,
+  sponsorshipTone,
 } from "@/lib/job-presentation";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -155,13 +156,17 @@ function HubJobCard({
           </Pressable>
         </View>
         <View style={styles.chipWrap}>
-          {chips.map((c, index) => (
-            <View key={c} style={[styles.listChip, index === 0 ? styles.listChipNavy : styles.listChipPale]}>
-              <Text style={[styles.listChipText, index === 0 && styles.listChipTextCyan]} numberOfLines={1}>
-                {jobChipLabel(c, locale)}
+          {chips.map((c, index) => {
+            const tone = sponsorshipTone(c);
+            const label = jobChipLabel(c, locale);
+            return (
+            <View key={c} style={[styles.listChip, tone === "yes" ? styles.listChipSponsor : tone === "no" ? styles.listChipNoSponsor : index === 0 ? styles.listChipNavy : styles.listChipPale]}>
+              <Text style={[styles.listChipText, (tone || index === 0) && styles.listChipTextOn]} numberOfLines={1}>
+                {label}
               </Text>
             </View>
-          ))}
+            );
+          })}
           {sal ? (
             <View style={[styles.listChip, styles.listChipPale]}>
               <Text style={styles.listChipText} numberOfLines={1}>
@@ -170,9 +175,9 @@ function HubJobCard({
             </View>
           ) : null}
           {sponsorBadge ? (
-            <View style={[styles.listChip, styles.listChipPale, styles.listChipRow]}>
-              <Ionicons name="shield-checkmark" size={11} color={colors.navy} />
-              <Text style={styles.listChipText} numberOfLines={1}>
+            <View style={[styles.listChip, sponsorBadge.positive ? styles.listChipSponsor : styles.listChipNoSponsor, styles.listChipRow]}>
+              <Ionicons name="shield-checkmark" size={11} color="#ffffff" />
+              <Text style={[styles.listChipText, styles.listChipTextOn]} numberOfLines={1}>
                 {sponsorBadge.label}
               </Text>
             </View>
@@ -810,14 +815,23 @@ export default function JobsTabScreen() {
 
       <View style={styles.listHeadingWrap}>
         <View style={{ flex: 1, minWidth: 0 }}>
+          {showingFallback ? (
+            <Text style={styles.externalBanner}>{ac("Now showing external roles")}</Text>
+          ) : null}
           {resultCount != null ? (
             <Text style={styles.countLine}>
               <Text style={styles.countNumber}>{new Intl.NumberFormat(intlLocale).format(resultCount)}</Text>{" "}
-              {resultCount === 1 ? ac("role") : ac("roles")}
+              {showingFallback
+                ? ac("external roles")
+                : resultCount === 1
+                  ? ac("role")
+                  : ac("roles")}
             </Text>
           ) : null}
           <Text style={styles.laneDesc}>
-            {shownLane === "direct"
+            {showingFallback
+              ? ac("Nothing matched in this section, so these roles open on the employer’s site.")
+              : shownLane === "direct"
               ? t("jobsDirectDesc")
               : shownLane === "connected"
                 ? t("jobsConnectedDesc")
@@ -842,11 +856,11 @@ export default function JobsTabScreen() {
           <View style={{ flex: 1, minWidth: 0 }}>
             <Text style={styles.fallbackTitle}>
               {feedTab === "direct"
-                ? ac("No direct roles match right now")
-                : ac("No connected roles match right now")}
+                ? ac("No roles you can apply for here")
+                : ac("No connected employer roles match")}
             </Text>
             <Text style={styles.fallbackBody}>
-              {ac("Here are matching roles that open on the employer's own site.")}
+              {ac("This list is now external roles. You apply on the employer’s site, not in the app.")}
               {feedTab === "direct" && visaRouteFilter
                 ? ` ${ac("The visa route filter only applies to direct roles.")}`
                 : ""}
@@ -1190,6 +1204,20 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     gap: 8,
   },
+  externalBanner: {
+    alignSelf: "flex-start",
+    marginBottom: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    backgroundColor: "#059669",
+    color: "#ffffff",
+    fontFamily: fontFamily.extraBold,
+    fontSize: 11,
+    letterSpacing: 0.4,
+    textTransform: "uppercase",
+    overflow: "hidden",
+  },
   countLine: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textMuted },
   countNumber: { fontSize: 16, fontFamily: fontFamily.headingStrong, color: colors.navy },
   laneDesc: { marginTop: 2, fontSize: 12, lineHeight: 17, fontFamily: fontFamily.regular, color: colors.textMuted },
@@ -1347,10 +1375,13 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
   },
   listChipNavy: { backgroundColor: colors.navy },
+  listChipSponsor: { backgroundColor: "#059669" },
+  listChipNoSponsor: { backgroundColor: "#E11D48" },
   listChipPale: { backgroundColor: colors.pale },
   listChipRow: { flexDirection: "row", alignItems: "center", gap: 4 },
   listChipText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy },
   listChipTextCyan: { color: colors.cyan },
+  listChipTextOn: { color: "#ffffff" },
   compatibilityBadge: {
     alignSelf: "flex-start",
     marginTop: 8,

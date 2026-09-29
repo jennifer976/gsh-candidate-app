@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { colors, fontFamily } from "@/lib/theme";
 
 type Props = {
@@ -30,13 +29,9 @@ export function GshTabStickyHeader({
 
   if (brandWash) {
     return (
-      <LinearGradient
-        colors={["#9aeeee", "#e8fafb", "#f4f7fb"]}
-        locations={[0, 0.55, 1]}
-        style={[styles.chrome, styles.chromeWash, { paddingTop }]}
-      >
+      <View style={[styles.chrome, styles.chromeWash, { paddingTop }]}>
         {body}
-      </LinearGradient>
+      </View>
     );
   }
 
@@ -56,8 +51,8 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
   },
   chromeWash: {
-    backgroundColor: "transparent",
-    borderBottomColor: "rgba(66,224,227,0.35)",
+    backgroundColor: colors.white,
+    borderBottomColor: colors.border,
   },
   title: {
     fontSize: 34,

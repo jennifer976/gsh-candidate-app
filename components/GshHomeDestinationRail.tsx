@@ -1,6 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { CountryFlag } from "@/components/CountryFlag";
 import { DepthPressable, SectionHeading } from "@/components/gsh-brand";
@@ -43,10 +42,10 @@ const CARD_H = 170;
 
 /**
  * Destination rail: photo cards with a navy edge and cyan depth.
- * `opens="jobs"` filters Jobs to the country; `opens="guide"` opens the country guide.
+ * Opens the country destination guide. Pass `opens="jobs"` only when the rail is a job filter.
  */
 export function GshHomeDestinationRail({
-  opens = "jobs",
+  opens = "guide",
   eyebrow,
   title,
   actionLabel,
@@ -99,11 +98,7 @@ export function GshHomeDestinationRail({
             innerStyle={{ width: CARD_W, height: CARD_H }}
           >
             <Image source={{ uri: d.uri }} style={styles.image} />
-            <LinearGradient
-              colors={["transparent", "rgba(7,13,44,0.2)", "rgba(7,13,44,0.9)"]}
-              locations={[0.3, 0.6, 1]}
-              style={StyleSheet.absoluteFill}
-            />
+            <View style={styles.scrim} />
             <View style={styles.flag}>
               <CountryFlag iso2={d.iso2} width={28} />
             </View>
@@ -126,6 +121,14 @@ const styles = StyleSheet.create({
   heading: { paddingHorizontal: 20, marginBottom: 12 },
   rail: { paddingHorizontal: 20, gap: 12, paddingBottom: 4, paddingTop: 2 },
   image: { ...StyleSheet.absoluteFillObject, width: "100%", height: "100%" },
+  scrim: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 78,
+    backgroundColor: "rgba(7,13,44,0.72)",
+  },
   flag: { position: "absolute", top: 10, left: 10 },
   copy: {
     position: "absolute",

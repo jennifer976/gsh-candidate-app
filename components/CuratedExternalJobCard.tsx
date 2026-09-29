@@ -1,5 +1,5 @@
 import { useAppCopy } from "@/lib/i18n";
-import { jobChipLabel, jobCountryLabel, jobAgeLabel } from "@/lib/job-presentation";
+import { jobChipLabel, jobCountryLabel, jobAgeLabel, sponsorshipTone } from "@/lib/job-presentation";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 import { CompanyLogo } from "@/components/CompanyLogo";
@@ -77,13 +77,16 @@ export function CuratedExternalJobCard({
             <View style={[styles.pill, styles.pillOnNavy]}>
               <Text style={[styles.pillText, styles.pillTextCyan]}>{kindLabel}</Text>
             </View>
-            {chips.map((label) => (
-              <View key={label} style={[styles.pill, styles.pillOnNavy]}>
-                <Text style={[styles.pillText, styles.pillTextCyan]} numberOfLines={1}>
+            {chips.map((label) => {
+              const tone = sponsorshipTone(label);
+              return (
+              <View key={label} style={[styles.pill, tone === "yes" ? styles.pillSponsor : tone === "no" ? styles.pillNoSponsor : styles.pillOnNavy]}>
+                <Text style={[styles.pillText, styles.pillTextOn]} numberOfLines={1}>
                   {label}
                 </Text>
               </View>
-            ))}
+              );
+            })}
           </View>
           <View style={styles.featureCta}>
             <Text style={styles.featureCtaText}>{t("jobsDetails")}</Text>
@@ -124,13 +127,16 @@ export function CuratedExternalJobCard({
         </View>
       </View>
       <View style={styles.pills}>
-        {chips.map((label, index) => (
-          <View key={label} style={[styles.pill, index === 0 ? styles.pillNavy : styles.pillPale]}>
-            <Text style={[styles.pillText, index === 0 && styles.pillTextCyan]} numberOfLines={1}>
+        {chips.map((label, index) => {
+          const tone = sponsorshipTone(label);
+          return (
+          <View key={label} style={[styles.pill, tone === "yes" ? styles.pillSponsor : tone === "no" ? styles.pillNoSponsor : index === 0 ? styles.pillNavy : styles.pillPale]}>
+            <Text style={[styles.pillText, (tone || index === 0) && styles.pillTextOn]} numberOfLines={1}>
               {label}
             </Text>
           </View>
-        ))}
+          );
+        })}
         <View style={[styles.pill, styles.pillPale]}>
           <Text style={styles.pillText}>{kindLabel}</Text>
         </View>
@@ -170,10 +176,13 @@ const styles = StyleSheet.create({
   pills: { marginTop: 12, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 8 },
   pill: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: radii.pill, maxWidth: "100%" },
   pillNavy: { backgroundColor: colors.navy },
+  pillSponsor: { backgroundColor: "#059669" },
+  pillNoSponsor: { backgroundColor: "#E11D48" },
   pillPale: { backgroundColor: colors.pale },
   pillOnNavy: { backgroundColor: "rgba(255,255,255,0.1)" },
   pillText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy },
   pillTextCyan: { color: colors.cyan },
+  pillTextOn: { color: "#ffffff" },
   band: {
     flexDirection: "row",
     alignItems: "center",

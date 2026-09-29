@@ -6,8 +6,38 @@ import { resolvePublicRoute } from "@/lib/public-route-parity";
 /**
  * Routes notification `link` payloads into in-app screens when possible; other https links open in the in-app WebView sheet.
  */
+/** Profile reminders and “update your profile” links should open the in-app profile, not the website sign-in. */
+function profileUpdateRoute(link: string): string | null {
+  let url: URL;
+  try {
+    url = /^https?:\/\//i.test(link)
+      ? new URL(link)
+      : new URL(link.startsWith("/") ? link : `/${link}`, getMarketingSiteUrl());
+  } catch {
+    return null;
+  }
+  const next = [
+    url.searchParams.get("callbackUrl"),
+    url.searchParams.get("redirect"),
+    url.searchParams.get("returnTo"),
+    url.searchParams.get("next"),
+    url.pathname,
+  ]
+    .filter((value): value is string => Boolean(value))
+    .join(" ");
+  if (/\/candidate\/profile(?:\/edit)?/i.test(next) || /\/auth\/login/i.test(url.pathname) && /profile/i.test(next)) {
+    return "/(tabs)/profile";
+  }
+  return null;
+}
+
 export function navigateFromPushLink(router: Router, link: string): boolean {
   if (!isGovernedPushLink(link)) return false;
+  const profileRoute = profileUpdateRoute(link);
+  if (profileRoute) {
+    router.push(profileRoute as never);
+    return true;
+  }
   const resolution = resolvePublicRoute(link);
   if (!resolution) return false;
   if (resolution.kind === "native") router.push(resolution.route as never);

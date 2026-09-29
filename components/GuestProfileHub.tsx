@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppLanguageSetting } from "@/components/AppLanguageSetting";
 import { GshScreenShell } from "@/components/GshScreenShell";
@@ -20,6 +21,7 @@ import { colors, fontFamily } from "@/lib/theme";
 export function GuestProfileHub() {
   const ac = useAccountCopy();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { openSignIn, openRegister } = useSignInPrompt();
 
   return (
@@ -57,6 +59,27 @@ export function GuestProfileHub() {
         </View>
 
         <View style={styles.section}>
+          <SectionHeading title={ac("Useful before you sign in")} style={styles.heading} />
+          {[
+            { label: ac("Relocation perks"), hint: ac("Offers that help with the move"), href: "/relocation-perks" },
+            { label: ac("Career toolkit"), hint: ac("CV check, country guides, calculators"), href: "/tools-resources" },
+          ].map((item) => (
+            <Pressable
+              key={item.href}
+              onPress={() => router.push(item.href as never)}
+              style={styles.linkRow}
+              accessibilityRole="button"
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={styles.linkTitle}>{item.label}</Text>
+                <Text style={styles.linkHint}>{item.hint}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.navy} />
+            </Pressable>
+          ))}
+        </View>
+
+        <View style={styles.section}>
           <SectionHeading title={ac("Language")} style={styles.heading} />
           <AppLanguageSetting />
         </View>
@@ -88,4 +111,15 @@ const styles = StyleSheet.create({
   trustText: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.navy },
   section: { paddingHorizontal: 20, marginTop: 28 },
   heading: { marginBottom: 12 },
+  linkRow: {
+    minHeight: 64,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  linkTitle: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.navy },
+  linkHint: { marginTop: 2, fontFamily: fontFamily.regular, fontSize: 13, color: colors.textSecondary },
 });
