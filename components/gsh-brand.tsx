@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import type { ComponentProps, ReactNode } from "react";
 import {
   ActivityIndicator,
@@ -7,23 +7,33 @@ import {
   Text,
   View,
   type StyleProp,
+  type TextStyle,
   type ViewStyle,
 } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import Svg, { Path } from "react-native-svg";
+import { GSH_MARK_PATH, GSH_MARK_VIEWBOX } from "@/lib/brand/gshMarkPath";
 import { hapticLight } from "@/lib/haptics";
-import { colors, fontFamily } from "@/lib/theme";
+import { RiseIn } from "@/lib/motion";
+import { cardSurfaceStyle, colors, fontFamily, shadows, type } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
+const TRAILING_ARROW = "arrow-up-right" as const;
 
 function tick() {
   void hapticLight();
 }
 
-/** Solid bottom edge that reads as a pressable slab (website/Duolingo-style depth). */
+/** Soft card surface. Depth prop kept for callers; values above 0 are ignored. */
 export function DepthSurface({
   face = colors.white,
-  depthColor = colors.navy,
-  depth = 5,
-  radius = 22,
+  depthColor: _depthColor = colors.navy,
+  depth: _depth = 0,
+  radius = 24,
   borderColor,
   borderWidth = 0,
   style,
@@ -41,27 +51,27 @@ export function DepthSurface({
   children: ReactNode;
 }) {
   return (
-    <View style={[{ borderRadius: radius, backgroundColor: depthColor, paddingBottom: depth }, style]}>
-      <View
-        style={[
-          { borderRadius: radius, backgroundColor: face, overflow: "hidden" },
-          borderWidth ? { borderWidth, borderColor: borderColor ?? depthColor } : null,
-          innerStyle,
-        ]}
-      >
-        {children}
-      </View>
+    <View
+      style={[
+        cardSurfaceStyle(),
+        { borderRadius: radius, backgroundColor: face, overflow: "hidden" },
+        borderWidth ? { borderWidth, borderColor: borderColor ?? colors.line } : null,
+        style,
+        innerStyle,
+      ]}
+    >
+      {children}
     </View>
   );
 }
 
-/** DepthSurface that presses down on tap. */
+/** Soft card that scales to 0.97 on press. Depth prop kept for callers; ignored above 0. */
 export function DepthPressable({
   onPress,
   face = colors.white,
-  depthColor = colors.navy,
-  depth = 5,
-  radius = 22,
+  depthColor: _depthColor = colors.navy,
+  depth: _depth = 0,
+  radius = 24,
   borderColor,
   borderWidth = 0,
   style,
@@ -87,68 +97,120 @@ export function DepthPressable({
   accessibilityRole?: "button" | "link" | "radio";
   children: ReactNode;
 }) {
+  const scale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   return (
     <Pressable
       onPress={onPress}
-      onPressIn={disabled ? undefined : tick}
+      onPressIn={() => {
+        if (disabled) return;
+        tick();
+        scale.value = withTiming(0.97, { duration: 120 });
+      }}
+      onPressOut={() => {
+        scale.value = withTiming(1, { duration: 120 });
+      }}
       disabled={disabled}
       accessibilityRole={accessibilityRole}
       accessibilityLabel={accessibilityLabel}
-      accessibilityState={{ disabled: Boolean(disabled), selected, checked: accessibilityRole === "radio" ? Boolean(selected) : undefined }}
+      accessibilityState={{
+        disabled: Boolean(disabled),
+        selected,
+        checked: accessibilityRole === "radio" ? Boolean(selected) : undefined,
+      }}
       style={style}
     >
-      {({ pressed }) => (
-        <View
-          style={{
+      <Animated.View
+        style={[
+          cardSurfaceStyle(),
+          {
             borderRadius: radius,
-            backgroundColor: depthColor,
-            paddingBottom: pressed ? 0 : depth,
-            marginTop: pressed ? depth : 0,
+            backgroundColor: face,
+            overflow: "hidden",
             opacity: disabled ? 0.55 : 1,
-          }}
-        >
-          <View
-            style={[
-              { borderRadius: radius, backgroundColor: face, overflow: "hidden" },
-              borderWidth ? { borderWidth, borderColor: borderColor ?? depthColor } : null,
-              innerStyle,
-            ]}
-          >
-            {children}
-          </View>
-        </View>
-      )}
+          },
+          borderWidth ? { borderWidth, borderColor: borderColor ?? colors.line } : null,
+          innerStyle,
+          animatedStyle,
+        ]}
+      >
+        {children}
+      </Animated.View>
     </Pressable>
   );
 }
 
-const BUTTON_VARIANTS = {
-  cyan: { face: colors.cyan, depth: colors.navy, text: colors.navy, icon: colors.navy },
-  cyanOnNavy: { face: colors.cyan, depth: colors.navyDeep, text: colors.navy, icon: colors.navy },
-  navy: { face: colors.navy, depth: colors.navyDeep, text: colors.white, icon: colors.cyan },
-  navyOnLight: { face: colors.navy, depth: colors.cyan, text: colors.white, icon: colors.cyan },
-  white: { face: colors.white, depth: colors.navy, text: colors.navy, icon: colors.navy },
-} as const;
+type ResolvedButton = {
+  bg: string;
+  text: string;
+  borderWidth: number;
+  borderColor: string;
+  trailingCyan: boolean;
+};
 
-export type DepthButtonVariant = keyof typeof BUTTON_VARIANTS;
+function resolveButtonVariant(
+  variant: string,
+): ResolvedButton {
+  // Map legacy cyan fill to navy primary.
+  if (variant === "cyan" || variant === "navy" || variant === "navyOnLight") {
+    return {
+      bg: colors.navy,
+      text: colors.white,
+      borderWidth: 0,
+      borderColor: "transparent",
+      trailingCyan: true,
+    };
+  }
+  if (variant === "cyanOnNavy") {
+    return {
+      bg: colors.white,
+      text: colors.navy,
+      borderWidth: 0,
+      borderColor: "transparent",
+      trailingCyan: false,
+    };
+  }
+  // secondary / ghost / outline / white
+  return {
+    bg: colors.white,
+    text: colors.navy,
+    borderWidth: 1,
+    borderColor: colors.line,
+    trailingCyan: false,
+  };
+}
+
+export type DepthButtonVariant =
+  | "navy"
+  | "secondary"
+  | "cyanOnNavy"
+  | "cyan"
+  | "white"
+  | "ghost"
+  | "outline"
+  | "navyOnLight";
 
 export function DepthButton({
   title,
   onPress,
-  variant = "cyan",
-  icon = "arrow-forward",
+  variant = "navy",
+  icon = TRAILING_ARROW,
   leadingIcon,
   size = "lg",
   disabled,
   loading,
-  bordered,
+  bordered: _bordered,
   accessibilityLabel,
   style,
 }: {
   title: string;
   onPress: () => void;
   variant?: DepthButtonVariant;
-  icon?: IonName | null;
+  /** Ionicons name, Feather "arrow-up-right", or null to hide the trailing icon. */
+  icon?: IonName | typeof TRAILING_ARROW | null;
   leadingIcon?: IonName;
   size?: "lg" | "md" | "sm";
   disabled?: boolean;
@@ -157,29 +219,40 @@ export function DepthButton({
   accessibilityLabel?: string;
   style?: StyleProp<ViewStyle>;
 }) {
-  const v = BUTTON_VARIANTS[variant];
-  const height = size === "lg" ? 56 : size === "md" ? 48 : 40;
-  const depth = size === "sm" ? 3 : size === "md" ? 4 : 5;
-  const fontSize = size === "lg" ? 15 : size === "md" ? 14 : 12;
+  const v = resolveButtonVariant(variant);
+  const height = size === "lg" ? 52 : size === "md" ? 48 : 40;
+  const fontSize = size === "lg" ? 16 : size === "md" ? 15 : 13;
+  const showTrailing = icon !== null;
+  const trailingColor = v.trailingCyan ? colors.cyan : v.text;
+  const useFeatherArrow = icon === TRAILING_ARROW || icon === undefined;
+
   return (
-    <DepthPressable
+    <Pressable
       onPress={onPress}
+      onPressIn={disabled || loading ? undefined : tick}
       disabled={disabled || loading}
-      face={v.face}
-      depthColor={v.depth}
-      depth={depth}
-      radius={size === "sm" ? 999 : 18}
-      borderWidth={bordered ? 2 : 0}
-      borderColor={colors.navy}
+      accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
-      style={style}
-      innerStyle={[styles.buttonInner, { minHeight: height, paddingHorizontal: size === "sm" ? 14 : 18 }]}
+      accessibilityState={{ disabled: Boolean(disabled || loading) }}
+      style={({ pressed }) => [
+        styles.buttonFace,
+        {
+          minHeight: height,
+          backgroundColor: v.bg,
+          borderWidth: v.borderWidth,
+          borderColor: v.borderColor,
+          opacity: disabled || loading ? 0.55 : pressed ? 0.92 : 1,
+          transform: [{ scale: pressed ? 0.97 : 1 }],
+          paddingHorizontal: size === "sm" ? 14 : 18,
+        },
+        style,
+      ]}
     >
       {loading ? (
         <ActivityIndicator color={v.text} />
       ) : (
         <>
-          {leadingIcon ? <Ionicons name={leadingIcon} size={fontSize + 3} color={v.icon} /> : null}
+          {leadingIcon ? <Ionicons name={leadingIcon} size={18} color={v.text} /> : null}
           <Text
             style={[styles.buttonText, { color: v.text, fontSize }]}
             numberOfLines={1}
@@ -188,14 +261,19 @@ export function DepthButton({
           >
             {title}
           </Text>
-          {icon ? <Ionicons name={icon} size={fontSize + 3} color={v.icon} /> : null}
+          {showTrailing ? (
+            useFeatherArrow ? (
+              <Feather name={TRAILING_ARROW} size={18} color={trailingColor} />
+            ) : (
+              <Ionicons name={icon as IonName} size={18} color={trailingColor} />
+            )
+          ) : null}
         </>
       )}
-    </DepthPressable>
+    </Pressable>
   );
 }
 
-/** Uppercase poster headline with a highlighted block word, as on the website. */
 /** Splits "Lead|Highlight" copy so each language can choose its own line break and word agreement. */
 export function posterParts(text: string): { lead?: string; highlight: string } {
   const [lead, highlight] = text.split("|");
@@ -206,9 +284,10 @@ export function PosterTitle({
   lead,
   highlight,
   onDark = false,
-  highlightTone = "navy",
-  size = 36,
+  highlightTone: _highlightTone = "navy",
+  size = 34,
   align = "left",
+  tone,
   style,
 }: {
   lead?: string;
@@ -217,42 +296,59 @@ export function PosterTitle({
   highlightTone?: "navy" | "cyan";
   size?: number;
   align?: "left" | "center";
+  tone?: string;
   style?: StyleProp<ViewStyle>;
 }) {
-  const lineHeight = Math.round(size * 1.05);
-  const leadText = lead?.trim().toLocaleUpperCase("en-GB");
-  const highlightText = highlight.trim().toLocaleUpperCase("en-GB");
-  const blockBg = highlightTone === "navy" ? colors.navy : colors.cyan;
-  const blockText = highlightTone === "navy" ? colors.cyan : colors.navy;
+  const leadText = (lead ?? "").trim();
+  const highlightText = highlight.trim();
+  const combined = [leadText, highlightText].filter(Boolean).join(" ");
+  const endsWithPunct = /[.?!]$/.test(combined);
+  const titleStyle: TextStyle = {
+    ...type.title,
+    fontSize: size,
+    lineHeight: Math.round(size * (36 / 34)),
+    color: onDark ? colors.white : colors.navy,
+    textAlign: align,
+  };
+
   return (
     <View
       style={[{ alignItems: align === "center" ? "center" : "flex-start" }, style]}
       accessibilityRole="header"
       accessible
-      accessibilityLabel={[leadText, highlightText].filter(Boolean).join(" ")}
+      accessibilityLabel={combined}
     >
-      {leadText ? (
-        <Text
-          style={[
-            styles.poster,
-            { fontSize: size, lineHeight, color: onDark ? colors.white : colors.navy, textAlign: align },
-          ]}
-        >
-          {leadText}
-        </Text>
-      ) : null}
-      <View style={[styles.posterBlock, { backgroundColor: blockBg, marginTop: leadText ? 4 : 0 }]}>
-        <Text style={[styles.poster, { fontSize: size, lineHeight, color: blockText }]}>{highlightText}</Text>
-      </View>
+      <Text style={titleStyle}>
+        {leadText ? `${leadText} ` : null}
+        {highlightText}
+        {tone ? <Text style={{ color: colors.tone }}>{` ${tone}`}</Text> : null}
+        {!endsWithPunct ? <Text style={{ color: colors.cyan }}>.</Text> : null}
+      </Text>
     </View>
   );
 }
 
-export function Eyebrow({ children, onDark, color }: { children: string; onDark?: boolean; color?: string }) {
+export function Eyebrow({
+  children,
+  onDark,
+  color,
+}: {
+  children: string;
+  onDark?: boolean;
+  color?: string;
+}) {
   return (
-    <Text style={[styles.eyebrow, { color: color ?? (onDark ? colors.cyan : colors.textMuted) }]}>
-      {children}
-    </Text>
+    <View style={styles.eyebrowRow}>
+      <View style={styles.eyebrowBar} />
+      <Text
+        style={[
+          styles.eyebrow,
+          { color: color ?? (onDark ? colors.onNavy2 : colors.text2) },
+        ]}
+      >
+        {children}
+      </Text>
+    </View>
   );
 }
 
@@ -275,7 +371,7 @@ export function SectionHeading({
     <View style={[styles.sectionRow, style]}>
       <View style={styles.sectionText}>
         {eyebrow ? <Eyebrow onDark={onDark}>{eyebrow}</Eyebrow> : null}
-        <Text style={[styles.sectionTitle, onDark && { color: colors.white }]} accessibilityRole="header">
+        <Text style={[type.section, onDark && { color: colors.white }]} accessibilityRole="header">
           {title}
         </Text>
       </View>
@@ -289,7 +385,7 @@ export function SectionHeading({
   );
 }
 
-/** Filter / collection chip: selected chips get the cyan slab with a navy edge. */
+/** Filter / collection chip: off white with border; on = navy fill, white text. */
 export function BrandChip({
   label,
   selected = false,
@@ -301,30 +397,10 @@ export function BrandChip({
   selected?: boolean;
   onPress: () => void;
   icon?: IonName;
-  /** Always render as the cyan slab (collection shortcuts). */
+  /** Always render as the selected (navy) state. */
   solid?: boolean;
 }) {
   const on = selected || solid;
-  if (on) {
-    const shownIcon: IonName | undefined = icon ?? (selected ? "checkmark-circle" : undefined);
-    return (
-      <DepthPressable
-        onPress={onPress}
-        face={colors.cyan}
-        depthColor={colors.navy}
-        depth={3}
-        radius={999}
-        borderWidth={2}
-        accessibilityLabel={label}
-        innerStyle={styles.chipInner}
-      >
-        {shownIcon ? <Ionicons name={shownIcon} size={15} color={colors.navy} /> : null}
-        <Text style={styles.chipTextOn} numberOfLines={1}>
-          {label}
-        </Text>
-      </DepthPressable>
-    );
-  }
   return (
     <Pressable
       onPress={() => {
@@ -332,11 +408,11 @@ export function BrandChip({
         onPress();
       }}
       accessibilityRole="button"
-      accessibilityState={{ selected: false }}
-      style={[styles.chipInner, styles.chipOff]}
+      accessibilityState={{ selected: on }}
+      style={[styles.chipInner, on ? styles.chipOn : styles.chipOff]}
     >
-      {icon ? <Ionicons name={icon} size={15} color={colors.navy} /> : null}
-      <Text style={styles.chipTextOff} numberOfLines={1}>
+      {icon ? <Ionicons name={icon} size={15} color={on ? colors.white : colors.navy} /> : null}
+      <Text style={on ? styles.chipTextOn : styles.chipTextOff} numberOfLines={1}>
         {label}
       </Text>
     </Pressable>
@@ -386,57 +462,50 @@ export function SegmentTabs<T extends string>({
   );
 }
 
-/** Soft ring motif from the website hero, placed absolutely behind content. */
-export function DecorRing({
-  size,
-  thickness,
-  color,
-  style,
-}: {
+/** Kept so imports compile; Part 3 removes call sites. */
+export function DecorRing(_props: {
   size: number;
   thickness: number;
   color: string;
   style: ViewStyle;
 }) {
-  return (
-    <View
-      pointerEvents="none"
-      style={[
-        {
-          position: "absolute",
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          borderWidth: thickness,
-          borderColor: color,
-        },
-        style,
-      ]}
-    />
-  );
+  return null;
 }
 
 export function IconBadge({
   icon,
-  face = colors.cyan,
-  color = colors.navy,
+  face,
+  color,
   size = 40,
   radius = 12,
+  onNavy = false,
 }: {
   icon: IonName;
   face?: string;
   color?: string;
   size?: number;
   radius?: number;
+  onNavy?: boolean;
 }) {
+  const bg = face ?? (onNavy ? "rgba(255,255,255,0.08)" : colors.panel);
+  const iconColor = color ?? (onNavy ? colors.cyan : colors.navy);
   return (
-    <View style={{ width: size, height: size, borderRadius: radius, backgroundColor: face, alignItems: "center", justifyContent: "center" }}>
-      <Ionicons name={icon} size={Math.round(size * 0.5)} color={color} />
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderRadius: radius,
+        backgroundColor: bg,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Ionicons name={icon} size={20} color={iconColor} />
     </View>
   );
 }
 
-/** Settings-style row: white slab with an icon badge, label, optional hint and chevron. */
+/** Settings-style row: white soft card with an icon badge, label, optional hint and chevron. */
 export function BrandLinkRow({
   icon,
   label,
@@ -456,27 +525,23 @@ export function BrandLinkRow({
     <DepthPressable
       onPress={onPress}
       face={onDark ? "rgba(255,255,255,0.08)" : colors.white}
-      depthColor={onDark ? colors.navyDeep : colors.navy}
-      depth={3}
-      radius={16}
-      borderWidth={2}
-      borderColor={onDark ? "rgba(255,255,255,0.14)" : colors.navy}
       accessibilityLabel={hint ? `${label}. ${hint}` : label}
       style={style}
       innerStyle={styles.linkRow}
+      radius={16}
     >
-      <IconBadge icon={icon} size={36} radius={11} face={onDark ? colors.cyan : colors.pale} />
+      <IconBadge icon={icon} onNavy={onDark} />
       <View style={styles.linkText}>
         <Text style={[styles.linkLabel, onDark && { color: colors.white }]} numberOfLines={2}>
           {label}
         </Text>
         {hint ? (
-          <Text style={[styles.linkHint, onDark && { color: "rgba(255,255,255,0.65)" }]} numberOfLines={2}>
+          <Text style={[styles.linkHint, onDark && { color: colors.onNavy2 }]} numberOfLines={2}>
             {hint}
           </Text>
         ) : null}
       </View>
-      <Ionicons name="chevron-forward" size={18} color={onDark ? colors.cyan : colors.navy} />
+      <Ionicons name="chevron-forward" size={18} color={onDark ? colors.cyan : colors.muted} />
     </DepthPressable>
   );
 }
@@ -502,24 +567,17 @@ export function BrandStatePanel({
   style?: StyleProp<ViewStyle>;
 }) {
   const onNavy = tone === "navy";
-  const badgeFace = tone === "white" ? colors.cyan : tone === "cyan" ? colors.navy : colors.cyan;
-  const badgeIcon = tone === "cyan" ? colors.cyan : colors.navy;
-  const badgeDepth = tone === "white" ? colors.navy : colors.navyDeep;
-  const primaryVariant: DepthButtonVariant = tone === "cyan" ? "navy" : onNavy ? "cyanOnNavy" : "cyan";
+  const primaryVariant: DepthButtonVariant = onNavy ? "cyanOnNavy" : "navy";
   return (
     <View style={[styles.state, style]}>
-      <DepthSurface face={badgeFace} depthColor={badgeDepth} depth={6} radius={28}>
-        <View style={styles.stateBadge}>
-          <Ionicons name={icon} size={42} color={badgeIcon} />
-        </View>
-      </DepthSurface>
+      <IconBadge icon={icon} size={72} radius={24} face={onNavy ? "rgba(255,255,255,0.08)" : colors.panel} color={onNavy ? colors.cyan : colors.navy} />
       <Text style={[styles.stateTitle, onNavy && { color: colors.white }]} accessibilityRole="header">
         {title}
       </Text>
       <Text
         style={[
           styles.stateBody,
-          { color: onNavy ? "rgba(255,255,255,0.72)" : tone === "cyan" ? "rgba(13,25,78,0.78)" : colors.textMuted },
+          { color: onNavy ? colors.onNavy2 : colors.text2 },
         ]}
       >
         {body}
@@ -529,7 +587,7 @@ export function BrandStatePanel({
           title={primary.label}
           onPress={primary.onPress}
           variant={primary.variant ?? primaryVariant}
-          icon={primary.icon === undefined ? "arrow-forward" : primary.icon}
+          icon={primary.icon === undefined ? TRAILING_ARROW : primary.icon}
           size="md"
           style={styles.stateButton}
         />
@@ -543,30 +601,176 @@ export function BrandStatePanel({
   );
 }
 
+export function SupportChip({ label, onNavy = false }: { label: string; onNavy?: boolean }) {
+  return (
+    <View
+      style={[
+        styles.supportChip,
+        {
+          backgroundColor: onNavy ? colors.supportChipBgOnNavy : colors.supportChipBg,
+        },
+      ]}
+    >
+      <View style={styles.supportDot} />
+      <Text style={[styles.supportText, onNavy && { color: colors.white }]} numberOfLines={1}>
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+export function PlainTag({ label }: { label: string }) {
+  return (
+    <View style={styles.plainTag}>
+      <Text style={styles.supportText} numberOfLines={1}>
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+export function TitleWithStop({
+  text,
+  eyebrow,
+  tone,
+}: {
+  text: string;
+  eyebrow?: string;
+  tone?: string;
+}) {
+  const endsWithPunct = /[.?!]$/.test(text);
+  return (
+    <View accessibilityRole="header">
+      {eyebrow ? (
+        <View style={{ marginBottom: 6 }}>
+          <Eyebrow>{eyebrow}</Eyebrow>
+        </View>
+      ) : null}
+      <Text style={type.title}>
+        {text}
+        {tone ? <Text style={{ color: colors.tone }}>{` ${tone}`}</Text> : null}
+        {!endsWithPunct ? <Text style={{ color: colors.cyan }}>.</Text> : null}
+      </Text>
+    </View>
+  );
+}
+
+export function StatChip({ value, label }: { value: string; label: string }) {
+  return (
+    <View style={[styles.statChip, shadows.lift]}>
+      <Text style={styles.statValue}>{value}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
+    </View>
+  );
+}
+
+export function TalentMovesLockup({ size = 66 }: { size?: number }) {
+  const letterSpacing = -0.035 * size;
+  // 0.9 can clip letter tops on Android; 0.94 keeps the tight lockup readable.
+  const lineHeight = 0.94 * size;
+  const boxRadius = size * 0.192;
+
+  return (
+    <View accessibilityLabel="Talent moves." accessible>
+      <RiseIn delay={50}>
+        <Text
+          importantForAccessibility="no-hide-descendants"
+          style={{
+            fontFamily: fontFamily.headingStrong,
+            fontSize: size,
+            lineHeight,
+            letterSpacing,
+            color: colors.navy,
+            includeFontPadding: false,
+          }}
+        >
+          TALENT
+        </Text>
+      </RiseIn>
+      <RiseIn delay={160}>
+        <View
+          style={{
+            alignSelf: "flex-start",
+            marginTop: size * 0.04,
+            borderRadius: boxRadius,
+            backgroundColor: colors.navy,
+            paddingTop: size * 0.058,
+            paddingHorizontal: size * 0.192,
+            paddingBottom: size * 0.135,
+          }}
+        >
+          <Text
+            importantForAccessibility="no-hide-descendants"
+            style={{
+              fontFamily: fontFamily.headingStrong,
+              fontSize: size,
+              lineHeight,
+              letterSpacing,
+              color: colors.white,
+              includeFontPadding: false,
+            }}
+          >
+            MOVES
+            <Text style={{ color: colors.cyan }}>.</Text>
+          </Text>
+        </View>
+      </RiseIn>
+    </View>
+  );
+}
+
+export function GshMark({
+  size,
+  color = "#dfe3ec",
+  style,
+}: {
+  size?: number;
+  color?: string;
+  style?: StyleProp<ViewStyle>;
+}) {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox={GSH_MARK_VIEWBOX}
+      style={style}
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+    >
+      <Path d={GSH_MARK_PATH} fill={color} fillRule="evenodd" />
+    </Svg>
+  );
+}
+
 const styles = StyleSheet.create({
-  buttonInner: {
+  buttonFace: {
+    borderRadius: 9999,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
   },
   buttonText: {
-    fontFamily: fontFamily.heading,
-    textTransform: "uppercase",
-    letterSpacing: 0.4,
+    fontFamily: fontFamily.semiBold,
+    letterSpacing: 0,
+    textTransform: "none",
     flexShrink: 1,
   },
-  poster: {
-    fontFamily: fontFamily.headingStrong,
-    letterSpacing: -0.4,
-    paddingRight: 2,
+  eyebrowRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
-  posterBlock: { alignSelf: "flex-start", paddingHorizontal: 8, paddingBottom: 4, paddingTop: 2 },
+  eyebrowBar: {
+    width: 20,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: colors.cyan,
+  },
   eyebrow: {
-    fontFamily: fontFamily.bold,
-    fontSize: 10,
-    letterSpacing: 1.4,
-    textTransform: "uppercase",
+    fontFamily: fontFamily.semiBold,
+    fontSize: 13,
+    lineHeight: 18,
   },
   sectionRow: {
     minHeight: 44,
@@ -575,37 +779,33 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 12,
   },
-  sectionText: { flex: 1, minWidth: 0, gap: 2 },
-  sectionTitle: {
-    fontFamily: fontFamily.heading,
-    fontSize: 20,
-    lineHeight: 25,
-    color: colors.navy,
-    letterSpacing: -0.4,
-  },
+  sectionText: { flex: 1, minWidth: 0, gap: 6 },
   sectionAction: { minHeight: 44, flexDirection: "row", alignItems: "center", gap: 2 },
   sectionActionText: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.navy },
   chipInner: {
-    minHeight: 40,
+    minHeight: 44,
+    height: 44,
     paddingHorizontal: 14,
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
+    borderRadius: 9999,
   },
   chipOff: {
-    borderRadius: 999,
-    borderWidth: 2,
-    borderColor: colors.border,
+    borderWidth: 1,
+    borderColor: colors.line,
     backgroundColor: colors.white,
-    marginBottom: 3,
   },
-  chipTextOn: { fontFamily: fontFamily.extraBold, fontSize: 12, color: colors.navy },
-  chipTextOff: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.navy },
+  chipOn: {
+    backgroundColor: colors.navy,
+  },
+  chipTextOn: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.white },
+  chipTextOff: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.navy },
   segment: {
     flexDirection: "row",
     padding: 5,
     borderRadius: 16,
-    backgroundColor: colors.pale,
+    backgroundColor: colors.panel,
     gap: 4,
   },
   segmentOnCyan: { backgroundColor: "rgba(255,255,255,0.5)" },
@@ -619,30 +819,33 @@ const styles = StyleSheet.create({
   },
   segmentCellOn: {
     backgroundColor: colors.navy,
-    borderBottomWidth: 3,
-    borderBottomColor: colors.navyDeep,
   },
-  segmentText: { fontFamily: fontFamily.bold, fontSize: 12, color: "rgba(13,25,78,0.6)" },
-  segmentTextOn: { fontFamily: fontFamily.extraBold, color: colors.cyan },
-  linkRow: { minHeight: 60, flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 12, paddingVertical: 10 },
+  segmentText: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.text2 },
+  segmentTextOn: { fontFamily: fontFamily.semiBold, color: colors.white },
+  linkRow: {
+    minHeight: 60,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
   linkText: { flex: 1, minWidth: 0 },
-  linkLabel: { fontFamily: fontFamily.bold, fontSize: 15, color: colors.navy },
-  linkHint: { marginTop: 2, fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: colors.textMuted },
+  linkLabel: { fontFamily: fontFamily.semiBold, fontSize: 15, color: colors.navy },
+  linkHint: { marginTop: 2, fontFamily: fontFamily.regular, fontSize: 12, lineHeight: 17, color: colors.text2 },
   state: { alignItems: "center", paddingHorizontal: 28, paddingVertical: 32 },
-  stateBadge: { width: 92, height: 92, alignItems: "center", justifyContent: "center" },
   stateTitle: {
     marginTop: 24,
     fontFamily: fontFamily.headingStrong,
     fontSize: 24,
-    lineHeight: 25,
+    lineHeight: 28,
     letterSpacing: -0.6,
-    textTransform: "uppercase",
     color: colors.navy,
     textAlign: "center",
   },
   stateBody: {
     marginTop: 10,
-    fontFamily: fontFamily.medium,
+    fontFamily: fontFamily.regular,
     fontSize: 14,
     lineHeight: 21,
     textAlign: "center",
@@ -650,5 +853,52 @@ const styles = StyleSheet.create({
   },
   stateButton: { marginTop: 22, alignSelf: "stretch" },
   stateSecondary: { minHeight: 44, justifyContent: "center", marginTop: 6 },
-  stateSecondaryText: { fontFamily: fontFamily.bold, fontSize: 14, color: colors.navy },
+  stateSecondaryText: { fontFamily: fontFamily.semiBold, fontSize: 14, color: colors.navy },
+  supportChip: {
+    height: 28,
+    borderRadius: 9999,
+    paddingHorizontal: 11,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
+    alignSelf: "flex-start",
+  },
+  supportDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.cyan,
+  },
+  supportText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 12,
+    color: colors.navy,
+  },
+  plainTag: {
+    height: 28,
+    borderRadius: 9999,
+    paddingHorizontal: 11,
+    backgroundColor: colors.panel,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "flex-start",
+  },
+  statChip: {
+    backgroundColor: colors.white,
+    borderRadius: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+  },
+  statValue: {
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 22,
+    lineHeight: 24,
+    color: colors.navy,
+  },
+  statLabel: {
+    fontFamily: fontFamily.medium,
+    fontSize: 12,
+    lineHeight: 16,
+    color: colors.text2,
+  },
 });

@@ -1,7 +1,9 @@
 import { useAppLanguage, toIntlLocale } from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+import { CountryFlag } from "@/components/CountryFlag";
+import { GUIDE_COUNTRY_CODES } from "@/lib/guideCountryCodes";
 import countryOptions from "@/lib/country-options.json";
 import { canonicalCountryCode, countryDisplayName } from "@/lib/countries";
 import { colors, fontFamily } from "@/lib/theme";
@@ -12,12 +14,17 @@ export function CountryPicker({
   value,
   onChange,
   multiple = false,
+  placeholder,
+  guideFirst = false,
 }: {
   label: string;
   hint?: string;
   value: string;
   onChange: (value: string) => void;
   multiple?: boolean;
+  placeholder?: string;
+  /** List the 19 guide countries first, then A–Z. */
+  guideFirst?: boolean;
 }) {
   const ac = useAccountCopy();
   const locale = useAppLanguage((s) => s.locale);
@@ -37,17 +44,36 @@ export function CountryPicker({
     .split(",")
     .map((v) => canonicalCountryCode(v) || v.trim())
     .filter(Boolean);
+
+  const ordered = useMemo(() => {
+    if (!guideFirst) return countryOptions;
+    const guideSet = new Set<string>(GUIDE_COUNTRY_CODES);
+    const guides = GUIDE_COUNTRY_CODES.map(
+      (code) =>
+        countryOptions.find((c) => c.code === code) ?? {
+          code,
+          label: countryDisplayName(code, "en"),
+        },
+    );
+    const rest = countryOptions
+      .filter((c) => !guideSet.has(c.code))
+      .slice()
+      .sort((a, b) => a.label.localeCompare(b.label, "en"));
+    return [...guides, ...rest];
+  }, [guideFirst]);
+
   const needle = normalise(query.trim());
   const exact = canonicalCountryCode(query);
-  const choices = countryOptions
+  const choices = ordered
     .filter(
       (c) =>
         !selected.includes(c.code) &&
-        (c.code === exact ||
+        (!needle ||
+          c.code === exact ||
           normalise(c.label).includes(needle) ||
           normalise(countryName(c.code)).includes(needle)),
     )
-    .slice(0, 12);
+    .slice(0, guideFirst && !needle ? 30 : 12);
   const choose = (code: string) => {
     onChange(multiple ? [...selected, code].join(", ") : code);
     setQuery("");
@@ -65,45 +91,51 @@ export function CountryPicker({
         {label}
       </Text>
       {hint ? (
-        <Text style={{ color: colors.textMuted, fontSize: 12, lineHeight: 18 }}>
+        <Text style={{ color: colors.text2, fontSize: 13, lineHeight: 19 }}>
           {hint}
         </Text>
       ) : null}
-      {selected.map((code) => (
-        <View
-          key={code}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 12,
-            paddingHorizontal: 12,
-            borderRadius: 16,
-            backgroundColor: colors.surfaceMuted,
-          }}
-        >
-          <Text
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+        {selected.map((code) => (
+          <View
+            key={code}
             style={{
-              flex: 1,
-              color: colors.navy,
-              fontFamily: fontFamily.regular,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+              paddingLeft: 6,
+              paddingRight: 10,
+              paddingVertical: 6,
+              borderRadius: 999,
+              backgroundColor: colors.panel,
             }}
           >
-            {countryName(code)}
-          </Text>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={ac("Remove {country}", {
-              country: countryName(code),
-            })}
-            onPress={() =>
-              onChange(selected.filter((v) => v !== code).join(", "))
-            }
-            style={{ minHeight: 44, justifyContent: "center" }}
-          >
-            <Text style={{ color: colors.navy }}>{ac("Remove")}</Text>
-          </Pressable>
-        </View>
-      ))}
+            <CountryFlag iso2={code.toLowerCase()} size="small" />
+            <Text
+              style={{
+                color: colors.navy,
+                fontFamily: fontFamily.semiBold,
+                fontSize: 13,
+              }}
+            >
+              {countryName(code)}
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={ac("Remove {country}", {
+                country: countryName(code),
+              })}
+              onPress={() =>
+                onChange(selected.filter((v) => v !== code).join(", "))
+              }
+              hitSlop={8}
+              style={{ minWidth: 28, minHeight: 28, justifyContent: "center" }}
+            >
+              <Text style={{ color: colors.muted, fontSize: 16 }}>×</Text>
+            </Pressable>
+          </View>
+        ))}
+      </View>
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
@@ -117,7 +149,7 @@ export function CountryPicker({
               ? ac("Change country")
               : multiple
                 ? ac("Add a country")
-                : ac("Choose a country")}
+                : placeholder || ac("Choose a country")}
         </Text>
       </Pressable>
       {open ? (
@@ -127,6 +159,7 @@ export function CountryPicker({
               label: label.replace(/\s*\*$/, ""),
             })}
             placeholder={ac("Search country name")}
+            placeholderTextColor={colors.muted}
             value={query}
             onChangeText={setQuery}
             autoCapitalize="words"
@@ -134,11 +167,12 @@ export function CountryPicker({
               minHeight: 52,
               borderRadius: 16,
               borderWidth: 1,
-              borderColor: colors.border,
+              borderColor: colors.line,
               padding: 12,
               color: colors.navy,
               fontSize: 16,
               fontFamily: fontFamily.regular,
+              backgroundColor: colors.white,
             }}
           />
           {choices.map((c) => (
@@ -148,17 +182,22 @@ export function CountryPicker({
               onPress={() => choose(c.code)}
               style={{
                 minHeight: 44,
-                justifyContent: "center",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 10,
                 borderBottomWidth: 1,
-                borderColor: colors.border,
+                borderColor: colors.line,
               }}
             >
-              <Text style={{ color: colors.navy }}>{countryName(c.code)}</Text>
+              <CountryFlag iso2={c.code.toLowerCase()} size="small" />
+              <Text style={{ color: colors.navy, fontFamily: fontFamily.medium }}>
+                {countryName(c.code)}
+              </Text>
             </Pressable>
           ))}
           <Text
             accessibilityLiveRegion="polite"
-            style={{ color: colors.textMuted, fontSize: 12 }}
+            style={{ color: colors.muted, fontSize: 12 }}
           >
             {choices.length
               ? ac("Type more letters to narrow the list.")

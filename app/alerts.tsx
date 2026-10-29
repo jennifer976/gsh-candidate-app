@@ -472,8 +472,8 @@ function AlertsScreen() {
                   </Text>
                 </View>
                 <Switch
-                  trackColor={{false: colors.border, true: "#bceff2"}}
-                  thumbColor={s.isActive ? colors.accent : colors.white}
+                  trackColor={{false: "#d5dae6", true: "#0d194e"}}
+                  thumbColor={colors.white}
                   accessibilityLabel={s.name?.trim() || ac("Saved search")}
                   disabled={toggleSearch.isPending}
                   value={s.isActive}
@@ -727,8 +727,8 @@ function RowSwitch(props: {
     >
       <Text style={styles.switchLabel}>{props.label}</Text>
       <Switch
-        trackColor={{false: colors.border, true: "#bceff2"}}
-        thumbColor={props.value ? colors.accent : colors.white}
+        trackColor={{false: "#d5dae6", true: "#0d194e"}}
+        thumbColor={colors.white}
         accessibilityLabel={props.label}
         value={props.value}
         onValueChange={props.onValueChange}

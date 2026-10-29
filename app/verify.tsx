@@ -1,5 +1,3 @@
-import { useAuthCopy } from "@/lib/i18n/useAuthCopy";
-import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -13,35 +11,23 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { AuthFeedback } from "@/components/AuthScaffold";
-import {
-  BrandStatePanel,
-  DecorRing,
-  DepthButton,
-  DepthSurface,
-  PosterTitle,
-  posterParts,
-} from "@/components/gsh-brand";
-import { LegalConsentFooterRow } from "@/components/LegalConsentLinks";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BrandStatePanel, DepthButton } from "@/components/gsh-brand";
+import { StepHeroCard } from "@/components/onboarding/StepHeroCard";
 import { resendSignupOtp, verifyOtpRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { persistCandidateReturnIntent } from "@/lib/candidate-return-intent";
 import { colors, fontFamily } from "@/lib/theme";
 
 const CODE_LENGTH = 6;
-const RESEND_SECONDS = 30;
 
 function first(value: string | string[] | undefined): string {
   return (Array.isArray(value) ? value[0] : value) ?? "";
 }
 
 export default function VerifyScreen() {
-  const ac = useAuthCopy();
-  const acc = useAccountCopy();
-  const [feedback, setFeedback] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{
     userId?: string | string[];
     email?: string | string[];
@@ -53,8 +39,9 @@ export default function VerifyScreen() {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [focused, setFocused] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [resending, setResending] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
@@ -62,28 +49,25 @@ export default function VerifyScreen() {
     if (returnTo) void persistCandidateReturnIntent(returnTo);
   }, [params.returnTo]);
 
-  useEffect(() => {
-    if (secondsLeft <= 0) return;
-    const timer = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
-    return () => clearTimeout(timer);
-  }, [secondsLeft]);
-
   async function onSubmit(value = code) {
     if (loading) return;
     setFeedback(null);
     setNotice(null);
     const c = value.trim();
     if (!userId || !/^\d{6}$/.test(c)) {
-      setFeedback(ac("Enter the 6-digit code from your email."));
+      setFeedback("Enter the 6-digit code from your email.");
       return;
     }
     setLoading(true);
     try {
       const data = await verifyOtpRequest(userId, c);
       setAuth(data.token, data.user);
-      router.dismissTo("/(tabs)/home");
+      router.replace({
+        pathname: "/onboarding/[step]",
+        params: { step: "2", mode: "signup" },
+      });
     } catch {
-      setFeedback(ac("That code could not be verified. Check it and try again."));
+      setFeedback("That code could not be verified. Check it and try again.");
     } finally {
       setLoading(false);
     }
@@ -96,31 +80,34 @@ export default function VerifyScreen() {
     setResending(true);
     try {
       await resendSignupOtp(userId, email);
-      setNotice(acc("We sent a new code to {email}.", { email }));
-      setSecondsLeft(RESEND_SECONDS);
+      setNotice(`We sent a new code to ${email}.`);
     } catch {
-      setFeedback(acc("We could not send a new code. Try again in a moment."));
+      setFeedback("We could not send a new code. Try again in a moment.");
     } finally {
       setResending(false);
     }
   }
 
-  const back = () => (router.canGoBack() ? router.back() : router.replace("/register"));
+  const back = () =>
+    router.canGoBack() ? router.back() : router.replace("/register");
 
   if (!userId) {
     return (
-      <SafeAreaView style={styles.root} edges={["top", "bottom"]}>
-        <ScrollView contentContainerStyle={styles.missing}>
-          <BrandStatePanel
-            icon="mail-unread-outline"
-            tone="cyan"
-            title={ac("Verify email")}
-            body={ac("This link is incomplete. Return to sign up, or sign in if you already verified.")}
-            primary={{ label: ac("Create account"), onPress: () => router.replace("/register") }}
-            secondary={{ label: ac("Sign in instead"), onPress: () => router.replace("/login") }}
-          />
-        </ScrollView>
-      </SafeAreaView>
+      <View style={[styles.root, { paddingTop: insets.top }]}>
+        <BrandStatePanel
+          icon="mail-unread-outline"
+          title="Verify email"
+          body="This link is incomplete. Return to sign up, or sign in if you already verified."
+          primary={{
+            label: "Create account",
+            onPress: () => router.replace("/register"),
+          }}
+          secondary={{
+            label: "Sign in instead",
+            onPress: () => router.replace("/login"),
+          }}
+        />
+      </View>
     );
   }
 
@@ -128,183 +115,194 @@ export default function VerifyScreen() {
   const activeIndex = Math.min(code.length, CODE_LENGTH - 1);
 
   return (
-    <View style={styles.root}>
-      <DecorRing size={300} thickness={44} color="rgba(255,255,255,0.3)" style={{ top: -120, right: -120 }} />
-      <SafeAreaView style={styles.flex} edges={["top", "bottom"]}>
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
-          <ScrollView
-            contentContainerStyle={styles.content}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
+    <View style={[styles.root, { paddingTop: insets.top + 8 }]}>
+      <View style={styles.topBar}>
+        <Pressable
+          onPress={back}
+          style={styles.circleBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Back"
+        >
+          <Ionicons name="arrow-back" size={20} color={colors.navy} />
+        </Pressable>
+      </View>
+
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
+        <ScrollView
+          contentContainerStyle={[
+            styles.scroll,
+            { paddingBottom: Math.max(insets.bottom, 24) },
+          ]}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <StepHeroCard
+            label="Email verification"
+            title="Check your inbox"
+            photo="plan-perks"
+          />
+
+          <Text style={styles.title} accessibilityRole="header">
+            Enter your code
+          </Text>
+          <Text style={styles.sub}>
+            {email
+              ? `Enter the code sent to ${email} to continue.`
+              : "Enter the code sent to your email to continue."}
+          </Text>
+
+          <Pressable
+            onPress={() => inputRef.current?.focus()}
+            style={styles.codeRow}
+            accessibilityRole="none"
+            importantForAccessibility="no-hide-descendants"
           >
-            <View style={styles.topRow}>
-              <Pressable
-                onPress={back}
-                style={styles.back}
-                accessibilityRole="button"
-                accessibilityLabel={acc("Back")}
-                hitSlop={6}
-              >
-                <Ionicons name="chevron-back" size={22} color={colors.navy} />
-              </Pressable>
-              <View style={styles.progressTrack}>
-                <View style={styles.progressFill} />
-              </View>
-            </View>
+            {digits.map((digit, index) => {
+              const active = focused && index === activeIndex;
+              return (
+                <View
+                  key={index}
+                  style={[styles.codeBox, active && styles.codeBoxActive]}
+                >
+                  <Text style={styles.codeDigit}>{digit}</Text>
+                </View>
+              );
+            })}
+          </Pressable>
+          <TextInput
+            ref={inputRef}
+            value={code}
+            onChangeText={(value) => {
+              const next = value.replace(/\D/g, "").slice(0, CODE_LENGTH);
+              setCode(next);
+              if (next.length === CODE_LENGTH) void onSubmit(next);
+            }}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            keyboardType="number-pad"
+            textContentType="oneTimeCode"
+            autoComplete="sms-otp"
+            maxLength={CODE_LENGTH}
+            autoFocus
+            editable={!loading}
+            accessibilityLabel="Verification code"
+            style={styles.hiddenInput}
+          />
 
-            <DepthSurface
-              face={colors.navy}
-              depthColor={colors.navyDeep}
-              depth={6}
-              radius={26}
-              style={styles.badge}
-            >
-              <View style={styles.badgeInner}>
-                <Ionicons name="mail-unread" size={38} color={colors.cyan} />
-              </View>
-            </DepthSurface>
-
-            <PosterTitle {...posterParts(acc("Check your|inbox."))} size={40} style={styles.title} />
-            <Text style={styles.subtitle}>
-              {email
-                ? acc("Enter the 6-digit code we sent to {email}.", { email })
-                : ac("Enter the code we emailed you to activate your candidate account.")}
+          <Text style={styles.hint}>
+            Codes contain six numbers, last 60 minutes, and can only be used once. Check your spam folder.
+          </Text>
+          <Pressable
+            onPress={() => void onResend()}
+            disabled={resending || !email}
+            style={styles.resend}
+            accessibilityRole="button"
+            accessibilityLabel="Request a new code"
+          >
+            <Text style={styles.resendText}>
+              {resending ? "Sending" : "Request a new code"}
             </Text>
+          </Pressable>
 
-            <Pressable
-              onPress={() => inputRef.current?.focus()}
-              style={styles.codeRow}
-              accessibilityRole="none"
-              importantForAccessibility="no-hide-descendants"
-            >
-              {digits.map((digit, index) => {
-                const active = focused && index === activeIndex;
-                return (
-                  <View
-                    key={index}
-                    style={[styles.codeBox, digit ? styles.codeBoxFilled : null, active && styles.codeBoxActive]}
-                  >
-                    <Text style={styles.codeDigit}>{digit}</Text>
-                  </View>
-                );
-              })}
-            </Pressable>
-            <TextInput
-              ref={inputRef}
-              value={code}
-              onChangeText={(value) => {
-                const next = value.replace(/\D/g, "").slice(0, CODE_LENGTH);
-                setCode(next);
-                if (next.length === CODE_LENGTH) void onSubmit(next);
-              }}
-              onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
-              keyboardType="number-pad"
-              textContentType="oneTimeCode"
-              autoComplete="sms-otp"
-              maxLength={CODE_LENGTH}
-              autoFocus
-              editable={!loading}
-              accessibilityLabel={ac("Verification code")}
-              style={styles.hiddenInput}
-            />
+          {notice ? <Text style={styles.notice}>{notice}</Text> : null}
+          {feedback ? <Text style={styles.error}>{feedback}</Text> : null}
 
-            <View style={styles.resendRow}>
-              {!email ? null : secondsLeft > 0 ? (
-                <Text style={styles.resendMuted}>
-                  {acc("You can ask for a new code in {seconds}s", { seconds: secondsLeft })}
-                </Text>
-              ) : (
-                <Pressable onPress={onResend} disabled={resending} accessibilityRole="button" hitSlop={8}>
-                  <Text style={styles.resendLink}>{resending ? acc("Sending…") : acc("Send a new code")}</Text>
-                </Pressable>
-              )}
-            </View>
-
-            {notice ? <Text style={styles.notice}>{notice}</Text> : null}
-            {feedback ? <AuthFeedback>{feedback}</AuthFeedback> : null}
-
-            <DepthSurface depth={4} radius={18} borderWidth={2} borderColor={colors.navy} style={styles.tip}>
-              <View style={styles.tipInner}>
-                <Ionicons name="bulb-outline" size={18} color={colors.navy} />
-                <Text style={styles.tipText}>
-                  {acc("Can't see it? Check spam, then send a new code. Codes last 60 minutes.")}
-                </Text>
-              </View>
-            </DepthSurface>
-
-            <DepthButton
-              title={ac("Verify & continue")}
-              onPress={() => void onSubmit()}
-              loading={loading}
-              variant="navy"
-              disabled={code.length < CODE_LENGTH}
-              style={styles.submit}
-            />
-            <LegalConsentFooterRow />
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+          <DepthButton
+            title="Verify email"
+            onPress={() => void onSubmit()}
+            loading={loading}
+            disabled={code.length < CODE_LENGTH || loading}
+            variant="navy"
+            style={styles.submit}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.cyan, overflow: "hidden" },
+  root: { flex: 1, backgroundColor: colors.white },
   flex: { flex: 1 },
-  missing: { flexGrow: 1, justifyContent: "center" },
-  content: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28 },
-  topRow: { flexDirection: "row", alignItems: "center", gap: 14, minHeight: 48 },
-  back: {
+  topBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    minHeight: 44,
+  },
+  circleBtn: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    borderWidth: 2,
-    borderColor: colors.navy,
+    backgroundColor: colors.panel,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  scroll: { paddingHorizontal: 20, gap: 12 },
+  title: {
+    marginTop: 20,
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 26,
+    lineHeight: 30,
+    color: colors.navy,
+  },
+  sub: {
+    fontFamily: fontFamily.regular,
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.text2,
+  },
+  codeRow: {
+    marginTop: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 8,
+  },
+  codeBox: {
+    width: 52,
+    height: 60,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.line,
     backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
   },
-  progressTrack: {
-    flex: 1,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "rgba(255,255,255,0.55)",
-    overflow: "hidden",
-  },
-  progressFill: { width: "66%", height: "100%", borderRadius: 5, backgroundColor: colors.navy },
-  badge: { alignSelf: "flex-start", marginTop: 28 },
-  badgeInner: { width: 76, height: 76, alignItems: "center", justifyContent: "center" },
-  title: { marginTop: 22 },
-  subtitle: {
-    marginTop: 14,
-    fontFamily: fontFamily.medium,
-    fontSize: 15,
-    lineHeight: 22,
-    color: "rgba(13,25,78,0.82)",
-  },
-  codeRow: { marginTop: 24, flexDirection: "row", justifyContent: "space-between", gap: 8 },
-  codeBox: {
-    flex: 1,
-    maxWidth: 54,
-    aspectRatio: 0.82,
-    borderRadius: 14,
+  codeBoxActive: {
     borderWidth: 2,
-    borderColor: "rgba(13,25,78,0.25)",
-    backgroundColor: "rgba(255,255,255,0.6)",
-    alignItems: "center",
-    justifyContent: "center",
+    borderColor: colors.navy,
   },
-  codeBoxFilled: { borderColor: colors.navy, backgroundColor: colors.white },
-  codeBoxActive: { borderColor: colors.navy, borderBottomWidth: 5 },
-  codeDigit: { fontFamily: fontFamily.headingStrong, fontSize: 24, color: colors.navy },
+  codeDigit: {
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 22,
+    color: colors.navy,
+  },
   hiddenInput: { position: "absolute", opacity: 0, width: 1, height: 1 },
-  resendRow: { minHeight: 44, justifyContent: "center", marginTop: 8 },
-  resendMuted: { fontFamily: fontFamily.medium, fontSize: 13, color: "rgba(13,25,78,0.7)" },
-  resendLink: { fontFamily: fontFamily.extraBold, fontSize: 14, color: colors.navy, textDecorationLine: "underline" },
-  notice: { marginBottom: 12, fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.navy },
-  tip: { marginTop: 4 },
-  tipInner: { flexDirection: "row", alignItems: "center", gap: 10, padding: 14 },
-  tipText: { flex: 1, fontFamily: fontFamily.medium, fontSize: 13, lineHeight: 19, color: colors.navy },
-  submit: { marginTop: 20 },
+  hint: {
+    fontFamily: fontFamily.regular,
+    fontSize: 13,
+    lineHeight: 19,
+    color: colors.text2,
+  },
+  resend: { minHeight: 44, justifyContent: "center" },
+  resendText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    color: colors.navy,
+    textDecorationLine: "underline",
+  },
+  notice: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 13,
+    color: colors.navy,
+  },
+  error: {
+    fontFamily: fontFamily.medium,
+    fontSize: 13,
+    color: colors.error,
+  },
+  submit: { marginTop: 8 },
 });

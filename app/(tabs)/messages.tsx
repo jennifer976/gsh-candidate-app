@@ -8,14 +8,11 @@ import { GshScreenShell } from "@/components/GshScreenShell";
 import { SignInPanel } from "@/components/SignInGate";
 import {
   BrandStatePanel,
-  DecorRing,
   DepthPressable,
   DepthSurface,
-  Eyebrow,
   IconBadge,
-  PosterTitle,
-  posterParts,
   SegmentTabs,
+  TitleWithStop,
 } from "@/components/gsh-brand";
 import { tabBarBottomPadding } from "@/lib/android-insets";
 import { fetchConversations } from "@/lib/api-client";
@@ -23,6 +20,7 @@ import { useAuthStore } from "@/lib/auth-store";
 import { useAppCopy } from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { jobAgeLabel } from "@/lib/job-presentation";
+import { listStaggerDelay, RiseIn } from "@/lib/motion";
 import { colors, fontFamily } from "@/lib/theme";
 import type { ConversationSummary } from "@/types/models";
 
@@ -58,10 +56,8 @@ export default function MessagesScreen() {
   const rows = filter === "unread" ? all.filter((row) => unreadOf(row) > 0) : all;
 
   const header = (
-    <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 14 }]}>
-      <DecorRing size={220} thickness={30} color="rgba(66,224,227,0.18)" style={{ top: -100, right: -90 }} />
-      <Eyebrow>{ac("Inbox")}</Eyebrow>
-      <PosterTitle {...posterParts(ac("Your|messages."))} size={38} style={styles.title} />
+    <View style={[styles.header, { paddingTop: insets.top + 14 }]}>
+      <TitleWithStop eyebrow="Employers and agencies" text="Messages" />
       {signedIn ? (
         <>
           <Text style={styles.body}>{ac("Employers and agencies message you here.")}</Text>
@@ -150,13 +146,20 @@ export default function MessagesScreen() {
           ) : null
         }
         refreshControl={
-          <RefreshControl refreshing={query.isRefetching} onRefresh={() => void query.refetch()} tintColor={colors.navy} />
+          <RefreshControl
+            refreshing={query.isRefetching}
+            onRefresh={() => void query.refetch()}
+            colors={["#0d194e"]}
+            progressBackgroundColor="#ffffff"
+            tintColor="#0d194e"
+          />
         }
         contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 16 }}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           const unread = unreadOf(item);
           const when = jobAgeLabel(item.lastMessageAt, locale);
           return (
+            <RiseIn delay={listStaggerDelay(index)}>
             <DepthPressable
               onPress={() => router.push(`/conversation/${item.id ?? item._id}`)}
               face={unread > 0 ? colors.unreadBg : colors.white}
@@ -198,6 +201,7 @@ export default function MessagesScreen() {
                 </View>
               </View>
             </DepthPressable>
+            </RiseIn>
           );
         }}
       />
@@ -206,7 +210,12 @@ export default function MessagesScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: { paddingHorizontal: 20, paddingBottom: 18, overflow: "hidden" },
+  header: {
+    backgroundColor: colors.panel,
+    paddingHorizontal: 20,
+    paddingBottom: 14,
+    overflow: "hidden",
+  },
   title: { marginTop: 8 },
   body: {
     marginTop: 14,
@@ -222,7 +231,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 48,
     height: 48,
-    borderRadius: 14,
+    borderRadius: 16,
     backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",

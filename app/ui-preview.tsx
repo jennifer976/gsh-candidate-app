@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: fontFamily.bold,
     color: colors.cyan,
-    textTransform: "uppercase",
     letterSpacing: 0.8,
   },
   taskTitle: {

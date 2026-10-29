@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.bold,
     color: colors.navy,
     letterSpacing: 0.2,
-    textTransform: "uppercase",
   },
   subtitle: {
     marginTop: 2,

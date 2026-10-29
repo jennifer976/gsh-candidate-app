@@ -139,7 +139,7 @@ function SettingsScreen() {
                     accessibilityLabel={t("vibration")}
                     value={hapticsEnabled}
                     onValueChange={setHapticsEnabled}
-                    trackColor={{ false: "#cbd5e1", true: colors.cyan }}
+                    trackColor={{ false: "#d5dae6", true: "#0d194e" }}
                     thumbColor={colors.white}
                   />
                 </View>

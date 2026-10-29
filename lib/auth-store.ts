@@ -1,6 +1,7 @@
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { resetNudgeSession } from "@/lib/profileNudgeSession";
 import type { AuthUser } from "@/types/models";
 
 interface AuthState {
@@ -32,7 +33,10 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       user: null,
       setAuth: (token, user) => set({ token, user }),
-      clearAuth: () => set({ token: null, user: null }),
+      clearAuth: () => {
+        resetNudgeSession();
+        set({ token: null, user: null });
+      },
     }),
     {
       name: "gsh-candidate-auth",

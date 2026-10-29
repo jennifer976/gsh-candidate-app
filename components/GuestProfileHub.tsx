@@ -90,7 +90,7 @@ export function GuestProfileHub() {
 
 const styles = StyleSheet.create({
   hero: {
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     paddingHorizontal: 20,
     paddingBottom: 22,
     borderBottomLeftRadius: 32,

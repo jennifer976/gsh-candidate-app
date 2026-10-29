@@ -24,11 +24,8 @@ import { BrandTopBar } from "@/components/BrandTopBar";
 import {
   BrandChip,
   BrandStatePanel,
-  DecorRing,
   DepthSurface,
-  Eyebrow,
-  PosterTitle,
-  posterParts,
+  TitleWithStop,
 } from "@/components/gsh-brand";
 import { tabBarBottomPadding } from "@/lib/android-insets";
 import { fetchApplications, withdrawApplication } from "@/lib/api-client";
@@ -166,12 +163,10 @@ function ApplicationsScreen() {
   }, [filter, rows, search]);
 
   const header = (
-    <View style={styles.header}>
-      <DecorRing size={220} thickness={30} color="rgba(13,25,78,0.08)" style={{ top: -90, right: -80 }} />
+    <View style={[styles.header, { paddingTop: insets.top + 14 }]}>
       <BrandTopBar fallback="/(tabs)/saved" />
       <View style={styles.headerBody}>
-        <Eyebrow color={colors.navy}>{t("applications")}</Eyebrow>
-        <PosterTitle {...posterParts(ac("Your|applications."))} size={34} />
+        <TitleWithStop eyebrow="Your applications" text="Applications" />
         <Text style={styles.headerSub}>{t("applicationUpdates")}</Text>
       </View>
     </View>
@@ -214,7 +209,9 @@ function ApplicationsScreen() {
           <RefreshControl
             refreshing={query.isFetching}
             onRefresh={() => query.refetch()}
-            tintColor={colors.cyan}
+            colors={["#0d194e"]}
+            progressBackgroundColor="#ffffff"
+            tintColor="#0d194e"
           />
         }
         contentContainerStyle={[
@@ -446,18 +443,16 @@ const styles = StyleSheet.create({
   listPad: { gap: 14 },
   listPadGrow: { flexGrow: 1 },
   header: {
-    backgroundColor: colors.cyan,
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
-    paddingBottom: 24,
+    backgroundColor: colors.panel,
+    paddingBottom: 14,
     overflow: "hidden",
   },
-  headerBody: { paddingHorizontal: 20, paddingTop: 16, gap: 10 },
+  headerBody: { paddingHorizontal: 20, paddingTop: 8, gap: 10 },
   headerSub: {
     fontSize: 14,
     lineHeight: 20,
     fontFamily: fontFamily.medium,
-    color: "rgba(13,25,78,0.78)",
+    color: colors.text2,
   },
   workspace: { gap: 12, marginTop: 18, marginBottom: 2, paddingHorizontal: 16 },
   searchBox: {
@@ -530,7 +525,7 @@ const styles = StyleSheet.create({
     borderColor: colors.navy,
     backgroundColor: colors.pale,
   },
-  statusPillGood: { backgroundColor: colors.cyan },
+  statusPillGood: { backgroundColor: colors.navy },
   statusPillBad: { backgroundColor: colors.white, borderColor: colors.borderStrong },
   statusPillText: {
     fontSize: 12,
@@ -543,7 +538,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 12,
     gap: 4,
-    borderRadius: 14,
+    borderRadius: 16,
     backgroundColor: colors.navy,
   },
   interviewTitle: {
@@ -551,7 +546,6 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.extraBold,
     color: colors.cyan,
     letterSpacing: 1,
-    textTransform: "uppercase",
   },
   interviewDetail: {
     fontSize: 13,

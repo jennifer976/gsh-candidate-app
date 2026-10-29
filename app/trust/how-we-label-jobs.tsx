@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: fontFamily.bold,
     letterSpacing: 1.6,
-    textTransform: "uppercase",
     color: colors.navy,
     opacity: 0.6,
   },

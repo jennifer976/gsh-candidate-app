@@ -24,6 +24,6 @@ const styles = StyleSheet.create({
   wash: {
     width: "100%",
   },
-  brand: { backgroundColor: "#42e0e3" },
+  brand: { backgroundColor: "#0d194e" },
   light: { backgroundColor: "#ffffff" },
 });

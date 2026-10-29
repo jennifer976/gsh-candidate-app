@@ -157,6 +157,7 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="welcome" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
           <Stack.Screen name="ui-preview" options={{ headerShown: false }} />
           <Stack.Screen
@@ -167,6 +168,8 @@ export default function RootLayout() {
             name="verify"
             options={{ title: t("screenVerifyemail"), headerShown: false }}
           />
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+          <Stack.Screen name="onboarding-done" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="job/[id]"

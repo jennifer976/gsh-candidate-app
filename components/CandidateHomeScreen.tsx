@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import type { ComponentProps } from "react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { resolveUploadAssetUrl } from "@/lib/media-url";
 import {
   ActivityIndicator,
@@ -19,6 +19,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshHomeDestinationRail } from "@/components/GshHomeDestinationRail";
 import { GshScreenShell } from "@/components/GshScreenShell";
+import { ProfileNudge } from "@/components/ProfileNudge";
 import {
   DecorRing,
   DepthButton,
@@ -36,6 +37,7 @@ import {
   fetchUnreadNotificationCount,
 } from "@/lib/api-client";
 import { tabBarBottomPadding } from "@/lib/android-insets";
+import { useAuthStore } from "@/lib/auth-store";
 import { brandLockupNavy, heroWalking } from "@/lib/brand-assets";
 import { resolveBrandImageUrl } from "@/lib/brand-logo";
 import { fetchPublishedBlogList } from "@/lib/content/blogQueries";
@@ -44,10 +46,19 @@ import type { AppLanguage as AppLocale } from "@/lib/i18n/catalog";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { getJobEmployerLabel, getJobLogoUrl, hubListingChipsPrioritized } from "@/lib/job-display";
 import { jobAgeLabel, jobChipLabel, jobLocationLabel, jobSalaryLabel } from "@/lib/job-presentation";
+import { firstMissingStep } from "@/lib/onboardingFlow";
+import { openProfileStep } from "@/lib/openProfileStep";
 import { getCandidateCompletionBreakdown } from "@/lib/profile-completion";
+import { shouldShowNudge } from "@/lib/profileNudge";
+import {
+  getNudgeShownThisSession,
+  markNudgeShownThisSession,
+  readNotNowAt,
+  writeNotNowAt,
+} from "@/lib/profileNudgeSession";
 import { useSignInPrompt } from "@/lib/useSignInPrompt";
 import { colors, fontFamily } from "@/lib/theme";
-import type { ExternalJobListingPublic, Job } from "@/types/models";
+import { authUserId, type ExternalJobListingPublic, type Job } from "@/types/models";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 
@@ -195,7 +206,13 @@ export default function CandidateHomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { signedIn, openSignIn, openRegister } = useSignInPrompt();
+  const user = useAuthStore((s) => s.user);
+  const userId = authUserId(user);
   const [search, setSearch] = useState("");
+  const [notNowAt, setNotNowAt] = useState<number | null>(null);
+  const [nudgeReady, setNudgeReady] = useState(false);
+  const [nudgeHidden, setNudgeHidden] = useState(false);
+  const [nudgeActive, setNudgeActive] = useState(false);
 
   const jobsQuery = useQuery({
     queryKey: ["jobs", "public", "home"],
@@ -252,6 +269,72 @@ export default function CandidateHomeScreen() {
   const completion = useMemo(() => getCandidateCompletionBreakdown(profile, locale), [profile, locale]);
   const missing = completion.missing.filter((item) => !item.filled).slice(0, 3);
 
+  useEffect(() => {
+    let alive = true;
+    if (!signedIn || !userId) {
+      setNotNowAt(null);
+      setNudgeReady(true);
+      return;
+    }
+    setNudgeReady(false);
+    void readNotNowAt(userId).then((value) => {
+      if (!alive) return;
+      setNotNowAt(value);
+      setNudgeReady(true);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [signedIn, userId]);
+
+  const nudgeEligible =
+    nudgeReady &&
+    !nudgeHidden &&
+    !profileQuery.isLoading &&
+    Boolean(profileQuery.data) &&
+    shouldShowNudge({
+      signedIn,
+      percent: completion.percent,
+      shownThisSession: getNudgeShownThisSession(),
+      notNowAt,
+      now: Date.now(),
+    });
+
+  useEffect(() => {
+    if (!nudgeEligible || nudgeActive || nudgeHidden) return;
+    setNudgeActive(true);
+    markNudgeShownThisSession();
+  }, [nudgeEligible, nudgeActive, nudgeHidden]);
+
+  const showNudge = (nudgeActive || nudgeEligible) && !nudgeHidden && completion.percent < 100;
+
+  const openMissingStep = useCallback(
+    (step: number | null | undefined) => {
+      openProfileStep(step, "home");
+    },
+    [],
+  );
+
+  const openFirstMissing = useCallback(() => {
+    openMissingStep(firstMissingStep(completion.missing));
+  }, [completion.missing, openMissingStep]);
+
+  const onNudgeFinishNow = useCallback(() => {
+    setNudgeHidden(true);
+    setNudgeActive(false);
+    markNudgeShownThisSession();
+    openFirstMissing();
+  }, [openFirstMissing]);
+
+  const onNudgeNotNow = useCallback(() => {
+    const now = Date.now();
+    setNudgeHidden(true);
+    setNudgeActive(false);
+    setNotNowAt(now);
+    markNudgeShownThisSession();
+    if (userId) void writeNotNowAt(userId, now);
+  }, [userId]);
+
   const roles: HomeRole[] = noDirectJobs
     ? (externalJobsQuery.data?.data ?? []).slice(0, 6).map((job) => externalRole(job, locale, ac))
     : (jobsQuery.data?.data ?? []).slice(0, 6).map((job) => directRole(job, locale));
@@ -277,7 +360,15 @@ export default function CandidateHomeScreen() {
         contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 24 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.navy} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["#0d194e"]}
+            progressBackgroundColor="#ffffff"
+            tintColor="#0d194e"
+          />
+        }
       >
         <View style={[styles.hero, { paddingTop: Math.max(insets.top, 12) + 6 }]}>
           <DecorRing size={300} thickness={40} color="rgba(255,255,255,0.28)" style={{ top: -120, right: -110 }} />
@@ -425,61 +516,70 @@ export default function CandidateHomeScreen() {
               </View>
             </DepthSurface>
           ) : profileQuery.data ? (
-            <DepthSurface face={colors.navy} depthColor={colors.navyDeep} depth={6} radius={24}>
-              <View style={styles.nextCard}>
-                <DecorRing size={170} thickness={26} color="rgba(66,224,227,0.14)" style={{ top: -70, right: -60 }} />
-                {completion.percent < 100 ? (
-                  <>
-                    <View style={styles.nextHead}>
-                      <View style={{ flex: 1 }}>
-                        <Eyebrow onDark>{ac("Your next step")}</Eyebrow>
-                        <Text style={styles.nextTitle}>{ac("Finish your profile")}</Text>
+            <>
+              {showNudge ? (
+                <ProfileNudge
+                  percent={completion.percent}
+                  onFinishNow={onNudgeFinishNow}
+                  onNotNow={onNudgeNotNow}
+                />
+              ) : null}
+              <DepthSurface face={colors.navy} depthColor={colors.navyDeep} depth={6} radius={24}>
+                <View style={styles.nextCard}>
+                  <DecorRing size={170} thickness={26} color="rgba(66,224,227,0.14)" style={{ top: -70, right: -60 }} />
+                  {completion.percent < 100 ? (
+                    <>
+                      <View style={styles.nextHead}>
+                        <View style={{ flex: 1 }}>
+                          <Eyebrow onDark>{ac("Your next step")}</Eyebrow>
+                          <Text style={styles.nextTitle}>{ac("Finish your profile")}</Text>
+                        </View>
+                        <Text style={styles.nextPercent}>{completion.percent}%</Text>
                       </View>
-                      <Text style={styles.nextPercent}>{completion.percent}%</Text>
-                    </View>
-                    <View style={styles.progressTrack}>
-                      <View style={[styles.progressFill, { width: `${Math.max(4, completion.percent)}%` }]} />
-                    </View>
-                    {missing.map((item) => (
-                      <Pressable
-                        key={item.path}
-                        onPress={() => router.push("/mobility-profile")}
-                        style={styles.missingRow}
-                        accessibilityRole="button"
-                      >
-                        <Ionicons name="ellipse-outline" size={18} color={colors.cyan} />
-                        <Text style={styles.missingText} numberOfLines={1}>
-                          {item.label}
-                        </Text>
-                        <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.5)" />
-                      </Pressable>
-                    ))}
-                    <DepthButton
-                      title={ac("Continue profile")}
-                      onPress={() => router.push("/mobility-profile")}
-                      variant="cyanOnNavy"
-                      size="md"
-                      style={styles.nextButton}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <Eyebrow onDark>{ac("Profile ready")}</Eyebrow>
-                    <Text style={styles.nextTitle}>{ac("Let new jobs come to you")}</Text>
-                    <Text style={styles.nextBody}>
-                      {ac("Set up a job alert and we will tell you when a matching sponsored job is posted.")}
-                    </Text>
-                    <DepthButton
-                      title={ac("Set up a job alert")}
-                      onPress={() => router.push("/alerts")}
-                      variant="cyanOnNavy"
-                      size="md"
-                      style={styles.nextButton}
-                    />
-                  </>
-                )}
-              </View>
-            </DepthSurface>
+                      <View style={styles.progressTrack}>
+                        <View style={[styles.progressFill, { width: `${Math.max(4, completion.percent)}%` }]} />
+                      </View>
+                      {missing.map((item) => (
+                        <Pressable
+                          key={item.path}
+                          onPress={() => openMissingStep(item.onboardingStep)}
+                          style={styles.missingRow}
+                          accessibilityRole="button"
+                        >
+                          <Ionicons name="ellipse-outline" size={18} color={colors.cyan} />
+                          <Text style={styles.missingText} numberOfLines={1}>
+                            {item.label}
+                          </Text>
+                          <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.5)" />
+                        </Pressable>
+                      ))}
+                      <DepthButton
+                        title={ac("Continue profile")}
+                        onPress={openFirstMissing}
+                        variant="cyanOnNavy"
+                        size="md"
+                        style={styles.nextButton}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Eyebrow onDark>{ac("Profile ready")}</Eyebrow>
+                      <Text style={styles.nextTitle}>{ac("Let new jobs come to you")}</Text>
+                      <Text style={styles.nextBody}>
+                        {ac("Set up a job alert and we will tell you when a matching sponsored job is posted.")}
+                      </Text>
+                      <DepthButton
+                        title={ac("Set up a job alert")}
+                        onPress={() => router.push("/alerts")}
+                        variant="cyanOnNavy"
+                        size="md"
+                        style={styles.nextButton}
+                      />
+                    </>
+                  )}
+                </View>
+              </DepthSurface>
+            </>
           ) : null}
         </View>
 
@@ -609,7 +709,7 @@ export default function CandidateHomeScreen() {
 
 const styles = StyleSheet.create({
   hero: {
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     paddingHorizontal: 20,
     paddingBottom: 26,
     borderBottomLeftRadius: 32,
@@ -690,7 +790,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     borderWidth: 2,
     borderColor: colors.navy,
     alignItems: "center",
@@ -774,7 +874,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   jobBandLeft: { flex: 1, minWidth: 0, flexDirection: "row", alignItems: "center", gap: 6 },
-  jobBandText: { flexShrink: 1, fontFamily: fontFamily.extraBold, fontSize: 11, letterSpacing: 0.3, textTransform: "uppercase" },
+  jobBandText: { flexShrink: 1, fontFamily: fontFamily.extraBold, fontSize: 11, letterSpacing: 0.3 },
   jobBandAge: { fontFamily: fontFamily.bold, fontSize: 11 },
   jobBody: { padding: 14, gap: 10 },
   jobHead: { flexDirection: "row", gap: 12, alignItems: "flex-start" },
@@ -799,7 +899,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     borderWidth: 2,
     borderColor: colors.navy,
     alignItems: "center",

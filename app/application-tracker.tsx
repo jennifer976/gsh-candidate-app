@@ -665,7 +665,6 @@ const styles = StyleSheet.create({
   outcomeLabel: {
     fontFamily: fontFamily.bold,
     fontSize: 11,
-    textTransform: "uppercase",
     color: colors.textMuted,
   },
   outcomeText: {

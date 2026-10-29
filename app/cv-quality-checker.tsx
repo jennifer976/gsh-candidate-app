@@ -22,8 +22,8 @@ const SEVERITY: Record<
   CvQualitySeverity,
   { icon: "checkmark-circle" | "alert-circle" | "remove-circle"; color: string }
 > = {
-  pass: { icon: "checkmark-circle", color: "#15803d" },
-  warn: { icon: "remove-circle", color: "#a16207" },
+  pass: { icon: "checkmark-circle", color: "#0d194e" },
+  warn: { icon: "remove-circle", color: "#0d194e" },
   fail: { icon: "alert-circle", color: colors.error },
 };
 
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
   },
   title: {
     fontFamily: fontFamily.headingStrong,
@@ -307,7 +307,6 @@ const styles = StyleSheet.create({
   scoreLabel: {
     fontFamily: fontFamily.bold,
     fontSize: 11,
-    textTransform: "uppercase",
     letterSpacing: 0.7,
     color: colors.textMuted,
   },

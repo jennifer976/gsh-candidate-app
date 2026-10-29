@@ -1,132 +1,51 @@
-# Global Sponsor Hub Candidate App Design System
+# Global Sponsor Hub candidate app design system
 
-## Product context
+The app follows the website's design system. It should feel calm, premium and clearly Global Sponsor Hub. It is not a game.
 
-Global Sponsor Hub is a native candidate app for finding sponsored work, saving roles, applying, messaging employers, completing a mobility profile, learning about destinations, and planning an international move. The product must feel like one cohesive premium app—not a marketing homepage attached to unrelated utility screens.
+## Colour
+- Navy #0d194e: main text, primary buttons, selected states, navy sections.
+- Cyan #42e0e3: accent only, about 10% of any screen at most. Use it for dots, the short line before small labels, focus rings, progress bars, the full stop after headings and badges on navy. Never a screen, hero, card, band or button fill on white.
+- Text 2 #515a80: secondary and body text on white.
+- Muted #8a93ad: placeholders, meta and inactive tab icons only.
+- Heading tone #646d93: the second half of a two-tone heading.
+- Mark grey #dfe3ec: the large Global Sponsor Hub logo mark behind the Welcome walker and on the Home hero card.
+- Border #e6e9f1 (1px). Strong border rgba(13,25,78,0.24).
+- Panel #f3f5f9: screen background behind cards, tiles, search pills.
+- White #ffffff: cards.
+- Error #b91c1c, form errors only, with an alert icon.
+- On navy: white text, 72% white for secondary text, 14% white for dividers, the mark at 5% white.
+- No green, amber, rose, purple, teal tints or a second navy.
 
-Primary home jobs-to-be-done:
-- Search sponsored jobs quickly.
-- Resume the most useful next action.
-- Open saved roles and applications.
-- Discover roles by destination or category.
-- See relevant jobs and resume recent searches.
-- Continue the most useful profile, application, or move-planning task.
-- Discover country guides, practical resources, career tools, blog articles, and specialist help.
-- Reach messages, notifications, alerts, and profile controls.
+## Shape and depth
+- Radii: 8, 12, 16, 24 and pill. 28 only for the Home hero card, the profile card and the bottom sheet top corners.
+- Cards: white, radius 24, no border, soft shadow (navy at 7%, 6px down, 20px blur). Lifted cards (photo cards, floating stat cards): navy at 14 to 22%, 14px down, 36px blur.
+- Inputs: white, 1px #e6e9f1, radius 16, height 52. Focus: navy border plus a 3px navy ring at 8%.
+- No outlines plus thick bottom edges, no slabs, no decorative rings, no ghost watermark words, no gradients except the photo scrims.
 
-## Visual direction
+## Type
+- Montserrat 800 for screen titles: 34/36, letter spacing -0.035em, navy, followed by a cyan full stop.
+- Montserrat 800 for section headings: 21/26, -0.03em.
+- Montserrat 700 for card titles: 17/22.
+- Inter 400 15/22 body, Inter 600 for labels, buttons and chips.
+- Small labels: Inter 600 13/18 #515a80 in sentence case, with a 20 x 2 cyan line before them.
+- Two-tone headings: navy, then #646d93 for the second half, for example "Where would you" / "like to work?".
+- Sentence case everywhere. The only capitals lockup is "TALENT MOVES." on Welcome.
 
-- Native, app-first, bold, tactile, information-rich, and unmistakably branded.
-- Use the supplied mobile reference for hierarchy and density, not as a literal clone.
-- Draw structural inspiration from production patterns: Duolingo’s chunky progress, quests, rewards, and unmistakable color ownership; Deel’s contextual action modules and global-work utility; Glassdoor’s personalized next steps and job rails; Wanderlog’s editorial guide cards; Monarch’s progress checklist; and Grab’s layout-matched skeletons.
-- Keep Global Sponsor Hub identity: navy, cyan, white, Montserrat headings, and Inter body copy.
-- Follow the website’s actual visual DNA: poster-scale Montserrat, navy blocks with cyan type, pill searches, cyan action buttons, the official walking-professional artwork, and flowing cyan network geometry.
-- Cyan is a dominant branded surface—not merely a small accent. Use large cyan hero fields, cyan progress modules, cyan selected states, and cyan section bands balanced by navy and white.
-- Use a pale app canvas with bold cyan/navy modules, white elevated content, navy text, and image-led discovery cards.
-- Cyan is the only accent. Do not copy Duolingo’s rainbow palette or Deel’s lavender; borrow their interaction logic while keeping GSH navy/cyan.
-- Avoid a desktop-dashboard feel: no oversized analytic panels, dense tables, or long explanatory sections on Home.
-- Do not include an expert relocation-support promotional banner.
-- Avoid dead space: every feed ends with useful content and a compact final action, followed by only the minimum safe-area clearance.
-- Use one visual language throughout Home, Jobs, Saved, Applications, Messages, Profile, Guides, Tools, Blog, and loading/error/empty states.
+## The TALENT MOVES. lockup (Welcome only)
+- Text "Talent moves." shown in capitals, Montserrat 800, letter spacing -0.035em, line height 0.9 of the font size.
+- Line 1 "TALENT" in navy. Line 2 "MOVES" in white inside a navy box with corner radius 0.192em and padding 0.058em top, 0.192em sides, 0.135em bottom, then a cyan full stop inside the box.
+- Font size 66 on a 390-wide phone. Screen readers read "Talent moves."
 
-## Home screen structure
+## Chips and tags
+- Support chip (Visa sponsorship, Relocation support): height 28, pill, background rgba(66,224,227,0.2), Inter 600 12 navy, a 6px cyan dot before the text.
+- Plain tag (Remote, Full time): same size, background #f3f5f9, no dot.
+- Filter chip: 44 high, pill. Off: white, 1px #e6e9f1, navy text. On: navy fill, white text.
 
-1. Safe-area app bar with the exact GSH logo, notification control, and candidate avatar/profile shortcut.
-2. Compact personalized greeting and a shorter, premium headline so useful content remains visible above the fold.
-3. Persistent high-emphasis search control with recent-search affordance.
-4. Personalized “Your next step” progress module: profile completion, unread matches, saved search, or application follow-up. It must be interactive, not decorative.
-5. “Jobs for you” rail with 2–3 cards, save affordances, mobility labels, and a clear “See all”.
-6. “Jump back in” quick actions for Saved, Applications, Alerts, and Messages.
-7. “Plan your move” utility rail containing Country guides, Compare countries, Move worksheets, Currency converter, Specialist requests, and Partner offers.
-8. Popular destinations image rail with partial-next-card affordance and a “See all” action.
-9. “Learn and prepare” editorial rail showing latest blog imagery plus practical resources such as CV quality check, ATS assistant, sponsorship cover letter, and scam checklist.
-10. Compact job-category chips for Relocation, Remote, Tech, Healthcare, and Engineering.
-11. A compact closing action to open the full Tools & Resources hub—never a large promotional banner.
-12. Persistent native bottom navigation: Home, Jobs, Saved, Messages, Profile.
+## Photos
+- Only the website's own photos, bundled in the app. Never AI images or stock photos.
+- Country cards use the same photo the website's /countries page uses. Flags are round, 28px, with a 2px white ring.
+- Layered cards: a photo can break the top edge of a navy card, rotated 2 to 5 degrees, with a white 3px border and a floating white stat chip.
 
-Application and matching features remain available through cards, badges, alerts, and secondary screens even when Applications is no longer a primary tab.
-
-## Cross-app cohesion
-
-- All primary tabs use the same cyan/navy branded app bar or cyan header field, section-header pattern, card radius, icon wells, badge language, progress geometry, and spacing rhythm.
-- Inner hubs (Guides, Tools, Blog, Resources) use the same app bar and card system; navy hero bands may be used only as short section anchors.
-- Lists use dividers or grouped cards—not an inconsistent mix of dark feeds, outlined marketing cards, and large empty canvases.
-- Profile is a task-based account hub first and an editor second: progress, next actions, tools, and settings precede long forms.
-- Every route provides a useful empty state with a next action and every error state offers retry plus a safe alternate destination.
-
-## Color tokens
-
-- Navy: `#0d194e`
-- Deep navy: `#070d2c`
-- Cyan: `#42e0e3`
-- White: `#ffffff`
-- Pale canvas: `#f4f7fb`
-- Muted surface: `#eef3f8`
-- Primary text: `#0d194e`
-- Secondary text: `#475569`
-- Muted text: `#64748b`
-- Border: `#e2e8f0`
-- Error: `#b91c1c`
-
-## Typography
-
-- Headings: Montserrat 700/800.
-- Body and controls: Inter 400/500/600/700.
-- Home headline: 32–38px equivalent on a 390px-wide device, tight line-height and tracking; it must not consume the entire first viewport.
-- Section headings: 18–22px Montserrat 700.
-- Body: 14–16px Inter.
-- Small labels: 10–12px Inter 600/700.
-
-## Spacing and geometry
-
-- Base horizontal inset: 16px.
-- Use an 8px spacing rhythm, with 12px gaps for compact rails.
-- Touch targets must be at least 44×44.
-- Cards: 16–22px radius with a single consistent family.
-- Search control and primary actions: pill radius.
-- Destination cards: approximately 136–152px wide, 128–148px tall.
-- Quick actions: equal-width cards in one row on phone layouts.
-- Bottom navigation respects iOS and Android safe areas.
-
-## Surface and depth
-
-- Prefer white cards on the pale canvas with subtle borders and a restrained shadow for featured modules.
-- Use only restrained native shadow on search, featured cards, sheets, and elevated app chrome.
-- Avoid heavy glassmorphism, neon glow, and deep multi-layer shadows.
-- Destination photos use a dark bottom scrim for accessible white labels.
-
-## Iconography and imagery
-
-- Use the existing Ionicons/SF Symbols already present in the app.
-- Use the exact supplied Global Sponsor Hub logo in every logo position; never replace it with initials, emoji, an invented mark, or text alone.
-- Destination imagery should be recognizable, crop well in portrait cards, and include accessible contrast.
-- The official website walking-professional artwork is the preferred Home visual anchor. Do not substitute generic stock imagery when it is available.
-- Reuse the website’s cyan network/blob geometry as background crops and progress-route motifs.
-
-## Interaction and motion
-
-- Keep existing light haptics and subtle press-scale feedback.
-- Use short 180–260ms transitions.
-- Respect reduced-motion settings.
-- Horizontal rails should snap softly and show a partial next card as an affordance.
-- Add interactive states: save/unsave, expandable next steps, progress completion, filter chips, recent searches, carousels, pull to refresh, retry, and contextual badges.
-- Introduce a professional GSH “move momentum” system inspired by quests: profile progress, weekly application activity, saved-job goals, and move-planning steps. Do not add a cartoon mascot, fake points economy, or childish copy.
-- Use chunky controls with subtle bottom depth, satisfying completion states, animated progress fills, haptics, and celebratory cyan pulses when a real task completes.
-- Loading states must use skeleton shapes matching the actual destination cards, job cards, progress module, and editorial cards. Do not replace the whole screen with a centered spinner.
-- Image loading should use a pale placeholder and cross-fade where supported.
-- Avoid autoplay, looping decorative motion, and large entrance choreography.
-
-## Accessibility and responsive behavior
-
-- Maintain WCAG AA text contrast.
-- Preserve dynamic type resilience and two-line truncation where needed.
-- Provide accessible names for icon-only actions.
-- Keep tablet content centered with the existing 720px maximum width.
-- Support iOS native tabs and Android JavaScript tabs without changing platform-specific behavior.
-
-## Hard constraints
-
-- Preserve existing data fetching, routes, localization, loading/error states, and analytics behavior.
-- Do not remove applications, alerts, notifications, or profile-readiness functionality.
-- Do not add an expert relocation-support banner.
-- Use only the fonts, colors, spacing, and component styles defined here and in `lib/theme.ts`.
+## Motion
+- Ease cubic-bezier(0.2, 0.8, 0.2, 1). Rise-in 700ms (fade plus 18px up), staggered 80 to 120ms. Count-ups 1.1s. Press scale 0.97. Heart bounce. Sheets slide up.
+- When the phone's reduce motion setting is on, nothing moves: show final values straight away.

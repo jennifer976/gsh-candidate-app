@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
   role: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy },
   view: { marginTop: 5, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.brand },
   empty: { padding: 32, textAlign: "center", color: colors.textMuted, fontFamily: fontFamily.regular },
-  error: { padding: 16, borderRadius: radii.md, backgroundColor: "#fef2f2" },
-  errorText: { color: "#991b1b", textAlign: "center", fontFamily: fontFamily.medium },
+  error: { padding: 16, borderRadius: radii.md, backgroundColor: "#f3f5f9" },
+  errorText: { color: "#b91c1c", textAlign: "center", fontFamily: fontFamily.medium },
 });
 
 export default withSignIn(AgencyIntroductionsScreen, {

@@ -196,13 +196,13 @@ const styles = StyleSheet.create({
   heroTop: { flexDirection: "row", gap: 14, alignItems: "flex-start" },
   heroLogoWell: {
     padding: 4,
-    borderRadius: 22,
+    borderRadius: 24,
     backgroundColor: colors.white,
   },
   heroMid: { flex: 1, minWidth: 0, gap: 6 },
   featuredPill: {
     alignSelf: "flex-start",
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     borderRadius: radii.pill,
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -212,7 +212,6 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.bold,
     color: colors.navy,
     letterSpacing: 0.4,
-    textTransform: "uppercase",
   },
   heroCompany: {
     fontSize: 13,
@@ -273,7 +272,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     borderRadius: radii.pill,
     paddingHorizontal: 14,
     paddingVertical: 10,

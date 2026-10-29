@@ -1,10 +1,10 @@
-/** GSH 2.0 candidate theme: navy + cyan highlights (no teal lane). */
+/** Global Sponsor Hub candidate theme: navy with a cyan accent. Matches the website design system. */
 import { TextStyle, ViewStyle } from "react-native";
 
 export const colors = {
   // Core brand — navy + cyan only
   navy: "#0d194e",
-  navyDeep: "#070d2c",
+  navyDeep: "#0d194e",
   navyMid: "#0d194e",
   /** Primary cyan accent (replaces darker teal). */
   cyan: "#42e0e3",
@@ -24,10 +24,10 @@ export const colors = {
 
   // Light surface (forms, modals, input fields)
   background: "#ffffff",
-  pale: "#f4f7fb",
-  pale2: "#eef3f8",
-  surfaceMuted: "#eef3f8",
-  surfaceLight: "#f4f7fb",
+  pale: "#f3f5f9",
+  pale2: "#f3f5f9",
+  surfaceMuted: "#f3f5f9",
+  surfaceLight: "#f3f5f9",
 
   // Text — dark backgrounds
   textOnDark: "#ffffff",
@@ -36,14 +36,29 @@ export const colors = {
 
   // Text — light backgrounds
   textPrimary: "#0d194e",
-  textSecondary: "#475569",
-  textMarketing: "#334155",
-  textMuted: "#64748b",
-  placeholder: "#94a3b8",
+  textSecondary: "#515a80",
+  textMarketing: "#515a80",
+  textMuted: "#515a80",
+  placeholder: "#8a93ad",
+
+  // New design-system tokens
+  text2: "#515a80",
+  muted: "#8a93ad",
+  tone: "#646d93",
+  mark: "#dfe3ec",
+  panel: "#f3f5f9",
+  line: "#e6e9f1",
+  supportChipBg: "rgba(66,224,227,0.2)",
+  supportChipBgOnNavy: "rgba(66,224,227,0.16)",
+  onNavy2: "rgba(255,255,255,0.72)",
+  onNavyLine: "rgba(255,255,255,0.14)",
+  markOnNavy: "rgba(255,255,255,0.05)",
+  scrimTop: "rgba(13,25,78,0.05)",
+  scrimBottom: "rgba(13,25,78,0.9)",
 
   // Borders
-  border: "#e2e8f0",
-  borderStrong: "#cbd5e1",
+  border: "#e6e9f1",
+  borderStrong: "rgba(13,25,78,0.24)",
   borderOnDark: "rgba(255,255,255,0.12)",
   borderOnDarkStrong: "rgba(255,255,255,0.22)",
 
@@ -51,15 +66,15 @@ export const colors = {
   brand: "#0d194e",
   brandDeep: "#0d194e",
   brandSoft: "rgba(66,224,227,0.16)",
-  brandGlow: "rgba(66,224,227,0.22)",
+  brandGlow: "transparent",
   secondary: "#0d194e",
   accent: "#42e0e3",
   error: "#b91c1c",
   white: "#ffffff",
 
   // Legacy chip names resolve to the neutral/cyan system.
-  purpleMuted: "#f6f7f9",
-  purpleBorder: "#e2e8f0",
+  purpleMuted: "#f3f5f9",
+  purpleBorder: "#e6e9f1",
   purpleText: "#0d194e",
   purpleTextDark: "#0d194e",
   secondaryTintBg: "rgba(66,224,227,0.14)",
@@ -69,12 +84,12 @@ export const colors = {
   chipOnBorder: "#0d194e",
   unreadBorder: "rgba(66,224,227,0.72)",
   unreadBg: "rgba(66,224,227,0.08)",
-  warningBg: "#fffbeb",
-  warningBorder: "#fde68a",
-  warningText: "#92400e",
+  warningBg: "#f3f5f9",
+  warningBorder: "#0d194e",
+  warningText: "#0d194e",
 
   discoverCanvas: "#ffffff",
-  foreground: "#171717",
+  foreground: "#0d194e",
 } as const;
 
 export const fontFamily = {
@@ -90,12 +105,80 @@ export const fontFamily = {
 
 export const radii = {
   sm: 8,
-  md: 10,
-  lg: 20,
+  md: 12,
+  lg: 16,
   xl: 24,
   xxl: 28,
-  feed: 20,
-  pill: 999,
+  feed: 24,
+  pill: 9999,
+} as const;
+
+/** Extra scroll padding so list content clears the floating tab bar. */
+export const FLOATING_TAB_CLEARANCE = 130;
+
+export const shadows = {
+  card: {
+    shadowColor: "#0d194e",
+    shadowOpacity: 0.07,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
+  },
+  lift: {
+    shadowColor: "#0d194e",
+    shadowOpacity: 0.16,
+    shadowRadius: 36,
+    shadowOffset: { width: 0, height: 14 },
+    elevation: 8,
+  },
+} as const;
+
+export const type = {
+  title: {
+    fontFamily: "Montserrat_800ExtraBold",
+    fontSize: 34,
+    lineHeight: 36,
+    letterSpacing: -1.2,
+    color: "#0d194e",
+  } satisfies TextStyle,
+  section: {
+    fontFamily: "Montserrat_800ExtraBold",
+    fontSize: 21,
+    lineHeight: 26,
+    letterSpacing: -0.6,
+    color: "#0d194e",
+  } satisfies TextStyle,
+  cardTitle: {
+    fontFamily: "Montserrat_700Bold",
+    fontSize: 17,
+    lineHeight: 22,
+    letterSpacing: -0.2,
+    color: "#0d194e",
+  } satisfies TextStyle,
+  body: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 15,
+    lineHeight: 22,
+    color: "#515a80",
+  } satisfies TextStyle,
+  label: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 14,
+    lineHeight: 20,
+    color: "#0d194e",
+  } satisfies TextStyle,
+  eyebrow: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 13,
+    lineHeight: 18,
+    color: "#515a80",
+  } satisfies TextStyle,
+  big: {
+    fontFamily: "Montserrat_800ExtraBold",
+    fontSize: 40,
+    lineHeight: 40,
+    letterSpacing: -1.4,
+  } satisfies TextStyle,
 } as const;
 
 /** Compatibility helper for legacy dark sections; intentionally has no glow/elevation. */
@@ -109,14 +192,12 @@ export function darkCardStyle(_accent?: "teal" | "purple" | "none"): ViewStyle {
 }
 
 /** Flat native section on a light background. */
-/** Brand card: navy outline with a heavier bottom edge, matching `DepthSurface`. */
+/** Brand card: white surface with soft navy shadow (no thick outline). */
 export function cardSurfaceStyle(_interactive?: boolean): ViewStyle {
   return {
-    backgroundColor: colors.background,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderBottomWidth: 5,
-    borderColor: colors.navy,
+    backgroundColor: "#ffffff",
+    borderRadius: 24,
+    ...shadows.card,
   };
 }
 
@@ -129,9 +210,9 @@ export const discoverFeedCardStyle = feedCardStyle;
 export function discoverSearchFieldStyle(): ViewStyle {
   return {
     backgroundColor: colors.white,
-    borderRadius: radii.md,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: "rgba(226, 232, 240, 0.95)",
+    borderColor: "#e6e9f1",
   };
 }
 export function cardCuratedSurfaceStyle(interactive?: boolean): ViewStyle {

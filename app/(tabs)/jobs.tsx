@@ -43,12 +43,11 @@ import { GshSwipeAction } from "@/components/GshSwipeAction";
 import {
   BrandChip,
   BrandStatePanel,
-  DecorRing,
   DepthPressable,
   DepthSurface,
-  PosterTitle,
-  posterParts,
+  TitleWithStop,
 } from "@/components/gsh-brand";
+import { listStaggerDelay, RiseIn } from "@/lib/motion";
 import {
   fetchPublicExternalJobListings,
   fetchPublicJobs,
@@ -500,11 +499,10 @@ export default function JobsTabScreen() {
 
   const listHeader = (
     <>
-      <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) + 12 }]}>
-        <DecorRing size={220} thickness={30} color="rgba(66,224,227,0.18)" style={{ top: -100, right: -90 }} />
+      <View style={[styles.header, { paddingTop: insets.top + 14 }]}>
         <View style={styles.headerTop}>
           <View style={{ flex: 1, minWidth: 0 }}>
-            <PosterTitle {...posterParts(ac("Find the|role."))} size={34} />
+            <TitleWithStop eyebrow="International jobs" text="Jobs" />
           </View>
           <Pressable
             onPress={() => router.push("/alerts")}
@@ -512,8 +510,7 @@ export default function JobsTabScreen() {
             accessibilityRole="button"
             accessibilityLabel={ac("Job alerts")}
           >
-            <Ionicons name="flash" size={18} color={colors.cyan} />
-            <Text style={styles.alertsText}>{ac("Job alerts")}</Text>
+            <Ionicons name="notifications-outline" size={22} color={colors.navy} />
           </Pressable>
         </View>
         <View style={styles.searchRow}>
@@ -979,7 +976,9 @@ export default function JobsTabScreen() {
           <RefreshControl
             refreshing={pullRefreshing}
             onRefresh={onRefresh}
-            tintColor={colors.cyan}
+            colors={["#0d194e"]}
+            progressBackgroundColor="#ffffff"
+            tintColor="#0d194e"
           />
         }
         contentContainerStyle={[
@@ -988,8 +987,8 @@ export default function JobsTabScreen() {
           listRows.length === 0 && !listBootloading && styles.listPadGrow,
         ]}
         keyboardShouldPersistTaps="handled"
-        renderItem={({ item }) => (
-          <View style={styles.listRow}>
+        renderItem={({ item, index }) => (
+          <RiseIn delay={listStaggerDelay(index)} style={styles.listRow}>
             {shownLane === "direct" ? (
               <HubJobCard
                 job={item as Job}
@@ -1024,7 +1023,7 @@ export default function JobsTabScreen() {
                 }
               />
             )}
-          </View>
+          </RiseIn>
         )}
         onEndReached={loadNextPage}
         onEndReachedThreshold={0.4}
@@ -1067,29 +1066,29 @@ export default function JobsTabScreen() {
 }
 
 const styles = StyleSheet.create({
-  shell: { backgroundColor: colors.white },
+  shell: { backgroundColor: colors.panel },
   listFlex: { flex: 1 },
   header: {
-    paddingHorizontal: 16,
-    paddingBottom: 6,
+    backgroundColor: colors.panel,
+    paddingHorizontal: 20,
+    paddingBottom: 14,
     overflow: "hidden",
   },
   headerTop: {
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "flex-start",
     justifyContent: "space-between",
     gap: 12,
   },
   alertsButton: {
-    minHeight: 44,
-    flexDirection: "row",
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: "center",
-    gap: 6,
-    paddingHorizontal: 12,
-    borderRadius: 999,
-    backgroundColor: colors.navy,
+    justifyContent: "center",
+    backgroundColor: colors.white,
   },
-  alertsText: { fontSize: 12, fontFamily: fontFamily.extraBold, color: colors.white },
+  alertsText: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.navy },
   searchRow: {
     marginTop: 16,
     flexDirection: "row",
@@ -1117,7 +1116,7 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 9,
     paddingHorizontal: 4,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1206,7 +1205,6 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.textMuted,
     letterSpacing: 0.4,
-    textTransform: "uppercase",
     marginBottom: 8,
   },
   recentScroll: { gap: 8, paddingBottom: 4 },
@@ -1242,12 +1240,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
-    backgroundColor: "#059669",
+    backgroundColor: "#0d194e",
     color: "#ffffff",
     fontFamily: fontFamily.extraBold,
     fontSize: 11,
     letterSpacing: 0.4,
-    textTransform: "uppercase",
     overflow: "hidden",
   },
   countLine: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textMuted },
@@ -1271,7 +1268,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 12,
     padding: 14,
-    borderRadius: 18,
+    borderRadius: 16,
     backgroundColor: colors.pale,
     borderWidth: 2,
     borderColor: colors.navy,
@@ -1280,7 +1277,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 17,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1311,7 +1308,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  bookmarkDiscOn: { backgroundColor: colors.cyan },
+  bookmarkDiscOn: { backgroundColor: colors.navy },
   cardMainHit: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -1319,14 +1316,14 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   logoWell: {
-    borderRadius: 18,
+    borderRadius: 16,
     backgroundColor: colors.pale,
     padding: 2,
   },
   cardAvatar: {
     width: 48,
     height: 48,
-    borderRadius: 14,
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
@@ -1407,7 +1404,7 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
   },
   listChipNavy: { backgroundColor: colors.navy },
-  listChipSponsor: { backgroundColor: "#059669" },
+  listChipSponsor: { backgroundColor: "#0d194e" },
   listChipNoSponsor: { backgroundColor: "#E11D48" },
   listChipPale: { backgroundColor: colors.pale },
   listChipRow: { flexDirection: "row", alignItems: "center", gap: 4 },
@@ -1472,7 +1469,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
   },

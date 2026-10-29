@@ -18,14 +18,11 @@ import { GshScreenShell } from "@/components/GshScreenShell";
 import { SignInPanel } from "@/components/SignInGate";
 import {
   BrandStatePanel,
-  DecorRing,
   DepthButton,
   DepthPressable,
   DepthSurface,
-  Eyebrow,
-  PosterTitle,
-  posterParts,
   SegmentTabs,
+  TitleWithStop,
 } from "@/components/gsh-brand";
 import { tabBarBottomPadding } from "@/lib/android-insets";
 import { fetchApplications, fetchSavedJobs, unsaveJob } from "@/lib/api-client";
@@ -36,6 +33,7 @@ import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { getJobEmployerLabel, getJobLogoUrl, jobFromSavedRow } from "@/lib/job-display";
 import { jobAgeLabel, jobLocationLabel } from "@/lib/job-presentation";
 import { useAuthStore } from "@/lib/auth-store";
+import { listStaggerDelay, RiseIn } from "@/lib/motion";
 import { colors, fontFamily } from "@/lib/theme";
 import type { Application, SavedJobPopulated } from "@/types/models";
 
@@ -160,11 +158,19 @@ export default function SavedTabScreen() {
   const interviews = applications.filter((row) => String(row.status).toLowerCase().includes("interview")).length;
   const active = segment === "saved" ? savedQuery : applicationsQuery;
 
+  const savedSub =
+    !signedIn || !savedQuery.data
+      ? undefined
+      : savedRows.length === 0
+        ? "Nothing saved yet"
+        : savedRows.length === 1
+          ? "1 saved role"
+          : `${savedRows.length} saved roles`;
+
   const header = (
-    <View style={[styles.hero, { paddingTop: Math.max(insets.top, 12) + 14 }]}>
-      <DecorRing size={260} thickness={36} color="rgba(255,255,255,0.3)" style={{ top: -110, right: -100 }} />
-      <Eyebrow color={colors.navy}>{ac("Your shortlist")}</Eyebrow>
-      <PosterTitle {...posterParts(ac("Your|pipeline."))} size={38} style={styles.heroTitle} />
+    <View style={[styles.hero, { paddingTop: insets.top + 14 }]}>
+      <TitleWithStop eyebrow="For later" text="Saved" />
+      {savedSub ? <Text style={styles.heroBody}>{savedSub}</Text> : null}
       {signedIn ? (
         <>
           <View style={styles.stats}>
@@ -173,7 +179,6 @@ export default function SavedTabScreen() {
             <StatTile value={applicationsQuery.data ? interviews : undefined} label={ac("Interviews")} />
           </View>
           <SegmentTabs
-            onCyan
             value={segment}
             onChange={setSegment}
             options={[
@@ -239,13 +244,14 @@ export default function SavedTabScreen() {
     />
   );
 
-  const renderSaved = ({ item }: { item: SavedJobPopulated }) => {
+  const renderSaved = ({ item, index }: { item: SavedJobPopulated; index: number }) => {
     const job = jobFromSavedRow(item);
     if (!job) return null;
     const employer = getJobEmployerLabel(job, locale);
     const location = jobLocationLabel(job, locale);
     const age = jobAgeLabel(item.createdAt, locale);
     return (
+      <RiseIn delay={listStaggerDelay(index)}>
       <DepthPressable
         onPress={() => router.push(`/job/${encodeURIComponent(job._id)}`)}
         depth={5}
@@ -284,10 +290,11 @@ export default function SavedTabScreen() {
           <Ionicons name="bookmark" size={18} color={colors.navy} />
         </Pressable>
       </DepthPressable>
+      </RiseIn>
     );
   };
 
-  const renderApplication = ({ item }: { item: Application }) => {
+  const renderApplication = ({ item, index }: { item: Application; index: number }) => {
     const job = item.jobId;
     const jobId = job?._id ?? job?.id;
     const age = jobAgeLabel(item.createdAt, locale);
@@ -305,6 +312,7 @@ export default function SavedTabScreen() {
       }
     }
     return (
+      <RiseIn delay={listStaggerDelay(index)}>
       <DepthPressable
         onPress={() => (jobId ? router.push(`/job/${encodeURIComponent(jobId)}`) : undefined)}
         depth={5}
@@ -339,6 +347,7 @@ export default function SavedTabScreen() {
           </View>
         ) : null}
       </DepthPressable>
+      </RiseIn>
     );
   };
 
@@ -356,7 +365,9 @@ export default function SavedTabScreen() {
             <RefreshControl
               refreshing={savedQuery.isRefetching}
               onRefresh={() => void savedQuery.refetch()}
-              tintColor={colors.navy}
+              colors={["#0d194e"]}
+              progressBackgroundColor="#ffffff"
+              tintColor="#0d194e"
             />
           }
         />
@@ -384,7 +395,9 @@ export default function SavedTabScreen() {
             <RefreshControl
               refreshing={applicationsQuery.isRefetching}
               onRefresh={() => void applicationsQuery.refetch()}
-              tintColor={colors.navy}
+              colors={["#0d194e"]}
+              progressBackgroundColor="#ffffff"
+              tintColor="#0d194e"
             />
           }
         />
@@ -395,21 +408,19 @@ export default function SavedTabScreen() {
 
 const styles = StyleSheet.create({
   hero: {
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.panel,
     paddingHorizontal: 20,
-    paddingBottom: 20,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
+    paddingBottom: 14,
     overflow: "hidden",
-    marginBottom: 20,
+    marginBottom: 12,
   },
   heroTitle: { marginTop: 8 },
   heroBody: {
-    marginTop: 14,
+    marginTop: 10,
     fontFamily: fontFamily.medium,
     fontSize: 15,
     lineHeight: 22,
-    color: "rgba(13,25,78,0.8)",
+    color: colors.text2,
   },
   stats: { flexDirection: "row", gap: 10, marginTop: 20 },
   statWrap: { flex: 1 },
@@ -444,7 +455,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     borderWidth: 2,
     borderColor: colors.navy,
     alignItems: "center",
@@ -456,7 +467,7 @@ const styles = StyleSheet.create({
   step: { flex: 1, alignItems: "center", gap: 6 },
   stepTrackRow: { flexDirection: "row", alignItems: "center", alignSelf: "stretch" },
   stepLine: { flex: 1, height: 6, backgroundColor: colors.pale },
-  stepLineOn: { backgroundColor: colors.cyan },
+  stepLineOn: { backgroundColor: colors.navy },
   hidden: { opacity: 0 },
   stepDot: {
     width: 28,

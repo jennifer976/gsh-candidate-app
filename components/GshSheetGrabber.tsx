@@ -1,5 +1,4 @@
 import { StyleSheet, View } from "react-native";
-import { colors } from "@/lib/theme";
 
 /** iOS page-sheet grabber — signals a real sheet, not a web dialog. */
 export function GshSheetGrabber() {
@@ -17,9 +16,9 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   pill: {
-    width: 36,
+    width: 40,
     height: 5,
     borderRadius: 3,
-    backgroundColor: colors.borderStrong,
+    backgroundColor: "#d5dae6",
   },
 });

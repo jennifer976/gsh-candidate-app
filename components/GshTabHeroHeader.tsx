@@ -3,38 +3,35 @@ import { useQuery } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
-import Animated, { useReducedMotion } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { GshChromeIconButton } from "@/components/GshChromeIconButton";
-import { GshHeroWash } from "@/components/GshHeroWash";
-import { brandLockupNavy, brandLockupWhite } from "@/lib/brand-assets";
+import { brandLockupNavy } from "@/lib/brand-assets";
 import {
   fetchConversations,
   fetchUnreadNotificationCount,
 } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
-import { enterDown, MOTION } from "@/lib/motion";
+import { enterDown, MOTION, useReduceMotion } from "@/lib/motion";
 import { colors, fontFamily } from "@/lib/theme";
 
 type Props = {
   paddingTop: number;
   tagline?: string;
   children?: ReactNode;
-  /** Light matches the website hero wash; navy for deliberate dark bands. */
+  /** Kept for callers; wash/rings removed in Part 2. */
   tone?: "light" | "navy";
 };
 
-/** Shared tab header — lockup + badged chrome icons. */
+/** Shared tab header — lockup + badged chrome icons. No wash, rings or watermark. */
 export function GshTabHeroHeader({
   paddingTop,
   tagline,
   children,
-  tone = "light",
 }: Props) {
   const interfaceCopy = useInterfaceCopy();
   const router = useRouter();
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReduceMotion();
   const token = useAuthStore((s) => s.token);
-  const light = tone === "light";
 
   const notificationsQuery = useQuery({
     queryKey: ["notifications-unread"],
@@ -55,14 +52,14 @@ export function GshTabHeroHeader({
     0,
   );
 
-  const body = (
+  return (
     <Animated.View
       entering={enterDown(MOTION.hero, reduceMotion)}
-      style={[styles.root, { paddingTop }, light ? styles.lightRoot : styles.navyRoot]}
+      style={[styles.root, { paddingTop }]}
     >
       <View style={styles.topRow}>
         <Image
-          source={light ? brandLockupNavy : brandLockupWhite}
+          source={brandLockupNavy}
           style={styles.logo}
           resizeMode="contain"
           accessibilityIgnoresInvertColors
@@ -74,42 +71,29 @@ export function GshTabHeroHeader({
             onPress={() => router.push("/notification-feed")}
             accessibilityLabel={interfaceCopy("Notifications")}
             badgeCount={unreadNotifications}
-            tone={light ? "light" : "navy"}
+            tone="light"
           />
           <GshChromeIconButton
             icon="chatbubble-outline"
             onPress={() => router.push("/(tabs)/messages")}
             accessibilityLabel="Chats"
             badgeCount={unreadMessages}
-            tone={light ? "light" : "navy"}
+            tone="light"
           />
         </View>
       </View>
-      {tagline ? (
-        <Text style={[styles.tagline, light ? styles.taglineLight : styles.taglineNavy]}>
-          {tagline}
-        </Text>
-      ) : null}
+      {tagline ? <Text style={styles.tagline}>{tagline}</Text> : null}
       {children}
     </Animated.View>
   );
-
-  if (!light) {
-    return <View style={{ backgroundColor: colors.navy }}>{body}</View>;
-  }
-
-  return <GshHeroWash style={styles.washClip}>{body}</GshHeroWash>;
 }
 
 const styles = StyleSheet.create({
-  washClip: {
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
-    overflow: "hidden",
+  root: {
+    paddingHorizontal: 20,
+    paddingBottom: 14,
+    backgroundColor: colors.panel,
   },
-  root: { paddingHorizontal: 20 },
-  lightRoot: { paddingBottom: 22 },
-  navyRoot: { paddingBottom: 28, borderBottomRightRadius: 36 },
   topRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -120,13 +104,10 @@ const styles = StyleSheet.create({
   logo: { width: 168, height: 40, maxWidth: "62%", flexShrink: 1 },
   actions: { flexDirection: "row", gap: 8 },
   tagline: {
-    fontSize: 11,
-    letterSpacing: 1.6,
-    fontFamily: fontFamily.bold,
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
     marginBottom: 12,
-    lineHeight: 16,
-    textTransform: "uppercase",
+    lineHeight: 18,
+    color: colors.text2,
   },
-  taglineLight: { color: colors.cyan },
-  taglineNavy: { color: colors.cyan },
 });

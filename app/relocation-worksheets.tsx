@@ -237,9 +237,12 @@ export default function RelocationWorksheetsScreen() {
                 <View key={item} style={styles.checkRow}>
                   <Ionicons name={state.negotiation[item] ? "checkmark-circle" : "ellipse-outline"} size={22} color={state.negotiation[item] ? colors.brand : colors.textMuted} />
                   <Text style={styles.checkText}>{copy[item as keyof typeof copy]}</Text>
-                  <Switch accessibilityLabel={copy[item as keyof typeof copy]}
+                  <Switch
+                    accessibilityLabel={copy[item as keyof typeof copy]}
                     value={state.negotiation[item]}
                     onValueChange={(value) => setState((s) => ({ ...s, negotiation: { ...s.negotiation, [item]: value } }))}
+                    trackColor={{ false: "#d5dae6", true: "#0d194e" }}
+                    thumbColor="#ffffff"
                   />
                 </View>
               ))}

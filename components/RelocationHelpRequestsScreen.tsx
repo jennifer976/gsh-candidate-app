@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
     borderRadius: 21,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
   },
   title: {
     fontFamily: fontFamily.headingStrong,
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  heroButton: { backgroundColor: colors.cyan },
+  heroButton: { backgroundColor: colors.navy },
   heroButtonText: { color: colors.navy },
   primaryButtonText: {
     fontFamily: fontFamily.bold,

@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   appendixCell: { gap: 4 },
-  appendixCol: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.textSecondary, textTransform: "uppercase", letterSpacing: 0.6 },
+  appendixCol: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.textSecondary, letterSpacing: 0.6 },
   appendixVal: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textMarketing, lineHeight: 20 },
   faq: {
     padding: 16,

@@ -210,7 +210,6 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontFamily: fontFamily.bold,
     fontSize: 11,
-    textTransform: "uppercase",
     letterSpacing: 0.8,
     color: colors.cyan,
   },
@@ -230,7 +229,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: radii.pill,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
   },
   statusText: {
     fontFamily: fontFamily.bold,
@@ -255,7 +254,6 @@ const styles = StyleSheet.create({
   detailLabel: {
     fontFamily: fontFamily.bold,
     fontSize: 11,
-    textTransform: "uppercase",
     letterSpacing: 0.5,
     color: colors.textMuted,
   },

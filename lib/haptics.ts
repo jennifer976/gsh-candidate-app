@@ -38,6 +38,14 @@ export async function hapticLight() {
   } catch {}
 }
 
+/** Selection tick — for tab changes */
+export async function hapticSelection() {
+  if (!hapticsAllowed()) return;
+  try {
+    await Haptics.selectionAsync();
+  } catch {}
+}
+
 /** Medium — for segment switches, filter changes */
 export async function hapticMedium() {
   if (!hapticsAllowed()) return;

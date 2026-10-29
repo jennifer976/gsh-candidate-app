@@ -93,7 +93,7 @@ export function GuideCardSkeleton() {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
-    borderRadius: 18,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 12,
   },
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   guideCard: {
     backgroundColor: colors.white,
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 14,
     marginBottom: 10,
     flexDirection: "row",

@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   dimension: { paddingTop: 9, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   dimensionTop: { flexDirection: "row", justifyContent: "space-between", gap: 8 },
   dimensionLabel: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textPrimary },
-  status: { fontSize: 12, fontFamily: fontFamily.bold, color: "#92400e" },
+  status: { fontSize: 12, fontFamily: fontFamily.bold, color: "#0d194e" },
   statusReady: { color: colors.navy },
   missing: { marginTop: 3, fontSize: 12, fontFamily: fontFamily.regular, color: colors.textMuted },
   modalSafe: { flex: 1, backgroundColor: colors.surfaceMuted },

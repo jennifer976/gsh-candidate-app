@@ -31,10 +31,12 @@ import profileOptions from "@/data/profileOptions.json";
 import { useLastCvCheck } from "@/lib/cv-check-history";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { GuestProfileHub } from "@/components/GuestProfileHub";
-import { BrandLinkRow, DecorRing, DepthButton, DepthSurface, Eyebrow } from "@/components/gsh-brand";
+import { BrandLinkRow, DepthButton, DepthSurface, Eyebrow, TitleWithStop } from "@/components/gsh-brand";
 import { fetchOwnProfile, recordCandidateJourneyStart, updateProfile, uploadFileFromUri, uploadImageFromUri } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
 import { JOB_PREFERENCE_OPTIONS } from "@/lib/job-preferences";
+import { firstMissingStep } from "@/lib/onboardingFlow";
+import { openProfileStep } from "@/lib/openProfileStep";
 import { getCandidateCompletionBreakdown } from "@/lib/profile-completion";
 import { getAllSkillsSorted } from "@/lib/skills-data";
 import { tabBarBottomPadding } from "@/lib/android-insets";
@@ -269,6 +271,9 @@ const ACCOUNT_LINKS = [
   { title: "Relocation perks", subtitle: "Offers that help with the move", icon: "airplane-outline" as const, href: "/relocation-perks" },
   { title: "Career toolkit", subtitle: "CV check, country guides, calculators", icon: "construct-outline" as const, href: "/tools-resources" },
   { title: "Work and move preferences", subtitle: "Countries, visa status and who can contact you", icon: "earth-outline" as const, href: "/mobility-profile" },
+  { title: "Your right to work", subtitle: "Work permissions you already hold", icon: "shield-checkmark-outline" as const, href: "onboarding-step-5" },
+  { title: "Who can find you", subtitle: "Employers, agencies and privacy", icon: "eye-outline" as const, href: "onboarding-step-13" },
+  { title: "Job alerts", subtitle: "Email and push for new roles", icon: "notifications-outline" as const, href: "/alerts" },
   { title: "Invites to apply", subtitle: "Review employer and agency invites", icon: "people-circle-outline" as const, href: "/agency-introductions" },
 ] as const;
 
@@ -553,10 +558,11 @@ function ProfileScreen() {
         nestedScrollEnabled
         bounces
       >
-        <View style={[styles.hero, { paddingTop: Math.max(insets.top, 12) + 10 }]}>
-          <DecorRing size={260} thickness={36} color="rgba(255,255,255,0.3)" style={{ top: -110, right: -100 }} />
+        <View style={[styles.hero, { paddingTop: insets.top + 14 }]}>
           <View style={styles.heroTop}>
-            <Eyebrow color={colors.navy}>{t("profile")}</Eyebrow>
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <TitleWithStop eyebrow="Your account" text="Profile" />
+            </View>
             <Pressable
               onPress={() => router.push("/settings")}
               style={styles.settingsButton}
@@ -605,14 +611,23 @@ function ProfileScreen() {
                   <View style={[styles.progressFill, { width: `${Math.max(4, completionBreakdown.percent)}%` }]} />
                 </View>
                 {completionBreakdown.missing.slice(0, 3).map((item) => (
-                  <View key={item.path} style={styles.finishRow}>
+                  <Pressable
+                    key={item.path}
+                    onPress={() => openProfileStep(item.onboardingStep, "profile")}
+                    style={styles.finishRow}
+                    accessibilityRole="button"
+                    accessibilityLabel={item.label}
+                  >
                     <Ionicons name="ellipse-outline" size={16} color={colors.cyan} />
                     <Text style={styles.finishRowText} numberOfLines={1}>{item.label}</Text>
-                  </View>
+                    <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.5)" />
+                  </Pressable>
                 ))}
                 <DepthButton
                   title={ac("Edit profile")}
-                  onPress={scrollToForm}
+                  onPress={() =>
+                    openProfileStep(firstMissingStep(completionBreakdown.missing), "profile")
+                  }
                   variant="cyanOnNavy"
                   size="md"
                   style={{ marginTop: 16 }}
@@ -622,12 +637,32 @@ function ProfileScreen() {
           ) : (
             <DepthButton title={ac("Edit profile")} onPress={scrollToForm} variant="navyOnLight" icon="create-outline" />
           )}
+          {completionBreakdown.missing.length > 0 ? (
+            <View style={styles.stillToAdd}>
+              <Text style={styles.stillToAddHeading}>{ac("Still to add")}</Text>
+              {completionBreakdown.missing.map((item) => (
+                <Pressable
+                  key={`still-${item.path}`}
+                  onPress={() => openProfileStep(item.onboardingStep, "profile")}
+                  style={styles.stillToAddRow}
+                  accessibilityRole="button"
+                  accessibilityLabel={item.label}
+                >
+                  <View style={styles.stillToAddDot} />
+                  <Text style={styles.stillToAddLabel} numberOfLines={1}>
+                    {item.label}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={18} color={colors.navy} />
+                </Pressable>
+              ))}
+            </View>
+          ) : null}
         </View>
 
         <View style={styles.content} onLayout={event => {contentSectionY.current = event.nativeEvent.layout.y;}}>
           {profileErrCopy ? (
             <View style={styles.errorBanner}>
-              <Ionicons name="warning-outline" size={18} color="#b45309" />
+              <Ionicons name="warning-outline" size={18} color="#0d194e" />
               <Text style={styles.errorText}>
                 {ac("Your profile details could not be loaded.")}
               </Text>
@@ -702,7 +737,7 @@ function ProfileScreen() {
               value={employerDiscoveryOn}
               disabled={discoveryMut.isPending}
               onValueChange={(enabled) => discoveryMut.mutate(enabled)}
-              trackColor={{ false: "#cbd5e1", true: "#059669" }}
+              trackColor={{ false: "#d5dae6", true: "#0d194e" }}
               thumbColor={colors.white}
             />
           </DepthSurface>
@@ -933,8 +968,16 @@ function ProfileScreen() {
                   row.href === "/mobility-profile" ? discoveryHint : ac(row.subtitle)
                 }
                 onPress={() => {
+                  if (row.href === "onboarding-step-5") {
+                    openProfileStep(5, "profile");
+                    return;
+                  }
+                  if (row.href === "onboarding-step-13") {
+                    openProfileStep(13, "profile");
+                    return;
+                  }
                   if (row.href === "/mobility-profile") void recordCandidateJourneyStart("global_mobility_profile_started");
-                  router.push(row.href);
+                  router.push(row.href as "/alerts" | "/mobility-profile" | "/relocation-perks" | "/tools-resources" | "/agency-introductions");
                 }}
               />
             ))}
@@ -1010,26 +1053,58 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   scrollContent: { paddingBottom: 24 },
   hero: {
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.panel,
     paddingHorizontal: 20,
-    paddingBottom: 24,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
+    paddingBottom: 14,
     overflow: "hidden",
   },
-  heroTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  heroTop: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: 12 },
   settingsButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    borderWidth: 2,
-    borderColor: colors.navy,
     backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
   },
   identity: { marginTop: 14, flexDirection: "row", alignItems: "center", gap: 16 },
-  editCtaPad: { paddingHorizontal: 16, paddingTop: 18 },
+  editCtaPad: { paddingHorizontal: 16, paddingTop: 18, gap: 14 },
+  stillToAdd: {
+    backgroundColor: colors.white,
+    borderRadius: 22,
+    borderWidth: 2,
+    borderColor: colors.navy,
+    paddingHorizontal: 14,
+    paddingTop: 14,
+    paddingBottom: 6,
+  },
+  stillToAddHeading: {
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 16,
+    color: colors.navy,
+    marginBottom: 6,
+    marginHorizontal: 2,
+  },
+  stillToAddRow: {
+    minHeight: 44,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 2,
+  },
+  stillToAddDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.cyan,
+  },
+  stillToAddLabel: {
+    flex: 1,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    color: colors.navy,
+  },
   avatarRing: {
     width: 92,
     height: 92,
@@ -1080,8 +1155,8 @@ const styles = StyleSheet.create({
   relocateText: { fontFamily: fontFamily.bold, fontSize: 11, color: colors.white },
   optInCard: { flexDirection: "row", alignItems: "center", gap: 12, padding: 16 },
   optInCopy: { flex: 1, minWidth: 0 },
-  optInEyebrow: { fontFamily: fontFamily.extraBold, fontSize: 11, letterSpacing: 1.2, textTransform: "uppercase", color: "#047857" },
-  optInEyebrowOn: { color: "#6ee7b7" },
+  optInEyebrow: { fontFamily: fontFamily.extraBold, fontSize: 11, letterSpacing: 1.2, color: "#0d194e" },
+  optInEyebrowOn: { color: "rgba(255,255,255,0.72)" },
   optInTitle: { marginTop: 4, fontFamily: fontFamily.headingStrong, fontSize: 18, color: colors.navy, letterSpacing: -0.3 },
   optInTitleOn: { color: colors.white },
   optInBody: { marginTop: 4, fontFamily: fontFamily.regular, fontSize: 13, lineHeight: 18, color: colors.textMuted },
@@ -1116,11 +1191,11 @@ const styles = StyleSheet.create({
     gap: 8,
     padding: 14,
     borderRadius: 12,
-    backgroundColor: "#fffbeb",
+    backgroundColor: "#f3f5f9",
     borderWidth: 1,
-    borderColor: "#fde68a",
+    borderColor: "#0d194e",
   },
-  errorText: { flex: 1, fontSize: 14, fontFamily: fontFamily.medium, color: "#92400e", lineHeight: 20 },
+  errorText: { flex: 1, fontSize: 14, fontFamily: fontFamily.medium, color: "#0d194e", lineHeight: 20 },
   quickCard: { padding: 16 },
   quickRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   quickIcon: {
@@ -1139,7 +1214,7 @@ const styles = StyleSheet.create({
     minWidth: 72,
     paddingHorizontal: 12,
     borderRadius: 999,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1156,7 +1231,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     borderWidth: 2,
     borderColor: colors.navy,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
   },
   countryChipText: { fontSize: 12, fontFamily: fontFamily.extraBold, color: colors.navy },
 
@@ -1170,7 +1245,6 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.semiBold,
     color: colors.textMuted,
     letterSpacing: 0.4,
-    textTransform: "uppercase",
     marginBottom: 14,
   },
 
@@ -1182,7 +1256,7 @@ const styles = StyleSheet.create({
     minHeight: 52,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 10,
+    borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: Platform.OS === "ios" ? 13 : 10,
     fontSize: 16,
@@ -1233,7 +1307,7 @@ const styles = StyleSheet.create({
   listAdd: { fontSize: 14, fontFamily: fontFamily.semiBold, color: colors.navy, textDecorationLine: "underline" },
   listSuggest: { alignSelf: "flex-start", minHeight: 44, justifyContent: "center", paddingHorizontal: 14, borderRadius: radii.pill, borderWidth: 1.5, borderColor: colors.navy, marginBottom: 12 },
   listSuggestText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.navy },
-  listCard: { borderWidth: 1, borderColor: colors.border, borderRadius: 14, padding: 12, paddingTop: 8, marginBottom: 14, backgroundColor: colors.surfaceMuted },
+  listCard: { borderWidth: 1, borderColor: colors.border, borderRadius: 16, padding: 12, paddingTop: 8, marginBottom: 14, backgroundColor: colors.surfaceMuted },
   listRemove: { alignSelf: "flex-end", minWidth: 44, minHeight: 36, alignItems: "flex-end", justifyContent: "center" },
   checkRow: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 44 },
   checkText: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textPrimary },
@@ -1281,7 +1355,7 @@ const styles = StyleSheet.create({
   modalHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   modalTitle: { fontSize: 17, fontFamily: fontFamily.bold, color: colors.navy },
   modalDone: { fontSize: 16, fontFamily: fontFamily.semiBold, color: colors.brand },
-  modalSearch: { flexDirection: "row", alignItems: "center", gap: 10, margin: 12, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 10, backgroundColor: colors.surfaceMuted, borderWidth: 1, borderColor: colors.border },
+  modalSearch: { flexDirection: "row", alignItems: "center", gap: 10, margin: 12, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 12, backgroundColor: colors.surfaceMuted, borderWidth: 1, borderColor: colors.border },
   modalSearchInput: { flex: 1, minHeight: 44, fontSize: 16, fontFamily: fontFamily.regular, color: colors.textPrimary },
   skillRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 14, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   skillRowOn: { backgroundColor: `${colors.brand}08` },

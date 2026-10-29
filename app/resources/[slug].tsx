@@ -253,7 +253,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: fontFamily.bold,
     letterSpacing: 1.6,
-    textTransform: "uppercase",
     color: colors.navy,
     opacity: 0.6,
   },
@@ -314,7 +313,7 @@ const styles = StyleSheet.create({
   },
   calloutWarning: { borderColor: colors.error, backgroundColor: colors.white },
   calloutHead: { flexDirection: "row", alignItems: "center", gap: 8 },
-  calloutTitle: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy, textTransform: "uppercase", letterSpacing: 0.8 },
+  calloutTitle: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: 0.8 },
   calloutBody: { fontSize: 15, lineHeight: 23, fontFamily: fontFamily.regular, color: colors.navy },
   list: { gap: 10 },
   listTitle: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.navy },
@@ -339,7 +338,6 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 12,
     fontFamily: fontFamily.bold,
-    textTransform: "uppercase",
     letterSpacing: 0.8,
   },
   tableCell: {
@@ -353,7 +351,7 @@ const styles = StyleSheet.create({
   },
   tableCellAlt: { backgroundColor: colors.pale },
   next: { marginTop: 12, gap: 10, padding: 20, borderRadius: radii.xl, backgroundColor: colors.navy },
-  nextEyebrow: { fontSize: 11, fontFamily: fontFamily.bold, letterSpacing: 1.6, textTransform: "uppercase", color: colors.teal },
+  nextEyebrow: { fontSize: 11, fontFamily: fontFamily.bold, letterSpacing: 1.6, color: colors.teal },
   nextTitle: { fontSize: 21, fontFamily: fontFamily.headingStrong, color: colors.white },
   nextBody: { fontSize: 14, lineHeight: 21, fontFamily: fontFamily.regular, color: "rgba(255,255,255,0.82)" },
   nextPrimary: {

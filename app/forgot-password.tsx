@@ -87,7 +87,7 @@ export default function ForgotPasswordScreen() {
                 placeholder="you@example.com"
                 placeholderTextColor={colors.placeholder}
               />
-              {feedback && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={{ color: "#9f1239", backgroundColor: "#fff1f2", borderRadius: 12, padding: 12, marginBottom: 12, fontFamily: fontFamily.regular, lineHeight: 22 }}>{ac(feedback)}</Text>}
+              {feedback && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={{ color: "#b91c1c", backgroundColor: "#fff1f2", borderRadius: 12, padding: 12, marginBottom: 12, fontFamily: fontFamily.regular, lineHeight: 22 }}>{ac(feedback)}</Text>}
               <GshGradientPrimaryButton
                 title={mut.isPending ? ac("Sending…") : ac("Send code")}
                 onPress={sendCode}

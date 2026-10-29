@@ -37,7 +37,7 @@ export function BrandedLaunchSplash({ onReady }: Props) {
 const styles = StyleSheet.create({
   root: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: colors.cyan,
+    backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
   },

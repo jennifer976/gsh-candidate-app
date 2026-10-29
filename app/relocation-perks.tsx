@@ -291,7 +291,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: fontFamily.bold,
     color: colors.textMuted,
-    textTransform: "uppercase",
     letterSpacing: 0.6,
   },
   title: {

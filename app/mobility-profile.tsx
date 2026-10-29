@@ -517,7 +517,8 @@ function MobilityProfileScreen() {
                 onValueChange={(value) =>
                   setForm({ ...form, willingToRelocate: value })
                 }
-                trackColor={{ false: colors.borderStrong, true: colors.accent }}
+                trackColor={{ false: "#d5dae6", true: "#0d194e" }}
+                thumbColor={colors.white}
               />
             </View>
             <CountryPicker
@@ -681,10 +682,8 @@ function MobilityProfileScreen() {
                     onValueChange={(enabled) =>
                       setForm({ ...form, [field]: enabled })
                     }
-                    trackColor={{
-                      false: colors.borderStrong,
-                      true: colors.accent,
-                    }}
+                    trackColor={{ false: "#d5dae6", true: "#0d194e" }}
+                    thumbColor={colors.white}
                   />
                 </View>
               );
@@ -714,7 +713,8 @@ function MobilityProfileScreen() {
                       value: field === "talent_pool_visible" ? !enabled : enabled,
                     })
                   }
-                  trackColor={{ false: colors.borderStrong, true: colors.accent }}
+                  trackColor={{ false: "#d5dae6", true: "#0d194e" }}
+                thumbColor={colors.white}
                 />
               </View>
             ))}
@@ -794,9 +794,9 @@ const styles = StyleSheet.create({
   readiness: {
     padding: 14,
     borderRadius: radii.lg,
-    backgroundColor: "#ecfeff",
+    backgroundColor: "#f3f5f9",
     borderWidth: 1,
-    borderColor: "#a5f3fc",
+    borderColor: "#f3f5f9",
     gap: 5,
   },
   card: {
@@ -807,7 +807,7 @@ const styles = StyleSheet.create({
   },
   record: {
     padding: 16,
-    borderRadius: 18,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.border,
     gap: 12,
@@ -841,7 +841,7 @@ const styles = StyleSheet.create({
     minHeight: 52,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surfaceMuted,
@@ -878,8 +878,8 @@ const styles = StyleSheet.create({
   attestation: {
     padding: 10,
     borderRadius: 9,
-    backgroundColor: "#fffbeb",
-    color: "#92400e",
+    backgroundColor: "#f3f5f9",
+    color: "#0d194e",
     fontSize: 12,
     lineHeight: 17,
     fontFamily: fontFamily.medium,
@@ -888,9 +888,9 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 8,
     borderRadius: radii.lg,
-    backgroundColor: "#ecfeff",
+    backgroundColor: "#f3f5f9",
     borderWidth: 1,
-    borderColor: "#67e8f9",
+    borderColor: "#f3f5f9",
   },
   button: {
     minWidth: 96,

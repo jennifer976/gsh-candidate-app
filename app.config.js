@@ -29,7 +29,7 @@ module.exports = () => {
     splash: {
       image: "./assets/brand-mark-navy.png",
       resizeMode: "contain",
-      backgroundColor: "#42e0e3",
+      backgroundColor: "#0d194e",
     },
     ios: {
       supportsTablet: true,
@@ -87,7 +87,7 @@ module.exports = () => {
           // Android 12+ masks the splash icon to a 192dp circle; 176dp keeps the mark's corner shapes inside it.
           imageWidth: 176,
           resizeMode: "contain",
-          backgroundColor: "#42e0e3",
+          backgroundColor: "#0d194e",
         },
       ],
       "expo-web-browser",

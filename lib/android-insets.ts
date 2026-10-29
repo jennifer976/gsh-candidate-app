@@ -1,4 +1,4 @@
-import { Platform } from "react-native";
+import { FLOATING_TAB_CLEARANCE } from "@/lib/theme";
 
 /** Bottom pad so tab icons/labels sit above Android gesture / 3-button nav. */
 export function androidTabBarMetrics(insetsBottom: number) {
@@ -14,12 +14,11 @@ export function androidTabBarMetrics(insetsBottom: number) {
 }
 
 /**
- * Bottom padding for tab screen lists. The Android JS tab bar sits below the scene,
- * so lists only need breathing room; the iOS native tab bar overlays content.
+ * Bottom padding for tab screen lists so content clears the floating tab bar.
+ * Uses FLOATING_TAB_CLEARANCE (130) + the safe-area inset.
  */
 export function tabBarBottomPadding(insetsBottom: number): number {
-  if (Platform.OS === "android") return 12;
-  return 56 + Math.max(insetsBottom, 8) + 16;
+  return FLOATING_TAB_CLEARANCE + Math.max(insetsBottom, 0);
 }
 
 /** Bottom pad for full-screen modals / sticky footers above system nav. */
