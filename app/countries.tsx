@@ -62,9 +62,7 @@ export default function CountriesScreen() {
                     {ac(country.blurb)}
                   </Text>
                 </View>
-                <View style={styles.arrow}>
-                  <Ionicons name="arrow-forward" size={16} color={colors.navy} />
-                </View>
+                <Ionicons name="chevron-forward" size={18} color={colors.muted} />
               </DepthPressable>
             ))}
           </View>
@@ -128,14 +126,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     fontFamily: fontFamily.regular,
     color: colors.textSecondary,
-  },
-  arrow: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
   },
   disclaimer: {
     marginTop: 8,

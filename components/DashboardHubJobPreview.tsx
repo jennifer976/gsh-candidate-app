@@ -128,7 +128,7 @@ export function DashboardHubJobPreview({
           </View>
           <View style={styles.heroCta}>
             <Text style={styles.heroCtaText}>{viewLabel}</Text>
-            <Ionicons name="arrow-forward" size={16} color={colors.navy} />
+            <Ionicons name="arrow-forward" size={16} color={colors.cyan} />
           </View>
         </View>
       </GshPressable>
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   heroMid: { flex: 1, minWidth: 0, gap: 6 },
   featuredPill: {
     alignSelf: "flex-start",
-    backgroundColor: colors.navy,
+    backgroundColor: "rgba(255,255,255,0.08)",
     borderRadius: radii.pill,
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   featuredPillText: {
     fontSize: 11,
     fontFamily: fontFamily.bold,
-    color: colors.navy,
+    color: colors.cyan,
     letterSpacing: 0.4,
   },
   heroCompany: {
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.white,
     borderRadius: radii.pill,
     paddingHorizontal: 14,
     paddingVertical: 10,

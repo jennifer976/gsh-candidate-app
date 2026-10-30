@@ -57,7 +57,7 @@ export function GshHomeProfileChecklist({
                 {item.benefit}
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={18} color={colors.navy} />
+            <Ionicons name="chevron-forward" size={18} color={colors.muted} />
           </GshPressable>
         ))}
       </View>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   numText: {
     fontSize: 13,
     fontFamily: fontFamily.bold,
-    color: colors.navy,
+    color: colors.white,
   },
   copy: { flex: 1, minWidth: 0 },
   rowTitle: {

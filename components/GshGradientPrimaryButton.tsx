@@ -1,5 +1,4 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
-import { hapticLight } from "@/lib/haptics";
 import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withSpring } from "react-native-reanimated";
 import { colors, fontFamily, radii } from "@/lib/theme";
 
@@ -16,10 +15,6 @@ type Props = {
 };
 
 const spring = { damping: 18, stiffness: 380 };
-
-function lightTap() {
-  void hapticLight();
-}
 
 /** Primary CTA. The legacy name remains to avoid changing caller contracts. */
 export function GshGradientPrimaryButton({ title, onPress, disabled, loading, containerStyle, tone = "navy" }: Props) {
@@ -41,15 +36,18 @@ export function GshGradientPrimaryButton({ title, onPress, disabled, loading, co
       onPressIn={() => {
         if (dim || reduceMotion) return;
         scale.value = withSpring(0.99, spring);
-        lightTap();
       }}
       onPressOut={() => {
         scale.value = withSpring(1, spring);
       }}
       style={[styles.outer, containerStyle, animStyle, dim && styles.dimmed]}
     >
-      <View style={[styles.fill, tone === "cyan" && {backgroundColor: colors.accent}]}>
-        {loading ? <ActivityIndicator color={tone === "cyan" ? colors.navy : colors.white} /> : <Text style={[styles.text, tone === "cyan" && {color: colors.navy}]}>{title}</Text>}
+      <View style={[styles.fill, tone === "cyan" && { backgroundColor: colors.accent }]}>
+        {loading ? (
+          <ActivityIndicator color={tone === "cyan" ? colors.navy : colors.white} />
+        ) : (
+          <Text style={[styles.text, tone === "cyan" && { color: colors.navy }]}>{title}</Text>
+        )}
       </View>
     </AnimatedPressable>
   );

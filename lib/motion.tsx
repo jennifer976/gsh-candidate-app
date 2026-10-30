@@ -1,4 +1,3 @@
-import { hapticLight } from "@/lib/haptics";
 import { colors, shadows } from "@/lib/theme";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
@@ -229,7 +228,6 @@ export function useHeartPop() {
   const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
   const trigger = useCallback(() => {
-    void hapticLight();
     if (reduce) return;
     scale.value = withSequence(
       withTiming(1.28, { duration: 120, easing: EASE }),

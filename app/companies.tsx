@@ -177,9 +177,7 @@ export default function CompaniesScreen() {
                     </View>
                   ) : null}
                 </View>
-                <View style={styles.arrow}>
-                  <Ionicons name="arrow-forward" size={16} color={colors.navy} />
-                </View>
+                <Ionicons name="chevron-forward" size={18} color={colors.muted} />
               </DepthPressable>
             );
           }}
@@ -289,13 +287,5 @@ const styles = StyleSheet.create({
     fontSize: 11,
     paddingHorizontal: 9,
     paddingVertical: 3,
-  },
-  arrow: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

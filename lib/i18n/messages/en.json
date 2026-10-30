@@ -8,7 +8,7 @@
   "deviceSettings": "Device notification settings",
   "deviceHelp": "Change permissions on this device.",
   "vibration": "Vibration",
-  "vibrationHelp": "A short tap when you press a button. Turn this off if it is too much.",
+  "vibrationHelp": "A gentle tap when you save a job, send an application or finish signing up.",
   "inbox": "Notifications",
   "inboxHelp": "Application and account updates.",
   "resources": "Tools and resources",

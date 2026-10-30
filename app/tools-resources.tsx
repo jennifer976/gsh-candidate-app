@@ -182,7 +182,7 @@ function LinkSection({ title, links, onOpen }: { title: string; links: Link[]; o
             accessibilityLabel={item.hint ? `${item.label}. ${item.hint}` : item.label}
           >
             <View style={styles.rowIcon}>
-              <Ionicons name={item.icon} size={18} color={colors.navy} />
+              <Ionicons name={item.icon} size={18} color={colors.cyan} />
             </View>
             <View style={styles.rowText}>
               <Text style={styles.rowLabel} numberOfLines={2}>
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.panel,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: colors.navy,
+    backgroundColor: "rgba(255,255,255,0.08)",
     alignItems: "center",
     justifyContent: "center",
   },

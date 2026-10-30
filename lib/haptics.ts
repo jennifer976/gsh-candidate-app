@@ -1,3 +1,6 @@
+/**
+ * Haptics: only three moments get a light confirm tap. Saving a job, sending an application in the app, and finishing sign-up. Nothing on taps, tabs, scrolls, toggles, chips, swipes or errors.
+ */
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
 import { Platform } from "react-native";
@@ -30,50 +33,55 @@ function hapticsAllowed() {
   return isNative && useHapticsPreference.getState().enabled;
 }
 
-/** Light tap — for bookmarking, toggling, selecting */
+let lastConfirmAt = 0;
+
+/** Light confirm — save job, send application, finish sign-up. */
+export async function hapticConfirm() {
+  if (!hapticsAllowed()) return;
+  const now = Date.now();
+  if (now - lastConfirmAt < 1000) return;
+  lastConfirmAt = now;
+  try {
+    if (Platform.OS === "android") {
+      try {
+        await Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Confirm);
+      } catch {
+        await Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Context_Click);
+      }
+    } else if (Platform.OS === "ios") {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+/** No-op — kept so old imports compile. Prefer hapticConfirm for the three allowed moments. */
 export async function hapticLight() {
-  if (!hapticsAllowed()) return;
-  try {
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  } catch {}
+  return Promise.resolve();
 }
 
-/** Selection tick — for tab changes */
+/** No-op — kept so old imports compile. */
 export async function hapticSelection() {
-  if (!hapticsAllowed()) return;
-  try {
-    await Haptics.selectionAsync();
-  } catch {}
+  return Promise.resolve();
 }
 
-/** Medium — for segment switches, filter changes */
+/** No-op — kept so old imports compile. */
 export async function hapticMedium() {
-  if (!hapticsAllowed()) return;
-  try {
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-  } catch {}
+  return Promise.resolve();
 }
 
-/** Success — for saving, applying, completing */
+/** No-op — kept so old imports compile. */
 export async function hapticSuccess() {
-  if (!hapticsAllowed()) return;
-  try {
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-  } catch {}
+  return Promise.resolve();
 }
 
-/** Warning — for errors, validation fails */
+/** No-op — kept so old imports compile. */
 export async function hapticWarning() {
-  if (!hapticsAllowed()) return;
-  try {
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-  } catch {}
+  return Promise.resolve();
 }
 
-/** Error — for destructive actions like withdraw */
+/** No-op — kept so old imports compile. */
 export async function hapticError() {
-  if (!hapticsAllowed()) return;
-  try {
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-  } catch {}
+  return Promise.resolve();
 }

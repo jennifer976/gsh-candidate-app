@@ -57,7 +57,7 @@ import {
   unsaveJob,
 } from "@/lib/api-client";
 import { compatibilityFirst, directJobIds } from "@/lib/compatibility";
-import { hapticLight } from "@/lib/haptics";
+import { hapticConfirm } from "@/lib/haptics";
 import { useSignInPrompt } from "@/lib/useSignInPrompt";
 import {
   getEmployerSponsorBadge,
@@ -136,7 +136,7 @@ function HubJobCard({
           </View>
           <Pressable
             onPress={() => {
-              void hapticLight();
+              if (!savedRowId) void hapticConfirm();
               onToggleBookmark();
             }}
             hitSlop={10}
@@ -149,7 +149,11 @@ function HubJobCard({
               <ActivityIndicator size="small" color={colors.navy} />
             ) : (
               <View style={[styles.bookmarkDisc, savedRowId ? styles.bookmarkDiscOn : null]}>
-                <Ionicons name={savedRowId ? "bookmark" : "bookmark-outline"} size={18} color={colors.navy} />
+                <Ionicons
+                  name={savedRowId ? "bookmark" : "bookmark-outline"}
+                  size={18}
+                  color={savedRowId ? colors.cyan : colors.navy}
+                />
               </View>
             )}
           </Pressable>
@@ -579,7 +583,6 @@ export default function JobsTabScreen() {
               feedTab === "direct" && styles.segmentCellOn,
             ]}
             onPress={() => {
-              void hapticLight();
               setFeedTab("direct");
             }}
             accessibilityRole="button"
@@ -600,7 +603,6 @@ export default function JobsTabScreen() {
               feedTab === "connected" && styles.segmentCellOn,
             ]}
             onPress={() => {
-              void hapticLight();
               setFeedTab("connected");
             }}
             accessibilityRole="button"
@@ -621,7 +623,6 @@ export default function JobsTabScreen() {
               feedTab === "curated" && styles.segmentCellOnCurated,
             ]}
             onPress={() => {
-              void hapticLight();
               setFeedTab("curated");
             }}
             accessibilityRole="button"
@@ -770,7 +771,6 @@ export default function JobsTabScreen() {
             label={pill.label}
             selected={pill.active}
             onPress={() => {
-              void hapticLight();
               pill.onPress();
             }}
           />
@@ -954,7 +954,6 @@ export default function JobsTabScreen() {
           ? {
               label: t("jobsTryExternal"),
               onPress: () => {
-                void hapticLight();
                 setFeedTab("curated");
               },
             }
@@ -1277,7 +1276,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 17,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.panel,
     alignItems: "center",
     justifyContent: "center",
   },

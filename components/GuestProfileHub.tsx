@@ -32,15 +32,15 @@ export function GuestProfileHub() {
       >
         <View style={[styles.hero, { paddingTop: Math.max(insets.top, 12) + 14 }]}>
           <DecorRing size={260} thickness={36} color="rgba(255,255,255,0.3)" style={{ top: -110, right: -100 }} />
-          <Eyebrow color={colors.navy}>{ac("Your account")}</Eyebrow>
-          <PosterTitle {...posterParts(ac("Create your|profile."))} size={38} style={styles.title} />
+          <Eyebrow onDark>{ac("Your account")}</Eyebrow>
+          <PosterTitle {...posterParts(ac("Create your|profile."))} onDark size={38} style={styles.title} />
           <Text style={styles.body}>
             {ac("Create a free account to save jobs, apply and hear from employers.")}
           </Text>
           <DepthButton
             title={ac("Create a free account")}
             onPress={() => openRegister("/(tabs)/profile")}
-            variant="navy"
+            variant="cyanOnNavy"
             style={styles.primary}
           />
           <DepthButton
@@ -53,7 +53,7 @@ export function GuestProfileHub() {
             style={styles.secondary}
           />
           <View style={styles.trustRow}>
-            <Ionicons name="lock-closed" size={13} color={colors.navy} />
+            <Ionicons name="lock-closed" size={13} color={colors.onNavy2} />
             <Text style={styles.trustText}>{ac("Free for candidates. Private by default.")}</Text>
           </View>
         </View>
@@ -74,7 +74,7 @@ export function GuestProfileHub() {
                 <Text style={styles.linkTitle}>{item.label}</Text>
                 <Text style={styles.linkHint}>{item.hint}</Text>
               </View>
-              <Ionicons name="chevron-forward" size={18} color={colors.navy} />
+              <Ionicons name="chevron-forward" size={18} color={colors.muted} />
             </Pressable>
           ))}
         </View>
@@ -103,12 +103,12 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.medium,
     fontSize: 15,
     lineHeight: 22,
-    color: "rgba(13,25,78,0.8)",
+    color: colors.onNavy2,
   },
   primary: { marginTop: 20 },
   secondary: { marginTop: 12 },
   trustRow: { marginTop: 14, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
-  trustText: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.navy },
+  trustText: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.onNavy2 },
   section: { paddingHorizontal: 20, marginTop: 28 },
   heading: { marginBottom: 12 },
   linkRow: {

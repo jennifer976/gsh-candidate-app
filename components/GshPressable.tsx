@@ -6,7 +6,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { hapticLight } from "@/lib/haptics";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const spring = { damping: 16, stiffness: 420 };
@@ -16,6 +15,7 @@ type Props = PressableProps & {
   style?: StyleProp<ViewStyle>;
   /** Press scale (default 0.985). */
   pressScale?: number;
+  /** Kept for callers; haptics are reserved for save / apply / finish sign-up. */
   haptic?: boolean;
 };
 
@@ -24,7 +24,7 @@ export function GshPressable({
   children,
   style,
   pressScale = 0.985,
-  haptic = true,
+  haptic: _haptic = false,
   disabled,
   onPressIn,
   onPressOut,
@@ -44,7 +44,6 @@ export function GshPressable({
       onPressIn={(e) => {
         if (!disabled && !reduceMotion) {
           scale.value = withSpring(pressScale, spring);
-          if (haptic) void hapticLight();
         }
         onPressIn?.(e);
       }}

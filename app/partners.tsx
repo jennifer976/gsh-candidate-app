@@ -159,9 +159,7 @@ export default function PartnersScreen() {
                 {item._id ? (
                   <View style={styles.ctaRow}>
                     <Text style={styles.ctaText}>{ac("View profile")}</Text>
-                    <View style={styles.ctaArrow}>
-                      <Ionicons name="arrow-forward" size={14} color={colors.navy} />
-                    </View>
+                    <Ionicons name="chevron-forward" size={18} color={colors.muted} />
                   </View>
                 ) : null}
               </View>
@@ -238,7 +236,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.navy,
     fontSize: 11,
     fontFamily: fontFamily.bold,
-    color: colors.navy,
+    color: colors.white,
   },
   desc: {
     marginTop: 12,
@@ -261,12 +259,4 @@ const styles = StyleSheet.create({
   websiteText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.navy },
   ctaRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   ctaText: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.navy },
-  ctaArrow: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 });

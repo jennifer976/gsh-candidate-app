@@ -38,7 +38,7 @@ import {
 } from "@/lib/api-client";
 import { tabBarBottomPadding } from "@/lib/android-insets";
 import { useAuthStore } from "@/lib/auth-store";
-import { brandLockupNavy, heroWalking } from "@/lib/brand-assets";
+import { brandLockupWhite, heroWalking } from "@/lib/brand-assets";
 import { resolveBrandImageUrl } from "@/lib/brand-logo";
 import { fetchPublishedBlogList } from "@/lib/content/blogQueries";
 import { useAppCopy } from "@/lib/i18n";
@@ -172,9 +172,7 @@ function HomeJobCard({ role, index, onPress }: { role: HomeRole; index: number; 
           </Text>
           <View style={styles.jobView}>
             <Text style={styles.jobViewText}>{t("jobsView")}</Text>
-            <View style={styles.jobViewArrow}>
-              <Ionicons name="arrow-forward" size={14} color={colors.navy} />
-            </View>
+            <Ionicons name="chevron-forward" size={18} color={colors.muted} />
           </View>
         </View>
       </View>
@@ -376,7 +374,7 @@ export default function CandidateHomeScreen() {
 
           <View style={styles.topBar}>
             <Image
-              source={brandLockupNavy}
+              source={brandLockupWhite}
               style={styles.logo}
               resizeMode="contain"
               accessibilityLabel="Global Sponsor Hub"
@@ -411,7 +409,7 @@ export default function CandidateHomeScreen() {
               <DepthButton
                 title={ac("Sign in")}
                 onPress={() => openSignIn("/(tabs)/home")}
-                variant="navy"
+                variant="cyanOnNavy"
                 size="sm"
                 icon={null}
               />
@@ -422,7 +420,7 @@ export default function CandidateHomeScreen() {
             {firstName ? ac("Hi {name}", { name: firstName }) : signedIn ? ac("Hi there") : ac("Welcome")}
           </Text>
           <View style={styles.heroRow}>
-            <PosterTitle {...posterParts(ac("Your talent|moves."))} size={40} style={styles.heroTitle} />
+            <PosterTitle {...posterParts(ac("Your talent|moves."))} onDark size={40} style={styles.heroTitle} />
             <DepthSurface
               face={colors.white}
               depthColor={colors.navy}
@@ -470,7 +468,7 @@ export default function CandidateHomeScreen() {
               accessibilityRole="button"
               accessibilityLabel={ac("Search")}
             >
-              <Ionicons name="arrow-forward" size={19} color={colors.navy} />
+              <Ionicons name="arrow-forward" size={19} color={colors.cyan} />
             </Pressable>
           </DepthSurface>
         </View>
@@ -752,7 +750,7 @@ const styles = StyleSheet.create({
     marginTop: 22,
     fontFamily: fontFamily.semiBold,
     fontSize: 15,
-    color: colors.navy,
+    color: colors.onNavy2,
   },
   heroRow: {
     marginTop: 8,
@@ -766,7 +764,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.medium,
     fontSize: 15,
     lineHeight: 22,
-    color: "rgba(13,25,78,0.8)",
+    color: colors.onNavy2,
     maxWidth: 320,
   },
   searchWrap: { marginTop: 18 },
@@ -895,16 +893,6 @@ const styles = StyleSheet.create({
   jobSalary: { flex: 1, fontFamily: fontFamily.bold, fontSize: 14, color: colors.navy },
   jobView: { flexDirection: "row", alignItems: "center", gap: 8 },
   jobViewText: { fontFamily: fontFamily.extraBold, fontSize: 13, color: colors.navy },
-  jobViewArrow: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: colors.navy,
-    borderWidth: 2,
-    borderColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   ph: { backgroundColor: colors.pale, borderRadius: 6 },
   postImage: { width: "100%", aspectRatio: 16 / 9, backgroundColor: colors.pale },
   postBody: { padding: 16, gap: 6 },

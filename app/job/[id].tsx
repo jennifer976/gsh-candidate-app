@@ -36,7 +36,7 @@ import { persistCandidateReturnIntent } from "@/lib/candidate-return-intent";
 import { getMarketingSiteUrl } from "@/lib/config";
 import { canonicalCountryCode, countryDisplayName } from "@/lib/countries";
 import { PUBLIC_COUNTRIES } from "@/lib/publicResources";
-import { hapticLight, hapticSuccess, hapticWarning } from "@/lib/haptics";
+import { hapticConfirm } from "@/lib/haptics";
 import { clearIdempotencyKey, getOrCreateIdempotencyKey } from "@/lib/idempotency";
 import {
   getJobEmployerLabel,
@@ -171,12 +171,11 @@ export default function JobDetailScreen() {
     mutationFn: () => saveJob(jobId),
     onSuccess: () => {
       setSaved(true);
-      void hapticSuccess();
+      void hapticConfirm();
       void qc.invalidateQueries({ queryKey: ["saved-jobs"] });
       void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
     },
     onError: (e: unknown) => {
-      void hapticWarning();
       const msg = errMsg(e);
       if (msg.includes("already saved")) {
         setSaved(true);
@@ -197,7 +196,7 @@ export default function JobDetailScreen() {
     },
     onSuccess: () => {
       void clearIdempotencyKey(`application:${jobId}`);
-      void hapticSuccess();
+      void hapticConfirm();
       void qc.invalidateQueries({ queryKey: ["applications"] });
       void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
       Alert.alert(
@@ -207,7 +206,6 @@ export default function JobDetailScreen() {
       );
     },
     onError: () => {
-      void hapticWarning();
       Alert.alert(t("detailApplyError"), t("detailApplyErrorHelp"));
     },
   });
@@ -264,7 +262,6 @@ export default function JobDetailScreen() {
   }
 
   function onSavePress() {
-    void hapticLight();
     if (!token) {
       const returnTo = `/job/${encodeURIComponent(jobId)}`;
       void persistCandidateReturnIntent(returnTo, { kind: "save_job", jobId }).then(() => {
@@ -653,7 +650,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 12,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.panel,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -801,7 +798,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.panel,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -883,7 +880,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.panel,
     alignItems: "center",
     justifyContent: "center",
   },

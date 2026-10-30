@@ -113,9 +113,7 @@ export default function BlogIndexScreen() {
                   ) : null}
                   <View style={styles.readRow}>
                     <Text style={styles.readText}>{ac("Read article")}</Text>
-                    <View style={styles.arrow}>
-                      <Ionicons name="arrow-forward" size={14} color={colors.navy} />
-                    </View>
+                    <Ionicons name="chevron-forward" size={18} color={colors.muted} />
                   </View>
                 </View>
               </DepthPressable>
@@ -144,17 +142,9 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     backgroundColor: colors.navy,
   },
-  categoryText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: 0.3 },
+  categoryText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.white, letterSpacing: 0.3 },
   title: { fontSize: 19, lineHeight: 24, fontFamily: fontFamily.heading, color: colors.navy, letterSpacing: -0.3 },
   desc: { fontSize: 14, fontFamily: fontFamily.regular, color: colors.textSecondary, lineHeight: 20 },
   readRow: { marginTop: 4, flexDirection: "row", alignItems: "center", justifyContent: "flex-end", gap: 8 },
   readText: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy },
-  arrow: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 });

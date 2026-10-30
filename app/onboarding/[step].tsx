@@ -67,6 +67,7 @@ import type {
   Qualification,
   WorkAuthorization,
 } from "@/types/mobility";
+import { hapticConfirm } from "@/lib/haptics";
 import { colors, fontFamily } from "@/lib/theme";
 
 const SPONSORSHIP_LABELS: Record<string, string> = {
@@ -257,6 +258,7 @@ export default function OnboardingStepScreen() {
 
     if (isLastSignupStep(step)) {
       await markCandidateOnboardingComplete();
+      void hapticConfirm();
       goHome(router);
       return;
     }

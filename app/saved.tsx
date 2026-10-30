@@ -19,7 +19,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import { fetchSavedJobs, unsaveJob } from "@/lib/api-client";
-import { hapticLight, hapticSuccess } from "@/lib/haptics";
 import {
   getJobEmployerLabel,
   getJobLogoUrl,
@@ -49,7 +48,6 @@ function SavedJobsScreen() {
   const unsave = useMutation({
     mutationFn: (row: SavedJobPopulated) => unsaveJob(row.id ?? row._id),
     onSuccess: () => {
-      void hapticSuccess();
       void qc.invalidateQueries({ queryKey: ["saved-jobs"] });
     },
     onError: (e: unknown) =>

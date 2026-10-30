@@ -75,7 +75,7 @@ export default function CvQualityCheckerScreen() {
       >
         <View style={styles.hero}>
           <View style={styles.heroIcon}>
-            <Ionicons name="document-text-outline" size={24} color={colors.navy} />
+            <Ionicons name="document-text-outline" size={24} color={colors.cyan} />
           </View>
           <Text style={styles.title}>{ac("Make your CV easier to review")}</Text>
           <Text style={styles.lead}>
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.navy,
+    backgroundColor: "rgba(255,255,255,0.08)",
   },
   title: {
     fontFamily: fontFamily.headingStrong,

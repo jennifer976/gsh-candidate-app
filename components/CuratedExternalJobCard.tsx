@@ -51,7 +51,7 @@ export function CuratedExternalJobCard({
       >
         <View style={styles.band}>
           <View style={styles.bandLeft}>
-            <Ionicons name="star" size={12} color={colors.navy} />
+            <Ionicons name="star" size={12} color={colors.cyan} />
             <Text style={styles.bandText}>{t("jobsFeatured")}</Text>
           </View>
           {age ? <Text style={styles.bandAge}>{age}</Text> : null}
@@ -90,7 +90,7 @@ export function CuratedExternalJobCard({
           </View>
           <View style={styles.featureCta}>
             <Text style={styles.featureCtaText}>{t("jobsDetails")}</Text>
-            <Ionicons name="arrow-forward" size={16} color={colors.navy} />
+            <Ionicons name="arrow-forward" size={16} color={colors.cyan} />
           </View>
         </View>
       </DepthPressable>
@@ -122,9 +122,7 @@ export function CuratedExternalJobCard({
             {job.title}
           </Text>
         </View>
-        <View style={styles.openDisc}>
-          <Ionicons name="open-outline" size={18} color={colors.navy} />
-        </View>
+        <Ionicons name="open-outline" size={18} color={colors.muted} />
       </View>
       <View style={styles.pills}>
         {chips.map((label, index) => {
@@ -165,14 +163,6 @@ const styles = StyleSheet.create({
     letterSpacing: -0.2,
   },
   titleFeature: { fontSize: 18, lineHeight: 23, color: colors.white },
-  openDisc: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   pills: { marginTop: 12, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 8 },
   pill: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: radii.pill, maxWidth: "100%" },
   pillNavy: { backgroundColor: colors.navy },
@@ -187,7 +177,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: colors.navy,
+    backgroundColor: "rgba(255,255,255,0.08)",
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
@@ -195,18 +185,16 @@ const styles = StyleSheet.create({
   bandText: {
     fontSize: 10,
     fontFamily: fontFamily.extraBold,
-    color: colors.navy,
+    color: colors.cyan,
     letterSpacing: 1.4,
   },
-  bandAge: { fontSize: 12, fontFamily: fontFamily.heading, color: colors.navy },
+  bandAge: { fontSize: 12, fontFamily: fontFamily.heading, color: colors.onNavy2 },
   featureBody: { padding: 16 },
   featureCta: {
     marginTop: 16,
     minHeight: 48,
     borderRadius: 16,
-    backgroundColor: colors.navy,
-    borderBottomWidth: 4,
-    borderBottomColor: colors.navyDeep,
+    backgroundColor: colors.white,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

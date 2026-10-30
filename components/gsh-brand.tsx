@@ -17,16 +17,11 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 import { GSH_MARK_PATH, GSH_MARK_VIEWBOX } from "@/lib/brand/gshMarkPath";
-import { hapticLight } from "@/lib/haptics";
 import { RiseIn } from "@/lib/motion";
 import { cardSurfaceStyle, colors, fontFamily, shadows, type } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
 const TRAILING_ARROW = "arrow-up-right" as const;
-
-function tick() {
-  void hapticLight();
-}
 
 /** Soft card surface. Depth prop kept for callers; values above 0 are ignored. */
 export function DepthSurface({
@@ -107,7 +102,6 @@ export function DepthPressable({
       onPress={onPress}
       onPressIn={() => {
         if (disabled) return;
-        tick();
         scale.value = withTiming(0.97, { duration: 120 });
       }}
       onPressOut={() => {
@@ -229,7 +223,6 @@ export function DepthButton({
   return (
     <Pressable
       onPress={onPress}
-      onPressIn={disabled || loading ? undefined : tick}
       disabled={disabled || loading}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
@@ -403,10 +396,7 @@ export function BrandChip({
   const on = selected || solid;
   return (
     <Pressable
-      onPress={() => {
-        tick();
-        onPress();
-      }}
+      onPress={onPress}
       accessibilityRole="button"
       accessibilityState={{ selected: on }}
       style={[styles.chipInner, on ? styles.chipOn : styles.chipOff]}
@@ -440,7 +430,6 @@ export function SegmentTabs<T extends string>({
           <Pressable
             key={option.id}
             onPress={() => {
-              if (!active) tick();
               onChange(option.id);
             }}
             accessibilityRole="tab"
@@ -541,7 +530,7 @@ export function BrandLinkRow({
           </Text>
         ) : null}
       </View>
-      <Ionicons name="chevron-forward" size={18} color={onDark ? colors.cyan : colors.muted} />
+      <Ionicons name="chevron-forward" size={18} color={colors.muted} />
     </DepthPressable>
   );
 }

@@ -106,9 +106,7 @@ export function GshHomeDestinationRail({
               <Text style={styles.name} numberOfLines={1}>
                 {ac(d.label)}
               </Text>
-              <View style={styles.arrow}>
-                <Ionicons name="arrow-forward" size={14} color={colors.navy} />
-              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.muted} />
             </View>
           </DepthPressable>
         ))}
@@ -146,13 +144,5 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.headingStrong,
     color: colors.white,
     letterSpacing: -0.4,
-  },
-  arrow: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });

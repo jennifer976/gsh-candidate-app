@@ -16,7 +16,6 @@ import {
 } from "@/components/gsh-brand";
 import { modalFooterPad } from "@/lib/android-insets";
 import { brandLockupNavy } from "@/lib/brand-assets";
-import { hapticLight } from "@/lib/haptics";
 import { colors, fontFamily } from "@/lib/theme";
 
 type IonName = ComponentProps<typeof Ionicons>["name"];
@@ -68,7 +67,6 @@ export function CandidateOnboardingModal({ visible, onComplete }: Props) {
   const [goalId, setGoalId] = useState<GoalId | null>(null);
 
   const skip = useCallback(() => {
-    void hapticLight();
     onComplete();
   }, [onComplete]);
 

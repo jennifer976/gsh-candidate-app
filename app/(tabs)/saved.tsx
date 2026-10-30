@@ -26,7 +26,6 @@ import {
 } from "@/components/gsh-brand";
 import { tabBarBottomPadding } from "@/lib/android-insets";
 import { fetchApplications, fetchSavedJobs, unsaveJob } from "@/lib/api-client";
-import { hapticSuccess } from "@/lib/haptics";
 import { useAppCopy } from "@/lib/i18n";
 import { applicationStatusLabel } from "@/lib/i18n/catalog";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
@@ -146,7 +145,6 @@ export default function SavedTabScreen() {
   const unsave = useMutation({
     mutationFn: (row: SavedJobPopulated) => unsaveJob(row.id ?? row._id),
     onSuccess: () => {
-      void hapticSuccess();
       void qc.invalidateQueries({ queryKey: ["saved-jobs"] });
       void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
     },
@@ -455,9 +453,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.navy,
-    borderWidth: 2,
-    borderColor: colors.navy,
+    backgroundColor: colors.panel,
     alignItems: "center",
     justifyContent: "center",
   },

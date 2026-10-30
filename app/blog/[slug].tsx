@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.navy,
     marginBottom: 10,
   },
-  categoryText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy, letterSpacing: 0.3 },
+  categoryText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.white, letterSpacing: 0.3 },
   title: {
     fontSize: 30,
     lineHeight: 35,

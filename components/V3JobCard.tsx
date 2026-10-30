@@ -4,6 +4,7 @@ import Animated from "react-native-reanimated";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { CountryFlag } from "@/components/CountryFlag";
 import { PlainTag, SupportChip } from "@/components/gsh-brand";
+import { hapticConfirm } from "@/lib/haptics";
 import { useHeartPop } from "@/lib/motion";
 import { cardSurfaceStyle, colors, fontFamily, type } from "@/lib/theme";
 import { canonicalCountryCode } from "@/lib/countries";
@@ -71,6 +72,7 @@ export function V3JobCard({
           <Pressable
             onPress={() => {
               heart.trigger();
+              if (!saved) void hapticConfirm();
               onToggleSave();
             }}
             hitSlop={8}

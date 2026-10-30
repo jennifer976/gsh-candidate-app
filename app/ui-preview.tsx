@@ -48,7 +48,7 @@ function UiPreviewContent() {
               <Text style={styles.taskEyebrow}>Next step</Text>
               <Text style={styles.taskTitle}>Browse jobs</Text>
             </View>
-            <Ionicons name="chevron-forward" size={18} color={colors.navy} />
+            <Ionicons name="chevron-forward" size={18} color={colors.muted} />
           </GshPressable>
         </View>
       </ScrollView>
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.panel,
     alignItems: "center",
     justifyContent: "center",
   },

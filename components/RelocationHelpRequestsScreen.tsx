@@ -183,7 +183,7 @@ export default function RelocationHelpRequestsScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.hero}>
           <View style={styles.heroIcon}>
-            <Ionicons name="navigate-outline" size={22} color={colors.navy} />
+            <Ionicons name="navigate-outline" size={22} color={colors.cyan} />
           </View>
           <Text style={styles.title}>{ac("Plan your move with specialist help")}</Text>
           <Text style={styles.copy}>
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
     borderRadius: 21,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.navy,
+    backgroundColor: "rgba(255,255,255,0.08)",
   },
   title: {
     fontFamily: fontFamily.headingStrong,
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  heroButton: { backgroundColor: colors.navy },
+  heroButton: { backgroundColor: colors.white },
   heroButtonText: { color: colors.navy },
   primaryButtonText: {
     fontFamily: fontFamily.bold,

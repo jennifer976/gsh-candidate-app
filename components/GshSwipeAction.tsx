@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { RectButton, Swipeable } from "react-native-gesture-handler";
-import { hapticMedium } from "@/lib/haptics";
 import { colors, fontFamily } from "@/lib/theme";
 
 type Action = {
@@ -46,7 +45,6 @@ export function GshSwipeAction({
               action.tone === "danger" ? styles.actionDanger : styles.actionPrimary,
             ]}
             onPress={() => {
-              void hapticMedium();
               action.onPress();
             }}
             accessibilityRole="button"

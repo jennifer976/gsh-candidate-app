@@ -8,7 +8,7 @@
     "deviceSettings":  "Notificaciones del dispositivo",
     "deviceHelp":  "Cambia los permisos de este dispositivo.",
     "vibration": "Vibración",
-    "vibrationHelp": "Una pulsación breve al tocar un botón. Desactívala si resulta excesiva.",
+    "vibrationHelp": "Una pulsación suave al guardar un empleo, enviar una solicitud o terminar el registro.",
     "inbox":  "Notificaciones",
     "inboxHelp":  "Novedades sobre candidaturas y cuenta.",
     "resources":  "Herramientas y recursos",

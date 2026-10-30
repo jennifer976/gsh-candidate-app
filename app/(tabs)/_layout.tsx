@@ -36,7 +36,6 @@ import {
   fetchUnreadNotificationCount,
 } from "@/lib/api-client";
 import { resumeCandidateReturnIntent } from "@/lib/candidate-return-intent";
-import { hapticSelection } from "@/lib/haptics";
 import { EASE, useReduceMotion } from "@/lib/motion";
 import { signupRoute } from "@/lib/onboardingFlow";
 import { colors, fontFamily, shadows } from "@/lib/theme";
@@ -245,7 +244,6 @@ function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
                   canPreventDefault: true,
                 });
                 if (!focused && !event.defaultPrevented) {
-                  void hapticSelection();
                   navigation.navigate(route.name, route.params);
                 }
               }}

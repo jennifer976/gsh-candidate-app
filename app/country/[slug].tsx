@@ -84,7 +84,7 @@ export default function CountryHubScreen() {
             </Text>
             <Pressable style={styles.primaryCta} onPress={searchJobs} accessibilityRole="button">
               <Text style={styles.primaryCtaText}>{ac("Search jobs")}</Text>
-              <Ionicons name="arrow-forward" size={18} color={colors.navy} />
+              <Ionicons name="arrow-forward" size={18} color={colors.cyan} />
             </Pressable>
           </View>
 
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
   },
-  primaryCtaText: { fontSize: 15, fontFamily: fontFamily.heading, color: colors.navy },
+  primaryCtaText: { fontSize: 15, fontFamily: fontFamily.heading, color: colors.white },
   block: { gap: 8, marginTop: 6 },
   sectionHead: { gap: 4, marginBottom: 2 },
   sectionEyebrow: {

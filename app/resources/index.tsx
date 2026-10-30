@@ -194,8 +194,15 @@ export default function ResourcesScreen() {
                       style={styles.topic}
                       innerStyle={styles.topicInner}
                     >
-                      <View style={[styles.topicIcon, { backgroundColor: row.navy ? colors.cyan : colors.navy }]}>
-                        <Ionicons name={row.icon} size={18} color={row.navy ? colors.navy : colors.cyan} />
+                      <View
+                        style={[
+                          styles.topicIcon,
+                          {
+                            backgroundColor: row.navy ? "rgba(255,255,255,0.08)" : colors.panel,
+                          },
+                        ]}
+                      >
+                        <Ionicons name={row.icon} size={18} color={row.navy ? colors.cyan : colors.navy} />
                       </View>
                       <Text style={[styles.topicLabel, row.navy && styles.topicLabelOnNavy]} numberOfLines={2}>
                         {ac(row.label)}
@@ -215,7 +222,7 @@ export default function ResourcesScreen() {
                       accessibilityLabel={`${ac("Latest from the blog")}. ${ac("See all")}`}
                     >
                       <Text style={styles.blogHeadText}>{ac("Latest from the blog")}</Text>
-                      <Ionicons name="newspaper" size={18} color={colors.navy} />
+                      <Ionicons name="newspaper" size={18} color={colors.white} />
                     </Pressable>
                     {posts.map((post, index) => (
                       <Pressable
@@ -284,9 +291,7 @@ function LibraryList({
                   </Text>
                 ) : null}
               </View>
-              <View style={styles.rowArrow}>
-                <Ionicons name="chevron-forward" size={16} color={colors.navy} />
-              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.muted} />
             </Pressable>
             {templateSlug ? (
               <Pressable
@@ -353,7 +358,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: colors.navy,
   },
-  blogHeadText: { fontSize: 15, fontFamily: fontFamily.heading, color: colors.navy },
+  blogHeadText: { fontSize: 15, fontFamily: fontFamily.heading, color: colors.white },
   blogRow: { minHeight: 64, flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
   blogRowBorder: { borderTopWidth: 1, borderTopColor: colors.border },
   blogIndex: { fontSize: 22, fontFamily: fontFamily.headingStrong, color: colors.navy, opacity: 0.35 },
@@ -368,14 +373,6 @@ const styles = StyleSheet.create({
   rowFormat: { fontSize: 11, fontFamily: fontFamily.bold, letterSpacing: 1.2, color: colors.textMuted },
   rowTitle: { marginTop: 3, fontSize: 16, lineHeight: 21, fontFamily: fontFamily.heading, color: colors.navy },
   rowBlurb: { marginTop: 4, fontSize: 13, lineHeight: 19, fontFamily: fontFamily.regular, color: colors.textSecondary },
-  rowArrow: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   saveButton: {
     minHeight: 44,
     flexDirection: "row",

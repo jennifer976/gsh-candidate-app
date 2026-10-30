@@ -8,7 +8,7 @@
     "deviceSettings":  "Notifications de l’appareil",
     "deviceHelp":  "Modifiez les autorisations sur cet appareil.",
   "vibration": "Vibration",
-  "vibrationHelp": "Une brève vibration quand vous appuyez. Désactivez-la si c’est trop.",
+  "vibrationHelp": "Une légère vibration quand vous enregistrez une offre, envoyez une candidature ou terminez l’inscription.",
     "inbox":  "Notifications",
     "inboxHelp":  "Suivi des candidatures et du compte.",
     "resources":  "Outils et ressources",
