@@ -1,20 +1,12 @@
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useAppCopy } from "@/lib/i18n";
 import {
-  jobChipLabel,
-  jobCountryLabel,
-  jobMatchLabel,
-  jobSalaryLabel,
-  sponsorshipTone,
-} from "@/lib/job-presentation";
-import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -30,195 +22,87 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { tabBarBottomPadding } from "@/lib/android-insets";
-import {
-  DiscoverListingInfoModal,
-  DiscoverTopicsFilterModal,
-} from "@/components/CandidateDiscoverRails";
-import { CompanyLogo } from "@/components/CompanyLogo";
-import { CuratedExternalJobCard } from "@/components/CuratedExternalJobCard";
+import { Icon } from "@/components/Icon";
 import { JobCardSkeleton } from "@/components/SkeletonLoader";
 import { GshScreenShell } from "@/components/GshScreenShell";
-import { GshSwipeAction } from "@/components/GshSwipeAction";
+import { DepthButton, TitleWithStop } from "@/components/gsh-brand";
+import { JobCard } from "@/components/v3/JobCard";
 import {
-  BrandChip,
-  BrandStatePanel,
-  DepthPressable,
-  DepthSurface,
-  TitleWithStop,
-} from "@/components/gsh-brand";
-import { listStaggerDelay, RiseIn } from "@/lib/motion";
+  JobsFilterSheet,
+  type JobsFilterDraft,
+} from "@/components/v3/JobsFilterSheet";
+import { tabBarBottomPadding } from "@/lib/android-insets";
 import {
   fetchPublicExternalJobListings,
   fetchPublicJobs,
-  fetchMyJobsCompatibilityBatch,
   fetchSavedJobs,
   saveJob,
   unsaveJob,
 } from "@/lib/api-client";
-import { compatibilityFirst, directJobIds } from "@/lib/compatibility";
 import { hapticConfirm } from "@/lib/haptics";
+import {
+  jobCardFieldsFromExternal,
+  jobCardFieldsFromJob,
+} from "@/lib/jobCardFields";
 import { useSignInPrompt } from "@/lib/useSignInPrompt";
-import {
-  getEmployerSponsorBadge,
-  getJobEmployerLabel,
-  getJobLogoUrl,
-  hubListingChipsPrioritized,
-} from "@/lib/job-display";
-import {
-  addRecentJobSearch,
-  loadRecentJobSearches,
-} from "@/lib/recent-job-searches";
-import { colors, fontFamily, radii } from "@/lib/theme";
+import { colors, fontFamily, shadows } from "@/lib/theme";
 import type { ExternalJobListingPublic, Job } from "@/types/models";
-import type { CompatibilityResult } from "@/types/mobility";
 
-const COMPATIBILITY_ORDER_KEY = "@gsh_compatibility_first_v1";
+type FeedTab = "direct" | "connected" | "curated";
+type SortMode = "newest" | "salary";
 
-const CHIP_CAP = 3;
+type ListRow =
+  | { kind: "search" }
+  | { kind: "meta" }
+  | { kind: "job"; job: Job | ExternalJobListingPublic; lane: FeedTab };
 
-function HubJobCard({
-  job,
-  onPress,
-  savedRowId,
-  bookmarkLoading,
-  onToggleBookmark,
-  compatibility,
-}: {
-  job: Job;
-  onPress: () => void;
-  savedRowId: string | undefined;
-  bookmarkLoading: boolean;
-  onToggleBookmark: () => void;
-  compatibility?: CompatibilityResult;
-}) {
-  const { t, locale } = useAppCopy();
+function salarySortValue(job: Job | ExternalJobListingPublic): number {
+  const j = job as Job;
+  const max = typeof j.maxSalary === "number" ? j.maxSalary : null;
+  const min = typeof j.minSalary === "number" ? j.minSalary : null;
+  if (max != null && min != null) return Math.max(max, min);
+  if (max != null) return max;
+  if (min != null) return min;
+  return -1;
+}
 
-  const employer = getJobEmployerLabel(job, locale);
-  const logoUrl = getJobLogoUrl(job);
-  const chips = hubListingChipsPrioritized(job, CHIP_CAP);
-  const sponsorBadge = getEmployerSponsorBadge(job, locale);
-  const metaLine =
-    [job.locationCity, jobCountryLabel(job.locationCountry || "", locale)]
-      .filter(Boolean)
-      .join(", ") ||
-    job.location ||
+function postedSortValue(job: Job | ExternalJobListingPublic): number {
+  const j = job as Job & ExternalJobListingPublic;
+  const raw =
+    j.externalPostedAt ??
+    j.createdAt ??
+    (j as { updatedAt?: string }).updatedAt ??
     "";
-  const meta =
-    [metaLine, job.jobType]
-      .filter((x) => typeof x === "string" && x.length > 0)
-      .join(" · ") || "";
-  const sal = jobSalaryLabel(job, locale);
-  const appliesOnPlatform =
-    (!job.listingKind || job.listingKind === "direct") && !job.externalListingId;
+  const t = new Date(raw).getTime();
+  return Number.isFinite(t) ? t : 0;
+}
 
+function sortJobs<T extends Job | ExternalJobListingPublic>(
+  rows: T[],
+  sort: SortMode,
+): T[] {
+  const copy = [...rows];
+  if (sort === "salary") {
+    copy.sort((a, b) => salarySortValue(b) - salarySortValue(a));
+  } else {
+    copy.sort((a, b) => postedSortValue(b) - postedSortValue(a));
+  }
+  return copy;
+}
+
+function countActiveFilters(draft: JobsFilterDraft): number {
   return (
-    <GshSwipeAction
-      rightActions={[
-        {
-          label: savedRowId ? t("jobsUnsave") : t("jobsSave"),
-          onPress: onToggleBookmark,
-          tone: "primary",
-        },
-      ]}
-    >
-    <DepthSurface depth={5} radius={24} borderWidth={2} borderColor={colors.navy} innerStyle={styles.card}>
-      <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${job.title}, ${employer}`}>
-        <View style={styles.cardMainHit}>
-          <CompanyLogo logoUrl={logoUrl} companyName={employer} size={48} radius={14} />
-          <View style={styles.cardMid}>
-            <Text style={styles.cardCompanyLine} numberOfLines={1}>
-              {[employer, meta].filter(Boolean).join(" · ")}
-            </Text>
-            <Text style={styles.cardTitle} numberOfLines={2}>
-              {job.title}
-            </Text>
-          </View>
-          <Pressable
-            onPress={() => {
-              if (!savedRowId) void hapticConfirm();
-              onToggleBookmark();
-            }}
-            hitSlop={10}
-            style={styles.cardBookmarkHit}
-            accessibilityRole="button"
-            accessibilityLabel={savedRowId ? t("jobsUnsave") : t("jobsSave")}
-            disabled={bookmarkLoading}
-          >
-            {bookmarkLoading ? (
-              <ActivityIndicator size="small" color={colors.navy} />
-            ) : (
-              <View style={[styles.bookmarkDisc, savedRowId ? styles.bookmarkDiscOn : null]}>
-                <Ionicons
-                  name={savedRowId ? "bookmark" : "bookmark-outline"}
-                  size={18}
-                  color={savedRowId ? colors.cyan : colors.navy}
-                />
-              </View>
-            )}
-          </Pressable>
-        </View>
-        <View style={styles.chipWrap}>
-          {chips.map((c, index) => {
-            const tone = sponsorshipTone(c);
-            const label = jobChipLabel(c, locale);
-            return (
-            <View key={c} style={[styles.listChip, tone === "yes" ? styles.listChipSponsor : tone === "no" ? styles.listChipNoSponsor : index === 0 ? styles.listChipNavy : styles.listChipPale]}>
-              <Text style={[styles.listChipText, (tone || index === 0) && styles.listChipTextOn]} numberOfLines={1}>
-                {label}
-              </Text>
-            </View>
-            );
-          })}
-          {sal ? (
-            <View style={[styles.listChip, styles.listChipPale]}>
-              <Text style={styles.listChipText} numberOfLines={1}>
-                {sal}
-              </Text>
-            </View>
-          ) : null}
-          {sponsorBadge ? (
-            <View style={[styles.listChip, sponsorBadge.positive ? styles.listChipSponsor : styles.listChipNoSponsor, styles.listChipRow]}>
-              <Ionicons name="shield-checkmark" size={11} color="#ffffff" />
-              <Text style={[styles.listChipText, styles.listChipTextOn]} numberOfLines={1}>
-                {sponsorBadge.label}
-              </Text>
-            </View>
-          ) : null}
-          {appliesOnPlatform ? (
-            <View style={[styles.listChip, styles.listChipPale, styles.listChipRow]}>
-              <Ionicons name="flash" size={11} color={colors.navy} />
-              <Text style={styles.listChipText}>{t("jobsEasyApply")}</Text>
-            </View>
-          ) : null}
-          {compatibility ? (
-            <View style={[styles.listChip, styles.listChipPale]}>
-              <Text style={styles.listChipText}>{jobMatchLabel(compatibility.status, locale)}</Text>
-            </View>
-          ) : null}
-        </View>
-      </Pressable>
-    </DepthSurface>
-    </GshSwipeAction>
+    (draft.location.trim() ? 1 : 0) +
+    (draft.mobility ? 1 : 0) +
+    (draft.workMode ? 1 : 0)
   );
 }
 
 export default function JobsTabScreen() {
   const { t, locale, intlLocale } = useAppCopy();
-
-  const [sortHelpOpen, setSortHelpOpen] = useState(false);
+  const ac = useAccountCopy();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [feedTab, setFeedTab] = useState<"direct" | "connected" | "curated">(
-    "direct",
-  );
-  const [q, setQ] = useState("");
-  const [debouncedQ, setDebouncedQ] = useState("");
-  const [recent, setRecent] = useState<string[]>([]);
-  const [pullRefreshing, setPullRefreshing] = useState(false);
-  const [topicsModalOpen, setTopicsModalOpen] = useState(false);
-  const [listingInfoOpen, setListingInfoOpen] = useState(false);
-  const ac = useAccountCopy();
   const { signedIn, openSignIn } = useSignInPrompt();
   const params = useLocalSearchParams<{
     q?: string;
@@ -226,48 +110,43 @@ export default function JobsTabScreen() {
     benefit?: string;
     workMode?: string;
   }>();
+  const qc = useQueryClient();
+
+  const [feedTab, setFeedTab] = useState<FeedTab>("direct");
+  const [q, setQ] = useState("");
+  const [debouncedQ, setDebouncedQ] = useState("");
+  const [pullRefreshing, setPullRefreshing] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [sortMode, setSortMode] = useState<SortMode>("newest");
   const [workModeFilter, setWorkModeFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [mobilityFilter, setMobilityFilter] = useState("");
-  const [experienceFilter, setExperienceFilter] = useState("");
   const [visaRouteFilter, setVisaRouteFilter] = useState("");
-  const [compatibilityFirstEnabled, setCompatibilityFirstEnabled] =
-    useState(false);
+  const [draft, setDraft] = useState<JobsFilterDraft>({
+    location: "",
+    mobility: "",
+    workMode: "",
+  });
 
   useEffect(() => {
-    // Expo Router already decodes parameters. Empty values intentionally clear an old linked filter.
     if (typeof params.q === "string") setQ(params.q.trim());
-    if (typeof params.location === "string") setLocationFilter(params.location.trim());
-    if (typeof params.benefit === "string") setMobilityFilter(params.benefit.trim());
+    if (typeof params.location === "string")
+      setLocationFilter(params.location.trim());
+    if (typeof params.benefit === "string")
+      setMobilityFilter(params.benefit.trim());
     if (typeof params.workMode === "string") {
-      setWorkModeFilter(["remote", "hybrid", "onsite"].includes(params.workMode) ? params.workMode : "");
+      setWorkModeFilter(
+        ["remote", "hybrid", "onsite"].includes(params.workMode)
+          ? params.workMode
+          : "",
+      );
     }
   }, [params.q, params.location, params.benefit, params.workMode]);
 
-  const qc = useQueryClient();
-
   useEffect(() => {
-    void loadRecentJobSearches().then(setRecent);
-    void AsyncStorage.getItem(COMPATIBILITY_ORDER_KEY).then((value) =>
-      setCompatibilityFirstEnabled(value === "1"),
-    );
-  }, []);
-
-  useEffect(() => {
-    const t = setTimeout(() => setDebouncedQ(q.trim()), 400);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setDebouncedQ(q.trim()), 400);
+    return () => clearTimeout(timer);
   }, [q]);
-
-  useEffect(() => {
-    if (debouncedQ.length < 3) return;
-    let cancelled = false;
-    void addRecentJobSearch(debouncedQ).then((next) => {
-      if (!cancelled) setRecent(next);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [debouncedQ]);
 
   const hubJobsQuery = useInfiniteQuery({
     queryKey: [
@@ -275,7 +154,6 @@ export default function JobsTabScreen() {
       debouncedQ,
       locationFilter,
       mobilityFilter,
-      experienceFilter,
       workModeFilter,
       visaRouteFilter,
     ],
@@ -285,7 +163,6 @@ export default function JobsTabScreen() {
         q: debouncedQ || undefined,
         location: locationFilter.trim() || undefined,
         benefit: mobilityFilter.trim() || undefined,
-        experienceLevel: experienceFilter || undefined,
         workMode: workModeFilter || undefined,
         visaRoute: visaRouteFilter.trim() || undefined,
         page: pageParam,
@@ -305,22 +182,19 @@ export default function JobsTabScreen() {
       debouncedQ,
       locationFilter,
       mobilityFilter,
-      experienceFilter,
       workModeFilter,
     ],
     initialPageParam: 1,
-    queryFn: ({ pageParam }) => {
-      return fetchPublicExternalJobListings({
+    queryFn: ({ pageParam }) =>
+      fetchPublicExternalJobListings({
         q: debouncedQ || undefined,
         location: locationFilter.trim() || undefined,
         benefit: mobilityFilter || undefined,
-        experienceLevel: experienceFilter || undefined,
         workMode: workModeFilter || undefined,
         sourceRelationship: "curated_external",
         page: pageParam,
         perPage: 25,
-      });
-    },
+      }),
     getNextPageParam: (lastPage) =>
       lastPage.page * lastPage.perPage < lastPage.total
         ? lastPage.page + 1
@@ -335,27 +209,61 @@ export default function JobsTabScreen() {
       debouncedQ,
       locationFilter,
       mobilityFilter,
-      experienceFilter,
       workModeFilter,
     ],
     initialPageParam: 1,
-    queryFn: ({ pageParam }) => {
-      return fetchPublicExternalJobListings({
+    queryFn: ({ pageParam }) =>
+      fetchPublicExternalJobListings({
         q: debouncedQ || undefined,
         location: locationFilter.trim() || undefined,
         benefit: mobilityFilter || undefined,
-        experienceLevel: experienceFilter || undefined,
         workMode: workModeFilter || undefined,
         sourceRelationship: "employer_connected",
         page: pageParam,
         perPage: 25,
-      });
-    },
+      }),
     getNextPageParam: (lastPage) =>
       lastPage.page * lastPage.perPage < lastPage.total
         ? lastPage.page + 1
         : undefined,
     staleTime: 60_000,
+  });
+
+  const draftPreviewQuery = useQuery({
+    queryKey: [
+      "jobs-filter-preview",
+      feedTab,
+      debouncedQ,
+      draft.location,
+      draft.mobility,
+      draft.workMode,
+      visaRouteFilter,
+    ],
+    enabled: filterOpen,
+    queryFn: async () => {
+      if (feedTab === "direct") {
+        return fetchPublicJobs({
+          q: debouncedQ || undefined,
+          location: draft.location.trim() || undefined,
+          benefit: draft.mobility.trim() || undefined,
+          workMode: draft.workMode || undefined,
+          visaRoute: visaRouteFilter.trim() || undefined,
+          page: 1,
+          perPage: 1,
+        });
+      }
+      return fetchPublicExternalJobListings({
+        q: debouncedQ || undefined,
+        location: draft.location.trim() || undefined,
+        benefit: draft.mobility || undefined,
+        workMode: draft.workMode || undefined,
+        sourceRelationship:
+          feedTab === "connected" ? "employer_connected" : "curated_external",
+        page: 1,
+        perPage: 1,
+      });
+    },
+    staleTime: 15_000,
   });
 
   const savedJobsQuery = useQuery({
@@ -368,6 +276,7 @@ export default function JobsTabScreen() {
   const saveJobMut = useMutation({
     mutationFn: (jobId: string) => saveJob(jobId),
     onSuccess: () => {
+      void hapticConfirm();
       void qc.invalidateQueries({ queryKey: ["saved-jobs"] });
       void qc.invalidateQueries({
         queryKey: ["analytics", "candidate-dashboard"],
@@ -400,36 +309,14 @@ export default function JobsTabScreen() {
   }, [savedJobsQuery.data]);
 
   const hubJobs = hubJobsQuery.data?.pages.flatMap((page) => page.data) ?? [];
-  const compatibilityIds = useMemo(() => directJobIds(hubJobs), [hubJobs]);
-  const compatibilityQuery = useQuery({
-    queryKey: ["compatibility", "jobs", compatibilityIds],
-    queryFn: () => fetchMyJobsCompatibilityBatch(compatibilityIds),
-    enabled: signedIn && compatibilityIds.length > 0,
-    retry: false,
-    staleTime: 60_000,
-  });
-  const compatibilityByJobId = useMemo(() => {
-    const data = compatibilityQuery.data?.data;
-    if (!data) return {} as Record<string, CompatibilityResult>;
-    if (!Array.isArray(data)) return data;
-    return Object.fromEntries(
-      data.map((item) => [item.jobId, item.compatibility]),
-    );
-  }, [compatibilityQuery.data]);
-  const orderedHubJobs = useMemo(
-    () =>
-      compatibilityFirstEnabled
-        ? compatibilityFirst(hubJobs, compatibilityByJobId)
-        : hubJobs,
-    [compatibilityFirstEnabled, compatibilityByJobId, hubJobs],
-  );
   const curatedJobs =
     curatedJobsQuery.data?.pages.flatMap((page) => page.data) ?? [];
   const connectedJobs =
     connectedJobsQuery.data?.pages.flatMap((page) => page.data) ?? [];
+
   const laneRows =
     feedTab === "direct"
-      ? orderedHubJobs
+      ? hubJobs
       : feedTab === "connected"
         ? connectedJobs
         : curatedJobs;
@@ -447,11 +334,19 @@ export default function JobsTabScreen() {
     laneRows.length === 0 &&
     !curatedJobsQuery.isError &&
     (curatedJobs.length > 0 || curatedJobsQuery.isLoading);
-  const shownLane = showingFallback ? "curated" : feedTab;
+  const shownLane: FeedTab = showingFallback ? "curated" : feedTab;
   const shownQuery = showingFallback ? curatedJobsQuery : laneQuery;
-  const listRows = showingFallback ? curatedJobs : laneRows;
+  const unsortedRows = showingFallback ? curatedJobs : laneRows;
+  const listRows = useMemo(
+    () => sortJobs(unsortedRows, sortMode),
+    [unsortedRows, sortMode],
+  );
 
-  const listBootloading = laneLoading || (showingFallback && curatedJobsQuery.isLoading && !curatedJobsQuery.data);
+  const listBootloading =
+    laneLoading ||
+    (showingFallback &&
+      curatedJobsQuery.isLoading &&
+      !curatedJobsQuery.data);
   const activeError = laneQuery.isError;
   const activeHasNextPage = shownQuery.hasNextPage;
   const activeFetchingNextPage = shownQuery.isFetchingNextPage;
@@ -459,25 +354,6 @@ export default function JobsTabScreen() {
     if (!activeHasNextPage || activeFetchingNextPage) return;
     void shownQuery.fetchNextPage();
   }, [activeFetchingNextPage, activeHasNextPage, shownQuery]);
-  const activeStructuredFilters = [
-    ...(workModeFilter ? [{ id: "workMode", label: ac(({remote: "Remote", hybrid: "Hybrid", onsite: "On-site"} as Record<string, string>)[workModeFilter]) }] : []),
-    ...(mobilityFilter
-      ? [
-          {
-            id: "mobility",
-            label: t("jobsMobilityLabel", {
-              value: jobChipLabel(mobilityFilter, locale),
-            }),
-          },
-        ]
-      : []),
-    ...(feedTab === "direct" && visaRouteFilter
-      ? [{ id: "visa", label: t("jobsVisaLabel", { route: visaRouteFilter }) }]
-      : []),
-    ...(experienceFilter
-      ? [{ id: "experience", label: t("jobsPillEntry") }]
-      : []),
-  ];
 
   const onRefresh = useCallback(() => {
     setPullRefreshing(true);
@@ -487,489 +363,389 @@ export default function JobsTabScreen() {
       connectedJobsQuery.refetch(),
       ...(signedIn ? [savedJobsQuery.refetch()] : []),
     ]).finally(() => setPullRefreshing(false));
-  }, [hubJobsQuery, curatedJobsQuery, connectedJobsQuery, savedJobsQuery, signedIn]);
+  }, [
+    hubJobsQuery,
+    curatedJobsQuery,
+    connectedJobsQuery,
+    savedJobsQuery,
+    signedIn,
+  ]);
 
   const firstPageTotal = shownQuery.data?.pages[0]?.total;
-  const resultCount = listBootloading || activeError
-    ? null
-    : shownLane === "direct" && visaRouteFilter
-      ? listRows.length
-      : typeof firstPageTotal === "number"
-        ? firstPageTotal
-        : null;
+  const resultCount =
+    listBootloading || activeError
+      ? null
+      : shownLane === "direct" && visaRouteFilter
+        ? listRows.length
+        : typeof firstPageTotal === "number"
+          ? firstPageTotal
+          : null;
 
-  const filterCount = activeStructuredFilters.length + (locationFilter ? 1 : 0);
+  const appliedFilters: JobsFilterDraft = {
+    location: locationFilter,
+    mobility: mobilityFilter,
+    workMode: workModeFilter,
+  };
+  const filterCount = countActiveFilters(appliedFilters);
   const narrowed = Boolean(debouncedQ) || filterCount > 0;
 
-  const listHeader = (
-    <>
-      <View style={[styles.header, { paddingTop: insets.top + 14 }]}>
-        <View style={styles.headerTop}>
-          <View style={{ flex: 1, minWidth: 0 }}>
-            <TitleWithStop eyebrow="International jobs" text="Jobs" />
-          </View>
-          <Pressable
-            onPress={() => router.push("/alerts")}
-            style={styles.alertsButton}
-            accessibilityRole="button"
-            accessibilityLabel={ac("Job alerts")}
-          >
-            <Ionicons name="notifications-outline" size={22} color={colors.navy} />
-          </Pressable>
-        </View>
-        <View style={styles.searchRow}>
-          <DepthSurface
-            depth={4}
-            radius={18}
-            borderWidth={2}
-            borderColor={colors.navy}
-            style={styles.searchWrap}
-            innerStyle={styles.searchCapsule}
-          >
-            <Ionicons name="search" size={20} color={colors.navy} style={styles.heroSearchIcon} />
-            <TextInput
-              style={styles.heroSearchInput}
-              placeholder={
-                feedTab === "direct"
-                  ? t("jobsSearchDirect")
-                  : feedTab === "connected"
-                    ? t("jobsSearchConnected")
-                    : t("jobsSearchExternal")
-              }
-              placeholderTextColor={colors.placeholder}
-              value={q}
-              onChangeText={setQ}
-              autoCapitalize="none"
-              autoCorrect={false}
-              returnKeyType="search"
-              accessibilityLabel={t("jobsSearch")}
-            />
-            {q.length > 0 ? (
-              <Pressable
-                onPress={() => setQ("")}
-                hitSlop={12}
-                accessibilityRole="button"
-                accessibilityLabel={t("jobsClear")}
-              >
-                <Ionicons name="close-circle" size={20} color={colors.textMuted} />
-              </Pressable>
-            ) : null}
-          </DepthSurface>
-          <DepthPressable
-            onPress={() => setTopicsModalOpen(true)}
-            face={colors.navy}
-            depthColor={colors.navyDeep}
-            depth={4}
-            radius={18}
-            accessibilityLabel={t("jobsOpenFilters")}
-            innerStyle={styles.filterButton}
-          >
-            <Ionicons name="options-outline" size={22} color={colors.cyan} />
-            {filterCount > 0 ? (
-              <View style={styles.filterBadge}>
-                <Text style={styles.filterBadgeText}>{filterCount}</Text>
-              </View>
-            ) : null}
-          </DepthPressable>
-        </View>
-      </View>
+  const previewCount =
+    draftPreviewQuery.data && typeof draftPreviewQuery.data.total === "number"
+      ? draftPreviewQuery.data.total
+      : null;
 
-      {/* ── Feed controls ── */}
-      <View style={styles.feedControls}>
-        <View style={styles.segmentHost}>
-          <Pressable
-            style={[
-              styles.segmentCell,
-              feedTab === "direct" && styles.segmentCellOn,
-            ]}
-            onPress={() => {
-              setFeedTab("direct");
-            }}
-            accessibilityRole="button"
-            accessibilityState={{ selected: feedTab === "direct" }}
-          >
-            <Text
-              style={[
-                styles.segmentText,
-                feedTab === "direct" && styles.segmentTextOn,
-              ]}
-            >
-              {t("jobsDirectTab")}
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.segmentCell,
-              feedTab === "connected" && styles.segmentCellOn,
-            ]}
-            onPress={() => {
-              setFeedTab("connected");
-            }}
-            accessibilityRole="button"
-            accessibilityState={{ selected: feedTab === "connected" }}
-          >
-            <Text
-              style={[
-                styles.segmentText,
-                feedTab === "connected" && styles.segmentTextOn,
-              ]}
-            >
-              {t("jobsConnectedTab")}
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.segmentCell,
-              feedTab === "curated" && styles.segmentCellOnCurated,
-            ]}
-            onPress={() => {
-              setFeedTab("curated");
-            }}
-            accessibilityRole="button"
-            accessibilityState={{ selected: feedTab === "curated" }}
-          >
-            <Text
-              style={[
-                styles.segmentText,
-                feedTab === "curated" && styles.segmentTextOnCurated,
-              ]}
-            >
-              {t("jobsExternalTab")}
-            </Text>
-          </Pressable>
-        </View>
-        {signedIn && feedTab === "direct" && hubJobs.length > 1 ? (
-          <View>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
-            >
-              <Pressable
-                style={[styles.compatibilityOrder, { flex: 1, minHeight: 44 }]}
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked: compatibilityFirstEnabled }}
-                onPress={() => {
-                  const next = !compatibilityFirstEnabled;
-                  setCompatibilityFirstEnabled(next);
-                  void AsyncStorage.setItem(
-                    COMPATIBILITY_ORDER_KEY,
-                    next ? "1" : "0",
-                  );
-                }}
-              >
-                <Ionicons
-                  name={
-                    compatibilityFirstEnabled
-                      ? "checkmark-circle"
-                      : "ellipse-outline"
-                  }
-                  size={18}
-                  color={colors.navy}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.compatibilityOrderTitle}>
-                    {t("jobsSort")}
-                  </Text>
-                  {/* no roles are hidden */}
-                </View>
-              </Pressable>
-              <Pressable
-                onPress={() => setSortHelpOpen((v) => !v)}
-                accessibilityRole="button"
-                accessibilityLabel={t("jobsSortHelp")}
-                accessibilityState={{ expanded: sortHelpOpen }}
-                style={{
-                  minWidth: 44,
-                  minHeight: 44,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Ionicons
-                  name="help-circle-outline"
-                  size={21}
-                  color={colors.navy}
-                />
-              </Pressable>
-            </View>
-            {sortHelpOpen ? (
-              <Text
-                style={[
-                  styles.compatibilityOrderHint,
-                  { paddingHorizontal: 12, paddingBottom: 10 },
-                ]}
-              >
-                {t("jobsSortBody")}
-              </Text>
-            ) : null}
-          </View>
-        ) : null}
-      </View>
+  const openFilters = useCallback(() => {
+    setDraft({
+      location: locationFilter,
+      mobility: mobilityFilter,
+      workMode: workModeFilter,
+    });
+    setFilterOpen(true);
+  }, [locationFilter, mobilityFilter, workModeFilter]);
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.pillFilterScroll}
-      >
-        {(
-          [
-            {
-              id: "remote",
-              label: t("jobsPillRemote"),
-              active: workModeFilter === "remote",
-              onPress: () =>
-                setWorkModeFilter((v) => (v === "remote" ? "" : "remote")),
-            },
-            {
-              id: "hybrid",
-              label: t("jobsPillHybrid"),
-              active: workModeFilter === "hybrid",
-              onPress: () =>
-                setWorkModeFilter((v) => (v === "hybrid" ? "" : "hybrid")),
-            },
-            {
-              id: "sponsorship",
-              label: t("jobsPillSponsorship"),
-              active: mobilityFilter === "Visa Sponsorship",
-              onPress: () =>
-                setMobilityFilter((v) =>
-                  v === "Visa Sponsorship" ? "" : "Visa Sponsorship",
-                ),
-            },
-            {
-              id: "relocation",
-              label: t("jobsPillRelocation"),
-              active: mobilityFilter === "Relocation Support",
-              onPress: () =>
-                setMobilityFilter((v) =>
-                  v === "Relocation Support" ? "" : "Relocation Support",
-                ),
-            },
-            {
-              id: "entry",
-              label: t("jobsPillEntry"),
-              active: experienceFilter === "Entry Level",
-              onPress: () =>
-                setExperienceFilter((v) =>
-                  v === "Entry Level" ? "" : "Entry Level",
-                ),
-            },
-            {
-              id: "abroad",
-              label: t("jobsPillAbroad"),
-              active: mobilityFilter === "Open to applicants from abroad",
-              onPress: () =>
-                setMobilityFilter((v) =>
-                  v === "Open to applicants from abroad"
-                    ? ""
-                    : "Open to applicants from abroad",
-                ),
-            },
-          ] as const
-        ).map((pill) => (
-          <BrandChip
-            key={pill.id}
-            label={pill.label}
-            selected={pill.active}
-            onPress={() => {
-              pill.onPress();
-            }}
-          />
-        ))}
-      </ScrollView>
+  const clearFiltersOnly = useCallback(() => {
+    setLocationFilter("");
+    setMobilityFilter("");
+    setWorkModeFilter("");
+    setVisaRouteFilter("");
+    setDraft({ location: "", mobility: "", workMode: "" });
+  }, []);
 
-      {activeStructuredFilters.length > 0 ? (
-        <View style={styles.activeFiltersOuter}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.recentScroll}
-          >
-            {activeStructuredFilters.map(({ id, label }) => (
-              <Pressable
-                key={id}
-                style={styles.recentChip}
-                onPress={() => {
-                  if (id === "workMode") setWorkModeFilter("");
-                  if (id === "mobility") setMobilityFilter("");
-                  if (id === "visa") setVisaRouteFilter("");
-                  if (id === "experience") setExperienceFilter("");
-                }}
-                accessibilityRole="button"
-              >
-                <Ionicons
-                  name="checkmark-circle-outline"
-                  size={12}
-                  color={colors.navy}
-                />
-                <Text style={styles.recentChipText} numberOfLines={1}>
-                  {label}
-                </Text>
-                <Ionicons name="close" size={12} color={colors.textMuted} />
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-      ) : null}
+  const clearAllFilters = useCallback(() => {
+    setQ("");
+    clearFiltersOnly();
+  }, [clearFiltersOnly]);
 
-      {/* ── Recent searches ── */}
-      {recent.length > 0 ? (
-        <View style={styles.recentOuter}>
-          <Text style={styles.recentLabel}>{t("jobsRecent")}</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.recentScroll}
-          >
-            {recent.map((term) => (
-              <Pressable
-                key={term}
-                style={styles.recentChip}
-                onPress={() => setQ(term)}
-                accessibilityRole="button"
-              >
-                <Ionicons
-                  name="time-outline"
-                  size={12}
-                  color={colors.textMuted}
-                />
-                <Text style={styles.recentChipText} numberOfLines={1}>
-                  {term}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-      ) : null}
+  const applyDraft = useCallback(() => {
+    setLocationFilter(draft.location);
+    setMobilityFilter(draft.mobility);
+    setWorkModeFilter(draft.workMode);
+    setFilterOpen(false);
+  }, [draft]);
 
-      <View style={styles.listHeadingWrap}>
+  const workModeChipLabel =
+    workModeFilter === "remote"
+      ? "Remote"
+      : workModeFilter === "hybrid"
+        ? "Hybrid"
+        : workModeFilter === "onsite"
+          ? "On-site"
+          : "Work mode";
+
+  const countryChipLabel = locationFilter.trim() || "Country";
+
+  const locationSuffix = locationFilter.trim()
+    ? ` in ${locationFilter.trim()}`
+    : " everywhere";
+
+  const toggleSort = () =>
+    setSortMode((s) => (s === "newest" ? "salary" : "newest"));
+
+  const listData: ListRow[] = useMemo(() => {
+    const head: ListRow[] = [{ kind: "search" }, { kind: "meta" }];
+    if (activeError || listBootloading) return head;
+    return [
+      ...head,
+      ...listRows.map((job) => ({
+        kind: "job" as const,
+        job,
+        lane: shownLane,
+      })),
+    ];
+  }, [activeError, listBootloading, listRows, shownLane]);
+
+  const header = (
+    <View style={[styles.header, { paddingTop: insets.top + 26 }]}>
+      <View style={styles.headerTop}>
         <View style={{ flex: 1, minWidth: 0 }}>
-          {showingFallback ? (
-            <Text style={styles.externalBanner}>{ac("Now showing external roles")}</Text>
-          ) : null}
-          {resultCount != null ? (
-            <Text style={styles.countLine}>
-              <Text style={styles.countNumber}>{new Intl.NumberFormat(intlLocale).format(resultCount)}</Text>{" "}
-              {showingFallback
-                ? ac("external roles")
-                : resultCount === 1
-                  ? ac("role")
-                  : ac("roles")}
-            </Text>
-          ) : null}
-          <Text style={styles.laneDesc}>
-            {showingFallback
-              ? ac("Nothing matched in this section, so these roles open on the employer’s site.")
-              : shownLane === "direct"
-              ? t("jobsDirectDesc")
-              : shownLane === "connected"
-                ? t("jobsConnectedDesc")
-                : t("jobsExternalDesc")}
-          </Text>
+          <TitleWithStop eyebrow="International jobs" text="Jobs" />
         </View>
         <Pressable
-          onPress={() => setListingInfoOpen(true)}
-          hitSlop={10}
-          style={styles.listInfoBtn}
+          onPress={() => router.push("/alerts")}
+          style={styles.alertsButton}
           accessibilityRole="button"
-          accessibilityLabel={t("jobsInfo")}
+          accessibilityLabel="Job alerts"
         >
-          <Ionicons name="information-circle" size={22} color={colors.navy} />
+          <Icon name="bell-ring" size={22} color={colors.navy} strokeWidth={1.8} />
         </Pressable>
       </View>
-      {showingFallback ? (
-        <View style={styles.fallbackNote}>
-          <View style={styles.fallbackIcon}>
-            <Ionicons name="open-outline" size={18} color={colors.navy} />
-          </View>
-          <View style={{ flex: 1, minWidth: 0 }}>
-            <Text style={styles.fallbackTitle}>
-              {feedTab === "direct"
-                ? ac("No roles you can apply for here")
-                : ac("No connected employer roles match")}
-            </Text>
-            <Text style={styles.fallbackBody}>
-              {ac("This list is now external roles. You apply on the employer’s site, not in the app.")}
-              {feedTab === "direct" && visaRouteFilter
-                ? ` ${ac("The visa route filter only applies to direct roles.")}`
-                : ""}
-            </Text>
-          </View>
-        </View>
-      ) : null}
-    </>
+
+      <View style={styles.segmentTrack}>
+        {(
+          [
+            { id: "direct" as const, label: t("jobsDirectTab") },
+            { id: "connected" as const, label: t("jobsConnectedTab") },
+            { id: "curated" as const, label: t("jobsExternalTab") },
+          ] as const
+        ).map((opt) => {
+          const on = feedTab === opt.id;
+          return (
+            <Pressable
+              key={opt.id}
+              onPress={() => setFeedTab(opt.id)}
+              style={[styles.segment, on && styles.segmentOn]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: on }}
+            >
+              <Text style={[styles.segmentText, on && styles.segmentTextOn]}>
+                {opt.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
   );
 
-  const emptyBody = listBootloading ? (
-    <View style={styles.skeletonList}>
-      <JobCardSkeleton />
-      <JobCardSkeleton />
-      <JobCardSkeleton />
+  const renderSearch = () => (
+    <View style={styles.stickyBlock}>
+      <View style={styles.searchRow}>
+        <View style={styles.searchPill}>
+          <Icon name="search" size={20} color={colors.text2} strokeWidth={1.8} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Job title, skill or company"
+            placeholderTextColor={colors.muted}
+            value={q}
+            onChangeText={setQ}
+            autoCapitalize="none"
+            autoCorrect={false}
+            returnKeyType="search"
+            accessibilityLabel="Search jobs"
+          />
+          {q.length > 0 ? (
+            <Pressable
+              onPress={() => setQ("")}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Clear search"
+              style={styles.clearSearchHit}
+            >
+              <Icon name="x" size={18} color={colors.muted} strokeWidth={1.8} />
+            </Pressable>
+          ) : null}
+        </View>
+        <Pressable
+          onPress={openFilters}
+          style={styles.filterBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Filters"
+        >
+          <Icon name="sliders-horizontal" size={22} color={colors.white} strokeWidth={1.8} />
+          {filterCount > 0 ? (
+            <View style={styles.filterBadge}>
+              <Text style={styles.filterBadgeText}>{filterCount}</Text>
+            </View>
+          ) : null}
+        </Pressable>
+      </View>
     </View>
-  ) : activeError ? (
-    <BrandStatePanel
-      icon="cloud-offline-outline"
-      title={t("jobsError")}
-      body={t("newsErrorHelp")}
-      primary={{
-        label: t("retry"),
-        icon: "refresh",
-        onPress: () =>
-          void (feedTab === "direct"
-            ? hubJobsQuery.refetch()
-            : feedTab === "connected"
-              ? connectedJobsQuery.refetch()
-              : curatedJobsQuery.refetch()),
-      }}
-      style={styles.statePanel}
-    />
-  ) : listRows.length === 0 ? (
-    <BrandStatePanel
-      icon={narrowed ? "search-outline" : "briefcase-outline"}
-      title={narrowed ? t("jobsNoMatches") : t("jobsEmpty")}
-      body={
-        narrowed
-          ? ac("Try a different word, or clear your filters.")
-          : ac("New roles are added every week. Set up an alert and we'll tell you.")
-      }
-      primary={
-        narrowed
-          ? {
-              label: t("jobsClear"),
-              icon: "close",
-              onPress: () => {
-                setQ("");
-                setLocationFilter("");
-                setMobilityFilter("");
-                setExperienceFilter("");
-                setWorkModeFilter("");
-                setVisaRouteFilter("");
+  );
+
+  const renderMeta = () => (
+    <View style={styles.metaBlock}>
+      <View style={styles.chipFadeHost}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.chipRow}
+        >
+          {(
+            [
+              {
+                id: "visa",
+                label: "Visa sponsorship",
+                active: mobilityFilter === "Visa Sponsorship",
+                onPress: () =>
+                  setMobilityFilter((v) =>
+                    v === "Visa Sponsorship" ? "" : "Visa Sponsorship",
+                  ),
               },
-            }
-          : { label: ac("Set up a job alert"), icon: "notifications-outline", onPress: () => router.push("/alerts") }
-      }
-      secondary={
-        narrowed
-          ? { label: ac("Set up a job alert"), onPress: () => router.push("/alerts") }
-          : feedTab === "direct"
-          ? {
-              label: t("jobsTryExternal"),
-              onPress: () => {
-                setFeedTab("curated");
+              {
+                id: "relocation",
+                label: "Relocation support",
+                active: mobilityFilter === "Relocation Support",
+                onPress: () =>
+                  setMobilityFilter((v) =>
+                    v === "Relocation Support" ? "" : "Relocation Support",
+                  ),
               },
-            }
-          : undefined
-      }
-      style={styles.statePanel}
-    />
-  ) : null;
+              {
+                id: "remote",
+                label: "Global remote",
+                active: workModeFilter === "remote",
+                onPress: () =>
+                  setWorkModeFilter((v) => (v === "remote" ? "" : "remote")),
+              },
+            ] as const
+          ).map((chip) => (
+            <Pressable
+              key={chip.id}
+              onPress={chip.onPress}
+              style={[styles.quickChip, chip.active && styles.quickChipOn]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: chip.active }}
+            >
+              <Text
+                style={[
+                  styles.quickChipText,
+                  chip.active && styles.quickChipTextOn,
+                ]}
+              >
+                {chip.label}
+              </Text>
+            </Pressable>
+          ))}
+          <Pressable
+            onPress={openFilters}
+            style={[
+              styles.quickChip,
+              Boolean(locationFilter.trim()) && styles.quickChipOn,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Country"
+          >
+            <Text
+              style={[
+                styles.quickChipText,
+                Boolean(locationFilter.trim()) && styles.quickChipTextOn,
+              ]}
+              numberOfLines={1}
+            >
+              {countryChipLabel}
+            </Text>
+            <Icon
+              name="chevron-down"
+              size={16}
+              color={locationFilter.trim() ? colors.white : colors.navy}
+              strokeWidth={1.8}
+            />
+          </Pressable>
+          <Pressable
+            onPress={openFilters}
+            style={[
+              styles.quickChip,
+              Boolean(workModeFilter) && styles.quickChipOn,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Work mode"
+          >
+            <Text
+              style={[
+                styles.quickChipText,
+                Boolean(workModeFilter) && styles.quickChipTextOn,
+              ]}
+              numberOfLines={1}
+            >
+              {workModeChipLabel}
+            </Text>
+            <Icon
+              name="chevron-down"
+              size={16}
+              color={workModeFilter ? colors.white : colors.navy}
+              strokeWidth={1.8}
+            />
+          </Pressable>
+        </ScrollView>
+        <LinearGradient
+          pointerEvents="none"
+          colors={["rgba(243,245,249,0)", "#f3f5f9"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.chipFade}
+        />
+      </View>
+
+      <View style={styles.resultsRow}>
+        <View style={styles.resultsTextWrap}>
+          {resultCount != null ? (
+            <Text style={styles.resultsLine}>
+              <Text style={styles.resultsCount}>
+                {resultCount === 1
+                  ? "1 role"
+                  : `${new Intl.NumberFormat(intlLocale).format(resultCount)} roles`}
+              </Text>
+              <Text style={styles.resultsWhere}>{locationSuffix}</Text>
+            </Text>
+          ) : null}
+          {showingFallback ? (
+            <Text style={styles.fallbackHint}>
+              {ac("Now showing external roles")}
+            </Text>
+          ) : null}
+        </View>
+        <Pressable
+          onPress={toggleSort}
+          style={styles.sortHit}
+          accessibilityRole="button"
+          accessibilityLabel={
+            sortMode === "newest" ? "Newest" : "Highest salary"
+          }
+        >
+          <Text style={styles.sortText}>
+            {sortMode === "newest" ? "Newest" : "Highest salary"}
+          </Text>
+          <Icon name="chevron-down" size={16} color={colors.navy} strokeWidth={1.8} />
+        </Pressable>
+      </View>
+
+      {listBootloading ? (
+        <View style={styles.skeletonList}>
+          <JobCardSkeleton />
+          <JobCardSkeleton />
+          <JobCardSkeleton />
+        </View>
+      ) : null}
+
+      {activeError ? (
+        <View style={styles.errorWrap}>
+          <Text style={styles.emptyTitle}>{t("jobsError")}</Text>
+          <Text style={styles.emptyBody}>{t("newsErrorHelp")}</Text>
+          <DepthButton
+            title={t("retry")}
+            onPress={() => void laneQuery.refetch()}
+            variant="navy"
+            size="md"
+            icon={null}
+          />
+        </View>
+      ) : null}
+
+      {!listBootloading && !activeError && listRows.length === 0 ? (
+        <View style={styles.emptyWrap}>
+          <View style={styles.emptyTile}>
+            <Icon name="search" size={26} color={colors.text2} strokeWidth={1.8} />
+          </View>
+          <Text style={styles.emptyTitle}>No roles match yet</Text>
+          <Text style={styles.emptyBody}>
+            Try fewer filters or a different search.
+          </Text>
+          {narrowed ? (
+            <Pressable
+              onPress={clearAllFilters}
+              style={styles.ghostHit}
+              accessibilityRole="button"
+              accessibilityLabel="Clear all filters"
+            >
+              <Text style={styles.ghostText}>Clear all filters</Text>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
+    </View>
+  );
 
   return (
     <GshScreenShell constrainTabletWidth style={styles.shell}>
       <FlatList
-        data={activeError ? [] : listRows}
-        keyExtractor={(item) => item._id}
-        ListHeaderComponent={listHeader}
-        ListEmptyComponent={emptyBody}
+        data={listData}
+        keyExtractor={(item, index) => {
+          if (item.kind === "search") return "search";
+          if (item.kind === "meta") return "meta";
+          return item.job._id || `job-${index}`;
+        }}
+        stickyHeaderIndices={[0]}
+        ListHeaderComponent={header}
         style={styles.listFlex}
         refreshControl={
           <RefreshControl
@@ -980,85 +756,81 @@ export default function JobsTabScreen() {
             tintColor="#0d194e"
           />
         }
-        contentContainerStyle={[
-          styles.listPad,
-          { paddingBottom: tabBarBottomPadding(insets.bottom) },
-          listRows.length === 0 && !listBootloading && styles.listPadGrow,
-        ]}
+        contentContainerStyle={{
+          paddingBottom: tabBarBottomPadding(insets.bottom),
+        }}
         keyboardShouldPersistTaps="handled"
-        renderItem={({ item, index }) => (
-          <RiseIn delay={listStaggerDelay(index)} style={styles.listRow}>
-            {shownLane === "direct" ? (
-              <HubJobCard
-                job={item as Job}
-                onPress={() => router.push(`/job/${(item as Job)._id}`)}
-                savedRowId={savedJobIdByListingId.get((item as Job)._id)}
-                bookmarkLoading={
-                  (saveJobMut.isPending &&
-                    saveJobMut.variables === (item as Job)._id) ||
-                  (unsaveJobMut.isPending &&
-                    unsaveJobMut.variables ===
-                      savedJobIdByListingId.get((item as Job)._id))
+        renderItem={({ item, index }) => {
+          if (item.kind === "search") return renderSearch();
+          if (item.kind === "meta") return renderMeta();
+
+          const fields =
+            item.lane === "direct"
+              ? jobCardFieldsFromJob(item.job as Job, locale)
+              : jobCardFieldsFromExternal(
+                  item.job as ExternalJobListingPublic,
+                  locale,
+                );
+          const jobId = item.job._id;
+          const savedRowId = savedJobIdByListingId.get(jobId);
+          const cardIndex = Math.max(0, index - 2);
+
+          return (
+            <View style={styles.listRow}>
+              <JobCard
+                index={cardIndex}
+                title={fields.title}
+                company={fields.company}
+                logoUrl={fields.logoUrl}
+                countryIso2={fields.countryIso2}
+                countryLabel={fields.countryLabel}
+                remote={fields.remote}
+                salaryLabel={fields.salaryLabel}
+                visaSponsorship={fields.visaSponsorship}
+                relocationSupport={fields.relocationSupport}
+                remoteTag={fields.remoteTag}
+                jobType={fields.jobType}
+                postedLabel={fields.postedLabel}
+                saved={Boolean(savedRowId)}
+                onPress={() => router.push(fields.href as never)}
+                onToggleSave={
+                  item.lane === "direct"
+                    ? () => {
+                        if (!signedIn) {
+                          openSignIn("/(tabs)/jobs", {
+                            kind: "save_job",
+                            targetId: jobId,
+                          });
+                          return;
+                        }
+                        if (savedRowId) unsaveJobMut.mutate(savedRowId);
+                        else saveJobMut.mutate(jobId);
+                      }
+                    : undefined
                 }
-                onToggleBookmark={() => {
-                  const j = item as Job;
-                  if (!signedIn) {
-                    openSignIn("/(tabs)/jobs", { kind: "save_job", targetId: j._id });
-                    return;
-                  }
-                  const sid = savedJobIdByListingId.get(j._id);
-                  if (sid) unsaveJobMut.mutate(sid);
-                  else saveJobMut.mutate(j._id);
-                }}
-                compatibility={compatibilityByJobId[(item as Job)._id]}
               />
-            ) : (
-              <CuratedExternalJobCard
-                job={item as ExternalJobListingPublic}
-                onPress={() =>
-                  router.push(
-                    `/external-job/${(item as ExternalJobListingPublic)._id}`,
-                  )
-                }
-              />
-            )}
-          </RiseIn>
-        )}
+            </View>
+          );
+        }}
         onEndReached={loadNextPage}
         onEndReachedThreshold={0.4}
         ListFooterComponent={
           activeFetchingNextPage ? (
             <View style={styles.paginationLoader}>
               <ActivityIndicator color={colors.navy} />
-              <Text style={styles.paginationLoaderText}>
-                {t("jobsLoadingMore")}
-              </Text>
             </View>
           ) : null
         }
       />
 
-      <DiscoverTopicsFilterModal
-        visible={topicsModalOpen}
-        onClose={() => setTopicsModalOpen(false)}
-        query={q}
-        location={locationFilter}
-        workModeFilter={workModeFilter}
-        onPickWorkMode={setWorkModeFilter}
-        mobilityFilter={mobilityFilter}
-        visaRouteFilter={visaRouteFilter}
-        onPickExplore={setQ}
-        onPickCountry={setLocationFilter}
-        onPickMobilityFilter={setMobilityFilter}
-        onPickVisaRoute={(route) => {
-          setFeedTab("direct");
-          setVisaRouteFilter(route);
-        }}
-      />
-      <DiscoverListingInfoModal
-        visible={listingInfoOpen}
-        onClose={() => setListingInfoOpen(false)}
-        feedTab={feedTab}
+      <JobsFilterSheet
+        visible={filterOpen}
+        onClose={() => setFilterOpen(false)}
+        draft={draft}
+        onChangeDraft={setDraft}
+        onClearAll={clearFiltersOnly}
+        onShow={applyDraft}
+        resultCount={previewCount}
       />
     </GshScreenShell>
   );
@@ -1069,9 +841,8 @@ const styles = StyleSheet.create({
   listFlex: { flex: 1 },
   header: {
     backgroundColor: colors.panel,
-    paddingHorizontal: 20,
-    paddingBottom: 14,
-    overflow: "hidden",
+    paddingHorizontal: 16,
+    paddingBottom: 8,
   },
   headerTop: {
     flexDirection: "row",
@@ -1083,396 +854,231 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.white,
+    ...shadows.card,
   },
-  alertsText: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.navy },
-  searchRow: {
+  segmentTrack: {
     marginTop: 16,
+    backgroundColor: "#e9ecf3",
+    borderRadius: 14,
+    padding: 4,
+    flexDirection: "row",
+    gap: 4,
+  },
+  segment: {
+    flex: 1,
+    height: 44,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  segmentOn: {
+    backgroundColor: colors.white,
+    shadowColor: "#0d194e",
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 2,
+  },
+  segmentText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    color: colors.text2,
+    textAlign: "center",
+  },
+  segmentTextOn: { color: colors.navy },
+  stickyBlock: {
+    backgroundColor: colors.panel,
+    paddingTop: 12,
+    paddingBottom: 2,
+    paddingHorizontal: 16,
+  },
+  searchRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
   },
-  searchWrap: { flex: 1, minWidth: 0 },
-  searchCapsule: {
+  searchPill: {
+    flex: 1,
+    minWidth: 0,
+    height: 56,
+    borderRadius: 999,
+    backgroundColor: colors.white,
+    paddingHorizontal: 18,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 14,
-    minHeight: 52,
+    gap: 10,
+    ...shadows.card,
   },
-  filterButton: {
+  searchInput: {
+    flex: 1,
+    minWidth: 0,
+    fontFamily: fontFamily.medium,
+    fontSize: 16,
+    color: colors.navy,
+    paddingVertical: 0,
+  },
+  clearSearchHit: {
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  filterBtn: {
     width: 56,
-    height: 52,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
   },
   filterBadge: {
     position: "absolute",
-    top: 6,
-    right: 6,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
+    top: -2,
+    right: -2,
+    minWidth: 22,
+    height: 22,
+    borderRadius: 11,
     paddingHorizontal: 4,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.cyan,
+    borderWidth: 2,
+    borderColor: colors.panel,
     alignItems: "center",
     justifyContent: "center",
   },
   filterBadgeText: {
-    fontSize: 11,
-    fontFamily: fontFamily.extraBold,
+    fontFamily: fontFamily.bold,
+    fontSize: 12,
     color: colors.navy,
   },
-  statePanel: { marginHorizontal: 16, marginTop: 12 },
-  heroSearchIcon: { marginRight: 8 },
-  heroSearchInput: {
-    flex: 1,
-    minWidth: 0,
-    minHeight: 48,
-    paddingVertical: 12,
-    fontSize: 16,
-    fontFamily: fontFamily.regular,
-    color: colors.navy,
+  metaBlock: {
+    backgroundColor: colors.panel,
+    paddingBottom: 8,
   },
-  feedControls: {
+  chipFadeHost: { position: "relative" },
+  chipRow: {
+    paddingHorizontal: 16,
     paddingTop: 12,
-    paddingBottom: 4,
-    paddingHorizontal: 16,
-  },
-  pillFilterScroll: {
+    paddingBottom: 8,
     gap: 8,
-    paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 6,
-  },
-  compatibilityOrder: {
-    minHeight: 52,
     flexDirection: "row",
     alignItems: "center",
-    gap: 9,
-    marginTop: 10,
-    padding: 10,
-    borderRadius: 16,
-    backgroundColor: colors.pale,
   },
-  compatibilityOrderTitle: {
-    fontSize: 13,
-    fontFamily: fontFamily.bold,
+  chipFade: {
+    position: "absolute",
+    top: 12,
+    right: 0,
+    bottom: 8,
+    width: 32,
+  },
+  quickChip: {
+    height: 44,
+    borderRadius: 999,
+    paddingHorizontal: 16,
+    backgroundColor: colors.white,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    ...shadows.card,
+  },
+  quickChipOn: { backgroundColor: colors.navy },
+  quickChipText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
     color: colors.navy,
   },
-  compatibilityOrderHint: {
-    marginTop: 2,
-    fontSize: 11,
-    lineHeight: 15,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-  },
-  activeFiltersOuter: { paddingTop: 8, paddingHorizontal: 16 },
-  segmentHost: {
+  quickChipTextOn: { color: colors.white },
+  resultsRow: {
+    marginTop: 4,
+    paddingHorizontal: 16,
     flexDirection: "row",
-    backgroundColor: colors.pale,
-    borderRadius: 16,
-    padding: 4,
-    borderWidth: 2,
-    borderColor: colors.navy,
+    alignItems: "center",
+    gap: 10,
   },
-  segmentCell: {
-    flex: 1,
-    minHeight: 44,
-    paddingVertical: 9,
+  resultsTextWrap: { flex: 1, minWidth: 0 },
+  resultsLine: {
+    fontFamily: fontFamily.medium,
+    fontSize: 15,
+    color: colors.text2,
+  },
+  resultsCount: {
+    fontFamily: fontFamily.bold,
+    fontSize: 16,
+    color: colors.navy,
+  },
+  resultsWhere: {
+    fontFamily: fontFamily.medium,
+    fontSize: 15,
+    color: colors.text2,
+  },
+  fallbackHint: {
+    marginTop: 2,
+    fontFamily: fontFamily.medium,
+    fontSize: 13,
+    color: colors.muted,
+  },
+  sortHit: {
+    height: 44,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
     paddingHorizontal: 4,
+  },
+  sortText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    color: colors.navy,
+  },
+  listRow: { paddingHorizontal: 16 },
+  skeletonList: { paddingHorizontal: 16, paddingTop: 12 },
+  paginationLoader: { paddingVertical: 22, alignItems: "center" },
+  emptyWrap: {
+    alignItems: "center",
+    paddingHorizontal: 24,
+    paddingTop: 28,
+    paddingBottom: 16,
+    gap: 10,
+  },
+  emptyTile: {
+    width: 64,
+    height: 64,
+    borderRadius: 22,
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 12,
+    ...shadows.card,
   },
-  segmentCellOn: { backgroundColor: colors.navy },
-  segmentCellOnCurated: { backgroundColor: colors.navy },
-  segmentText: {
-    fontSize: 13,
-    fontFamily: fontFamily.bold,
-    color: "rgba(13,25,78,0.6)",
+  emptyTitle: {
+    fontFamily: fontFamily.heading,
+    fontSize: 18,
+    color: colors.navy,
     textAlign: "center",
   },
-  segmentTextOn: { fontFamily: fontFamily.extraBold, color: colors.cyan },
-  segmentTextOnCurated: { fontFamily: fontFamily.extraBold, color: colors.cyan },
-
-  // Recent
-  recentOuter: { paddingTop: 12, paddingHorizontal: 16 },
-  recentLabel: {
-    fontSize: 11,
-    fontFamily: fontFamily.semiBold,
-    color: colors.textMuted,
-    letterSpacing: 0.4,
-    marginBottom: 8,
+  emptyBody: {
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.text2,
+    textAlign: "center",
   },
-  recentScroll: { gap: 8, paddingBottom: 4 },
-  recentChip: {
-    minHeight: 40,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-    borderRadius: radii.pill,
-    backgroundColor: colors.white,
-    borderWidth: 2,
-    borderColor: colors.border,
-  },
-  recentChipText: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-    maxWidth: 160,
-  },
-
-  listHeadingWrap: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 14,
-    gap: 8,
-  },
-  externalBanner: {
-    alignSelf: "flex-start",
-    marginBottom: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 999,
-    backgroundColor: "#0d194e",
-    color: "#ffffff",
-    fontFamily: fontFamily.extraBold,
-    fontSize: 11,
-    letterSpacing: 0.4,
-    overflow: "hidden",
-  },
-  countLine: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textMuted },
-  countNumber: { fontSize: 16, fontFamily: fontFamily.headingStrong, color: colors.navy },
-  laneDesc: { marginTop: 2, fontSize: 12, lineHeight: 17, fontFamily: fontFamily.regular, color: colors.textMuted },
-  listInfoBtn: {
-    minWidth: 44,
+  ghostHit: {
     minHeight: 44,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 12,
   },
-
-  /** No horizontal pad here — hero is full-bleed like Home; rows use listRow. */
-  listPad: { gap: 18 },
-  listRow: { paddingHorizontal: 16 },
-  listPadGrow: { flexGrow: 1 },
-  fallbackNote: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 12,
-    marginHorizontal: 16,
-    marginTop: 12,
-    padding: 14,
-    borderRadius: 16,
-    backgroundColor: colors.pale,
-    borderWidth: 2,
-    borderColor: colors.navy,
-  },
-  fallbackIcon: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: colors.panel,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  fallbackTitle: {
+  ghostText: {
+    fontFamily: fontFamily.semiBold,
     fontSize: 15,
-    fontFamily: fontFamily.heading,
     color: colors.navy,
+    textDecorationLine: "underline",
   },
-  fallbackBody: {
-    marginTop: 3,
-    fontSize: 13,
-    lineHeight: 19,
-    fontFamily: fontFamily.regular,
-    color: colors.textSecondary,
-  },
-  paginationLoader: { paddingVertical: 22, alignItems: "center", gap: 8 },
-  paginationLoaderText: {
-    fontSize: 12,
-    fontFamily: fontFamily.semiBold,
-    color: colors.textMuted,
-  },
-  card: { padding: 16 },
-  bookmarkDisc: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.pale,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  bookmarkDiscOn: { backgroundColor: colors.navy },
-  cardMainHit: {
-    flexDirection: "row",
-    alignItems: "flex-start",
+  errorWrap: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
     gap: 12,
-    minWidth: 0,
-  },
-  logoWell: {
-    borderRadius: 16,
-    backgroundColor: colors.pale,
-    padding: 2,
-  },
-  cardAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
     alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
   },
-  cardAvatarText: { fontSize: 18, fontFamily: fontFamily.bold },
-  cardMid: { flex: 1, minWidth: 0 },
-  cardBookmarkHit: {
-    width: 44,
-    height: 44,
-    alignItems: "flex-end",
-    justifyContent: "flex-start",
-    paddingTop: 2,
-  },
-  cardTitle: {
-    fontSize: 17,
-    fontFamily: fontFamily.heading,
-    color: colors.navy,
-    letterSpacing: -0.3,
-    marginTop: 4,
-    marginBottom: 4,
-    lineHeight: 22,
-  },
-  cardCompanyRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    flexWrap: "wrap",
-  },
-  cardCompanyLine: {
-    fontSize: 13,
-    fontFamily: fontFamily.medium,
-    color: colors.textSecondary,
-    flexShrink: 1,
-  },
-  sponsorPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: radii.pill,
-    backgroundColor: colors.brandSoft,
-    maxWidth: "100%",
-  },
-  sponsorPillActive: { backgroundColor: colors.brandSoft },
-  sponsorPillText: {
-    fontSize: 10,
-    fontFamily: fontFamily.semiBold,
-    color: colors.navy,
-    letterSpacing: 0.3,
-    flexShrink: 1,
-  },
-  cardMetaRow: {
-    marginTop: 4,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 4,
-    paddingRight: 4,
-  },
-  cardMetaLine: {
-    flex: 1,
-    fontSize: 13,
-    fontFamily: fontFamily.regular,
-    color: colors.textMuted,
-    lineHeight: 18,
-  },
-  cardSalaryInline: {
-    marginTop: 4,
-    fontSize: 14,
-    fontFamily: fontFamily.semiBold,
-    color: colors.navy,
-  },
-  chipWrap: { marginTop: 12, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 8 },
-  listChip: {
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: radii.pill,
-    maxWidth: "100%",
-  },
-  listChipNavy: { backgroundColor: colors.navy },
-  listChipSponsor: { backgroundColor: "#0d194e" },
-  listChipNoSponsor: { backgroundColor: "#E11D48" },
-  listChipPale: { backgroundColor: colors.pale },
-  listChipRow: { flexDirection: "row", alignItems: "center", gap: 4 },
-  listChipText: { fontSize: 11, fontFamily: fontFamily.bold, color: colors.navy },
-  listChipTextCyan: { color: colors.cyan },
-  listChipTextOn: { color: "#ffffff" },
-  compatibilityBadge: {
-    alignSelf: "flex-start",
-    marginTop: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: radii.pill,
-    backgroundColor: colors.brandSoft,
-    borderWidth: 1,
-    borderColor: "rgba(66,224,227,0.45)",
-  },
-  compatibilityBadgeText: {
-    fontSize: 10,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-  },
-  cardFooter: {
-    marginTop: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingTop: 12,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.border,
-  },
-  easyApplyRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: radii.pill,
-    backgroundColor: "rgba(66,224,227,0.22)",
-  },
-  easyApplyText: {
-    fontSize: 12,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-  },
-  cardFooterEnd: { flexDirection: "row", alignItems: "center", gap: 4 },
-  cardFooterCta: { flexDirection: "row", alignItems: "center", gap: 8 },
-  cardSalary: {
-    fontSize: 15,
-    fontFamily: fontFamily.heading,
-    color: colors.navy,
-    letterSpacing: -0.2,
-    flex: 1,
-    paddingRight: 8,
-  },
-  cardSalarySpacer: { flex: 1 },
-  cardCta: {
-    fontSize: 14,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-  },
-  cardCtaArrow: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.navy,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  // Empty/error
-  skeletonList: { paddingHorizontal: 16, paddingTop: 12, gap: 0 },
 });

@@ -359,9 +359,9 @@ const sheetStyles = StyleSheet.create({
     paddingBottom: 4,
   },
   grabber: {
-    width: 40,
+    width: 36,
     height: 5,
     borderRadius: 3,
-    backgroundColor: "#d5dae6",
+    backgroundColor: "#dfe3ec",
   },
 });
