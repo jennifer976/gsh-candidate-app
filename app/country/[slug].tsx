@@ -71,7 +71,7 @@ export default function CountryHubScreen() {
         <ScrollView contentContainerStyle={styles.pad} showsVerticalScrollIndicator={false}>
           <View style={styles.hero}>
             <View style={styles.heroBadge}>
-              <CountryFlag iso2={country.iso2} width={36} />
+              <CountryFlag iso2={country.iso2} size={28} />
               <Text style={styles.heroCountry}>{ac(country.name)}</Text>
             </View>
             <Text style={styles.heroTitle} accessibilityRole="header">

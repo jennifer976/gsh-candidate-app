@@ -710,7 +710,7 @@ function ProfileScreen() {
               <View style={styles.countryChips}>
                 {targetCountryCodes.map((code) => (
                   <View key={code} style={styles.countryChip}>
-                    <CountryFlag iso2={code.toLowerCase()} width={18} />
+                    <CountryFlag iso2={code.toLowerCase()} size="sm" />
                     <Text style={styles.countryChipText}>{countryDisplayName(code, locale)}</Text>
                   </View>
                 ))}

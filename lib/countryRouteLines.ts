@@ -15,14 +15,12 @@ export const COUNTRY_ROUTE_LINES: Record<string, string> = {
 };
 
 export function countryRouteLine(slug: string): string {
-  if (!ROUTE_LINES_APPROVED) {
-    return COUNTRY_ROUTE_LINES[slug] ? COUNTRY_ROUTE_LINES[slug] : "Country guide";
-  }
+  if (!ROUTE_LINES_APPROVED) return "Country guide";
   return COUNTRY_ROUTE_LINES[slug] ?? "Country guide";
 }
 
-/** While pending approval, only these six may show their route line; others say Country guide. */
+/** Pack rule: route lines only when ROUTE_LINES_APPROVED; otherwise always "Country guide". */
 export function displayRouteLine(slug: string): string {
-  if (ROUTE_LINES_APPROVED) return COUNTRY_ROUTE_LINES[slug] ?? "Country guide";
+  if (!ROUTE_LINES_APPROVED) return "Country guide";
   return COUNTRY_ROUTE_LINES[slug] ?? "Country guide";
 }

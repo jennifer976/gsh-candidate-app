@@ -26,6 +26,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { Icon as TabIcon, type IconName } from "@/components/Icon";
 import {
   isCandidateOnboardingComplete,
 } from "@/lib/candidate-onboarding";
@@ -167,15 +168,12 @@ function useOnboardingGate(token: string | null) {
   return { showOnboarding, onboardingReady };
 }
 
-const TAB_ICONS: Record<
-  (typeof VISIBLE_TABS)[number],
-  { outline: IonName; filled: IonName }
-> = {
-  home: { outline: "home-outline", filled: "home" },
-  jobs: { outline: "briefcase-outline", filled: "briefcase" },
-  saved: { outline: "bookmark-outline", filled: "bookmark" },
-  messages: { outline: "chatbubbles-outline", filled: "chatbubbles" },
-  profile: { outline: "person-outline", filled: "person" },
+const TAB_ICONS: Record<(typeof VISIBLE_TABS)[number], IconName> = {
+  home: "house",
+  jobs: "briefcase-business",
+  saved: "heart",
+  messages: "message-circle",
+  profile: "user",
 };
 
 function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
@@ -212,7 +210,7 @@ function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
                 ? options.title
                 : route.name;
           const focused = index === activeIndex;
-          const icons = TAB_ICONS[route.name as (typeof VISIBLE_TABS)[number]];
+          const iconName = TAB_ICONS[route.name as (typeof VISIBLE_TABS)[number]];
           const badge = options.tabBarBadge;
           const badgeNum =
             typeof badge === "number"
@@ -232,8 +230,7 @@ function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               key={route.key}
               focused={focused}
               label={label}
-              outline={icons.outline}
-              filled={icons.filled}
+              iconName={iconName}
               badge={badge}
               reduceMotion={reduceMotion}
               accessibilityLabel={`${label}, tab, ${index + 1} of ${routes.length}${a11yExtra}`}
@@ -258,8 +255,7 @@ function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 function FloatingTabItem({
   focused,
   label,
-  outline,
-  filled,
+  iconName,
   badge,
   reduceMotion,
   accessibilityLabel,
@@ -267,8 +263,7 @@ function FloatingTabItem({
 }: {
   focused: boolean;
   label: string;
-  outline: IonName;
-  filled: IonName;
+  iconName: IconName;
   badge?: string | number;
   reduceMotion: boolean;
   accessibilityLabel: string;
@@ -304,10 +299,11 @@ function FloatingTabItem({
           style={[floatStyles.pill, pillStyle]}
         />
         <View style={floatStyles.iconWrap}>
-          <Ionicons
-            name={focused ? filled : outline}
+          <TabIcon
+            name={iconName}
             size={22}
-            color={focused ? colors.white : colors.muted}
+            color={focused ? colors.white : "#8a93ad"}
+            strokeWidth={focused ? 2 : 1.8}
           />
           {showBadge ? (
             <View

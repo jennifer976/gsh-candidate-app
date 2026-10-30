@@ -126,10 +126,24 @@ export const shadows = {
   },
   lift: {
     shadowColor: "#0d194e",
-    shadowOpacity: 0.16,
+    shadowOpacity: 0.12,
     shadowRadius: 36,
     shadowOffset: { width: 0, height: 14 },
     elevation: 8,
+  },
+  photo: {
+    shadowColor: "#0d194e",
+    shadowOpacity: 0.22,
+    shadowRadius: 40,
+    shadowOffset: { width: 0, height: 18 },
+    elevation: 12,
+  },
+  chip: {
+    shadowColor: "#0d194e",
+    shadowOpacity: 0.22,
+    shadowRadius: 30,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 10,
   },
 } as const;
 
