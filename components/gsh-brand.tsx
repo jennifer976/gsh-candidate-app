@@ -635,7 +635,7 @@ export function TitleWithStop({
           <Eyebrow>{eyebrow}</Eyebrow>
         </View>
       ) : null}
-      <Text style={type.title}>
+      <Text style={type.title} allowFontScaling>
         {text}
         {tone ? <Text style={{ color: colors.tone }}>{` ${tone}`}</Text> : null}
         {!endsWithPunct ? <Text style={{ color: colors.cyan }}>.</Text> : null}

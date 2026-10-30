@@ -151,9 +151,11 @@ export const type = {
   title: {
     fontFamily: "Montserrat_800ExtraBold",
     fontSize: 34,
-    lineHeight: 36,
+    // Extra line box so Montserrat descenders (e.g. the g in Messages) are not clipped.
+    lineHeight: 42,
     letterSpacing: -1.2,
     color: "#0d194e",
+    paddingBottom: 2,
   } satisfies TextStyle,
   section: {
     fontFamily: "Montserrat_800ExtraBold",

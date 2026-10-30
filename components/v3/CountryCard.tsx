@@ -13,8 +13,11 @@ import { EASE, useReduceMotion } from "@/lib/motion";
 import { COUNTRY_PHOTO, SITE_PHOTOS } from "@/lib/sitePhotos";
 import { colors, fontFamily, shadows } from "@/lib/theme";
 
-const CARD_W = 168;
-const CARD_H = 224;
+/** Landscape-leaning so city photos read as places, not cropped details. */
+export const COUNTRY_CARD_W = 200;
+export const COUNTRY_CARD_H = 152;
+const CARD_W = COUNTRY_CARD_W;
+const CARD_H = COUNTRY_CARD_H;
 
 export function CountryCard({
   slug,
@@ -59,7 +62,11 @@ export function CountryCard({
     >
       {source ? (
         <Animated.View style={[StyleSheet.absoluteFill, photoStyle]}>
-          <Image source={source} style={StyleSheet.absoluteFill} resizeMode="cover" />
+          <Image
+            source={source}
+            style={styles.photo}
+            resizeMode="cover"
+          />
         </Animated.View>
       ) : null}
       <LinearGradient
@@ -94,6 +101,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: colors.navy,
     ...shadows.card,
+  },
+  photo: {
+    ...StyleSheet.absoluteFillObject,
   },
   flag: {
     position: "absolute",

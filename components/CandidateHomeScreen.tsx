@@ -11,6 +11,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -108,6 +109,7 @@ export default function CandidateHomeScreen() {
   const { locale } = useAppCopy();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { width: windowWidth } = useWindowDimensions();
   const qc = useQueryClient();
   const { signedIn, openSignIn, openRegister } = useSignInPrompt();
   const user = useAuthStore((s) => s.user);
@@ -612,7 +614,7 @@ export default function CandidateHomeScreen() {
                 ) : null}
               </>
             ) : (
-              <View style={[styles.navyCard, { overflow: "visible" }]}>
+              <View style={[styles.navyCard, { overflow: "visible", paddingTop: 28 }]}>
                 <GshMark
                   size={260}
                   color="rgba(255,255,255,0.05)"
@@ -623,9 +625,6 @@ export default function CandidateHomeScreen() {
                   rotate={3}
                   style={styles.breakout}
                 />
-                <FloatIn delay={250} style={styles.statChipPos}>
-                  <StatChip value="Free" label="for candidates, always" />
-                </FloatIn>
                 <Eyebrow onDark>Free for candidates</Eyebrow>
                 <Text style={[styles.navyTitle, { maxWidth: 170 }]}>
                   Create your free account
@@ -725,8 +724,8 @@ export default function CandidateHomeScreen() {
           </RiseIn>
         ) : null}
 
-        <RiseIn delay={220}>
-          <NavyBand style={{ marginTop: 22, marginHorizontal: -16 }}>
+        <RiseIn delay={220} style={{ marginHorizontal: -16, width: windowWidth, alignSelf: "flex-start" }}>
+          <NavyBand style={{ marginTop: 22, width: windowWidth }}>
             <Eyebrow onDark>Global Sponsor Hub</Eyebrow>
             <Text
               style={styles.bandBig}

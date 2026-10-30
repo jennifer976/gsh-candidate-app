@@ -1,6 +1,6 @@
 import { ScrollView, View } from "react-native";
 import { useRouter } from "expo-router";
-import { CountryCard } from "@/components/v3/CountryCard";
+import { COUNTRY_CARD_W, CountryCard } from "@/components/v3/CountryCard";
 import {
   GUIDE_COUNTRY_SLUG_BY_CODE,
   GUIDE_JOBS_LOCATION_BY_CODE,
@@ -45,7 +45,7 @@ function buildRailCountries(): RailCountry[] {
 }
 
 const RAIL_COUNTRIES = buildRailCountries();
-const CARD_W = 168;
+const CARD_W = COUNTRY_CARD_W;
 
 export function CountryRail({
   onSelectCountry,
