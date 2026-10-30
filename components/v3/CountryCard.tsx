@@ -51,7 +51,7 @@ export function CountryCard({
       onPress={onPress}
       onPressIn={() => {
         if (reduceMotion) return;
-        scale.value = withTiming(1.04, { duration: 160, easing: EASE });
+        scale.value = withTiming(1.02, { duration: 160, easing: EASE });
       }}
       onPressOut={() => {
         scale.value = withTiming(1, { duration: 160, easing: EASE });
@@ -61,11 +61,11 @@ export function CountryCard({
       style={styles.card}
     >
       {source ? (
-        <Animated.View style={[StyleSheet.absoluteFill, photoStyle]}>
+        <Animated.View style={[styles.photoWrap, photoStyle]}>
           <Image
             source={source}
             style={styles.photo}
-            resizeMode="cover"
+            resizeMode="contain"
           />
         </Animated.View>
       ) : null}
@@ -102,8 +102,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.navy,
     ...shadows.card,
   },
-  photo: {
+  photoWrap: {
     ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 6,
+    paddingTop: 6,
+    paddingBottom: 52,
+  },
+  photo: {
+    width: "100%",
+    height: "100%",
   },
   flag: {
     position: "absolute",
