@@ -59,7 +59,7 @@ export default function PartnersScreen() {
       <PosterTitle {...posterParts(ac("Help with|the move."))} size={34} />
       <Text style={styles.intro}>
         {ac(
-          "Independent visa, housing and relocation help. Listing is free for them. You request — they pay only if they accept. We do not run the move.",
+          "Independent visa and relocation specialists. Ask for help with your move, with or without a job offer.",
         )}
       </Text>
       <DepthSurface depth={4} radius={18} borderWidth={2} borderColor={colors.navy} innerStyle={styles.search}>
