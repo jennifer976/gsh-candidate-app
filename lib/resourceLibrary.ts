@@ -25,7 +25,7 @@ const candidateGuides = [...catalog.relocation, ...catalog.pillars, ...catalog.c
 export const RESOURCE_LIBRARY: ResourceItem[] = [
   { id: "countries", kind: "guides", format: "Guides", title: "Destination guides", blurb: "Country hubs with visa context, then live roles.", href: "/countries" },
   { id: "compare", kind: "guides", format: "Guides", title: "Compare destinations", blurb: "Two or three countries, side by side.", href: "/compare-countries" },
-  { id: "labels", kind: "guides", format: "Trust", title: "How jobs are labelled", blurb: "What sponsorship and relocation labels mean here.", href: "/trust/how-we-label-jobs" },
+  { id: "labels", kind: "guides", format: "Trust", title: "How job tags work", blurb: "What the sponsorship and relocation tags on each job mean.", href: "/trust/how-we-label-jobs" },
   ...candidateGuides.map((guide): ResourceItem => ({
     id: guide.path,
     kind: "guides",

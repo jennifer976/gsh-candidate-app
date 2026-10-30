@@ -1,16 +1,20 @@
 import { useAppCopy } from "@/lib/i18n";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Eyebrow } from "@/components/gsh-brand";
+import { Card } from "@/components/v3";
 import type { CountryVisaGuideSection } from "@/lib/guides/countryVisaGuides";
 import { openExternalUrlInApp } from "@/lib/openMarketingBrowser";
-import { cardSurfaceStyle, colors, fontFamily, radii } from "@/lib/theme";
+import { colors, fontFamily } from "@/lib/theme";
 
 export function CountryVisaGuideSections({ sections }: { sections: CountryVisaGuideSection[] }) {
   const { t } = useAppCopy();
+  if (!sections.length) return null;
+
   return (
-    <>
+    <View style={styles.wrap}>
       {sections.map((sec, si) => (
-        <View key={`${si}-${sec.heading}`} style={[styles.sectionCard, cardSurfaceStyle(true)]}>
-          <Text style={styles.sectionHeading}>{sec.heading}</Text>
+        <Card key={`${si}-${sec.heading}`} style={styles.card}>
+          <Eyebrow>{sec.heading}</Eyebrow>
           {(sec.paragraphs ?? []).map((p, i) => (
             <Text key={`${si}-p-${i}`} style={styles.p}>
               {p}
@@ -86,20 +90,15 @@ export function CountryVisaGuideSections({ sections }: { sections: CountryVisaGu
               <Text style={styles.calloutBody}>{sec.callout.body}</Text>
             </View>
           ) : null}
-        </View>
+        </Card>
       ))}
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionCard: { padding: 16, borderRadius: radii.lg },
-  sectionHeading: {
-    fontSize: 17,
-    fontFamily: fontFamily.bold,
-    color: colors.navy,
-    marginBottom: 10,
-  },
+  wrap: { gap: 12 },
+  card: { gap: 10 },
   bulletList: { gap: 12, marginBottom: 4 },
   bulletRow: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
   bulletDot: {
@@ -107,27 +106,26 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: colors.teal,
+    backgroundColor: colors.cyan,
   },
   bulletText: {
     flex: 1,
     fontSize: 15,
     fontFamily: fontFamily.regular,
-    color: colors.textMarketing,
-    lineHeight: 23,
+    color: colors.text2,
+    lineHeight: 22,
   },
   bulletLead: { fontFamily: fontFamily.bold, color: colors.navy },
   p: {
     fontSize: 15,
     fontFamily: fontFamily.regular,
-    color: colors.textMarketing,
-    lineHeight: 23,
-    marginBottom: 10,
+    color: colors.text2,
+    lineHeight: 22,
   },
-  prosConsGrid: { gap: 10, marginTop: 8 },
+  prosConsGrid: { gap: 10, marginTop: 4 },
   prosConsCol: {
-    borderRadius: radii.md,
-    backgroundColor: colors.surfaceMuted,
+    borderRadius: 16,
+    backgroundColor: colors.panel,
     padding: 12,
   },
   panelTitle: {
@@ -139,15 +137,15 @@ const styles = StyleSheet.create({
   panelItem: {
     fontSize: 14,
     fontFamily: fontFamily.regular,
-    color: colors.textMarketing,
+    color: colors.text2,
     lineHeight: 21,
     marginBottom: 6,
   },
   pathwayBox: {
-    marginTop: 10,
-    borderRadius: radii.md,
+    marginTop: 4,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.line,
     padding: 12,
   },
   stepRow: { flexDirection: "row", alignItems: "flex-start", gap: 10, marginBottom: 12 },
@@ -157,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.brand,
+    backgroundColor: colors.navy,
   },
   stepBadgeText: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.white },
   stepTitle: { fontSize: 14, fontFamily: fontFamily.bold, color: colors.navy },
@@ -165,28 +163,28 @@ const styles = StyleSheet.create({
     marginTop: 3,
     fontSize: 13,
     fontFamily: fontFamily.regular,
-    color: colors.textMuted,
+    color: colors.muted,
     lineHeight: 19,
   },
   pathwayNote: {
     fontSize: 13,
     fontFamily: fontFamily.medium,
-    color: colors.textSecondary,
+    color: colors.text2,
     lineHeight: 19,
   },
-  sourceBtn: { marginTop: 8, paddingVertical: 10, alignSelf: "flex-start", minHeight: 44 },
-  sourceBtnText: { color: colors.brand, fontFamily: fontFamily.semiBold, fontSize: 15 },
+  sourceBtn: { marginTop: 4, paddingVertical: 10, alignSelf: "flex-start", minHeight: 44 },
+  sourceBtnText: { color: colors.navy, fontFamily: fontFamily.semiBold, fontSize: 15 },
   calloutBox: {
-    marginTop: 10,
-    borderRadius: radii.md,
-    backgroundColor: colors.brandSoft,
+    marginTop: 4,
+    borderRadius: 16,
+    backgroundColor: colors.panel,
     padding: 12,
   },
   calloutTitle: { fontSize: 13, fontFamily: fontFamily.bold, color: colors.navy, marginBottom: 5 },
   calloutBody: {
     fontSize: 14,
     fontFamily: fontFamily.regular,
-    color: colors.textMarketing,
+    color: colors.text2,
     lineHeight: 21,
   },
 });

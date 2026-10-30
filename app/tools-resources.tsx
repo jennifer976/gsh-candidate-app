@@ -1,27 +1,32 @@
 import { useAppCopy } from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
-import { Ionicons } from "@expo/vector-icons";
 import { type Href, Stack, useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { BrandTopBar } from "@/components/BrandTopBar";
+import { Icon, type IconName } from "@/components/Icon";
 import {
-  DecorRing,
   DepthButton,
-  DepthPressable,
-  DepthSurface,
+  GshMark,
+  SupportChip,
+  TitleWithStop,
   Eyebrow,
-  PosterTitle,
-  posterParts,
 } from "@/components/gsh-brand";
+import {
+  BreakoutPhoto,
+  CountryRail,
+  NavyBand,
+  Row,
+  RowCard,
+  SectionHeader,
+  Tile,
+} from "@/components/v3";
 import { useLastCvCheck } from "@/lib/cv-check-history";
 import { useRelocationPerksNav } from "@/lib/use-relocation-perks-nav";
-import { colors, fontFamily } from "@/lib/theme";
+import { colors, fontFamily, shadows } from "@/lib/theme";
 
-type IonName = keyof typeof Ionicons.glyphMap;
-type Link = { icon: IonName; label: string; hint?: string; href: Href };
+type Link = { icon: IconName; label: string; hint?: string; href: Href };
 
-/** The one place for tools, move planning, reading and help. Layout follows the Superdesign tools board. */
+/** The one place for tools, move planning, reading and help. */
 export default function ToolsAndResourcesScreen() {
   const { t } = useAppCopy();
   const ac = useAccountCopy();
@@ -31,268 +36,354 @@ export default function ToolsAndResourcesScreen() {
   const lastCvCheck = useLastCvCheck();
 
   const jobReady: Link[] = [
-    { icon: "git-compare", label: ac("CV and job comparison"), hint: ac("Match your CV to a role"), href: "/ats-assistant" },
     {
-      icon: "create",
+      icon: "git-compare",
+      label: ac("CV and job comparison"),
+      hint: ac("Match your CV to a role"),
+      href: "/ats-assistant",
+    },
+    {
+      icon: "pen-line",
       label: ac("Cover letter template"),
       hint: ac("For visa-sponsored roles"),
       href: "/resources/visa-sponsorship-cover-letter-template",
     },
-    { icon: "shield-checkmark", label: ac("Scam checklist"), hint: ac("Spot fake job offers"), href: "/resources/job-offer-scam-checklist" },
-    { icon: "business", label: ac("Company directory"), hint: ac("Employers hiring with us"), href: "/companies" },
+    {
+      icon: "shield-check",
+      label: ac("Scam checklist"),
+      hint: ac("Spot fake job offers"),
+      href: "/resources/job-offer-scam-checklist",
+    },
+    {
+      icon: "building-2",
+      label: ac("Company directory"),
+      hint: ac("Employers hiring with us"),
+      href: "/companies",
+    },
   ];
 
   const move: Link[] = [
-    { icon: "compass", label: ac("Plan the visa, and the move"), hint: ac("Visa, housing, and money after a hire."), href: "/relocation-help" },
-    { icon: "earth", label: ac("Countries"), hint: ac("Visa routes, hiring sectors and everyday life, destination by destination."), href: "/countries" },
-    { icon: "git-compare", label: ac("Compare countries"), hint: t("resourcesCompareHelp"), href: "/compare-countries" },
-    { icon: "cash", label: ac("Currency converter"), hint: t("resourcesSalaryHelp"), href: "/currency-converter" },
-    { icon: "clipboard", label: ac("Relocation worksheets"), hint: t("resourcesWorksheetsHelp"), href: "/relocation-worksheets" },
-    { icon: "people", label: ac("Specialist help"), hint: t("resourcesSpecialistsHelp"), href: "/partners" },
-    { icon: "airplane", label: relocationPerksNav.title, hint: relocationPerksNav.subtitle, href: "/relocation-perks" },
+    {
+      icon: "compass",
+      label: ac("Plan the visa, and the move"),
+      hint: ac("Visa, housing, and money after a hire."),
+      href: "/relocation-help",
+    },
+    {
+      icon: "git-compare",
+      label: ac("Compare countries"),
+      hint: t("resourcesCompareHelp"),
+      href: "/compare-countries",
+    },
+    {
+      icon: "coins",
+      label: ac("Currency converter"),
+      hint: t("resourcesSalaryHelp"),
+      href: "/currency-converter",
+    },
+    {
+      icon: "clipboard-list",
+      label: ac("Relocation worksheets"),
+      hint: t("resourcesWorksheetsHelp"),
+      href: "/relocation-worksheets",
+    },
+    {
+      icon: "users-round",
+      label: ac("Specialist help"),
+      hint: t("resourcesSpecialistsHelp"),
+      href: "/partners",
+    },
+    {
+      icon: "plane",
+      label: relocationPerksNav.title,
+      hint: relocationPerksNav.subtitle,
+      href: "/relocation-perks",
+    },
   ];
 
   const reading: Link[] = [
-    { icon: "document-text", label: ac("Guides"), hint: t("resourcesPracticalHelp"), href: "/resources" },
-    { icon: "newspaper", label: t("resourcesBlog"), hint: t("resourcesBlogHelp"), href: "/blog" },
-    { icon: "megaphone", label: t("resourcesNews"), hint: t("resourcesNewsHelp"), href: "/news" },
+    {
+      icon: "file-text",
+      label: ac("Guides"),
+      hint: t("resourcesPracticalHelp"),
+      href: "/resources",
+    },
+    {
+      icon: "newspaper",
+      label: t("resourcesBlog"),
+      hint: t("resourcesBlogHelp"),
+      href: "/blog",
+    },
+    {
+      icon: "megaphone",
+      label: t("resourcesNews"),
+      hint: t("resourcesNewsHelp"),
+      href: "/news",
+    },
   ];
 
-  const help: Link[] = [
-    { icon: "help-circle", label: t("screenFAQs"), href: "/faq" },
+  const help: { icon: IconName; label: string; href: Href }[] = [
+    { icon: "circle-help", label: t("screenFAQs"), href: "/faq" },
     { icon: "mail", label: t("screenContact"), href: "/contact" },
-    { icon: "chatbox-ellipses", label: t("resourcesFeedback"), href: "/feedback" },
+    { icon: "message-square", label: t("resourcesFeedback"), href: "/feedback" },
     { icon: "scale", label: t("resourcesLegal"), href: "/legal" },
   ];
+
+  function goBack() {
+    if (router.canGoBack()) router.back();
+    else router.replace("/(tabs)/profile");
+  }
 
   return (
     <View style={styles.root}>
       <Stack.Screen options={{ title: t("resources"), headerShown: false }} />
       <ScrollView
-        contentContainerStyle={[styles.pad, { paddingBottom: Math.max(insets.bottom, 16) + 32 }]}
+        contentContainerStyle={{
+          paddingBottom: Math.max(insets.bottom, 16) + 40,
+        }}
         showsVerticalScrollIndicator={false}
       >
-        <DecorRing size={256} thickness={36} color="rgba(66,224,227,0.15)" style={{ top: 40, right: -96 }} />
-        <DecorRing size={224} thickness={30} color="rgba(66,224,227,0.10)" style={{ top: 560, left: -96 }} />
-        <BrandTopBar onDark />
+        <View style={[styles.pad, { paddingTop: insets.top + 22 }]}>
+          <Pressable
+            onPress={goBack}
+            style={styles.backBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Back"
+          >
+            <Icon name="arrow-left" size={22} color={colors.navy} strokeWidth={1.8} />
+          </Pressable>
 
-        <View style={styles.hero}>
-          <Eyebrow onDark>{ac("Free for candidates")}</Eyebrow>
-          <PosterTitle {...posterParts(ac("Your career|toolkit."))} onDark highlightTone="cyan" size={36} />
-        </View>
-
-        <DepthSurface face={colors.cyan} depthColor={colors.navyDeep} depth={6} radius={26} style={styles.feature} innerStyle={styles.featureInner}>
-          <DecorRing size={128} thickness={20} color="rgba(255,255,255,0.35)" style={{ top: -40, right: -40 }} />
-          <View style={styles.recommended}>
-            <Ionicons name="star" size={11} color={colors.cyan} />
-            <Text style={styles.recommendedText}>{ac("Recommended")}</Text>
+          <View style={{ marginTop: 16 }}>
+            <TitleWithStop eyebrow={ac("Free for candidates")} text={ac("Your career toolkit")} />
           </View>
-          <Text style={styles.featureTitle}>{ac("CV quality check")}</Text>
-          <Text style={styles.featureBody}>{ac("Check structure, contact details, dates, and measurable results.")}</Text>
-          {lastCvCheck ? (
-            <View style={styles.lastScore}>
-              <Ionicons name="stats-chart" size={13} color={colors.cyan} />
-              <Text style={styles.lastScoreText}>{ac("Last score {score}/100", { score: lastCvCheck.score })}</Text>
+
+          <View style={styles.feature}>
+            <View style={styles.featureClip} pointerEvents="none">
+              <GshMark
+                size={260}
+                color="rgba(255,255,255,0.05)"
+                style={styles.featureMark}
+              />
             </View>
-          ) : null}
-          <View style={styles.featureFoot}>
-            <DepthButton
-              title={lastCvCheck ? ac("Check again") : ac("Start")}
-              onPress={() => router.push("/cv-quality-checker")}
-              variant="navy"
-              size="md"
-              style={{ flex: 1 }}
+            <BreakoutPhoto
+              photo="talent-pool"
+              rotate={3}
+              style={styles.featurePhoto}
             />
-            <View style={styles.featureNote}>
-              <Ionicons name="lock-closed" size={13} color={colors.navy} />
-              <Text style={styles.featureNoteText}>{ac("Runs on your phone")}</Text>
+            <SupportChip label={ac("Recommended")} onNavy />
+            <Text style={styles.featureTitle}>{ac("CV quality check")}</Text>
+            <Text style={styles.featureBody}>
+              {ac("Check structure, contact details, dates, and measurable results.")}
+            </Text>
+            {lastCvCheck ? (
+              <View style={styles.lastScore}>
+                <Text style={styles.lastScoreText}>
+                  {ac("Last score {score}/100", { score: lastCvCheck.score })}
+                </Text>
+              </View>
+            ) : null}
+            <View style={styles.featureFoot}>
+              <DepthButton
+                title={lastCvCheck ? ac("Check again") : ac("Start")}
+                onPress={() => router.push("/cv-quality-checker")}
+                variant="cyanOnNavy"
+                size="md"
+                style={{ flex: 1 }}
+              />
+              <View style={styles.featureNote}>
+                <Icon name="lock" size={14} color={colors.cyan} strokeWidth={1.8} />
+                <Text style={styles.featureNoteText}>{ac("Runs on your phone")}</Text>
+              </View>
             </View>
           </View>
-        </DepthSurface>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{ac("Get job-ready")}</Text>
-          <View style={styles.grid}>
-            {jobReady.map((item) => (
-              <DepthPressable
-                key={item.label}
-                onPress={() => router.push(item.href)}
-                face={colors.white}
-                depthColor={colors.cyan}
-                depth={4}
-                radius={20}
-                accessibilityLabel={item.hint ? `${item.label}. ${item.hint}` : item.label}
-                style={styles.tile}
-                innerStyle={styles.tileInner}
-              >
-                <View style={styles.tileIcon}>
-                  <Ionicons name={item.icon} size={18} color={colors.navy} />
-                </View>
-                <Text style={styles.tileLabel} numberOfLines={2}>
-                  {item.label}
-                </Text>
-                {item.hint ? (
-                  <Text style={styles.tileHint} numberOfLines={2}>
-                    {item.hint}
-                  </Text>
-                ) : null}
-              </DepthPressable>
-            ))}
+          <View style={styles.section}>
+            <SectionHeader
+              eyebrow={ac("Apply with confidence")}
+              title={ac("Get job-ready")}
+            />
+            <View style={styles.grid}>
+              {jobReady.map((item) => (
+                <Tile
+                  key={item.label}
+                  icon={item.icon}
+                  title={item.label}
+                  hint={item.hint}
+                  onPress={() => router.push(item.href)}
+                  style={styles.tile}
+                />
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.section}>
+            <SectionHeader
+              eyebrow={ac("Moving abroad")}
+              title={ac("Plan your move")}
+              onSeeAll={() => router.push("/countries")}
+            />
+            <CountryRail
+              onSelectCountry={(slug) =>
+                router.push(`/country/${encodeURIComponent(slug)}` as Href)
+              }
+            />
+            <RowCard style={{ marginTop: 12 }}>
+              {move.map((item, index) => (
+                <Row
+                  key={item.label}
+                  icon={item.icon}
+                  label={item.label}
+                  hint={item.hint}
+                  onPress={() => router.push(item.href)}
+                  isLast={index === move.length - 1}
+                />
+              ))}
+            </RowCard>
+          </View>
+
+          <View style={styles.section}>
+            <SectionHeader eyebrow={ac("Read and plan")} title={ac("Resources")} />
+            <RowCard style={{ marginTop: 12 }}>
+              {reading.map((item, index) => (
+                <Row
+                  key={item.label}
+                  icon={item.icon}
+                  label={item.label}
+                  hint={item.hint}
+                  onPress={() => router.push(item.href)}
+                  isLast={index === reading.length - 1}
+                />
+              ))}
+            </RowCard>
           </View>
         </View>
 
-        <LinkSection title={ac("Plan your move")} links={move} onOpen={(href) => router.push(href)} />
-        <LinkSection title={ac("Resources")} links={reading} onOpen={(href) => router.push(href)} />
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{ac("Help and contact")}</Text>
+        <NavyBand style={{ marginTop: 30 }}>
+          <Eyebrow onDark>{ac("Help and contact")}</Eyebrow>
+          <Text style={styles.helpTitle}>{ac("Questions or feedback")}</Text>
           <View style={styles.helpGrid}>
             {help.map((item) => (
               <Pressable
                 key={item.label}
                 onPress={() => router.push(item.href)}
-                style={({ pressed }) => [styles.helpTile, pressed && styles.rowPressed]}
+                style={({ pressed }) => [styles.helpTile, pressed && styles.helpPressed]}
                 accessibilityRole="button"
                 accessibilityLabel={item.label}
               >
-                <Ionicons name={item.icon} size={18} color={colors.cyan} />
+                <Icon name={item.icon} size={20} color={colors.cyan} strokeWidth={1.8} />
                 <Text style={styles.helpText} numberOfLines={2}>
                   {item.label}
                 </Text>
               </Pressable>
             ))}
           </View>
-        </View>
+        </NavyBand>
       </ScrollView>
     </View>
   );
 }
 
-function LinkSection({ title, links, onOpen }: { title: string; links: Link[]; onOpen: (href: Href) => void }) {
-  return (
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      <View style={styles.rows}>
-        {links.map((item) => (
-          <Pressable
-            key={item.label}
-            onPress={() => onOpen(item.href)}
-            style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-            accessibilityRole="button"
-            accessibilityLabel={item.hint ? `${item.label}. ${item.hint}` : item.label}
-          >
-            <View style={styles.rowIcon}>
-              <Ionicons name={item.icon} size={18} color={colors.cyan} />
-            </View>
-            <View style={styles.rowText}>
-              <Text style={styles.rowLabel} numberOfLines={2}>
-                {item.label}
-              </Text>
-              {item.hint ? (
-                <Text style={styles.rowHint} numberOfLines={2}>
-                  {item.hint}
-                </Text>
-              ) : null}
-            </View>
-            <Ionicons name="chevron-forward" size={18} color="rgba(255,255,255,0.6)" />
-          </Pressable>
-        ))}
-      </View>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.navy },
-  pad: { overflow: "hidden" },
-  hero: { paddingHorizontal: 20, paddingTop: 16, gap: 6 },
-  feature: { marginHorizontal: 20, marginTop: 24 },
-  featureInner: { padding: 20, overflow: "hidden" },
-  recommended: {
-    alignSelf: "flex-start",
-    flexDirection: "row",
+  root: { flex: 1, backgroundColor: colors.panel },
+  pad: { paddingHorizontal: 16 },
+  backBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.white,
     alignItems: "center",
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 999,
-    backgroundColor: colors.navy,
+    justifyContent: "center",
+    ...shadows.card,
   },
-  recommendedText: {
-    fontSize: 10,
-    fontFamily: fontFamily.extraBold,
-    color: colors.cyan,
-    letterSpacing: 0.8,
+  feature: {
+    marginTop: 44,
+    backgroundColor: colors.navy,
+    borderRadius: 28,
+    padding: 20,
+    overflow: "visible",
+    ...shadows.photo,
+  },
+  featureClip: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 28,
+    overflow: "hidden",
+  },
+  featureMark: {
+    position: "absolute",
+    left: -80,
+    bottom: -120,
+  },
+  featurePhoto: {
+    position: "absolute",
+    right: 16,
+    top: -30,
+    width: 104,
+    height: 128,
   },
   featureTitle: {
-    marginTop: 12,
-    fontSize: 22,
-    lineHeight: 26,
+    marginTop: 10,
+    maxWidth: 180,
     fontFamily: fontFamily.headingStrong,
-    letterSpacing: -0.4,
-    color: colors.navy,
+    fontSize: 21,
+    lineHeight: 25,
+    color: colors.white,
   },
   featureBody: {
-    marginTop: 4,
-    fontSize: 13,
-    lineHeight: 18,
-    fontFamily: fontFamily.semiBold,
-    color: "rgba(13,25,78,0.7)",
+    marginTop: 6,
+    maxWidth: 200,
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    lineHeight: 20,
+    color: "rgba(255,255,255,0.75)",
   },
   lastScore: {
     alignSelf: "flex-start",
     marginTop: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     borderRadius: 999,
-    backgroundColor: colors.navy,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.28)",
+    backgroundColor: "rgba(255,255,255,0.08)",
   },
-  lastScoreText: { fontSize: 12, fontFamily: fontFamily.extraBold, color: colors.white },
-  featureFoot: { marginTop: 16, flexDirection: "row", alignItems: "center", gap: 12 },
-  featureNote: { flexDirection: "row", alignItems: "center", gap: 4 },
-  featureNoteText: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.navy },
-  section: { marginTop: 28, paddingHorizontal: 20 },
-  sectionTitle: { fontSize: 19, fontFamily: fontFamily.heading, color: colors.white, letterSpacing: -0.3 },
-  grid: { marginTop: 12, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 12 },
-  tile: { width: "47%", flexGrow: 1 },
-  tileInner: { padding: 14, minHeight: 116 },
-  tileIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: colors.panel,
-    alignItems: "center",
-    justifyContent: "center",
+  lastScoreText: {
+    fontFamily: fontFamily.bold,
+    fontSize: 12,
+    color: colors.white,
   },
-  tileLabel: { marginTop: 10, fontSize: 14, lineHeight: 18, fontFamily: fontFamily.heading, color: colors.navy },
-  tileHint: { marginTop: 2, fontSize: 11, lineHeight: 15, fontFamily: fontFamily.semiBold, color: colors.textMuted },
-  rows: { marginTop: 12, gap: 10 },
-  row: {
-    minHeight: 64,
+  featureFoot: {
+    marginTop: 16,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 16,
-    backgroundColor: "rgba(255,255,255,0.1)",
   },
-  rowPressed: { backgroundColor: "rgba(255,255,255,0.16)" },
-  rowIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: "rgba(255,255,255,0.08)",
-    alignItems: "center",
-    justifyContent: "center",
+  featureNote: { flexDirection: "row", alignItems: "center", gap: 6, flexShrink: 1 },
+  featureNoteText: {
+    fontFamily: fontFamily.medium,
+    fontSize: 13,
+    color: "rgba(255,255,255,0.72)",
   },
-  rowText: { flex: 1, minWidth: 0 },
-  rowLabel: { fontSize: 14, fontFamily: fontFamily.extraBold, color: colors.white },
-  rowHint: { marginTop: 2, fontSize: 11, lineHeight: 15, fontFamily: fontFamily.regular, color: "rgba(255,255,255,0.6)" },
-  helpGrid: { marginTop: 12, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 10 },
+  section: { marginTop: 30 },
+  grid: {
+    marginTop: 12,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+  },
+  tile: { width: "47%", flexGrow: 1 },
+  helpTitle: {
+    marginTop: 6,
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 21,
+    lineHeight: 26,
+    color: colors.white,
+  },
+  helpGrid: {
+    marginTop: 16,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+  },
   helpTile: {
     width: "47%",
     flexGrow: 1,
@@ -302,7 +393,13 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 14,
     borderRadius: 16,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "rgba(255,255,255,0.08)",
   },
-  helpText: { flex: 1, fontSize: 14, fontFamily: fontFamily.bold, color: colors.white },
+  helpPressed: { backgroundColor: "rgba(255,255,255,0.14)" },
+  helpText: {
+    flex: 1,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    color: colors.white,
+  },
 });

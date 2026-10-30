@@ -253,7 +253,7 @@ export default function RootLayout() {
           <Stack.Screen name="country/[slug]" options={{ title: "" }} />
           <Stack.Screen name="guide/[slug]" options={{ title: t("guideTitle") }} />
           <Stack.Screen name="relocating/[slug]" options={{ title: t("guideTitle") }} />
-          <Stack.Screen name="trust/how-we-label-jobs" options={{ title: ac("How jobs are labelled") }} />
+          <Stack.Screen name="trust/how-we-label-jobs" options={{ title: ac("How job tags work") }} />
           <Stack.Screen
             name="saved-resources"
             options={{ title: t("screenSavedresources") }}

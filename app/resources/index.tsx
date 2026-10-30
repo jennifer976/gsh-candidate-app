@@ -1,39 +1,28 @@
 import { useDeferredValue, useMemo, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  BrandStatePanel,
-  DepthPressable,
-  DepthSurface,
-  Eyebrow,
-  PosterTitle,
-  posterParts,
-  SectionHeading,
-} from "@/components/gsh-brand";
-import { GshHomeDestinationRail } from "@/components/GshHomeDestinationRail";
-import { GshScreenShell } from "@/components/GshScreenShell";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Icon, type IconName } from "@/components/Icon";
+import { BrandStatePanel, TitleWithStop } from "@/components/gsh-brand";
+import { Card, SectionHeader, Tile } from "@/components/v3";
 import { fetchPublishedBlogList } from "@/lib/content/blogQueries";
 import { fetchPublishedExpertInsights } from "@/lib/content/expertInsightQueries";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
-import { PUBLIC_COUNTRIES } from "@/lib/publicResources";
 import { RESOURCE_LIBRARY, type ResourceItem } from "@/lib/resourceLibrary";
-import { colors, fontFamily } from "@/lib/theme";
+import { colors, fontFamily, shadows } from "@/lib/theme";
 import { useTemplateSaves } from "@/lib/useTemplateSaves";
 
-type IonName = keyof typeof Ionicons.glyphMap;
 type TopicId = "visas" | "family" | "remote" | "templates";
 
 /** Tools, countries, news and the blog have their own screens, so the library keeps to guides and templates. */
 const LIBRARY_EXCLUDED_IDS = new Set(["countries", "compare", "news", "blog"]);
 
-const TOPICS: { id: TopicId; label: string; icon: IonName; navy: boolean }[] = [
-  { id: "visas", label: "Visas and sponsorship", icon: "airplane", navy: false },
-  { id: "family", label: "Moving with family", icon: "people", navy: true },
-  { id: "remote", label: "Remote work", icon: "laptop", navy: true },
-  { id: "templates", label: "Templates", icon: "document-text", navy: false },
+const TOPICS: { id: TopicId; label: string; icon: IconName }[] = [
+  { id: "visas", label: "Visas and sponsorship", icon: "plane" },
+  { id: "family", label: "Moving with family", icon: "users-round" },
+  { id: "remote", label: "Remote work", icon: "globe" },
+  { id: "templates", label: "Templates", icon: "file-text" },
 ];
 
 function matchesTopic(item: ResourceItem, topic: TopicId): boolean {
@@ -48,6 +37,7 @@ function matchesTopic(item: ResourceItem, topic: TopicId): boolean {
 export default function ResourcesScreen() {
   const ac = useAccountCopy();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const saves = useTemplateSaves("/resources");
   const [query, setQuery] = useState("");
   const search = useDeferredValue(query).trim().toLowerCase();
@@ -86,7 +76,9 @@ export default function ResourcesScreen() {
       library.filter((item) => {
         if (topic && !matchesTopic(item, topic)) return false;
         if (!search) return true;
-        return [ac(item.title), ac(item.blurb ?? ""), ac(item.format)].some((v) => v.toLowerCase().includes(search));
+        return [ac(item.title), ac(item.blurb ?? ""), ac(item.format)].some((v) =>
+          v.toLowerCase().includes(search),
+        );
       }),
     [ac, library, search, topic],
   );
@@ -100,32 +92,44 @@ export default function ResourcesScreen() {
   };
 
   const openSaved = () =>
-    router.push(saves.signedIn ? "/saved-resources" : { pathname: "/login", params: { returnTo: "/saved-resources" } });
+    router.push(
+      saves.signedIn
+        ? "/saved-resources"
+        : { pathname: "/login", params: { returnTo: "/saved-resources" } },
+    );
+
+  function goBack() {
+    if (router.canGoBack()) router.back();
+    else router.replace("/tools-resources");
+  }
 
   return (
-    <GshScreenShell constrainTabletWidth style={styles.shell}>
-      <SafeAreaView style={styles.safe} edges={["bottom"]}>
-        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-          <View style={styles.pad}>
-            <View style={styles.headRow}>
-              <View style={{ flex: 1, minWidth: 0 }}>
-                <Eyebrow>{ac("Guides and blog")}</Eyebrow>
-                <PosterTitle {...posterParts(ac("Know before|you go."))} highlightTone="cyan" size={34} />
-              </View>
-              <Pressable
-                onPress={openSaved}
-                style={styles.roundButton}
-                accessibilityRole="button"
-                accessibilityLabel={
-                  saves.signedIn ? `${ac("Saved resources")}. ${ac("Saved: {count}", { count: saves.count })}` : ac("Saved resources")
-                }
-              >
-                <Ionicons name="bookmark-outline" size={20} color={colors.navy} />
-              </Pressable>
-            </View>
+    <View style={styles.root}>
+      <ScrollView
+        contentContainerStyle={{
+          paddingTop: insets.top + 22,
+          paddingBottom: Math.max(insets.bottom, 16) + 40,
+        }}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.pad}>
+          <Pressable
+            onPress={goBack}
+            style={styles.backBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Back"
+          >
+            <Icon name="arrow-left" size={22} color={colors.navy} strokeWidth={1.8} />
+          </Pressable>
 
-            <DepthSurface depth={4} radius={18} borderWidth={2} borderColor={colors.navy} style={styles.searchWrap} innerStyle={styles.search}>
-              <Ionicons name="search" size={20} color={colors.navy} />
+          <View style={{ marginTop: 16 }}>
+            <TitleWithStop eyebrow={ac("Guides and templates")} text={ac("Resources")} />
+          </View>
+
+          <View style={styles.searchRow}>
+            <View style={styles.searchPill}>
+              <Icon name="search" size={20} color={colors.navy} strokeWidth={1.8} />
               <TextInput
                 value={query}
                 onChangeText={setQuery}
@@ -137,126 +141,124 @@ export default function ResourcesScreen() {
               />
               {query ? (
                 <Pressable onPress={() => setQuery("")} hitSlop={10} accessibilityLabel={ac("Clear filters")}>
-                  <Ionicons name="close-circle" size={20} color={colors.textMuted} />
+                  <Icon name="x" size={18} color={colors.muted} strokeWidth={1.8} />
                 </Pressable>
               ) : null}
-            </DepthSurface>
-          </View>
-
-          {narrowed ? (
-            <View style={styles.pad}>
-              <View style={styles.resultHead}>
-                <Text style={styles.resultTitle} numberOfLines={1}>
-                  {topicLabel || ac("Search results")}
-                </Text>
-                <Pressable onPress={clear} style={styles.clearPill} accessibilityRole="button">
-                  <Ionicons name="close" size={14} color={colors.navy} />
-                  <Text style={styles.clearText}>{ac("Clear filters")}</Text>
-                </Pressable>
-              </View>
-              <Text style={styles.srOnly} accessibilityLiveRegion="polite">
-                {ac("{count} resources match the current filters.", { count: filtered.length })}
-              </Text>
-              {filtered.length ? (
-                <LibraryList items={filtered} saves={saves} onOpen={(item) => router.push(item.href)} />
-              ) : (
-                <BrandStatePanel
-                  icon="search-outline"
-                  title={ac("Nothing matches those filters.")}
-                  body={ac("Try a broader question or return to the complete library.")}
-                  primary={{ label: ac("Clear filters"), icon: "close", onPress: clear }}
-                />
-              )}
             </View>
-          ) : (
-            <>
-              <View style={styles.section}>
-                <GshHomeDestinationRail
-                  opens="guide"
-                  eyebrow={ac("Visa routes and everyday life")}
-                  title={ac("Country guides")}
-                  actionLabel={ac("All {count}", { count: PUBLIC_COUNTRIES.length })}
-                />
-              </View>
+            <Pressable
+              onPress={openSaved}
+              style={styles.bookmarkBtn}
+              accessibilityRole="button"
+              accessibilityLabel={
+                saves.signedIn
+                  ? `${ac("Saved resources")}. ${ac("Saved: {count}", { count: saves.count })}`
+                  : ac("Saved resources")
+              }
+            >
+              <Icon name="bookmark" size={20} color={colors.navy} strokeWidth={1.8} />
+            </Pressable>
+          </View>
+        </View>
 
+        {narrowed ? (
+          <View style={styles.pad}>
+            <View style={styles.resultHead}>
+              <Text style={styles.resultTitle} numberOfLines={1}>
+                {topicLabel || ac("Search results")}
+              </Text>
+              <Pressable onPress={clear} style={styles.clearPill} accessibilityRole="button">
+                <Icon name="x" size={14} color={colors.navy} strokeWidth={1.8} />
+                <Text style={styles.clearText}>{ac("Clear filters")}</Text>
+              </Pressable>
+            </View>
+            <Text style={styles.srOnly} accessibilityLiveRegion="polite">
+              {ac("{count} resources match the current filters.", { count: filtered.length })}
+            </Text>
+            {filtered.length ? (
+              <LibraryList items={filtered} saves={saves} onOpen={(item) => router.push(item.href)} />
+            ) : (
+              <BrandStatePanel
+                icon="search-outline"
+                title={ac("Nothing matches those filters.")}
+                body={ac("Try a broader question or return to the complete library.")}
+                primary={{ label: ac("Clear filters"), icon: "close", onPress: clear }}
+              />
+            )}
+          </View>
+        ) : (
+          <>
+            <View style={[styles.pad, styles.section]}>
+              <View style={styles.grid}>
+                {TOPICS.map((row) => (
+                  <Tile
+                    key={row.id}
+                    icon={row.icon}
+                    title={ac(row.label)}
+                    onPress={() => setTopic(row.id)}
+                    style={styles.tile}
+                  />
+                ))}
+              </View>
+            </View>
+
+            {posts.length > 0 ? (
               <View style={[styles.pad, styles.section]}>
-                <SectionHeading title={ac("Browse by topic")} />
-                <View style={styles.topicGrid}>
-                  {TOPICS.map((row) => (
-                    <DepthPressable
-                      key={row.id}
-                      onPress={() => setTopic(row.id)}
-                      face={row.navy ? colors.navy : colors.cyan}
-                      depthColor={row.navy ? colors.cyan : colors.navy}
-                      depth={4}
-                      radius={20}
-                      accessibilityLabel={ac(row.label)}
-                      style={styles.topic}
-                      innerStyle={styles.topicInner}
-                    >
-                      <View
-                        style={[
-                          styles.topicIcon,
-                          {
-                            backgroundColor: row.navy ? "rgba(255,255,255,0.08)" : colors.panel,
-                          },
-                        ]}
-                      >
-                        <Ionicons name={row.icon} size={18} color={row.navy ? colors.cyan : colors.navy} />
-                      </View>
-                      <Text style={[styles.topicLabel, row.navy && styles.topicLabelOnNavy]} numberOfLines={2}>
-                        {ac(row.label)}
-                      </Text>
-                    </DepthPressable>
-                  ))}
-                </View>
-              </View>
-
-              {posts.length > 0 ? (
-                <View style={[styles.pad, styles.section]}>
-                  <View style={styles.blogBox}>
+                <Card padding={0}>
+                  <Pressable
+                    onPress={() => router.push("/blog")}
+                    style={styles.blogHead}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${ac("Latest insights")}. ${ac("See all")}`}
+                  >
+                    <Text style={styles.blogHeadText}>{ac("Latest insights")}</Text>
+                    <View style={styles.seeAll}>
+                      <Text style={styles.seeAllText}>{ac("See all")}</Text>
+                      <Icon name="chevron-right" size={18} color={colors.text2} strokeWidth={1.8} />
+                    </View>
+                  </Pressable>
+                  {posts.map((post, index) => (
                     <Pressable
-                      onPress={() => router.push("/blog")}
-                      style={styles.blogHead}
+                      key={post.id}
+                      onPress={() => router.push(`/blog/${encodeURIComponent(post.slug)}`)}
+                      style={({ pressed }) => [
+                        styles.blogRow,
+                        index > 0 && styles.blogRowBorder,
+                        pressed && styles.rowPressed,
+                      ]}
                       accessibilityRole="button"
-                      accessibilityLabel={`${ac("Latest from the blog")}. ${ac("See all")}`}
+                      accessibilityLabel={post.title}
                     >
-                      <Text style={styles.blogHeadText}>{ac("Latest from the blog")}</Text>
-                      <Ionicons name="newspaper" size={18} color={colors.white} />
-                    </Pressable>
-                    {posts.map((post, index) => (
-                      <Pressable
-                        key={post.id}
-                        onPress={() => router.push(`/blog/${encodeURIComponent(post.slug)}`)}
-                        style={({ pressed }) => [styles.blogRow, index > 0 && styles.blogRowBorder, pressed && styles.rowPressed]}
-                        accessibilityRole="button"
-                        accessibilityLabel={post.title}
-                      >
-                        <Text style={styles.blogIndex}>{String(index + 1).padStart(2, "0")}</Text>
+                      <Text style={styles.blogIndex}>{String(index + 1).padStart(2, "0")}</Text>
+                      <View style={{ flex: 1, minWidth: 0 }}>
                         <Text style={styles.blogTitle} numberOfLines={2}>
                           {post.title}
                         </Text>
-                        {post.category?.name ? <Text style={styles.blogMeta}>{post.category.name}</Text> : null}
-                      </Pressable>
-                    ))}
-                  </View>
-                </View>
-              ) : null}
-
-              <View style={[styles.pad, styles.section]}>
-                <SectionHeading title={ac("All guides and templates")} />
-                {saves.failed ? (
-                  <Text accessibilityRole="alert" style={styles.error}>
-                    {ac("Could not update resources")}. {ac("Please try again.")}
-                  </Text>
-                ) : null}
-                <LibraryList items={library} saves={saves} onOpen={(item) => router.push(item.href)} />
+                        {post.category?.name ? (
+                          <Text style={styles.blogMeta}>{post.category.name}</Text>
+                        ) : null}
+                      </View>
+                    </Pressable>
+                  ))}
+                </Card>
               </View>
-            </>
-          )}
-        </ScrollView>
-      </SafeAreaView>
-    </GshScreenShell>
+            ) : null}
+
+            <View style={[styles.pad, styles.section]}>
+              <SectionHeader
+                eyebrow={ac("Everything in one place")}
+                title={ac("All guides and templates")}
+              />
+              {saves.failed ? (
+                <Text accessibilityRole="alert" style={styles.error}>
+                  {ac("Could not update resources")}. {ac("Please try again.")}
+                </Text>
+              ) : null}
+              <LibraryList items={library} saves={saves} onOpen={(item) => router.push(item.href)} />
+            </View>
+          </>
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -276,14 +278,17 @@ function LibraryList({
         const templateSlug = item.templateSlug;
         const saved = templateSlug ? saves.isSaved(templateSlug) : false;
         return (
-          <DepthSurface key={item.id} depth={4} radius={20} borderWidth={2} borderColor={colors.navy} innerStyle={styles.row}>
+          <Card key={item.id} padding={18} style={styles.guideCard}>
             <Pressable
               style={({ pressed }) => [styles.rowMain, pressed && styles.rowPressed]}
               onPress={() => onOpen(item)}
               accessibilityRole="button"
             >
-              <View style={{ flex: 1 }}>
-                <Text style={styles.rowFormat}>{ac(item.format)}</Text>
+              <View style={{ flex: 1, minWidth: 0 }}>
+                <View style={styles.formatRow}>
+                  <View style={styles.formatBar} />
+                  <Text style={styles.rowFormat}>{ac(item.format)}</Text>
+                </View>
                 <Text style={styles.rowTitle}>{ac(item.title)}</Text>
                 {item.blurb ? (
                   <Text style={styles.rowBlurb} numberOfLines={2}>
@@ -291,7 +296,7 @@ function LibraryList({
                   </Text>
                 ) : null}
               </View>
-              <Ionicons name="chevron-forward" size={18} color={colors.muted} />
+              <Icon name="chevron-right" size={18} color={colors.muted} strokeWidth={1.8} />
             </Pressable>
             {templateSlug ? (
               <Pressable
@@ -300,11 +305,11 @@ function LibraryList({
                 disabled={saves.busy}
                 accessibilityLabel={`${ac(saved ? "Remove" : "Save")}: ${ac(item.title)}`}
               >
-                <Ionicons name={saved ? "bookmark" : "bookmark-outline"} size={18} color={colors.navy} />
-                <Text style={[styles.saveText, saved && styles.saveTextActive]}>{saved ? ac("Saved") : ac("Save")}</Text>
+                <Icon name="bookmark" size={18} color={colors.navy} strokeWidth={1.8} />
+                <Text style={styles.saveText}>{saved ? ac("Saved") : ac("Save")}</Text>
               </Pressable>
             ) : null}
-          </DepthSurface>
+          </Card>
         );
       })}
     </View>
@@ -312,25 +317,64 @@ function LibraryList({
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
-  shell: { backgroundColor: colors.white },
-  scroll: { paddingTop: 16, paddingBottom: 40 },
-  pad: { paddingHorizontal: 20 },
+  root: { flex: 1, backgroundColor: colors.panel },
+  pad: { paddingHorizontal: 16 },
   section: { marginTop: 28 },
-  headRow: { flexDirection: "row", alignItems: "flex-start", gap: 12 },
-  roundButton: {
+  backBtn: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.pale,
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
+    ...shadows.card,
   },
-  searchWrap: { marginTop: 20 },
-  search: { minHeight: 56, flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 16 },
-  searchInput: { flex: 1, minHeight: 48, fontSize: 15, fontFamily: fontFamily.semiBold, color: colors.navy },
-  resultHead: { marginTop: 24, marginBottom: 12, flexDirection: "row", alignItems: "center", gap: 12 },
-  resultTitle: { flex: 1, fontSize: 19, fontFamily: fontFamily.heading, color: colors.navy },
+  searchRow: {
+    marginTop: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  searchPill: {
+    flex: 1,
+    height: 56,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingHorizontal: 16,
+    borderRadius: 999,
+    backgroundColor: colors.white,
+    ...shadows.card,
+  },
+  searchInput: {
+    flex: 1,
+    minHeight: 44,
+    fontSize: 15,
+    fontFamily: fontFamily.semiBold,
+    color: colors.navy,
+  },
+  bookmarkBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+    ...shadows.card,
+  },
+  resultHead: {
+    marginTop: 24,
+    marginBottom: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  resultTitle: {
+    flex: 1,
+    fontSize: 19,
+    fontFamily: fontFamily.heading,
+    color: colors.navy,
+  },
   clearPill: {
     flexDirection: "row",
     alignItems: "center",
@@ -338,50 +382,113 @@ const styles = StyleSheet.create({
     minHeight: 36,
     paddingHorizontal: 12,
     borderRadius: 999,
-    backgroundColor: colors.pale,
+    backgroundColor: colors.white,
   },
   clearText: { fontSize: 12, fontFamily: fontFamily.bold, color: colors.navy },
-  topicGrid: { marginTop: 12, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-start", gap: 12 },
-  topic: { width: "47%", flexGrow: 1 },
-  topicInner: { padding: 14, minHeight: 104 },
-  topicIcon: { width: 40, height: 40, borderRadius: 12, alignItems: "center", justifyContent: "center" },
-  topicLabel: { marginTop: 10, fontSize: 14, lineHeight: 18, fontFamily: fontFamily.heading, color: colors.navy },
-  topicLabelOnNavy: { color: colors.white },
-  blogBox: { borderRadius: 24, borderWidth: 2, borderColor: colors.navy, overflow: "hidden", backgroundColor: colors.white },
+  grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
+  tile: { width: "47%", flexGrow: 1 },
   blogHead: {
+    minHeight: 52,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: colors.navy,
-    borderBottomWidth: 2,
-    borderBottomColor: colors.navy,
+    paddingHorizontal: 18,
+    paddingTop: 14,
+    paddingBottom: 10,
   },
-  blogHeadText: { fontSize: 15, fontFamily: fontFamily.heading, color: colors.white },
-  blogRow: { minHeight: 64, flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
-  blogRowBorder: { borderTopWidth: 1, borderTopColor: colors.border },
-  blogIndex: { fontSize: 22, fontFamily: fontFamily.headingStrong, color: colors.navy, opacity: 0.35 },
-  blogTitle: { flex: 1, fontSize: 13, lineHeight: 19, fontFamily: fontFamily.bold, color: colors.navy },
-  blogMeta: { fontSize: 10, fontFamily: fontFamily.bold, color: colors.textMuted },
-  error: { color: colors.error, fontFamily: fontFamily.semiBold, fontSize: 13, marginTop: 8 },
+  blogHeadText: {
+    fontFamily: fontFamily.heading,
+    fontSize: 17,
+    color: colors.navy,
+  },
+  seeAll: { flexDirection: "row", alignItems: "center", gap: 2, minHeight: 44 },
+  seeAllText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    color: colors.text2,
+  },
+  blogRow: {
+    minHeight: 64,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+  },
+  blogRowBorder: { borderTopWidth: 1, borderTopColor: colors.line },
+  blogIndex: {
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 22,
+    color: "#dfe3ec",
+  },
+  blogTitle: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.navy,
+  },
+  blogMeta: {
+    marginTop: 2,
+    fontFamily: fontFamily.medium,
+    fontSize: 12,
+    color: colors.muted,
+  },
+  error: {
+    color: colors.error,
+    fontFamily: fontFamily.semiBold,
+    fontSize: 13,
+    marginTop: 8,
+  },
   srOnly: { position: "absolute", width: 1, height: 1, opacity: 0 },
   list: { marginTop: 12, gap: 12 },
-  row: { overflow: "hidden" },
-  rowMain: { minHeight: 64, flexDirection: "row", alignItems: "center", gap: 12, padding: 14 },
-  rowPressed: { backgroundColor: colors.pale },
-  rowFormat: { fontSize: 11, fontFamily: fontFamily.bold, letterSpacing: 1.2, color: colors.textMuted },
-  rowTitle: { marginTop: 3, fontSize: 16, lineHeight: 21, fontFamily: fontFamily.heading, color: colors.navy },
-  rowBlurb: { marginTop: 4, fontSize: 13, lineHeight: 19, fontFamily: fontFamily.regular, color: colors.textSecondary },
+  guideCard: {},
+  rowMain: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  rowPressed: { opacity: 0.85 },
+  formatRow: { flexDirection: "row", alignItems: "center", gap: 8 },
+  formatBar: {
+    width: 16,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: colors.cyan,
+  },
+  rowFormat: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 12,
+    lineHeight: 16,
+    color: colors.text2,
+    textTransform: "none",
+  },
+  rowTitle: {
+    marginTop: 6,
+    fontFamily: fontFamily.heading,
+    fontSize: 17,
+    lineHeight: 22,
+    color: colors.navy,
+  },
+  rowBlurb: {
+    marginTop: 4,
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.text2,
+  },
   saveButton: {
+    marginTop: 12,
     minHeight: 44,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    borderTopWidth: 2,
-    borderTopColor: colors.navy,
+    gap: 8,
+    borderTopWidth: 1,
+    borderTopColor: colors.line,
+    paddingTop: 12,
   },
-  saveText: { fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textMuted },
-  saveTextActive: { color: colors.navy, fontFamily: fontFamily.bold },
+  saveText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    color: colors.navy,
+  },
 });

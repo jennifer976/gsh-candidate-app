@@ -8,11 +8,17 @@ type SizeProp = number | "default" | "small" | "sm";
 
 function resolveSize(size: SizeProp | undefined, width?: number): number {
   if (typeof width === "number" && width > 0) {
-    // Pack 27: flags are only 28 or 20. Map legacy widths to the nearest.
-    return width <= 22 ? 20 : 28;
+    // Pack 27: list flags are 28 or 20. Breakout sizes (e.g. 64) pass through.
+    if (width <= 22) return 20;
+    if (width <= 40) return 28;
+    return width;
   }
   if (size === "small" || size === "sm") return 20;
-  if (typeof size === "number" && size > 0) return size <= 22 ? 20 : 28;
+  if (typeof size === "number" && size > 0) {
+    if (size <= 22) return 20;
+    if (size <= 40) return 28;
+    return size;
+  }
   return 28;
 }
 
@@ -31,7 +37,7 @@ export function CountryFlag({
     .trim()
     .toLowerCase();
   const svg = code ? SITE_FLAGS[code] : undefined;
-  const ring = dim >= 28 ? 2 : 1.5;
+  const ring = dim >= 48 ? 3 : dim >= 28 ? 2 : 1.5;
 
   return (
     <View
@@ -43,7 +49,7 @@ export function CountryFlag({
           borderRadius: dim / 2,
           borderWidth: ring,
         },
-        dim >= 28 ? shadows.card : null,
+        dim >= 48 ? shadows.lift : dim >= 28 ? shadows.card : null,
       ]}
     >
       {svg ? (

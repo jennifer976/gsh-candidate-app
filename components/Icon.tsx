@@ -7,6 +7,7 @@ import {
   Banknote,
   Bell,
   BellRing,
+  Bookmark,
   BriefcaseBusiness,
   Building2,
   ChevronDown,
@@ -88,6 +89,7 @@ export const ICON_NAMES = [
   "external-link",
   "gift",
   "sparkles",
+  "bookmark",
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];
@@ -135,6 +137,7 @@ const MAP: Record<IconName, ComponentType<SvgProps>> = {
   "external-link": ExternalLink,
   gift: Gift,
   sparkles: Sparkles,
+  bookmark: Bookmark,
 };
 
 type Props = {
