@@ -1223,9 +1223,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontFamily: fontFamily.headingStrong,
     fontSize: 34,
-    lineHeight: 34,
+    // Room for Montserrat descenders (y in Always / candidates).
+    lineHeight: 42,
     letterSpacing: -1.2,
     color: colors.navy,
+    paddingBottom: 2,
   },
   modalBackdrop: {
     flex: 1,
