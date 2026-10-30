@@ -1,10 +1,7 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Pressable,
   RefreshControl,
@@ -13,132 +10,30 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CompanyLogo } from "@/components/CompanyLogo";
 import { GshScreenShell } from "@/components/GshScreenShell";
-import { SignInPanel } from "@/components/SignInGate";
-import {
-  BrandStatePanel,
-  DepthButton,
-  DepthPressable,
-  DepthSurface,
-  SegmentTabs,
-  TitleWithStop,
-} from "@/components/gsh-brand";
+import { DepthButton, TitleWithStop } from "@/components/gsh-brand";
+import { JobCard, PhotoEmpty } from "@/components/v3";
 import { tabBarBottomPadding } from "@/lib/android-insets";
-import { fetchApplications, fetchSavedJobs, unsaveJob } from "@/lib/api-client";
-import { useAppCopy } from "@/lib/i18n";
-import { applicationStatusLabel } from "@/lib/i18n/catalog";
-import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
-import { getJobEmployerLabel, getJobLogoUrl, jobFromSavedRow } from "@/lib/job-display";
-import { jobAgeLabel, jobLocationLabel } from "@/lib/job-presentation";
+import { fetchSavedJobs, unsaveJob } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
-import { listStaggerDelay, RiseIn } from "@/lib/motion";
+import { useAppCopy } from "@/lib/i18n";
+import { jobCardFieldsFromJob } from "@/lib/jobCardFields";
+import { jobFromSavedRow } from "@/lib/job-display";
+import { useSignInPrompt } from "@/lib/useSignInPrompt";
 import { colors, fontFamily } from "@/lib/theme";
-import type { Application, SavedJobPopulated } from "@/types/models";
-
-type Segment = "saved" | "applications";
-
-const STAGES = ["pending", "screening", "interview", "offer"] as const;
-
-function stageIndex(status: string): number {
-  const s = status.trim().toLowerCase();
-  if (s === "offer" || s === "hired") return 3;
-  if (s.includes("interview")) return 2;
-  if (s === "screening" || s === "shortlisted" || s === "reviewed") return 1;
-  return 0;
-}
-
-function isStopped(status: string): boolean {
-  return ["rejected", "withdrawn"].includes(status.trim().toLowerCase());
-}
-
-function StatTile({ value, label }: { value: number | undefined; label: string }) {
-  return (
-    <DepthSurface
-      depth={4}
-      radius={18}
-      borderWidth={2}
-      borderColor={colors.navy}
-      style={styles.statWrap}
-      innerStyle={styles.stat}
-    >
-      <Text style={styles.statValue}>{value ?? "–"}</Text>
-      <Text style={styles.statLabel} numberOfLines={1}>
-        {label}
-      </Text>
-    </DepthSurface>
-  );
-}
-
-function PipelineStepper({ status }: { status: string }) {
-  const { t, locale } = useAppCopy();
-  const ac = useAccountCopy();
-  const current = stageIndex(status);
-  const stopped = isStopped(status);
-  const labels = [ac("Applied"), t("statusScreening"), t("statusInterview"), t("statusOffer")];
-  if (stopped) {
-    return (
-      <View style={styles.stoppedPill}>
-        <Ionicons name="close-circle" size={15} color={colors.textSecondary} />
-        <Text style={styles.stoppedText}>{applicationStatusLabel(status, locale)}</Text>
-      </View>
-    );
-  }
-  return (
-    <View style={styles.stepper} accessible accessibilityLabel={applicationStatusLabel(status, locale)}>
-      {STAGES.map((stage, index) => {
-        const done = index <= current;
-        return (
-          <View key={stage} style={styles.step}>
-            <View style={styles.stepTrackRow}>
-              <View style={[styles.stepLine, index === 0 && styles.hidden, index <= current && styles.stepLineOn]} />
-              <View style={[styles.stepDot, done && styles.stepDotOn, index === current && styles.stepDotCurrent]}>
-                {done ? (
-                  <Ionicons name="checkmark" size={13} color={index === current ? colors.cyan : colors.navy} />
-                ) : null}
-              </View>
-              <View
-                style={[
-                  styles.stepLine,
-                  index === STAGES.length - 1 && styles.hidden,
-                  index < current && styles.stepLineOn,
-                ]}
-              />
-            </View>
-            <Text style={[styles.stepLabel, index === current && styles.stepLabelOn]} numberOfLines={1}>
-              {labels[index]}
-            </Text>
-          </View>
-        );
-      })}
-    </View>
-  );
-}
+import type { SavedJobPopulated } from "@/types/models";
 
 export default function SavedTabScreen() {
-  const { t, locale, intlLocale } = useAppCopy();
-  const ac = useAccountCopy();
+  const { locale } = useAppCopy();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
   const signedIn = Boolean(useAuthStore((s) => s.token));
-  const params = useLocalSearchParams<{ segment?: string }>();
-  const [segment, setSegment] = useState<Segment>(
-    params.segment === "applications" ? "applications" : "saved",
-  );
-
-  useEffect(() => {
-    if (params.segment === "applications" || params.segment === "saved") setSegment(params.segment);
-  }, [params.segment]);
+  const { openSignIn, openRegister } = useSignInPrompt();
 
   const savedQuery = useQuery({
     queryKey: ["saved-jobs"],
     queryFn: fetchSavedJobs,
-    enabled: signedIn,
-  });
-  const applicationsQuery = useQuery({
-    queryKey: ["applications"],
-    queryFn: fetchApplications,
     enabled: signedIn,
   });
 
@@ -148,355 +43,158 @@ export default function SavedTabScreen() {
       void qc.invalidateQueries({ queryKey: ["saved-jobs"] });
       void qc.invalidateQueries({ queryKey: ["analytics", "candidate-dashboard"] });
     },
-    onError: () => Alert.alert(ac("Could not remove"), ac("Please try again.")),
   });
 
   const savedRows = savedQuery.data ?? [];
-  const applications = applicationsQuery.data ?? [];
-  const interviews = applications.filter((row) => String(row.status).toLowerCase().includes("interview")).length;
-  const active = segment === "saved" ? savedQuery : applicationsQuery;
-
-  const savedSub =
-    !signedIn || !savedQuery.data
-      ? undefined
-      : savedRows.length === 0
+  const count = savedRows.length;
+  const sub =
+    !signedIn
+      ? null
+      : count === 0
         ? "Nothing saved yet"
-        : savedRows.length === 1
+        : count === 1
           ? "1 saved role"
-          : `${savedRows.length} saved roles`;
+          : `${count} saved roles`;
 
   const header = (
-    <View style={[styles.hero, { paddingTop: insets.top + 14 }]}>
+    <View style={[styles.header, { paddingTop: insets.top + 26 }]}>
       <TitleWithStop eyebrow="For later" text="Saved" />
-      {savedSub ? <Text style={styles.heroBody}>{savedSub}</Text> : null}
-      {signedIn ? (
-        <>
-          <View style={styles.stats}>
-            <StatTile value={savedQuery.data ? savedRows.length : undefined} label={t("saved")} />
-            <StatTile value={applicationsQuery.data ? applications.length : undefined} label={ac("Applied")} />
-            <StatTile value={applicationsQuery.data ? interviews : undefined} label={ac("Interviews")} />
-          </View>
-          <SegmentTabs
-            value={segment}
-            onChange={setSegment}
-            options={[
-              { id: "saved", label: ac("Saved jobs") },
-              { id: "applications", label: t("applications") },
-            ]}
-            style={styles.segment}
-          />
-        </>
-      ) : (
-        <Text style={styles.heroBody}>
-          {ac("Keep the jobs you like in one place and follow every application.")}
-        </Text>
-      )}
+      {sub ? <Text style={styles.sub}>{sub}</Text> : null}
     </View>
   );
 
   if (!signedIn) {
     return (
-      <GshScreenShell constrainTabletWidth>
+      <GshScreenShell constrainTabletWidth style={{ backgroundColor: colors.panel }}>
         <FlatList
           data={[]}
           renderItem={null}
           ListHeaderComponent={header}
           ListFooterComponent={
-            <SignInPanel
-              returnTo="/(tabs)/saved"
-              icon="bookmark-outline"
-              title="Save jobs for later"
-              body="Sign in to keep a list of the jobs you like and come back to them."
-            />
+            <PhotoEmpty
+              photo="relocation"
+              chipIcon="heart"
+              chipLabel="Saved roles live here"
+              title="Your saved roles"
+              body="Create a free account to save jobs and come back to them."
+            >
+              <DepthButton
+                title="Create a free account"
+                onPress={() => openRegister("/(tabs)/saved")}
+                variant="navy"
+                size="md"
+              />
+              <Pressable
+                onPress={() => openSignIn("/(tabs)/saved")}
+                style={styles.signInTextHit}
+                accessibilityRole="button"
+                accessibilityLabel="Sign in"
+              >
+                <Text style={styles.signInText}>Sign in</Text>
+              </Pressable>
+            </PhotoEmpty>
           }
-          contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 16 }}
+          contentContainerStyle={{
+            paddingHorizontal: 16,
+            paddingBottom: tabBarBottomPadding(insets.bottom),
+          }}
         />
       </GshScreenShell>
     );
   }
 
-  const listEmpty = active.isLoading ? (
+  const empty = savedQuery.isLoading ? (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color={colors.navy} />
     </View>
-  ) : active.isError ? (
-    <BrandStatePanel
-      icon="cloud-offline-outline"
-      title={ac("Could not load")}
-      body={ac("Check your connection and try again.")}
-      primary={{ label: ac("Try again"), onPress: () => void active.refetch(), icon: "refresh" }}
-    />
-  ) : segment === "saved" ? (
-    <BrandStatePanel
-      icon="bookmark-outline"
-      title={ac("Nothing saved yet")}
-      body={ac("Tap the bookmark on any job to keep it here.")}
-      primary={{ label: ac("Browse jobs"), onPress: () => router.push("/(tabs)/jobs") }}
-    />
   ) : (
-    <BrandStatePanel
-      icon="paper-plane-outline"
-      title={ac("No applications yet")}
-      body={ac("When you apply for a job, you can follow its progress here.")}
-      primary={{ label: ac("Browse jobs"), onPress: () => router.push("/(tabs)/jobs") }}
-    />
+    <PhotoEmpty
+      photo="relocation"
+      chipIcon="heart"
+      chipLabel="Saved roles live here"
+      title="Keep roles for later"
+      body="Tap the heart on any job and it appears here."
+    >
+      <DepthButton
+        title="Browse jobs"
+        onPress={() => router.push("/(tabs)/jobs")}
+        variant="navy"
+        size="md"
+        style={{ marginTop: 18 }}
+        icon={null}
+      />
+    </PhotoEmpty>
   );
 
-  const renderSaved = ({ item, index }: { item: SavedJobPopulated; index: number }) => {
-    const job = jobFromSavedRow(item);
-    if (!job) return null;
-    const employer = getJobEmployerLabel(job, locale);
-    const location = jobLocationLabel(job, locale);
-    const age = jobAgeLabel(item.createdAt, locale);
-    return (
-      <RiseIn delay={listStaggerDelay(index)}>
-      <DepthPressable
-        onPress={() => router.push(`/job/${encodeURIComponent(job._id)}`)}
-        depth={5}
-        radius={20}
-        borderWidth={2}
-        borderColor={colors.navy}
-        accessibilityLabel={`${job.title}, ${employer}`}
-        style={styles.cardGap}
-        innerStyle={styles.card}
-      >
-        <CompanyLogo logoUrl={getJobLogoUrl(job)} companyName={employer} size={48} radius={12} />
-        <View style={styles.cardText}>
-          <Text style={styles.cardCompany} numberOfLines={1}>
-            {employer}
-          </Text>
-          <Text style={styles.cardTitle} numberOfLines={2}>
-            {job.title}
-          </Text>
-          <Text style={styles.cardMeta} numberOfLines={1}>
-            {[location, age].filter(Boolean).join(" · ")}
-          </Text>
-          {item.listingActive === false ? (
-            <View style={styles.closedPill}>
-              <Text style={styles.closedText}>{ac("No longer open")}</Text>
-            </View>
-          ) : null}
-        </View>
-        <Pressable
-          onPress={() => unsave.mutate(item)}
-          disabled={unsave.isPending}
-          style={styles.unsave}
-          hitSlop={6}
-          accessibilityRole="button"
-          accessibilityLabel={ac("Remove from saved")}
-        >
-          <Ionicons name="bookmark" size={18} color={colors.navy} />
-        </Pressable>
-      </DepthPressable>
-      </RiseIn>
-    );
-  };
-
-  const renderApplication = ({ item, index }: { item: Application; index: number }) => {
-    const job = item.jobId;
-    const jobId = job?._id ?? job?.id;
-    const age = jobAgeLabel(item.createdAt, locale);
-    const interviewAt = item.interviewSchedule?.scheduledAt;
-    let interviewLabel = "";
-    if (interviewAt) {
-      const date = new Date(interviewAt);
-      if (Number.isFinite(date.getTime())) {
-        interviewLabel = date.toLocaleString(intlLocale, {
-          day: "numeric",
-          month: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-      }
-    }
-    return (
-      <RiseIn delay={listStaggerDelay(index)}>
-      <DepthPressable
-        onPress={() => (jobId ? router.push(`/job/${encodeURIComponent(jobId)}`) : undefined)}
-        depth={5}
-        radius={20}
-        borderWidth={2}
-        borderColor={colors.navy}
-        accessibilityLabel={job?.title ?? t("applications")}
-        style={styles.cardGap}
-        innerStyle={styles.appCard}
-      >
-        <View style={styles.appHead}>
-          <CompanyLogo companyName={job?.companyName ?? ""} logoUrl="" size={44} radius={12} />
-          <View style={styles.cardText}>
-            <Text style={styles.cardCompany} numberOfLines={1}>
-              {job?.companyName ?? ""}
-            </Text>
-            <Text style={styles.cardTitle} numberOfLines={2}>
-              {job?.title ?? ""}
-            </Text>
-            {age ? (
-              <Text style={styles.cardMeta} numberOfLines={1}>
-                {`${ac("Applied")} · ${age}`}
-              </Text>
-            ) : null}
-          </View>
-        </View>
-        <PipelineStepper status={String(item.status || "pending")} />
-        {interviewLabel ? (
-          <View style={styles.interviewRow}>
-            <Ionicons name="calendar" size={15} color={colors.navy} />
-            <Text style={styles.interviewText}>{ac("Interview: {date}", { date: interviewLabel })}</Text>
-          </View>
-        ) : null}
-      </DepthPressable>
-      </RiseIn>
-    );
-  };
-
   return (
-    <GshScreenShell constrainTabletWidth>
-      {segment === "saved" ? (
-        <FlatList
-          data={savedQuery.isError ? [] : savedRows}
-          keyExtractor={(item) => item._id}
-          renderItem={renderSaved}
-          ListHeaderComponent={header}
-          ListEmptyComponent={listEmpty}
-          contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 16 }}
-          refreshControl={
-            <RefreshControl
-              refreshing={savedQuery.isRefetching}
-              onRefresh={() => void savedQuery.refetch()}
-              colors={["#0d194e"]}
-              progressBackgroundColor="#ffffff"
-              tintColor="#0d194e"
+    <GshScreenShell constrainTabletWidth style={{ backgroundColor: colors.panel }}>
+      <FlatList
+        data={savedQuery.isError ? [] : savedRows}
+        keyExtractor={(item) => item._id}
+        ListHeaderComponent={header}
+        ListEmptyComponent={empty}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingBottom: tabBarBottomPadding(insets.bottom),
+        }}
+        refreshControl={
+          <RefreshControl
+            refreshing={savedQuery.isRefetching}
+            onRefresh={() => void savedQuery.refetch()}
+            colors={["#0d194e"]}
+            progressBackgroundColor="#ffffff"
+            tintColor="#0d194e"
+          />
+        }
+        renderItem={({ item, index }) => {
+          const job = jobFromSavedRow(item);
+          if (!job) return null;
+          const fields = jobCardFieldsFromJob(job, locale);
+          return (
+            <JobCard
+              index={index}
+              title={fields.title}
+              company={fields.company}
+              logoUrl={fields.logoUrl}
+              countryIso2={fields.countryIso2}
+              countryLabel={fields.countryLabel}
+              remote={fields.remote}
+              salaryLabel={fields.salaryLabel}
+              visaSponsorship={fields.visaSponsorship}
+              relocationSupport={fields.relocationSupport}
+              remoteTag={fields.remoteTag}
+              jobType={fields.jobType}
+              postedLabel={fields.postedLabel}
+              saved
+              onPress={() => router.push(fields.href as never)}
+              onToggleSave={() => unsave.mutate(item)}
             />
-          }
-        />
-      ) : (
-        <FlatList
-          data={applicationsQuery.isError ? [] : applications}
-          keyExtractor={(item) => item._id}
-          renderItem={renderApplication}
-          ListHeaderComponent={header}
-          ListEmptyComponent={listEmpty}
-          ListFooterComponent={
-            applications.length > 0 ? (
-              <View style={styles.footer}>
-                <DepthButton
-                  title={ac("Manage applications")}
-                  onPress={() => router.push("/(tabs)/applications")}
-                  variant="navyOnLight"
-                  size="md"
-                />
-              </View>
-            ) : null
-          }
-          contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 16 }}
-          refreshControl={
-            <RefreshControl
-              refreshing={applicationsQuery.isRefetching}
-              onRefresh={() => void applicationsQuery.refetch()}
-              colors={["#0d194e"]}
-              progressBackgroundColor="#ffffff"
-              tintColor="#0d194e"
-            />
-          }
-        />
-      )}
+          );
+        }}
+      />
     </GshScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  hero: {
-    backgroundColor: colors.panel,
-    paddingHorizontal: 20,
-    paddingBottom: 14,
-    overflow: "hidden",
-    marginBottom: 12,
-  },
-  heroTitle: { marginTop: 8 },
-  heroBody: {
-    marginTop: 10,
-    fontFamily: fontFamily.medium,
+  header: { marginBottom: 12 },
+  sub: {
+    marginTop: 4,
+    fontFamily: fontFamily.regular,
     fontSize: 15,
-    lineHeight: 22,
     color: colors.text2,
   },
-  stats: { flexDirection: "row", gap: 10, marginTop: 20 },
-  statWrap: { flex: 1 },
-  stat: { paddingVertical: 12, paddingHorizontal: 10, alignItems: "center" },
-  statValue: { fontFamily: fontFamily.headingStrong, fontSize: 26, color: colors.navy, letterSpacing: -0.6 },
-  statLabel: { marginTop: 2, fontFamily: fontFamily.bold, fontSize: 11, color: colors.textSecondary },
-  segment: { marginTop: 18 },
   loading: { paddingVertical: 48, alignItems: "center" },
-  cardGap: { marginHorizontal: 20, marginBottom: 14 },
-  card: { padding: 14, flexDirection: "row", alignItems: "flex-start", gap: 12 },
-  cardText: { flex: 1, minWidth: 0 },
-  cardCompany: { fontFamily: fontFamily.semiBold, fontSize: 13, color: colors.textSecondary },
-  cardTitle: {
-    marginTop: 2,
-    fontFamily: fontFamily.heading,
-    fontSize: 16,
-    lineHeight: 21,
-    letterSpacing: -0.2,
-    color: colors.navy,
-  },
-  cardMeta: { marginTop: 6, fontFamily: fontFamily.medium, fontSize: 12, color: colors.textMuted },
-  closedPill: {
-    alignSelf: "flex-start",
+  signInTextHit: {
     marginTop: 8,
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    backgroundColor: colors.surfaceMuted,
-  },
-  closedText: { fontFamily: fontFamily.bold, fontSize: 11, color: colors.textSecondary },
-  unsave: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.panel,
+    minHeight: 44,
     alignItems: "center",
     justifyContent: "center",
   },
-  appCard: { padding: 14, gap: 14 },
-  appHead: { flexDirection: "row", gap: 12, alignItems: "flex-start" },
-  stepper: { flexDirection: "row" },
-  step: { flex: 1, alignItems: "center", gap: 6 },
-  stepTrackRow: { flexDirection: "row", alignItems: "center", alignSelf: "stretch" },
-  stepLine: { flex: 1, height: 6, backgroundColor: colors.pale },
-  stepLineOn: { backgroundColor: colors.navy },
-  hidden: { opacity: 0 },
-  stepDot: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.pale,
-    alignItems: "center",
-    justifyContent: "center",
+  signInText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    color: colors.navy,
+    textDecorationLine: "underline",
   },
-  stepDotOn: { backgroundColor: colors.cyan },
-  stepDotCurrent: { width: 32, height: 32, borderRadius: 16, borderWidth: 3, borderColor: colors.cyan, backgroundColor: colors.navy },
-  stepLabel: { fontFamily: fontFamily.semiBold, fontSize: 11, color: colors.textMuted },
-  stepLabelOn: { fontFamily: fontFamily.extraBold, color: colors.navy },
-  stoppedPill: {
-    alignSelf: "flex-start",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: colors.surfaceMuted,
-  },
-  stoppedText: { fontFamily: fontFamily.bold, fontSize: 12, color: colors.textSecondary },
-  interviewRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    backgroundColor: "rgba(66,224,227,0.18)",
-  },
-  interviewText: { flex: 1, fontFamily: fontFamily.bold, fontSize: 13, color: colors.navy },
-  footer: { paddingHorizontal: 20, paddingTop: 4 },
 });

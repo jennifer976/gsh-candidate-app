@@ -1,125 +1,209 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppLanguageSetting } from "@/components/AppLanguageSetting";
+import { Icon } from "@/components/Icon";
 import { GshScreenShell } from "@/components/GshScreenShell";
 import {
-  DecorRing,
+  BreakoutPhoto,
+  Card,
+  Row,
+  RowCard,
+  SectionHeader,
+} from "@/components/v3";
+import {
   DepthButton,
-  Eyebrow,
-  PosterTitle,
-  posterParts,
-  SectionHeading,
+  GshMark,
+  TitleWithStop,
 } from "@/components/gsh-brand";
 import { tabBarBottomPadding } from "@/lib/android-insets";
-import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { useSignInPrompt } from "@/lib/useSignInPrompt";
-import { colors, fontFamily } from "@/lib/theme";
+import { RiseIn } from "@/lib/motion";
+import { colors, fontFamily, shadows } from "@/lib/theme";
 
 /** Profile tab for signed-out visitors: sign in or register, plus language. */
 export function GuestProfileHub() {
-  const ac = useAccountCopy();
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { openSignIn, openRegister } = useSignInPrompt();
 
   return (
-    <GshScreenShell constrainTabletWidth>
+    <GshScreenShell constrainTabletWidth style={{ backgroundColor: colors.panel }}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 24 }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingTop: insets.top + 26,
+          paddingBottom: tabBarBottomPadding(insets.bottom),
+        }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.hero, { paddingTop: Math.max(insets.top, 12) + 14 }]}>
-          <DecorRing size={260} thickness={36} color="rgba(255,255,255,0.3)" style={{ top: -110, right: -100 }} />
-          <Eyebrow onDark>{ac("Your account")}</Eyebrow>
-          <PosterTitle {...posterParts(ac("Create your|profile."))} onDark size={38} style={styles.title} />
-          <Text style={styles.body}>
-            {ac("Create a free account to save jobs, apply and hear from employers.")}
-          </Text>
-          <DepthButton
-            title={ac("Create a free account")}
-            onPress={() => openRegister("/(tabs)/profile")}
-            variant="cyanOnNavy"
-            style={styles.primary}
-          />
-          <DepthButton
-            title={ac("Sign in")}
-            onPress={() => openSignIn("/(tabs)/profile")}
-            variant="white"
-            bordered
-            icon={null}
-            size="md"
-            style={styles.secondary}
-          />
-          <View style={styles.trustRow}>
-            <Ionicons name="lock-closed" size={13} color={colors.onNavy2} />
-            <Text style={styles.trustText}>{ac("Free for candidates. Private by default.")}</Text>
-          </View>
-        </View>
+        <RiseIn>
+          <TitleWithStop eyebrow="Your account" text="Profile" />
+        </RiseIn>
 
-        <View style={styles.section}>
-          <SectionHeading title={ac("Useful before you sign in")} style={styles.heading} />
-          {[
-            { label: ac("Relocation perks"), hint: ac("Offers that help with the move"), href: "/relocation-perks" },
-            { label: ac("Career toolkit"), hint: ac("CV check, country guides, calculators"), href: "/tools-resources" },
-          ].map((item) => (
-            <Pressable
-              key={item.href}
-              onPress={() => router.push(item.href as never)}
-              style={styles.linkRow}
-              accessibilityRole="button"
-            >
-              <View style={{ flex: 1 }}>
-                <Text style={styles.linkTitle}>{item.label}</Text>
-                <Text style={styles.linkHint}>{item.hint}</Text>
+        <RiseIn delay={60}>
+          <View style={[styles.navyCard, { marginTop: 18 }]}>
+            <GshMark
+              size={300}
+              color="rgba(255,255,255,0.05)"
+              style={styles.mark}
+            />
+            <BreakoutPhoto
+              photo="plan-hero"
+              rotate={3}
+              style={styles.breakout}
+            />
+            <View style={styles.avatarRing}>
+              <View style={styles.avatarInner}>
+                <Icon name="user" size={28} color={colors.navy} />
               </View>
-              <Ionicons name="chevron-forward" size={18} color={colors.muted} />
+            </View>
+            <Text style={styles.title}>
+              Create your profile
+              <Text style={{ color: colors.cyan }}>.</Text>
+            </Text>
+            <Text style={styles.body}>
+              Create a free account to save jobs, apply and hear from employers.
+            </Text>
+            <DepthButton
+              title="Create a free account"
+              onPress={() => openRegister("/(tabs)/profile")}
+              variant="cyanOnNavy"
+              size="md"
+              style={{ marginTop: 20 }}
+            />
+            <Pressable
+              onPress={() => openSignIn("/(tabs)/profile")}
+              style={styles.glassBtn}
+              accessibilityRole="button"
+              accessibilityLabel="Sign in"
+            >
+              <Text style={styles.glassText}>Sign in</Text>
             </Pressable>
-          ))}
-        </View>
+            <View style={styles.trustRow}>
+              <Icon name="lock" size={14} color={colors.cyan} />
+              <Text style={styles.trustText}>
+                Free for candidates. Private by default.
+              </Text>
+            </View>
+          </View>
+        </RiseIn>
 
-        <View style={styles.section}>
-          <SectionHeading title={ac("Language")} style={styles.heading} />
-          <AppLanguageSetting />
-        </View>
+        <RiseIn delay={120}>
+          <View style={{ marginTop: 26 }}>
+            <SectionHeader
+              eyebrow="Before you sign in"
+              title="Useful now"
+            />
+            <RowCard style={{ marginTop: 12 }}>
+              <Row
+                icon="gift"
+                label="Relocation perks"
+                hint="Offers that help with the move"
+                onPress={() => router.push("/relocation-perks")}
+              />
+              <Row
+                icon="sparkles"
+                label="Career toolkit"
+                hint="CV check, country guides, calculators"
+                onPress={() => router.push("/tools-resources")}
+                isLast
+              />
+            </RowCard>
+          </View>
+        </RiseIn>
+
+        <RiseIn delay={160}>
+          <View style={{ marginTop: 26 }}>
+            <SectionHeader eyebrow="App settings" title="Language" />
+            <Card padding={18} style={{ marginTop: 12 }}>
+              <AppLanguageSetting />
+            </Card>
+          </View>
+        </RiseIn>
       </ScrollView>
     </GshScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  hero: {
+  navyCard: {
     backgroundColor: colors.navy,
+    borderRadius: 28,
+    paddingTop: 22,
     paddingHorizontal: 20,
-    paddingBottom: 22,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
-    overflow: "hidden",
+    paddingBottom: 20,
+    overflow: "visible",
+    ...shadows.photo,
   },
-  title: { marginTop: 8 },
+  mark: { position: "absolute", right: -110, top: -110 },
+  breakout: {
+    position: "absolute",
+    right: 16,
+    top: -30,
+    width: 104,
+    height: 128,
+  },
+  avatarRing: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    borderWidth: 2,
+    borderColor: colors.cyan,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarInner: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    borderWidth: 3,
+    borderColor: colors.navy,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    marginTop: 18,
+    maxWidth: 220,
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 26,
+    lineHeight: 30,
+    letterSpacing: -0.8,
+    color: colors.white,
+  },
   body: {
-    marginTop: 14,
-    fontFamily: fontFamily.medium,
+    marginTop: 8,
+    fontFamily: fontFamily.regular,
     fontSize: 15,
     lineHeight: 22,
-    color: colors.onNavy2,
+    color: "rgba(255,255,255,0.75)",
   },
-  primary: { marginTop: 20 },
-  secondary: { marginTop: 12 },
-  trustRow: { marginTop: 14, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
-  trustText: { fontFamily: fontFamily.semiBold, fontSize: 12, color: colors.onNavy2 },
-  section: { paddingHorizontal: 20, marginTop: 28 },
-  heading: { marginBottom: 12 },
-  linkRow: {
-    minHeight: 64,
+  glassBtn: {
+    marginTop: 10,
+    minHeight: 48,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.28)",
+    backgroundColor: "rgba(255,255,255,0.08)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  glassText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    color: colors.white,
+  },
+  trustRow: {
+    marginTop: 14,
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    justifyContent: "center",
+    gap: 6,
   },
-  linkTitle: { fontFamily: fontFamily.bold, fontSize: 16, color: colors.navy },
-  linkHint: { marginTop: 2, fontFamily: fontFamily.regular, fontSize: 13, color: colors.textSecondary },
+  trustText: {
+    fontFamily: fontFamily.medium,
+    fontSize: 13,
+    color: "rgba(255,255,255,0.72)",
+  },
 });

@@ -14,7 +14,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const ALLOWED_CONFIRM = [
   /(?:^|[/\\])job[/\\]\[id\]\.tsx$/,
   /(?:^|[/\\])V3JobCard\.tsx$/,
+  /(?:^|[/\\])JobCard\.tsx$/,
   /(?:^|[/\\])jobs\.tsx$/, // HubJobCard bookmark save
+  /(?:^|[/\\])CandidateHomeScreen\.tsx$/,
+  /(?:^|[/\\])saved\.tsx$/,
   /(?:^|[/\\])onboarding[/\\]\[step\]\.tsx$/,
 ];
 

@@ -3,6 +3,8 @@ export { Card } from "@/components/v3/Card";
 export { CountryCard } from "@/components/v3/CountryCard";
 export { CountryRail } from "@/components/v3/CountryRail";
 export { IconTile } from "@/components/v3/IconTile";
+export { JobCard, cardInDelay } from "@/components/v3/JobCard";
+export type { JobCardProps } from "@/components/v3/JobCard";
 export { NavyBand } from "@/components/v3/NavyBand";
 export { PhotoEmpty } from "@/components/v3/PhotoEmpty";
 export { Row, RowCard } from "@/components/v3/RowCard";

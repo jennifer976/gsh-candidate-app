@@ -1,19 +1,20 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { GshScreenShell } from "@/components/GshScreenShell";
-import { SignInPanel } from "@/components/SignInGate";
 import {
-  BrandStatePanel,
-  DepthPressable,
-  DepthSurface,
-  IconBadge,
-  SegmentTabs,
-  TitleWithStop,
-} from "@/components/gsh-brand";
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Icon } from "@/components/Icon";
+import { GshScreenShell } from "@/components/GshScreenShell";
+import { Card, PhotoEmpty } from "@/components/v3";
+import { DepthButton, TitleWithStop } from "@/components/gsh-brand";
 import { tabBarBottomPadding } from "@/lib/android-insets";
 import { fetchConversations } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -21,10 +22,12 @@ import { useAppCopy } from "@/lib/i18n";
 import { useAccountCopy } from "@/lib/i18n/useAccountCopy";
 import { jobAgeLabel } from "@/lib/job-presentation";
 import { listStaggerDelay, RiseIn } from "@/lib/motion";
+import { openProfileStep } from "@/lib/openProfileStep";
+import { useSignInPrompt } from "@/lib/useSignInPrompt";
 import { colors, fontFamily } from "@/lib/theme";
 import type { ConversationSummary } from "@/types/models";
 
-type Filter = "all" | "unread";
+type Filter = "all" | "employers" | "agencies";
 
 function initialsFromLabel(label: string): string {
   const parts = label.trim().split(/\s+/).filter(Boolean);
@@ -37,12 +40,25 @@ function unreadOf(row: ConversationSummary): number {
   return Math.max(0, row.unreadCount ?? (row.read === false ? 1 : 0));
 }
 
+function isAgency(row: ConversationSummary): boolean {
+  const kind = String(
+    (row as ConversationSummary & { counterpartyType?: string }).counterpartyType ||
+      (row as ConversationSummary & { partyType?: string }).partyType ||
+      "",
+  ).toLowerCase();
+  if (kind.includes("agency")) return true;
+  if (kind.includes("employer")) return false;
+  const label = (row.counterpartyLabel || "").toLowerCase();
+  return /\bagency\b|\brecruiter\b/.test(label);
+}
+
 export default function MessagesScreen() {
   const ac = useAccountCopy();
   const { locale } = useAppCopy();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const signedIn = Boolean(useAuthStore((s) => s.token));
+  const { openSignIn, openRegister } = useSignInPrompt();
   const [filter, setFilter] = useState<Filter>("all");
 
   const query = useQuery({
@@ -52,47 +68,81 @@ export default function MessagesScreen() {
   });
 
   const all = query.data ?? [];
-  const unreadTotal = all.filter((row) => unreadOf(row) > 0).length;
-  const rows = filter === "unread" ? all.filter((row) => unreadOf(row) > 0) : all;
+  const rows =
+    filter === "all"
+      ? all
+      : filter === "agencies"
+        ? all.filter(isAgency)
+        : all.filter((row) => !isAgency(row));
 
   const header = (
-    <View style={[styles.header, { paddingTop: insets.top + 14 }]}>
+    <View style={[styles.header, { paddingTop: insets.top + 26 }]}>
       <TitleWithStop eyebrow="Employers and agencies" text="Messages" />
       {signedIn ? (
-        <>
-          <Text style={styles.body}>{ac("Employers and agencies message you here.")}</Text>
-          <SegmentTabs
-            value={filter}
-            onChange={setFilter}
-            options={[
-              { id: "all", label: all.length > 0 ? `${ac("All")} · ${all.length}` : ac("All") },
-              { id: "unread", label: unreadTotal > 0 ? `${ac("Unread")} · ${unreadTotal}` : ac("Unread") },
-            ]}
-            style={styles.segment}
-          />
-        </>
-      ) : (
-        <Text style={styles.body}>{ac("Talk to employers and agencies about your applications.")}</Text>
-      )}
+        <View style={styles.segmentTrack}>
+          {(
+            [
+              { id: "all", label: "All" },
+              { id: "employers", label: "Employers" },
+              { id: "agencies", label: "Agencies" },
+            ] as const
+          ).map((opt) => {
+            const on = filter === opt.id;
+            return (
+              <Pressable
+                key={opt.id}
+                onPress={() => setFilter(opt.id)}
+                style={[styles.segment, on && styles.segmentOn]}
+                accessibilityRole="button"
+                accessibilityState={{ selected: on }}
+              >
+                <Text style={[styles.segmentText, on && styles.segmentTextOn]}>
+                  {opt.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      ) : null}
     </View>
   );
 
   if (!signedIn) {
     return (
-      <GshScreenShell constrainTabletWidth>
+      <GshScreenShell constrainTabletWidth style={{ backgroundColor: colors.panel }}>
         <FlatList
           data={[]}
           renderItem={null}
           ListHeaderComponent={header}
           ListFooterComponent={
-            <SignInPanel
-              returnTo="/(tabs)/messages"
-              icon="chatbubbles-outline"
+            <PhotoEmpty
+              photo="about-city"
+              chipIcon="message-circle"
+              chipLabel="You choose who"
               title="Your messages"
               body="Sign in to read and reply to messages from employers."
-            />
+              style={{ paddingTop: 40 }}
+            >
+              <DepthButton
+                title="Create a free account"
+                onPress={() => openRegister("/(tabs)/messages")}
+                variant="navy"
+                size="md"
+              />
+              <Pressable
+                onPress={() => openSignIn("/(tabs)/messages")}
+                style={styles.signInHit}
+                accessibilityRole="button"
+                accessibilityLabel="Sign in"
+              >
+                <Text style={styles.signInText}>Sign in</Text>
+              </Pressable>
+            </PhotoEmpty>
           }
-          contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 16 }}
+          contentContainerStyle={{
+            paddingHorizontal: 16,
+            paddingBottom: tabBarBottomPadding(insets.bottom),
+          }}
         />
       </GshScreenShell>
     );
@@ -103,48 +153,44 @@ export default function MessagesScreen() {
       <ActivityIndicator size="large" color={colors.navy} />
     </View>
   ) : query.isError ? (
-    <BrandStatePanel
-      icon="cloud-offline-outline"
-      title={ac("Could not load")}
-      body={ac("Check your connection and try again.")}
-      primary={{ label: ac("Try again"), onPress: () => void query.refetch(), icon: "refresh" }}
-    />
-  ) : filter === "unread" && all.length > 0 ? (
-    <BrandStatePanel
-      icon="checkmark-done-outline"
-      title={ac("All caught up")}
-      body={ac("You have read every message.")}
-      secondary={{ label: ac("Show all messages"), onPress: () => setFilter("all") }}
-    />
+    <View style={styles.errorWrap}>
+      <Text style={styles.errorTitle}>{ac("Could not load")}</Text>
+      <Text style={styles.errorBody}>
+        {ac("Check your connection and try again.")}
+      </Text>
+      <DepthButton
+        title={ac("Try again")}
+        onPress={() => void query.refetch()}
+        variant="navy"
+        size="md"
+        icon="refresh"
+      />
+    </View>
   ) : (
-    <BrandStatePanel
-      icon="chatbubbles-outline"
-      title={ac("No messages yet")}
-      body={ac("When an employer or agency contacts you, the conversation will appear here.")}
-      primary={{ label: ac("Browse jobs"), onPress: () => router.push("/(tabs)/jobs") }}
-    />
+    <PhotoEmpty
+      photo="about-city"
+      chipIcon="message-circle"
+      chipLabel="You choose who"
+      title="No messages yet"
+      body="When an employer or agency you've allowed to contact you sends a message, it appears here."
+    >
+      <Pressable
+        onPress={() => openProfileStep(13, "messages")}
+        style={styles.ghostHit}
+        accessibilityRole="button"
+      >
+        <Text style={styles.ghostText}>Choose who can contact you</Text>
+      </Pressable>
+    </PhotoEmpty>
   );
 
   return (
-    <GshScreenShell constrainTabletWidth>
+    <GshScreenShell constrainTabletWidth style={{ backgroundColor: colors.panel }}>
       <FlatList
         data={query.isError ? [] : rows}
         keyExtractor={(item) => item.id ?? item._id}
         ListHeaderComponent={header}
         ListEmptyComponent={empty}
-        ListFooterComponent={
-          rows.length > 0 ? (
-            <DepthSurface face={colors.navy} depthColor={colors.cyan} depth={5} radius={20} style={styles.tip}>
-              <View style={styles.tipInner}>
-                <IconBadge icon="shield-checkmark" size={36} radius={11} />
-                <Text style={styles.tipText}>
-                  <Text style={styles.tipStrong}>{ac("Employers and agencies start the chat.")}</Text>{" "}
-                  {ac("Control who can find and contact you in Profile.")}
-                </Text>
-              </View>
-            </DepthSurface>
-          ) : null
-        }
         refreshControl={
           <RefreshControl
             refreshing={query.isRefetching}
@@ -154,53 +200,76 @@ export default function MessagesScreen() {
             tintColor="#0d194e"
           />
         }
-        contentContainerStyle={{ paddingBottom: tabBarBottomPadding(insets.bottom) + 16 }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingBottom: tabBarBottomPadding(insets.bottom),
+        }}
         renderItem={({ item, index }) => {
           const unread = unreadOf(item);
           const when = jobAgeLabel(item.lastMessageAt, locale);
           return (
             <RiseIn delay={listStaggerDelay(index)}>
-            <DepthPressable
-              onPress={() => router.push(`/conversation/${item.id ?? item._id}`)}
-              face={unread > 0 ? colors.unreadBg : colors.white}
-              depthColor={unread > 0 ? colors.navy : colors.border}
-              depth={4}
-              radius={20}
-              borderWidth={2}
-              borderColor={unread > 0 ? colors.navy : colors.border}
-              accessibilityLabel={`${item.counterpartyLabel}. ${item.jobTitle}`}
-              style={styles.cardGap}
-              innerStyle={styles.card}
-            >
-              <View style={styles.avatar}>
-                <Text style={styles.avatarText}>{initialsFromLabel(item.counterpartyLabel || "?")}</Text>
-              </View>
-              <View style={styles.cardMid}>
-                <View style={styles.rowTop}>
-                  <Text style={[styles.counterparty, unread > 0 && styles.bold]} numberOfLines={1}>
-                    {item.counterpartyLabel}
-                  </Text>
-                  {when ? <Text style={styles.when}>{when}</Text> : null}
-                </View>
-                {item.jobTitle ? (
-                  <Text style={styles.jobTitle} numberOfLines={1}>
-                    {item.jobTitle}
-                  </Text>
-                ) : null}
-                <View style={styles.previewRow}>
-                  <Text style={[styles.preview, unread > 0 && styles.previewUnread]} numberOfLines={2}>
-                    {item.lastMessagePreview || ac("No messages yet")}
-                  </Text>
-                  {unread > 0 ? (
-                    <View style={styles.badge}>
-                      <Text style={styles.badgeText}>{unread > 99 ? "99+" : unread}</Text>
+              <Pressable
+                onPress={() =>
+                  router.push(`/conversation/${item.id ?? item._id}`)
+                }
+                accessibilityRole="button"
+                accessibilityLabel={`${item.counterpartyLabel}. ${item.jobTitle}`}
+                style={{ marginBottom: 12 }}
+              >
+                <Card
+                  padding={14}
+                  style={unread > 0 ? styles.cardUnread : undefined}
+                >
+                  <View style={styles.cardRow}>
+                    <View style={styles.avatar}>
+                      <Text style={styles.avatarText}>
+                        {initialsFromLabel(item.counterpartyLabel || "?")}
+                      </Text>
                     </View>
-                  ) : (
-                    <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
-                  )}
-                </View>
-              </View>
-            </DepthPressable>
+                    <View style={styles.cardMid}>
+                      <View style={styles.rowTop}>
+                        <Text
+                          style={[styles.counterparty, unread > 0 && styles.bold]}
+                          numberOfLines={1}
+                        >
+                          {item.counterpartyLabel}
+                        </Text>
+                        {when ? <Text style={styles.when}>{when}</Text> : null}
+                      </View>
+                      {item.jobTitle ? (
+                        <Text style={styles.jobTitle} numberOfLines={1}>
+                          {item.jobTitle}
+                        </Text>
+                      ) : null}
+                      <View style={styles.previewRow}>
+                        <Text
+                          style={[
+                            styles.preview,
+                            unread > 0 && styles.previewUnread,
+                          ]}
+                          numberOfLines={2}
+                        >
+                          {item.lastMessagePreview || ac("No messages yet")}
+                        </Text>
+                        {unread > 0 ? (
+                          <View style={styles.badge}>
+                            <Text style={styles.badgeText}>
+                              {unread > 99 ? "99+" : unread}
+                            </Text>
+                          </View>
+                        ) : (
+                          <Icon
+                            name="chevron-right"
+                            size={16}
+                            color={colors.muted}
+                          />
+                        )}
+                      </View>
+                    </View>
+                  </View>
+                </Card>
+              </Pressable>
             </RiseIn>
           );
         }}
@@ -210,24 +279,55 @@ export default function MessagesScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: colors.panel,
-    paddingHorizontal: 20,
-    paddingBottom: 14,
-    overflow: "hidden",
+  header: { marginBottom: 8 },
+  segmentTrack: {
+    marginTop: 16,
+    backgroundColor: "#e9ecf3",
+    borderRadius: 14,
+    padding: 4,
+    flexDirection: "row",
+    gap: 4,
   },
-  title: { marginTop: 8 },
-  body: {
-    marginTop: 14,
-    fontFamily: fontFamily.medium,
-    fontSize: 15,
-    lineHeight: 22,
-    color: colors.textSecondary,
+  segment: {
+    flex: 1,
+    height: 44,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  segment: { marginTop: 18 },
+  segmentOn: {
+    backgroundColor: colors.white,
+    shadowColor: "#0d194e",
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 2,
+  },
+  segmentText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 14,
+    color: colors.text2,
+  },
+  segmentTextOn: { color: colors.navy },
   loading: { paddingVertical: 48, alignItems: "center" },
-  cardGap: { marginHorizontal: 20, marginBottom: 12 },
-  card: { flexDirection: "row", gap: 12, padding: 14 },
+  errorWrap: { paddingVertical: 32, gap: 12, alignItems: "center" },
+  errorTitle: {
+    fontFamily: fontFamily.headingStrong,
+    fontSize: 18,
+    color: colors.navy,
+  },
+  errorBody: {
+    fontFamily: fontFamily.regular,
+    fontSize: 14,
+    color: colors.text2,
+    textAlign: "center",
+  },
+  cardUnread: {
+    borderWidth: 1,
+    borderColor: colors.unreadBorder,
+    backgroundColor: colors.unreadBg,
+  },
+  cardRow: { flexDirection: "row", gap: 12 },
   avatar: {
     width: 48,
     height: 48,
@@ -236,9 +336,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  avatarText: { fontSize: 15, fontFamily: fontFamily.heading, color: colors.cyan },
+  avatarText: {
+    fontSize: 15,
+    fontFamily: fontFamily.heading,
+    color: colors.cyan,
+  },
   cardMid: { flex: 1, minWidth: 0 },
-  rowTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 8 },
+  rowTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 8,
+  },
   counterparty: {
     flex: 1,
     fontSize: 16,
@@ -247,10 +356,30 @@ const styles = StyleSheet.create({
     letterSpacing: -0.2,
   },
   bold: { fontFamily: fontFamily.headingStrong },
-  when: { fontSize: 12, fontFamily: fontFamily.semiBold, color: colors.textMuted },
-  jobTitle: { marginTop: 2, fontSize: 13, fontFamily: fontFamily.semiBold, color: colors.textSecondary },
-  previewRow: { marginTop: 6, flexDirection: "row", alignItems: "center", gap: 10 },
-  preview: { flex: 1, fontSize: 14, lineHeight: 20, fontFamily: fontFamily.regular, color: colors.textMuted },
+  when: {
+    fontSize: 12,
+    fontFamily: fontFamily.semiBold,
+    color: colors.muted,
+  },
+  jobTitle: {
+    marginTop: 2,
+    fontSize: 13,
+    fontFamily: fontFamily.semiBold,
+    color: colors.text2,
+  },
+  previewRow: {
+    marginTop: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  preview: {
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: fontFamily.regular,
+    color: colors.muted,
+  },
   previewUnread: { fontFamily: fontFamily.semiBold, color: colors.navy },
   badge: {
     minWidth: 24,
@@ -261,9 +390,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  badgeText: { fontSize: 11, fontFamily: fontFamily.extraBold, color: colors.cyan },
-  tip: { marginHorizontal: 20, marginTop: 8 },
-  tipInner: { flexDirection: "row", alignItems: "center", gap: 12, padding: 16 },
-  tipText: { flex: 1, fontFamily: fontFamily.medium, fontSize: 13, lineHeight: 20, color: "rgba(255,255,255,0.75)" },
-  tipStrong: { fontFamily: fontFamily.extraBold, color: colors.white },
+  badgeText: {
+    fontSize: 11,
+    fontFamily: fontFamily.extraBold,
+    color: colors.cyan,
+  },
+  ghostHit: {
+    minHeight: 44,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  ghostText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    color: colors.navy,
+    textDecorationLine: "underline",
+  },
+  signInHit: {
+    marginTop: 8,
+    minHeight: 44,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  signInText: {
+    fontFamily: fontFamily.semiBold,
+    fontSize: 15,
+    color: colors.navy,
+    textDecorationLine: "underline",
+  },
 });
